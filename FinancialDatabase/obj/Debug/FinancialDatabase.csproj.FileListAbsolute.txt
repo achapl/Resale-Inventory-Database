@@ -1,0 +1,10 @@
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\bin\Debug\FinancialDatabase.exe.config
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\bin\Debug\FinancialDatabase.exe
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\bin\Debug\FinancialDatabase.pdb
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\obj\Debug\FinancialDatabase.csproj.AssemblyReference.cache
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\obj\Debug\FinancialDatabase.Form1.resources
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\obj\Debug\FinancialDatabase.Properties.Resources.resources
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\obj\Debug\FinancialDatabase.csproj.GenerateResource.cache
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\obj\Debug\FinancialDatabase.csproj.CoreCompileInputs.cache
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\obj\Debug\FinancialDatabase.exe
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\obj\Debug\FinancialDatabase.pdb
