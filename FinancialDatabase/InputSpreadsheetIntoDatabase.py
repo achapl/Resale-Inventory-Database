@@ -20,7 +20,18 @@ A few cases
 	# 2 - Bought, Not Sold, Packaged
 	# 3 - Bought     Sold, Packaged
 def getItemStatus(row):
+	case = -1
+	hasPackingDims = (row[7] != '')
+	isSold		   = (row[3] != '')
 
+	if !hasPackingDims and !isSold:
+		case = 1
+	elif hasPackingDims and !isSold:
+		case = 2
+	elif hasPackingDims and isSold:
+		case = 3
+
+	return case
 
 def inputIntoDatabase
 	

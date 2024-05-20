@@ -55,7 +55,7 @@ namespace FinancialDatabase
         {
             const string DEFAULTQUERY = "SELECT * FROM city where ID < 5";
 
-            // Activate Python Script 'Pyscript.py' as process 'p'
+            // Activate Python Script 'DtbConnAndQuery.py' as process 'p'
             string query = this.textBox1.Text;
             if (query == "")
             {
@@ -65,7 +65,7 @@ namespace FinancialDatabase
             query = formatQuery(query);
 
             Console.WriteLine(query);
-            string cmdText = @"/K python C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Pyscript.py " + query;
+            string cmdText = @"/K python C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\DtbConnAndQuery.py " + query;
             Console.WriteLine(cmdText);
             System.Diagnostics.Process p = new System.Diagnostics.Process();
             
