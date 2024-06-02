@@ -10,7 +10,6 @@ import re
 
 # Lengthen year month and day to instead of 3-5-20 to be 03-05-2020
 def formatMDY(date):
-    
     if (len(date) == 3):
         if len(date[2]) == 2:
                     date[2] = "20" + date[2]
@@ -94,6 +93,7 @@ def assignDate(Sheet):
 """
 Col F - Sold Date """
 def formatSoldDate(Sheet):
+    # Defaults
     NOYEAR = "NOYEAR"
     lastDate = datetime.date(2020,1,1)
     
@@ -104,6 +104,7 @@ def formatSoldDate(Sheet):
         date = row[5].split('-')
         date = formatMDY(date)
         date = reformatToYMD(date)
+        row[5] = '-'.join(date)
 
         # if date is format  04-11 (when real date is 04-11-2024)
         if date[0] == NOYEAR:
@@ -308,18 +309,24 @@ def deleteExtraneous(Sheet):
 
 
 with open('Tool Buys - Sheet1.csv') as csvfile:
+
+    # Open and extract raw data into Sheet
     CSVSheet = csv.reader(csvfile, delimiter=',', quotechar='"')
     Sheet = []
     for row in CSVSheet:
         if row[0] == "Date" or row[0] == "(BLANK)":
             continue
         Sheet.append(row)
+
+    # Format data in Sheet
     Sheet = assignDate(Sheet)
     Sheet = formatSoldDate(Sheet)
     Sheet = shippingInfo(Sheet)
     Sheet = seperateNotes(Sheet)
     Sheet = formatWeightDims(Sheet)
     Sheet = deleteExtraneous(Sheet)
+
+    # Write formatted Sheet to file
     with open('Tool Buys - Sheet1_FMT.csv', 'x') as csvfileFMT:
         CSVWriter = csv.writer(csvfileFMT, delimiter = ',', quotechar='\'')
         for row in Sheet:
@@ -327,7 +334,7 @@ with open('Tool Buys - Sheet1.csv') as csvfile:
 
 
 """
-After: 0:Date | 1:Name | 2: Cost Bought | 3: SoldVal | 4: Profit Made | 5: Sold Date | 6: New Ship Num | 7: Weight/Dims| 8: Notes - Old Ship Num, ColJ Orig notes, Col I Orig Notes
+After: 0:Date | 1:Name | 2: Cost Bought | 3: SoldVal | 4: Profit Made | 5: Sold Date | 6: New Ship Num | 7: Weight/Dims | 8: Notes - Old Ship Num, ColJ Orig notes, Col I Orig Notes
 
 Col A - Date
         - Give date do each purchase

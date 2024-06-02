@@ -34,7 +34,10 @@ def runQuery(query):
 
 	cursor = cnx.cursor()
 	cursor.execute(query)
-
+	retStr = ""
+	for row in cursor:
+		retStr = retStr + "\n" + row
+	return retStr
 
 
 runQuery(getQuery())
