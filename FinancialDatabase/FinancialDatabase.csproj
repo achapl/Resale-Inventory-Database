@@ -83,7 +83,7 @@
   <ItemGroup>
     <Content Include="FormatData.py" />
     <Content Include="InputSpreadsheetIntoDatabase.py" />
-    <Content Include="Pyscript.py" />
+    <Content Include="DtbConnAndQuery.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

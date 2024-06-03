@@ -91,6 +91,17 @@ def assignDate(Sheet):
     return Sheet
 
 """
+Col B - Name
+        - Input correct escape characters for special character such as "     """
+
+def formatName(Sheet):
+    for i in range(len(Sheet)):
+        row = Sheet[i]
+        name = row[1]
+        row[1] = row[1].replace("\"", "\\\"")
+    return Sheet
+
+"""
 Col F - Sold Date """
 def formatSoldDate(Sheet):
     # Defaults
@@ -320,6 +331,7 @@ with open('Tool Buys - Sheet1.csv') as csvfile:
 
     # Format data in Sheet
     Sheet = assignDate(Sheet)
+    Sheet = formatName(Sheet)
     Sheet = formatSoldDate(Sheet)
     Sheet = shippingInfo(Sheet)
     Sheet = seperateNotes(Sheet)

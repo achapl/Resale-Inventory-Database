@@ -1,4 +1,5 @@
-import DtbConnAndQuery.py
+from DtbConnAndQuery import runQuery
+import csv
 
 itemTable = "item"
 purcTable = "purchase"
@@ -9,7 +10,7 @@ shipTable = "shipping"
 def isSold(row):
 	return (row[3] != '')
 
-def hasPackingDims
+def hasPackingDims(row):
 	return (row[7] != '')
 
 # Given a table where you just added a row, return the primary key for that row
@@ -26,38 +27,46 @@ def updateItemIDs(currItemID):
 	saleID = runQuery(saleQuery)
 	shipID = runQuery(shippingQuery)
 	
-	if purchaseID Not "":
+	if purchaseID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET PurchaseID = " + purhcaseID
 		runQuery(modifiedItemQuery)
-	if saleID Not "":
+	if saleID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET SaleID = " + saleID
 		runQuery(modifiedItemQuery)
-	if shipID Not "":
+	if shipID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET ShippingID = " + shipID
 		runQuery(modifiedItemQuery)
 
 	return
 
 def inputIntoDatabase(data):
-	for prevRow, row, nextRow in data:
-		isSold		   = isSold(row)
-		hasPackingDims = hasPackingDims(row)		
+	for index, row in enumerate(data):
+		prevRow = None
+		nextRow = None
+		if index > 0:
+			prevRow = data[index-1]
+		if index < len(data) - 1:
+			nextRow = data[index+1]
+
+	#for prevRow, row, nextRow in data:
+		boolIsSold		   = isSold(row)
+		boolhasPackingDims = hasPackingDims(row)		
 
 		#Default - Item entry and purchase entry
 		
-		itemQuery = "INSERT INTO " + itemTable + " VALUES (Name) "
+		itemQuery = "USE tool_database; INSERT INTO " + itemTable + " (Name) VALUES  (\"" + row[1] + "\");"
 		runQuery(itemQuery)
 
-		currItemID = getLastID(itemTable)
+		"""currItemID = getLastID(itemTable)
 
-		purchaseQuery = "INSERT INTO " + purcTable + " VALUES (Date_Purchased, Amount, ItemID) (" + data[0] + "," + data[2] + "," + currItemID + ")"
+		purchaseQuery = "INSERT INTO " + purcTable + " VALUES (Date_Purchased, Amount, ItemID) (" + row[0] + ", STR_TO_DATE('" + row[2] + "', '%Y-%m-%d')" + "," + currItemID + ")"
 		runQuery(purchaseQuery)
 
-		if isSold:
-			saleQuery = "INSERT INTO " + soldQuery + " VALUES (Date_Sold, Amount, ItemID) (" + row[5] + ", " + row[3] + ", " + currItemID + ")"
+		if boolIsSold:
+			saleQuery = "INSERT INTO " + soldQuery + " VALUES (Date_Sold, Amount, ItemID) (" + ", STR_TO_DATE('" + row[5] + "', '%Y-%m-%d')" + ", " + row[3] + ", " + currItemID + ")"
 			runQuery(saleQuery)
 
-		if hasPackingDims:
+		if boolhasPackingDims:
 			ouncesPerPound = 16
 			# [lbs, oz, l,w,h]
 			shipDims = row[8].split(",")
@@ -72,12 +81,13 @@ def inputIntoDatabase(data):
 			packQuery = "INSERT INTO " + shipTable + " VALUES (Length, Width, Height, Weight, ItemID) (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + currItemID + ")"
 			runQuery(packQuery)
 		
-		updateItemIDs(currItemID)
+		updateItemIDs(currItemID)"""
 
 
 
 
-with open('Tool Buys - Sheet1_FMT.csv') as csvfile:
-    CSVSheet = csv.reader(csvfile, delimiter=',', quotechar='"')
-    for row in CSVSheet:
-		inputIntoDatabase(row)
+with open('Tool Buys - Sheet1_FMT_Testing.csv') as csvfile:
+	CSVSheet = list(csv.reader(csvfile, delimiter=',', quotechar='"'))
+	inputIntoDatabase(CSVSheet)
+	"""for row in CSVSheet:
+		inputIntoDatabase(row)"""

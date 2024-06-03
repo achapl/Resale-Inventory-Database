@@ -29,17 +29,21 @@ def getQuery():
 
 
 def runQuery(query):
+	print(query)
 	# user: testuser, pass: testuser
 	cnx = mysql.connector.connect(user='testuser', password='testuser', host='127.0.0.1', database='world')
-
 	cursor = cnx.cursor()
-	cursor.execute(query)
+	cnx.rollback()
+	cursor.execute("USE tool_database; SELECT * FROM item;")#query)
+	cnx.commit()
 	retStr = ""
 	for row in cursor:
 		retStr = retStr + "\n" + row
+	cursor.close()
+	cnx.close()
 	return retStr
 
-
+"""
 runQuery(getQuery())
 
 #print each row in cursor:
@@ -49,4 +53,4 @@ for row in cursor:
 print(eos)
 cursor.close()
 
-cnx.close()
+cnx.close()"""
