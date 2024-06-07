@@ -14,33 +14,39 @@ def hasPackingDims(row):
 	return (row[7] != '')
 
 # Given a table where you just added a row, return the primary key for that row
+#
+#
+#
+### DELETE OR FIND BETTER WAY TO EXTRCT THIS FUNCTIONALITY FROM THE DebConnAndQuery.py runQuery() functionality
+# Probably need to return the lastID with the runQuery func, since it closes the connection after each query, so that connection's LAST_INSERT_ID is lost.
+#
+#
 def getLastID(table):
-	query = "SELECT last_insert_id() from " + table
+	query = "SELECT LAST_INSERT_ID() from " + table + ";"
 	return runQuery(query)
 
-def updateItemIDs(currItemID):
-	purchaseQuery = "SELECT PURCHASE_ID from " + purcTable + " WHERE ItemID = " + currItemID
-	saleQuery     = "SELECT SALE_ID     from " + saleTable + " WHERE ItemID = " + currItemID
-	shippingQuery = "SELECT SHIPPING_ID from " + shipTable + " WHERE ItemID = " + currItemID
+def updateItemIDs(itemID, purcID, saleID, shipID):
 	
-	purchaseID = runQuery(purchaseQuery)
-	saleID = runQuery(saleQuery)
-	shipID = runQuery(shippingQuery)
-	
-	if purchaseID != "":
-		modifiedItemQuery = "UPDATE " + itemTable + " SET PurchaseID = " + purhcaseID
+	if purcID != "":
+		modifiedItemQuery = "UPDATE " + itemTable + " SET PurchaseID = " + purcID + " WHERE ITEM_ID = " + itemID + ";"
 		runQuery(modifiedItemQuery)
 	if saleID != "":
-		modifiedItemQuery = "UPDATE " + itemTable + " SET SaleID = " + saleID
+		modifiedItemQuery = "UPDATE " + itemTable + " SET SaleID = "     + saleID + " WHERE ITEM_ID = " + itemID + ";"
 		runQuery(modifiedItemQuery)
 	if shipID != "":
-		modifiedItemQuery = "UPDATE " + itemTable + " SET ShippingID = " + shipID
+		modifiedItemQuery = "UPDATE " + itemTable + " SET ShippingID = " + shipID + " WHERE ITEM_ID = " + itemID + ";"
 		runQuery(modifiedItemQuery)
 
 	return
 
+def formatRow(row):
+	for i, elem in enumerate(row):
+		row[i] = row[i].replace("\"", "\\\"")
+	return row
+
 def inputIntoDatabase(data):
 	for index, row in enumerate(data):
+		row = formatRow(row)
 		prevRow = None
 		nextRow = None
 		if index > 0:
@@ -54,40 +60,46 @@ def inputIntoDatabase(data):
 
 		#Default - Item entry and purchase entry
 		
-		itemQuery = "USE tool_database; INSERT INTO " + itemTable + " (Name) VALUES  (\"" + row[1] + "\");"
-		runQuery(itemQuery)
+		itemQuery = "INSERT INTO " + itemTable + " (Name) VALUES  (\"" + row[1] + "\");"
+		itemID = str(runQuery(itemQuery)[1])
 
-		"""currItemID = getLastID(itemTable)
-
-		purchaseQuery = "INSERT INTO " + purcTable + " VALUES (Date_Purchased, Amount, ItemID) (" + row[0] + ", STR_TO_DATE('" + row[2] + "', '%Y-%m-%d')" + "," + currItemID + ")"
-		runQuery(purchaseQuery)
-
+		purchaseQuery = "INSERT INTO " + purcTable + " (Date_Purchased, Amount, ItemID) VALUES (STR_TO_DATE('" + row[0] + "', '%Y-%m-%d')," + row[2] + ", " + itemID + ");"
+		purcID = str(runQuery(purchaseQuery)[1])
+		
+		saleID = ""
+		shipID = ""
 		if boolIsSold:
-			saleQuery = "INSERT INTO " + soldQuery + " VALUES (Date_Sold, Amount, ItemID) (" + ", STR_TO_DATE('" + row[5] + "', '%Y-%m-%d')" + ", " + row[3] + ", " + currItemID + ")"
-			runQuery(saleQuery)
+			saleQuery = "INSERT INTO " + saleTable + " (Date_Sold, Amount, ItemID) VALUES (STR_TO_DATE('" + row[5] + "', '%Y-%m-%d')" + ", " + row[3] + ", " + itemID + ");"
+			saleID = str(runQuery(saleQuery)[1])
 
 		if boolhasPackingDims:
 			ouncesPerPound = 16
 			# [lbs, oz, l,w,h]
-			shipDims = row[8].split(",")
+			shipDims = row[7].split(",")
 			lbs = shipDims[0]
 			oz  = shipDims[1]
 			l   = shipDims[2]
 			w   = shipDims[3]
 			h   = shipDims[4]
 
-			ttlWeight = lbs*ouncePerPound + oz
+			if oz == "":
+				oz = "0"
+			if lbs == "":
+				lbs = "0"
 
-			packQuery = "INSERT INTO " + shipTable + " VALUES (Length, Width, Height, Weight, ItemID) (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + currItemID + ")"
-			runQuery(packQuery)
+			ttlWeight = str(int(lbs)*ouncesPerPound + int(oz))
+
+			shipQuery = "INSERT INTO " + shipTable + " (Length, Width, Height, Weight, ItemID) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + itemID + ");"
+			shipID = str(runQuery(shipQuery)[1])
 		
-		updateItemIDs(currItemID)"""
+		updateItemIDs(itemID, purcID, saleID, shipID)
 
 
 
 
-with open('Tool Buys - Sheet1_FMT_Testing.csv') as csvfile:
-	CSVSheet = list(csv.reader(csvfile, delimiter=',', quotechar='"'))
+with open('Tool Buys - Sheet1_FMT.csv') as csvfile:
+	CSVSheet = list(csv.reader(csvfile, delimiter=',', escapechar = '\\', quoting = csv.QUOTE_NONE, lineterminator = '\r\r\n'))
+	#for row in CSVSheet:
+	#	print(row)
 	inputIntoDatabase(CSVSheet)
-	"""for row in CSVSheet:
-		inputIntoDatabase(row)"""
+	

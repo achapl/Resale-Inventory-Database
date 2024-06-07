@@ -1,5 +1,5 @@
 
-eos = "EOS"
+
 import mysql.connector
 import sys
 
@@ -31,17 +31,27 @@ def getQuery():
 def runQuery(query):
 	print(query)
 	# user: testuser, pass: testuser
-	cnx = mysql.connector.connect(user='testuser', password='testuser', host='127.0.0.1', database='world')
+	cnx = mysql.connector.connect(user='testuser', password='testuser', host='127.0.0.1', database='tool_database')
+	cnx.autocommit=True
 	cursor = cnx.cursor()
 	cnx.rollback()
-	cursor.execute("USE tool_database; SELECT * FROM item;")#query)
-	cnx.commit()
-	retStr = ""
-	for row in cursor:
-		retStr = retStr + "\n" + row
-	cursor.close()
-	cnx.close()
-	return retStr
+	try:
+		result = cursor.execute(query) ## TRY: Finding source code for commit(), restarting a database connection project, creating new database user
+		result = [result, cursor.fetchall()]
+		try:
+			cnx.commit()
+		except mysql.connector.errors.InternalError:
+			print("Error: Unread Result")
+		retStr = ""
+		if result is not None:
+			retstr = str(result)
+		cursor.close()
+		cnx.close()
+	except:
+		print("!!!ERROR!!!")
+		print(query)
+		retStr = ""
+	return retStr, cursor.lastrowid
 
 """
 runQuery(getQuery())
@@ -50,7 +60,6 @@ runQuery(getQuery())
 for row in cursor:
 	print(row)
 
-print(eos)
 cursor.close()
 
 cnx.close()"""

@@ -92,13 +92,27 @@ def assignDate(Sheet):
 
 """
 Col B - Name
-        - Input correct escape characters for special character such as "     """
+        - Input correct escape characters for special character such as '"'
+        - If name surrounded by quotes, remove them
+"""
 
 def formatName(Sheet):
     for i in range(len(Sheet)):
         row = Sheet[i]
-        name = row[1]
+        
+        """# When a name has a quote in it (ex: Mitutoyo 10" calipers), it is converted into CSV and given as (ie: "Mitutoyo 10"" Calipers")
+        # If name surrounded by quotes, remove them
+        if row[1] != "" and row[1][0] == "\"" and row[1][len(row[1])-1] == "\"":
+            row[1] = row[1][1:len(row[1])-2]
+            # Replace all doulble double quotes (ie: "") with single double quotes (ie: ")
+            row[1] = row[1].replace("\"\"", "\"")"""
+        # Replace all remaining quotes (ex: 25") with \", (ex: 25\") so that it can be properly read as a string later
         row[1] = row[1].replace("\"", "\\\"")
+
+        """#Get rid of all "'", but keep "'s"
+        row[1] = row[1].replace("''",    "*****")
+        row[1] = row[1].replace("'",     "")
+        row[1] = row[1].replace("*****", "'")"""
     return Sheet
 
 """
@@ -256,6 +270,10 @@ def seperateNotes(Sheet):
         if not compRegExp.search(row[7]):
             # Copy over notes from H into I
             if row[7] != '':
+            
+                # Esape quotes from notes column
+                row[7] = row[7].replace("\"","\"")
+                
                 row[8] = row[8] + ',' + row[7]
                 row[7] = ''
 
@@ -299,7 +317,12 @@ def recurFormatWeightDims(dims, hadPrevComma):
 
 def formatWeightDims(Sheet):
     for row in Sheet:
-        row[7] = recurFormatWeightDims(row[7].strip(), False)
+        # Check if has format "##oz" instead of "##lbs, ##oz" or "##lbs"
+        # This cannot be checked inside of the recursive func since the cases of "I found ounces and no pounds" can result from already getting to 'ounces' when and when not there are originaly pounds
+        if "oz" in row[7] and "lbs" not in row[7]:
+            row[7] = "," + recurFormatWeightDims(row[7].strip(), False)
+        else:
+            row[7] = recurFormatWeightDims(row[7].strip(), False)
     return Sheet
 
 
@@ -331,17 +354,18 @@ with open('Tool Buys - Sheet1.csv') as csvfile:
 
     # Format data in Sheet
     Sheet = assignDate(Sheet)
-    Sheet = formatName(Sheet)
+    #Sheet = formatName(Sheet)
     Sheet = formatSoldDate(Sheet)
     Sheet = shippingInfo(Sheet)
     Sheet = seperateNotes(Sheet)
     Sheet = formatWeightDims(Sheet)
     Sheet = deleteExtraneous(Sheet)
 
-    # Write formatted Sheet to file
-    with open('Tool Buys - Sheet1_FMT.csv', 'x') as csvfileFMT:
-        CSVWriter = csv.writer(csvfileFMT, delimiter = ',', quotechar='\'')
+    # Write formatted Sheet to file ('x' is write)
+    with open('Tool Buys - Sheet1_FMT.csv', 'x', newline = '') as csvfileFMT:
+        CSVWriter = csv.writer(csvfileFMT, delimiter = ',', escapechar = '\\', quoting = csv.QUOTE_NONE)
         for row in Sheet:
+            print(row)
             CSVWriter.writerow(row)
 
 
@@ -353,7 +377,8 @@ Col A - Date
         - Default is 1/1/20
         - Ignore any '?' for simplicity and lump it in with last date given
 Col B - Name
-        - Make seperate table for taxes/fees
+        - Input correct escape characters for special character such as '"'
+        - If name surrounded by quotes, remove them
 Col C - Cost Bought
 Col D - Sold Price
         - May involve math for shipping price. Math is not shown, use the given sold price as the sold price anyways, IE ignore this statement.
