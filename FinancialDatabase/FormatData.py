@@ -1,10 +1,11 @@
 import csv
 import datetime
 import re
+import os
 
 #   Date,   Name,   Cost Bought,    Sold Val,   Profit Made,    Sold Date,  Shipping Info,  Notes 
 
-# If 'Notes' containes any letter other than l,b,s,o, or z (lbs, oz), it is a textual note, not shipping dimensions
+# If 'Notes' contains any letter other than l,b,s,o, or z (lbs, oz), it is a textual note, not shipping dimensions
 # Shipping info is unique purchaced item number
 
 
@@ -160,10 +161,12 @@ def getShipInfoFormatType(shipInfo):
         # if last char is not a number, with no dashes found it is  case 3
         if shipInfo == "116E":
             pass
-        if len(shipInfo) > 1 and shipInfo.count('-') == 0:
+        if len(shipInfo) > 1 and shipInfo.count('-') == 0: # Note: at this point, we know shipInfo is not an int b/c of Type 2
             int(shipInfo[len(shipInfo)-1])
             return 3
     except:
+        print("UNKNOWN ERROR, getShipInfoFormatType, shipInfo is : ")
+        print(shipInfo)
         pass
 
     if shipInfo.count('-') == 1:
@@ -214,10 +217,17 @@ Col G - Shipping info (inventory index)
 and
 
 Col J - Old Shipping Num
-        - Col G will be copied over to col J as a backup, so the original shipping-info/inventory-index numbers are kept"""
+        - Col G(6) will be copied over to col J(9) as a backup, so the original shipping-info/inventory-index numbers are kept"""
 
-def shippingInfo(Sheet):
-    bearingSublot="A"
+def convertLettersToNum(string):
+    ttl = 0
+    string = string.upper()
+    for letter in string:
+        ttl += ord(letter) - 41
+    return ttl
+
+def shippingInfo(Sheet):  
+
     for row in Sheet:
         # Copy Col G into col J
         if row[6] != '':
@@ -228,46 +238,66 @@ def shippingInfo(Sheet):
         shipInfo = row[6]
         formatType = getShipInfoFormatType(shipInfo)
         
-        # Case 4 ("251-A") are already well-formatted, don't have to change it
         match formatType:
-            case 1:
+            # ""
+            case 1: 
                 continue
-            case 2: # "251"
+
+            # "251" -> "251-A-1"
+            case 2:
                 row[6] = row[6] + "-A-1"
                 
-            case 3: # "251A" -> "251-A"
+            # "251A" -> "251-A"
+            case 3:
                 j = row[6].rfind('-')
                 row[6] = row[6][:j-1] + "-" + row[6][j:]
 
-        sp = row[6].split('-')
-        if int(sp[0]) in [236,237,248]  or int(sp[0]) in range(251,266):
-            sp[0] = '236'
-            sp[1] = bearingSublot
-            
-            bearingSublot = incrementString(bearingSublot)
-        row[6] = '-'.join(sp)
+            # Case 4 ("251-A") is already well-formatted, don't have to change it
+            case 4:
+                continue
     return Sheet
-
-
-def notesFormat(note, compRegExp):
-    #Most characters: "###lbs (###lbs, ##oz), ###x###x###"
-    return compRegExp.search(note)
-
+       
+    
 """
-Col H - Notes (will be weight/shipping dims)
+Col 7 H - Notes (will be weight/shipping dims)
         - Can either be weight/dims or misc notes
         - Weight/dims will be of the format "##lbs (##lbs, ##oz), ##x##x##"
         - Put notes in I. Notes may also be found in I and J
         - All rote numbers in I are starting prices. Rote numbers found in rows 355-450 (may be off by 1 removing top column-naming row), refer to initial quantity in the sublot
-Col I - Starting Price and Init Qty
+Col 8 I - Starting Price and Init Qty
         - If starting price, lop in with Notes
-        - Starting price may end with A (ie: 0.99A), this means start at 99 cents for an auction """
+        - Starting price may end with A (ie: 0.99A), this means start at 99 cents for an auction
+        - Init quantity may be seen as :{'Init Qty: ', or just an integer}
+        - Put init quantity into 10 """
 def seperateNotes(Sheet):
-    compRegExp = re.compile("[0-9]+(lbs?|oz)")
+    weightExpr = re.compile("[0-9]+(lbs?|oz)")
     actualWeight = re.compile("\(.*\)")
+    # usingInitQuantitySwitch is true (on) if Col 8 I previously had an initial quantity, telling us that all subsequent rows with only numbers represent an init quantity. This is turned off when a number is not seen
+    usingInitQuantitySwitch = False;
+    
     for row in Sheet:
+
+        # Look for init quantity
+        if "Init Qty: " in row[8]:
+            row[8] = row[8].replace("Init Qty: ", "")
+            usingInitQuantitySwitch = True
+
+        if usingInitQuantitySwitch:
+            # Check to turn switch off on rows after the one where Init Qty: first appears
+            # Note: "" is not considered numeric
+            if not row[8].isnumeric():
+                usingInitQuantitySwitch = False
+            else:
+                row[10] = row[8]
+                row[8] = "Init Quantity: " + row[8]
+            
+        # If it is not init quantity, it is starting price
+        else:
+            row[8] = "Starting Price: " + row[8]
+        
+
         # If found just a text note, copy them into the end of cell for col I of that row
-        if not compRegExp.search(row[7]):
+        if not weightExpr.search(row[7]):
             # Copy over notes from H into I
             if row[7] != '':
             
@@ -337,7 +367,10 @@ def deleteExtraneous2(Sheet):
 def deleteExtraneous(Sheet):
     Sheet = [i for i in Sheet if i[1] != '']
 
-    Sheet = [row[0:9] for row in Sheet]
+    Sheet = [row[0:11] for row in Sheet]
+    for elem in Sheet:
+        if len(elem) != 11:
+            print(elem)
     return Sheet
 
 
@@ -362,44 +395,49 @@ with open('Tool Buys - Sheet1.csv') as csvfile:
     Sheet = deleteExtraneous(Sheet)
 
     # Write formatted Sheet to file ('x' is write)
+    if os.path.exists("Tool Buys - Sheet1_FMT.csv"):
+      os.remove("Tool Buys - Sheet1_FMT.csv")
     with open('Tool Buys - Sheet1_FMT.csv', 'x', newline = '') as csvfileFMT:
         CSVWriter = csv.writer(csvfileFMT, delimiter = ',', escapechar = '\\', quoting = csv.QUOTE_NONE)
         for row in Sheet:
-            print(row)
+            #print(row)
             CSVWriter.writerow(row)
 
 
 """
-After: 0:Date | 1:Name | 2: Cost Bought | 3: SoldVal | 4: Profit Made | 5: Sold Date | 6: New Ship Num | 7: Weight/Dims | 8: Notes - Old Ship Num, ColJ Orig notes, Col I Orig Notes
+After: 0:Date | 1:Name | 2: Cost Bought | 3: SoldVal | 4: Profit Made | 5: Sold Date | *DEPRECIATED* 6: Formatted Ship Num (of format 251-A)| 7: Weight/Dims | 8: Notes - Old Ship Num, ColJ Orig notes, Col I Orig Notes | 9: BLANK | 10: Init Quantity
 
-Col A - Date
+Before: (and operations to such columns)
+Col 0 A - Date
         - Give date do each purchase
         - Default is 1/1/20
         - Ignore any '?' for simplicity and lump it in with last date given
-Col B - Name
+Col 1 B - Name
         - Input correct escape characters for special character such as '"'
         - If name surrounded by quotes, remove them
-Col C - Cost Bought
-Col D - Sold Price
+Col 2 C - Cost Bought
+Col 3 D - Sold Price
         - May involve math for shipping price. Math is not shown, use the given sold price as the sold price anyways, IE ignore this statement.
-Col E - Profit
+Col 4 E - Profit
         - Check where there is no "profit" entry when there is a sold val entry
-Col F - Sold Date
-Col G - Shipping info (inventory index)
+Col 5 F - Sold Date
+Col 6 G - Shipping info (inventory index)
         - Note: 251 will mean lot, 251-A will mean a grouping of same items for a lot, 251-A-1 will be first item of grouping in 251-A
         - Individual purchaced items will be considered 1 item lots
         - Given 251 in the orig CSV file (a 1 item lot, ie: an individual item),will change to 251-A-1
         - Given 251-A in the orig CSV file (a group of similar items in a lot purchsaed), will remain unchanged
-Col H - Notes (will be weight/shipping dims)
+Col 7 H - Notes (will be weight/shipping dims)
         - Can either be weight/dims or misc notes
         - Weight/dims will be of the format "##lbs (##lbs, ##oz), ##x##x##"
         - Put notes in I. Notes may also be found in I and J
         - All rote numbers in I are starting prices. Rote numbers found in rows 355-450 (may be off by 1 removing top column-naming row), refer to initial quantity in the sublot
-Col I - Starting Price and Init Qty
+Col 8 I - Starting Price and Init Qty
         - If starting price, lop in with Notes
-        - Starting price may end with A (ie: 0.99A), this means start at 99 cents for an auction 
+        - Starting price may end with A (ie: 0.99A), this means start at 99 cents for an auction
+        - Init quantity may be seen as :{'Init Qty: ', or just an integer}
+        - Put init quantity into 9 
 
-Col J - Old Shipping Num
+Col 9 J - Old Shipping Num
         - Col G will be copied over to col J as a backup, so the original shipping-info/inventory-index numbers are kept
 
 Delete all columns after K

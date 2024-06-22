@@ -4,6 +4,8 @@ import mysql.connector
 import sys
 
 
+errorCount = 0
+
 def getArgs():
 	
 	numArgs = len(sys.argv)
@@ -48,7 +50,9 @@ def runQuery(query):
 		cursor.close()
 		cnx.close()
 	except:
-		print("!!!ERROR!!!")
+		global errorCount
+		errorCount += 1
+		print("!!!ERROR!!! : " + str(errorCount))
 		print(query)
 		retStr = ""
 	return retStr, cursor.lastrowid

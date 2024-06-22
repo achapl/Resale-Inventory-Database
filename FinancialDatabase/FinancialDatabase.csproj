@@ -84,7 +84,6 @@
     <Content Include="FormatData.py" />
     <Content Include="InputSpreadsheetIntoDatabase.py" />
     <Content Include="DtbConnAndQuery.py" />
-    <Content Include="serverTest.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
