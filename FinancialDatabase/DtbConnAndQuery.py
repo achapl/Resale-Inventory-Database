@@ -31,7 +31,7 @@ def getQuery():
 
 
 def runQuery(query):
-	print(query)
+	#print(query)
 	# user: testuser, pass: testuser
 	cnx = mysql.connector.connect(user='testuser', password='testuser', host='127.0.0.1', database='tool_database')
 	cnx.autocommit=True
@@ -54,7 +54,7 @@ def runQuery(query):
 		errorCount += 1
 		print("!!!ERROR!!! : " + str(errorCount))
 		print(query)
-		retStr = ""
+		retStr = "!!!ERROR!!!"
 	return retStr, cursor.lastrowid
 
 """

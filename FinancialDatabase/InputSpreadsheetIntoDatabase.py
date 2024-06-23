@@ -30,17 +30,26 @@ def updateItemIDs(itemID, purcID, saleID, shipID):
 
 	if purcID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET PurchaseID = " + purcID + " WHERE ITEM_ID = " + itemID + ";"
-		runQuery(modifiedItemQuery)
+		result = runQuery(modifiedItemQuery)
+		if result[0] == "!!!ERROR!!!":
+			print("!!!ERROR!!!")
+			print(modifiedItemQuery)
 	else:
 		print("ERROR, NO PURC_ID for ITEM_ID: " + itemID)
 
 	if saleID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET SaleID = "     + saleID + " WHERE ITEM_ID = " + itemID + ";"
-		runQuery(modifiedItemQuery)
+		result = runQuery(modifiedItemQuery)
+		if result[0] == "!!!ERROR!!!":
+			print("!!!ERROR!!!")
+			print(modifiedItemQuery)
 
 	if shipID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET ShippingID = " + shipID + " WHERE ITEM_ID = " + itemID + ";"
-		runQuery(modifiedItemQuery)
+		result = runQuery(modifiedItemQuery)
+		if result[0] == "!!!ERROR!!!":
+			print("!!!ERROR!!!")
+			print(modifiedItemQuery)
 
 	return
 
@@ -85,13 +94,23 @@ def inputIntoDatabase(data):
 		hasPurchasePrice = row[2] != ""
 		if hasPurchasePrice:
 			purchaseQuery = "INSERT INTO " + purcTable + " (Date_Purchased, Amount, ItemID) VALUES (STR_TO_DATE('" + row[0] + "', '%Y-%m-%d')," + row[2] + ", " + itemID + ");"
-			purcID = str(runQuery(purchaseQuery)[1])
+			result = runQuery(purchaseQuery)
+			if result[0] == "!!!ERROR!!!":
+				print("!!!ERROR!!!")
+				print("For: " + row[1])
+				print(purchaseQuery)
+			purcID = str(result[1])
 		
 		saleID = ""
 		shipID = ""
 		if boolIsSold:
 			saleQuery = "INSERT INTO " + saleTable + " (Date_Sold, Amount, ItemID) VALUES (STR_TO_DATE('" + row[5] + "', '%Y-%m-%d')" + ", " + row[3] + ", " + itemID + ");"
-			saleID = str(runQuery(saleQuery)[1])
+			result = runQuery(saleQuery)
+			if result[0] == "!!!ERROR!!!":
+				print("!!!ERROR!!!")
+				print("For: " + row[1])
+				print(saleQuery)
+			saleID = str(result[1])
 
 		if boolhasPackingDims:
 			ouncesPerPound = 16
@@ -111,14 +130,19 @@ def inputIntoDatabase(data):
 			ttlWeight = str(int(lbs)*ouncesPerPound + int(oz))
 
 			shipQuery = "INSERT INTO " + shipTable + " (Length, Width, Height, Weight, ItemID) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + itemID + ");"
-			shipID = str(runQuery(shipQuery)[1])
+			result = runQuery(shipQuery)
+			if result[0] == "!!!ERROR!!!":
+				print("!!!ERROR!!!")
+				print("For: " + row[1])
+				print(shipQuery)
+			shipID = str(result[1])
 
 		updateItemIDs(itemID, purcID, saleID, shipID)
 
 
 
 
-with open('Tool Buys - Sheet1_FMT_TESTING.csv') as csvfile:
+with open('Tool Buys - Sheet1_FMT.csv') as csvfile:
 	CSVSheet = list(csv.reader(csvfile, delimiter=',', escapechar = '\\', quoting = csv.QUOTE_NONE, lineterminator = '\r\r\n'))
 	#for row in CSVSheet:
 	#	print(row)

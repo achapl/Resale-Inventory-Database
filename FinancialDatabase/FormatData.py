@@ -229,12 +229,14 @@ def convertLettersToNum(string):
 def shippingInfo(Sheet):  
 
     for row in Sheet:
+        if row[1] == "Stanley No. 3":
+            pass
         # Copy Col G into col J
-        if row[6] != '':
-            temp = ''
-            if row[9] != '':
+        if row[6] != "":
+            temp = ""
+            if row[9] != "":
                 temp = ", " + row[9]
-            row[9] = row[6] + temp
+            row[9] = "Orig Shipping Info Number: " + row[6] + temp
         shipInfo = row[6]
         formatType = getShipInfoFormatType(shipInfo)
         
@@ -292,7 +294,7 @@ def seperateNotes(Sheet):
                 row[8] = "Init Quantity: " + row[8]
             
         # If it is not init quantity, it is starting price
-        else:
+        elif row[8].isnumeric():
             row[8] = "Starting Price: " + row[8]
         
 
@@ -304,7 +306,10 @@ def seperateNotes(Sheet):
                 # Esape quotes from notes column
                 row[7] = row[7].replace("\"","\"")
                 
-                row[8] = row[8] + ',' + row[7]
+                if row[8] != "":
+                    row[8] = row[8] + ", " + row[7]
+                else:
+                    row[8] = row[7]
                 row[7] = ''
 
         # If weight/dims is found, cut and paste over any acutual weight in parens to the notes
@@ -315,7 +320,10 @@ def seperateNotes(Sheet):
                row[7] = row[7][0:s.start()] + row[7][s.end():]
         # Copy over notes from J into I
         if row[9] != '':
-            row[8] = row[9] + "," + row[8]
+            if row[8] != '':
+                row[8] = row[9] + ", " + row[8]
+            else:
+                row[8] = row[9]
             row[9] = ''
             
     return Sheet
