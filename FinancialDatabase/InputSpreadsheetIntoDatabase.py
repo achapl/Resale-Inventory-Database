@@ -128,8 +128,7 @@ def inputIntoDatabase(data):
 				lbs = "0"
 
 			ttlWeight = str(int(lbs)*ouncesPerPound + int(oz))
-
-			shipQuery = "INSERT INTO " + shipTable + " (Length, Width, Height, Weight, ItemID) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + itemID + ");"
+			shipQuery = "INSERT INTO " + shipTable + " (Length, Width, Height, Weight, ItemID, Notes) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + itemID + ", \"" + row[11] + "\");"
 			result = runQuery(shipQuery)
 			if result[0] == "!!!ERROR!!!":
 				print("!!!ERROR!!!")
@@ -142,7 +141,7 @@ def inputIntoDatabase(data):
 
 
 
-with open('Tool Buys - Sheet1_FMT.csv') as csvfile:
+with open('Tool Buys - Sheet1_FMT_TESTING.csv') as csvfile:
 	CSVSheet = list(csv.reader(csvfile, delimiter=',', escapechar = '\\', quoting = csv.QUOTE_NONE, lineterminator = '\r\r\n'))
 	#for row in CSVSheet:
 	#	print(row)

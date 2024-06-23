@@ -278,7 +278,8 @@ def seperateNotes(Sheet):
     usingInitQuantitySwitch = False;
     
     for row in Sheet:
-
+        # Default for row[11]
+        row[11] = ""
         # Look for init quantity
         if "Init Qty: " in row[8]:
             row[8] = row[8].replace("Init Qty: ", "")
@@ -316,7 +317,7 @@ def seperateNotes(Sheet):
         else:
             if actualWeight.search(row[7]) != None:
                s = actualWeight.search(row[7])
-               row[8] = row[8] + ", Actual Weight: " + row[7][s.start():s.end()]
+               row[11] = "Actual Weight: " + row[7][s.start():s.end()]
                row[7] = row[7][0:s.start()] + row[7][s.end():]
         # Copy over notes from J into I
         if row[9] != '':
@@ -375,7 +376,7 @@ def deleteExtraneous2(Sheet):
 def deleteExtraneous(Sheet):
     Sheet = [i for i in Sheet if i[1] != '']
 
-    Sheet = [row[0:11] for row in Sheet]
+    Sheet = [row[0:12] for row in Sheet]
     for elem in Sheet:
         if len(elem) != 11:
             print(elem)
@@ -413,7 +414,7 @@ with open('Tool Buys - Sheet1.csv') as csvfile:
 
 
 """
-After: 0:Date | 1:Name | 2: Cost Bought | 3: SoldVal | 4: Profit Made | 5: Sold Date | *DEPRECIATED* 6: Formatted Ship Num (of format 251-A)| 7: Weight/Dims | 8: Notes - Old Ship Num, ColJ Orig notes, Col I Orig Notes | 9: BLANK | 10: Init Quantity
+After: 0:Date | 1:Name | 2: Cost Bought | 3: SoldVal | 4: Profit Made | 5: Sold Date | *DEPRECIATED* 6: Formatted Ship Num (of format 251-A)| 7: Weight/Dims | 8: Notes - Old Ship Num, ColJ Orig notes, Col I Orig Notes | 9: BLANK | 10: Init Quantity | 11: Actual Weight
 
 Before: (and operations to such columns)
 Col 0 A - Date
