@@ -141,7 +141,7 @@ def inputIntoDatabase(data):
 
 
 
-with open('Tool Buys - Sheet1_FMT_TESTING.csv') as csvfile:
+with open('Tool Buys - Sheet1_FMT.csv') as csvfile:
 	CSVSheet = list(csv.reader(csvfile, delimiter=',', escapechar = '\\', quoting = csv.QUOTE_NONE, lineterminator = '\r\r\n'))
 	#for row in CSVSheet:
 	#	print(row)
