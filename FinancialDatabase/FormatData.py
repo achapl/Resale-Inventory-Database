@@ -365,6 +365,23 @@ def formatWeightDims(Sheet):
     return Sheet
 
 
+
+def isFee(Sheet):
+    for row in Sheet:
+        name = row[1]
+        fees = ['18%', 'Premium', 'Tax']
+        if any(x in name for x in fees):
+            if fees[0] in name:
+                row[12] = 'Auction Premium'
+            elif fees[1] in name:
+                row[12] = 'Auction Premium'
+            elif fees[2] in fees:
+                row[12] = 'Purchas Sales Tax'
+        else:
+            row[12] = ''
+    return Sheet
+
+""" DELETE THIS, UNUSED
 def deleteExtraneous2(Sheet):
     l = [['A'],['B'],['']*3,['C'],['D']]
     for i in l:
@@ -372,14 +389,11 @@ def deleteExtraneous2(Sheet):
             l.remove(i)
     print(l)
     return Sheet
+"""
 
 def deleteExtraneous(Sheet):
     Sheet = [i for i in Sheet if i[1] != '']
-
-    Sheet = [row[0:12] for row in Sheet]
-    for elem in Sheet:
-        if len(elem) != 11:
-            print(elem)
+    Sheet = [row[0:13] for row in Sheet]
     return Sheet
 
 
@@ -401,11 +415,12 @@ with open('Tool Buys - Sheet1.csv') as csvfile:
     Sheet = shippingInfo(Sheet)
     Sheet = seperateNotes(Sheet)
     Sheet = formatWeightDims(Sheet)
+    Sheet = isFee(Sheet)
     Sheet = deleteExtraneous(Sheet)
 
     # Write formatted Sheet to file ('x' is write)
     if os.path.exists("Tool Buys - Sheet1_FMT.csv"):
-      os.remove("Tool Buys - Sheet1_FMT.csv")
+        os.remove("Tool Buys - Sheet1_FMT.csv")
     with open('Tool Buys - Sheet1_FMT.csv', 'x', newline = '') as csvfileFMT:
         CSVWriter = csv.writer(csvfileFMT, delimiter = ',', escapechar = '\\', quoting = csv.QUOTE_NONE)
         for row in Sheet:
@@ -413,8 +428,18 @@ with open('Tool Buys - Sheet1.csv') as csvfile:
             CSVWriter.writerow(row)
 
 
+    # Write formatted TESTING Sheet to file ('x' is write)
+    if os.path.exists("Tool Buys - Sheet1_FMT_TESTING.csv"):
+        os.remove("Tool Buys - Sheet1_FMT_TESTING.csv")
+    with open('Tool Buys - Sheet1_FMT_TESTING.csv', 'x', newline = '') as csvfileFMT:
+        CSVWriter = csv.writer(csvfileFMT, delimiter = ',', escapechar = '\\', quoting = csv.QUOTE_NONE)
+        for index, row in enumerate(Sheet):
+            if index >=257 and index <=643:
+                CSVWriter.writerow(row)
+
+
 """
-After: 0:Date | 1:Name | 2: Cost Bought | 3: SoldVal | 4: Profit Made | 5: Sold Date | *DEPRECIATED* 6: Formatted Ship Num (of format 251-A)| 7: Weight/Dims | 8: Notes - Old Ship Num, ColJ Orig notes, Col I Orig Notes | 9: BLANK | 10: Init Quantity | 11: Actual Weight
+After: 0:Date | 1:Name | 2: Cost Bought | 3: SoldVal | 4: Profit Made | 5: Sold Date | *DEPRECIATED* 6: Formatted Ship Num (of format 251-A)| 7: Weight/Dims | 8: Notes - Old Ship Num, ColJ Orig notes, Col I Orig Notes | 9: BLANK | 10: Init Quantity | 11: Actual Weight | 12: Fee Type
 
 Before: (and operations to such columns)
 Col 0 A - Date

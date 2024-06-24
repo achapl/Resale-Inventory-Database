@@ -1,10 +1,12 @@
 from DtbConnAndQuery import runQuery
 import csv
 
-itemTable = "item"
+
 purcTable = "purchase"
-saleTable = "sale"
 shipTable = "shipping"
+saleTable = "sale"
+itemTable = "item"
+feeTable  = "fee"
 
 # Determine if sold by checking if it has a sold date
 # This prevents lot headers (purchase: "Lot" which covers purchase of all items below) which have a net sold price but no date, from being inputted into the sales table
@@ -14,6 +16,21 @@ def isSold(row):
 def hasPackingDims(row):
 	return (row[7] != '')
 
+def isFee(row):
+	return (row[12] != '')
+
+def deleteTable(table):
+	modifiedItemQuery = "DELETE FROM " + table + ";"
+	result = runQuery(modifiedItemQuery)
+	if result[0] == "!!!ERROR!!!":
+		print("!!!ERROR!!!")
+		print(modifiedItemQuery)
+def clearDatabase():
+	deleteTable(purcTable)
+	deleteTable(shipTable)
+	deleteTable(saleTable)
+	deleteTable(itemTable)
+	deleteTable(feeTable)
 # Given a table where you just added a row, return the primary key for that row
 #
 #
@@ -21,10 +38,10 @@ def hasPackingDims(row):
 ### DELETE OR FIND BETTER WAY TO EXTRCT THIS FUNCTIONALITY FROM THE DebConnAndQuery.py runQuery() functionality
 # Probably need to return the lastID with the runQuery func, since it closes the connection after each query, so that connection's LAST_INSERT_ID is lost.
 #
-#
-def getLastID(table):
+#DELETE THIS
+"""def getLastID(table):
 	query = "SELECT LAST_INSERT_ID() from " + table + ";"
-	return runQuery(query)
+	return runQuery(query)"""
 
 def updateItemIDs(itemID, purcID, saleID, shipID):
 
@@ -72,6 +89,7 @@ def inputIntoDatabase(data):
 		#for prevRow, row, nextRow in data:
 		boolIsSold		   = isSold(row)
 		boolhasPackingDims = hasPackingDims(row)		
+		boolIsFee		   = isFee(row)
 		
 		currQuantity = 0
 		if boolIsSold:
@@ -84,6 +102,16 @@ def inputIntoDatabase(data):
 			initQuantity = 1
 		else:
 			initQuantity = row[10]
+
+		if boolIsFee:
+			feeQuery = "INSERT INTO " + feeTable + " (Date, Amount, Type) VALUES (STR_TO_DATE('" + row[0] + "', '%Y-%m-%d')," + str(row[2]) + ", \"" + row[12] + "\");"
+			result = runQuery(feeQuery)
+			if result[0] == "!!!ERROR!!!":
+				print("!!!ERROR!!!")
+				print("For: " + row[1])
+				print(feeQuery)
+			feeID = str(result[1])
+			continue
 
 		#Default - Item entry
 		itemQuery = "INSERT INTO " + itemTable + " (Name, InitialQuantity, CurrentQuantity, Notes) VALUES  (\"" + row[1] + "\"" + ", " + str(initQuantity) + ", " + str(currQuantity) + ", " + "\"" + row[8] + "\"" + ");" # Note: Change current quantity later based on small_sales.
@@ -143,7 +171,6 @@ def inputIntoDatabase(data):
 
 with open('Tool Buys - Sheet1_FMT.csv') as csvfile:
 	CSVSheet = list(csv.reader(csvfile, delimiter=',', escapechar = '\\', quoting = csv.QUOTE_NONE, lineterminator = '\r\r\n'))
-	#for row in CSVSheet:
-	#	print(row)
+	clearDatabase()
 	inputIntoDatabase(CSVSheet)
 	
