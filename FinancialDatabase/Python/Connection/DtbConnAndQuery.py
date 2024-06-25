@@ -50,18 +50,7 @@ def runQuery(query):
 	except:
 		global errorCount
 		errorCount += 1
-		print("!!!ERROR!!! : " + str(errorCount))
+		print("!!!ERROR!!!")
 		print(query)
 		retStr = "!!!ERROR!!!"
 	return retStr, cursor.lastrowid
-
-"""
-runQuery(getQuery())
-
-#print each row in cursor:
-for row in cursor:
-	print(row)
-
-cursor.close()
-
-cnx.close()"""
