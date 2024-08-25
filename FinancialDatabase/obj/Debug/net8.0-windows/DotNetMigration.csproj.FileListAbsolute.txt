@@ -1,0 +1,17 @@
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\bin\Debug\net8.0-windows\DotNetMigration.exe
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\bin\Debug\net8.0-windows\DotNetMigration.dll.config
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\bin\Debug\net8.0-windows\DotNetMigration.deps.json
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\bin\Debug\net8.0-windows\DotNetMigration.runtimeconfig.json
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\bin\Debug\net8.0-windows\DotNetMigration.dll
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\bin\Debug\net8.0-windows\DotNetMigration.pdb
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\FinancialDatabase.Form1.resources
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\DotNetMigration.csproj.GenerateResource.cache
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\DotNetMigration.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\DotNetMigration.AssemblyInfoInputs.cache
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\DotNetMigration.AssemblyInfo.cs
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\DotNetMigration.csproj.CoreCompileInputs.cache
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\DotNetMigration.dll
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\refint\DotNetMigration.dll
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\DotNetMigration.pdb
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\DotNetMigration.genruntimeconfig.cache
+C:\Users\Owner\source\repos\DotNetMigration\DotNetMigration\obj\Debug\net8.0-windows\ref\DotNetMigration.dll
