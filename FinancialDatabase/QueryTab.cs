@@ -69,7 +69,7 @@ public class QueryTab
 
         //string query = QB.buildQuery(term, startDate, endDate, isInStock, isSoldOut, dateCol, nameCol, priceCol);
 
-        string cmdText = @"/K python C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Python\Connection\DCQControl.py " + query;
+        string cmdText = @"/K python C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Python\Connection\DCQControl.py ";// + query;
         System.Diagnostics.Process p = new System.Diagnostics.Process();
 
         p.StartInfo.UseShellExecute = false;

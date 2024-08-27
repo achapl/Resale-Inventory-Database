@@ -19,3 +19,4 @@ C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\bin\Debu
 C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\bin\Debug\net8.0-windows\Python.Runtime.pdb
 C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\bin\Debug\net8.0-windows\Python.Runtime.xml
 C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\obj\Debug\net8.0-windows\Financia.803DDF3C.Up2Date
+C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\obj\Debug\net8.0-windows\FinancialDatabase.sourcelink.json
