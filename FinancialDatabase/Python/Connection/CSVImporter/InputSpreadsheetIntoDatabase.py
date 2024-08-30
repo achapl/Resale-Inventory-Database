@@ -78,7 +78,13 @@ def extractQuantity(row):
 def getShippingDims(row):
 	ouncesPerPound = 16
 	# [lbs, oz, l,w,h]
+	# Remove leading comma, unneeded
+	if row[7][0] == ',':
+		row[7] = row[7][1:]
 	shipDims = row[7].split(",")
+	# No lbs included, must add it in manually
+	if len(shipDims) == 4:
+		shipDims = ["0"] + shipDims
 	lbs = shipDims[0]
 	oz  = shipDims[1]
 	l   = shipDims[2]
@@ -107,27 +113,28 @@ def inputIntoDatabase(data):
 		if isFee(row):
 			# Fee entry
 			feeQuery = "INSERT INTO " + feeTable + " (Date, Amount, Type) VALUES (STR_TO_DATE('" + row[0] + "', '%Y-%m-%d')," + str(row[2]) + ", \"" + row[12] + "\");"
-			feeID = str(runQuery(feeQuery)[1])
+			feeID = str(runQuery(feeQuery)[2])
 			continue
 		
 		#Item entry
-		itemQuery = "INSERT INTO " + itemTable + " (Name, InitialQuantity, CurrentQuantity, Notes) VALUES (\"" + row[1] + "\"" + ", " + str(initQuantity) + ", " + str(currQuantity) + ", " + "\"" + row[8] + "\"" + ");" # Note: Change current quantity later based on small_sales.
-		itemID = str(runQuery(itemQuery)[1])
+		itemQuery = "INSERT INTO " + itemTable + " (Name, InitialQuantity, CurrentQuantity, Notes_item) VALUES (\"" + row[1] + "\"" + ", " + str(initQuantity) + ", " + str(currQuantity) + ", " + "\"" + row[8] + "\"" + ");" # Note: Change current quantity later based on small_sales.
+		itemID = str(runQuery(itemQuery)[2])
 
 		# If it is the purchase of a new lot or single item lot, insert that purchase into the database, and
 		# update the most recent purchaseID to be used for following items of the same lot if any exist
 		if hasPurchasePrice(row):
-			purchaseQuery = "INSERT INTO " + purcTable + " (Date_Purchased, Amount, ItemID) VALUES (STR_TO_DATE('" + row[0] + "', '%Y-%m-%d')," + row[2] + ", " + itemID + ");"
-			purcID = str(runQuery(purchaseQuery)[1])
+			purchaseQuery = "INSERT INTO " + purcTable + " (Date_Purchased, Amount_purchase, ItemID_purchase) VALUES (STR_TO_DATE('" + row[0] + "', '%Y-%m-%d')," + row[2] + ", " + itemID + ");"
+			purcID = str(runQuery(purchaseQuery)[2])
 		
 		if isSold(row):
-			saleQuery = "INSERT INTO " + saleTable + " (Date_Sold, Amount, ItemID) VALUES (STR_TO_DATE('" + row[5] + "', '%Y-%m-%d')" + ", " + row[3] + ", " + itemID + ");"
-			saleID = str(runQuery(saleQuery)[1])
+			saleQuery = "INSERT INTO " + saleTable + " (Date_Sold, Amount_sale, ItemID_sale) VALUES (STR_TO_DATE('" + row[5] + "', '%Y-%m-%d')" + ", " + row[3] + ", " + itemID + ");"
+			saleID = str(runQuery(saleQuery)[2])
 
 		if hasPackingDims(row):
 			ttlWeight, l, w, h = getShippingDims(row)
-			shipQuery = "INSERT INTO " + shipTable + " (Length, Width, Height, Weight, ItemID, Notes) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + itemID + ", \"" + row[11] + "\");"
-			shipID = str(runQuery(shipQuery)[1])
+			shipQuery = "INSERT INTO " + shipTable + " (Length, Width, Height, Weight, ItemID_shipping, Notes_shipping) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + itemID + ", \"" + row[11] + "\");"
+			shipID = str(runQuery(shipQuery)[2])
 
 		updateItemIDs(itemID, purcID, saleID, shipID)
+		print(row[1] + " PurcID: " + purcID)
 	

@@ -17,7 +17,7 @@ while(noAnswer):
 
 
 noFile = True
-DEFAULTFILE = "Connection\CSVImporter\Tool Buys - Sheet1_FMT_TESTING.csv"
+DEFAULTFILE = "Connection\CSVImporter\Tool Buys - Sheet1_FMT.csv"
 while(noFile):
 	f = None
 	fileName = input("CSV File to Import (or use 'D' or 'DEFAULT'): ")
