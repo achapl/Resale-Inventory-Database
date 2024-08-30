@@ -992,6 +992,7 @@
             this.Sale.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.resultItemBindingSource)).EndInit();
             this.ResumeLayout(false);
+
         }
 
         #endregion
