@@ -15,7 +15,7 @@ using System.IO;
 
 public class CtrlerOfPythonToDTBConnector
 {
-    
+    static bool pythonInitialized = false;
 
     const string PYTHON_EXEC = @"/K python "/* + "-m pdb "*/ + @"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Python\Connection\DCQControl.py ";
     const string START_COL_MARKER = "Column Names:"; // Marker to the Start of Column Names
@@ -27,17 +27,6 @@ public class CtrlerOfPythonToDTBConnector
     public CtrlerOfPythonToDTBConnector()
     {
         QB = new QueryBuilder();
-        //runPython();
-    }
-
-    private void runPython()
-    {
-        Console.WriteLine(Runtime.PythonDLL);
-        Runtime.PythonDLL = @"C:\Users\Owner\AppData\Local\Programs\Python\Python311\python311.dll";
-        Console.WriteLine(Runtime.PythonDLL);
-        PythonEngine.Initialize();
-
-        var mod = PyModule.Import("DCQControl.py");
     }
 
 
@@ -100,9 +89,25 @@ public class CtrlerOfPythonToDTBConnector
         string queryOutput = "";
         string line;
 
-        System.Diagnostics.Process p = startPython(statement);
+        // NOTE: Depreciated. This is the old CMD way of running python scripts
+        // TODO: DELETE
+        // TODO: Check if DCQControl.py is needed anymore
+        //System.Diagnostics.Process p = startPython(statement);
 
-        line = p.StandardOutput.ReadLine();
+        dynamic[] result = runPython(statement);
+
+        string ret = "";
+        int i = 0;
+        while (i < result.Length)
+        {
+            ret += result[i];
+            i++;
+        }
+        return ret;
+
+        // Old way of reading output of CMD
+        // TODO: Delete
+        /*line = p.StandardOutput.ReadLine();
         while (line.CompareTo(EOS) != 0)
         {
             queryOutput += line;
@@ -110,7 +115,7 @@ public class CtrlerOfPythonToDTBConnector
         }
 
         kill(p);
-        return queryOutput;
+        return queryOutput;*/
     }
 
     // Given a search query, turn it into a string query and run it
@@ -119,10 +124,30 @@ public class CtrlerOfPythonToDTBConnector
         string query = QB.buildSearchByNameQuery(Q);
         return RunItemSearchQuery(query);
     }
-    
+
+    private dynamic[] runPython(string query)
+    {
+        Runtime.PythonDLL = @"C:\Users\Owner\AppData\Local\Programs\Python\Python311\python311.dll";
+        PythonEngine.Initialize();
+        dynamic result;
+        using (Py.GIL())
+        {
+            // Modify path to work
+            dynamic os = Py.Import("os");
+            dynamic sys = Py.Import("sys");
+            sys.path.append(os.path.dirname(os.path.expanduser(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Python\")));
+
+            dynamic Connector = Py.Import("Connection.DtbConnAndQuery");
+            result = Connector.runQuery(query);
+
+        }
+        return result;
+    }
+
     // Start the python process and return the process so its output can be read
     private Process startPython(string query)
     {
+
         string args = PYTHON_EXEC + query;
         System.Diagnostics.Process p = new System.Diagnostics.Process();
 
@@ -228,7 +253,7 @@ public class CtrlerOfPythonToDTBConnector
     {
         if (s.Length == 0) return new List<string>();
 
-        char escape = '\\';
+        char escape = '/';
         char endQuote = (char) 0;
         List<char> topLevelStartChars = new List<char>(new char[] { '"', '\'', '(', '{', '[' });
         List<char> topLevelEndChars   = new List<char>(new char[] { '"', '\'', ')', '}', ']' });

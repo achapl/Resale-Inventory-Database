@@ -1,4 +1,4 @@
-import DtbConnAndQuery
+import Connection.DtbConnAndQuery as DtbConnAndQuery
 import sys
 
 
@@ -25,6 +25,7 @@ def getQuery():
 	query = formatArgs(args)
 	return query
 
+
 def useArgsToRunQuery():
 	result, columnNames, empty = DtbConnAndQuery.runQuery(getQuery())
 	if (result[1] != None):
@@ -38,5 +39,3 @@ def useArgsToRunQuery():
 			for row in result[1]:
 				print(row)
 	print("EOS")
-
-useArgsToRunQuery()
