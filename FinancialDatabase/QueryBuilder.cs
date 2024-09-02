@@ -155,7 +155,7 @@ namespace FinancialDatabase
         private string formatAttribute(string attrib, string type)
         {
 
-            if (attrib == null) { return null; }
+            if (attrib == null) { return ""; }
             if (type.CompareTo("date") == 0)
             {
                 return "DATE(\"" + attrib + "\")";

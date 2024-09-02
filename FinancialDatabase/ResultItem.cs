@@ -8,9 +8,6 @@ using Date = Util.Date;
 
 public class ResultItem : IEquatable<ResultItem>
 {
-
-
-
     string rawResult;
     List<string> rawList;
 
@@ -45,8 +42,15 @@ public class ResultItem : IEquatable<ResultItem>
     int Weight;
     string Notes_shipping;
 
-	public ResultItem(string item, List<string> colNames)
+    #pragma warning disable CS8618 // Defaults are set to non-null vals
+    public ResultItem()
+    {
+        setDefaults();
+    }
+    #pragma warning disable CS8618 // Defaults are set to non-null vals
+    public ResultItem(string item, List<string> colNames)
 	{
+        this.setDefaults();
 		this.rawResult = item;
 	}
 
@@ -97,7 +101,7 @@ public class ResultItem : IEquatable<ResultItem>
             // Missing info, skip
             if (item[i].CompareTo("None") == 0)
             {
-                itemAttribute = null;
+                itemAttribute = null!;
             }
             switch(colNames[i])
             {
@@ -180,6 +184,8 @@ public class ResultItem : IEquatable<ResultItem>
             }
         }
     }
+
+    
 
 
 
@@ -655,10 +661,13 @@ public class ResultItem : IEquatable<ResultItem>
     public void set_Notes_shipping(string Notes_shipping) => this.Notes_shipping = Notes_shipping;
 
 
-
+    #pragma warning disable CS8767 // 'other' and 'this' are checked for null
     public bool Equals(ResultItem other)
     {
-        return this.ITEM_ID == other.ITEM_ID;
+        if (this  == null && other == null)  return true;
+        if (this  == null)  return false;
+        if (other == null)  return false;
+        return this.ITEM_ID == other!.ITEM_ID;
     }
 
     private Date parseDate(string date)

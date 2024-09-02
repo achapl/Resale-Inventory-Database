@@ -20,7 +20,7 @@ public class Util
 
     public static string myTrim(string strToTrim, string[] trimStrs)
     {
-        if (strToTrim == null) { return null; }
+        if (strToTrim == null) { return ""; }
         if (trimStrs == null) { return strToTrim; }
 
         bool foundStartTrim = false;
@@ -47,6 +47,171 @@ public class Util
 
 
 
+    }
+
+    public static string splitOnTopLevelCommas_StringCleanup(string s)
+    {
+        // Clean up the split item to be added
+        // Remove the comma
+        if (s[0] == ',')
+        {
+            s = s.Substring(1);
+        }
+
+        // Remove whitespaces
+        s = s.Trim();
+
+        // Remove any quotes
+        if (s[0] == '\'')
+        {
+            s = s.Trim('\'');
+        }
+        else if (s[0] == '"')
+        {
+            s = s.Trim('"');
+        }
+        return s;
+    }
+
+    // Split string inStr on commas, except the ones contained in strings inside of the string, encapsulated in quotes
+    // ie: ('2521', 'name "of i\'tem', '43', 435, .etc) will be split into the list (strings represented w/o quotes for simplicity)
+    //     { 2521,   name "of i\'tem,   43,  435, .etc }
+    public static List<string> splitOnTopLevelCommas(string s)
+    {
+        if (s.Length == 0) return new List<string>();
+
+        char escape = '/';
+        char endQuote = (char)0;
+        List<char> topLevelStartChars = new List<char>(new char[] { '"', '\'', '(', '{', '[' });
+        List<char> topLevelEndChars = new List<char>(new char[] { '"', '\'', ')', '}', ']' });
+        Dictionary<char, char> openAndCloseChars = new Dictionary<char, char> { { '(', ')' },
+                                                                                { '{', '}' },
+                                                                                { '[', ']' },
+                                                                                { '"', '"' },
+                                                                                { '\'', '\'' }};
+        List<string> result = new List<string>();
+        bool onTopLevel = true;
+        int lastTopLevelComma = 0;
+        string splitToBeAdded;
+
+        // Initial cleanup of the string
+        // Remove any parenthesies encapsulating the whole string
+        if (s[0] == '(' && s.Last() == ')')
+        {
+            s = s.Substring(1, s.Length - 2);
+        }
+        for (int i = 0; i < s.Length; i++)
+        {
+            // If no quote char found yet, and current char is a quote char
+            if (onTopLevel && topLevelStartChars.Contains(s[i]))
+            {
+                endQuote = openAndCloseChars[s[i]];
+                onTopLevel = false;
+                continue;
+            }
+
+            // If another quote has been found underneath top level quote
+            if (!onTopLevel && s[i] == endQuote)
+            {
+                // Edge case out-of-bounds check
+                if (i > 0 && s[i - 1] != escape)
+                {
+                    onTopLevel = true;
+                }
+                else if (i <= 0)
+                {
+                    Console.WriteLine("ERROR splitOnTopLevelCommas - current index <= 0, when it should be past zero for index: " + i);
+                    return new List<string>();
+                }
+                // Else, inStr[i] - 1 must be escape char, skip continue to next char
+                else
+                {
+                    continue;
+                }
+            }
+
+
+            // Top level comma to split on is found
+            if (onTopLevel && s[i] == ',')
+            {
+                splitToBeAdded = s.Substring(lastTopLevelComma, i - lastTopLevelComma);
+                splitToBeAdded = splitOnTopLevelCommas_StringCleanup(splitToBeAdded);
+                result.Add(splitToBeAdded);
+                lastTopLevelComma = i;
+            }
+
+
+        }
+        // Add last element, (which doesn't have a comma after it)
+
+        splitToBeAdded = s.Substring(lastTopLevelComma);
+        splitToBeAdded = splitOnTopLevelCommas_StringCleanup(splitToBeAdded);
+        result.Add(splitToBeAdded);
+
+        return result;
+
+    }
+
+    // Given a string, it will split it on the first character
+    // Will split on top level commas
+    public static List<string> PairedCharTopLevelSplit(string inStr, char left)
+    {
+
+        if (inStr.Length == 0) return new List<string>();
+        Dictionary<char, char> LRDict = new Dictionary<char, char>() {
+            { '(', ')' },
+            { '[', ']' },
+            { '{', '}' },
+            { '\'', '\'' },
+            { '"' , '"'  }};
+
+        if (!LRDict.ContainsKey(left))
+        {
+            Console.WriteLine("ERROR splitOnFirstChar (SplitOnTopLevelPairs): Unknown Paired-Char to Split on encountered: " + left);
+            return new List<string>();
+        }
+        char right = LRDict[left];
+
+        List<string> result = new List<string>();
+
+        // Splits on top level pairings.
+        // ie: () (()) () ((()())) splits into  [(), (()), (), ((()()))]
+        char[] trimChars = { left, right };
+        int pairCount = 0;
+        int lastL = 0;
+        bool needNewL = false;
+        char c;
+        for (int i = 0; i < inStr.Length; i++)
+        {
+            c = inStr[i];
+            if (c == left)
+            {
+                pairCount++;
+
+                if (needNewL)
+                {
+                    lastL = i;
+                    needNewL = false;
+                }
+            }
+            if (c == right) pairCount--;
+
+            if (pairCount < 0) break;
+
+            // Even top-level pairing found
+            if (pairCount == 0 && !needNewL)
+            {
+                needNewL = true;
+                result.Add(inStr.Substring(lastL, i - lastL + 1).Trim(trimChars));
+            }
+        }
+
+        if (pairCount != 0)
+        {
+            Console.WriteLine("ERROR splitOnFirstChar (SplitOnTopLevelPairs): Unbalanced Pairing");
+        }
+
+        return result;
     }
 
     public struct Date
@@ -94,6 +259,8 @@ public class Util
         {
             return  year + "-" + month + "-" + day;
         }
+
+        
     };
 
 }

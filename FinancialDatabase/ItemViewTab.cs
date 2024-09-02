@@ -19,6 +19,7 @@ public class ItemViewTab
 		this.Form1 = Form1;
         QB = new QueryBuilder();
         PyConnector = new CtrlerOfPythonToDTBConnector();
+        currItem = new ResultItem();
 
         controlBoxAttrib = new Dictionary<Control, string>
         {
@@ -126,9 +127,10 @@ public class ItemViewTab
 
         foreach (Control c in changedFields)
         {
+            if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); }
             string query = "";
             string type = "";
-            string s = controlBoxAttrib[c];
+            string s = controlBoxAttrib[c!];
             List<int> WeightLbsOz = ozToOzLbs(currItem.get_Weight());
             //Hardcode weight as it is the only case where a comb. of 2 textboxes must be combined into 1 value
             if (s.CompareTo("shipping.WeightLbs") == 0)
@@ -179,16 +181,17 @@ public class ItemViewTab
                 t_Lbs.Clear();
                 t_oz.Clear();
             }
-            else if(c.GetType() == typeof(TextBox))                
+            // ! denotes to the compiler that c will not be null
+            else if(c!.GetType() == typeof(TextBox))                
             {
                 type = Form1.colDataTypes[controlBoxAttrib[c]];
-                TextBox t = c as TextBox;
+                TextBox t = c as TextBox ?? new TextBox();// ?? denotes null assignment
                 query = QB.buildUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
                 t.Clear();
             }
             else if (c.GetType() == typeof(DateTimePicker))
             {
-                DateTimePicker dt = c as DateTimePicker;
+                DateTimePicker dt = c as DateTimePicker ?? new DateTimePicker();
                 type = Form1.colDataTypes[controlBoxAttrib[c]];
                 query = QB.buildUpdateQuery(currItem, controlBoxAttrib[c], type, new Date(dt));
                 dt.Value = dt.MinDate; // Set as default value to show it has been "cleared" if new date does not show

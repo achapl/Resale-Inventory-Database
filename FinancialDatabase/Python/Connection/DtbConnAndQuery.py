@@ -19,9 +19,6 @@ def runQuery(query):
 	colNames = None
 	try:
 		result = cursor.execute(query)
-		# cursor.execute(query) only returns first item. fetchall() will collect remaining items
-		# only use fetchall()?
-		#result = [result, cursor.fetchall()]
 		result = cursor.fetchall()
 
 		# If any changes (Create, Update, Delete) have been perforned, try and commit them to the database
@@ -29,10 +26,6 @@ def runQuery(query):
 			cnx.commit()
 		except mysql.connector.errors.InternalError:
 			print("Error: Unread Result")
-		# Unneeded? main program works. If the database input from CSV works as well, remove this
-			#retStr = ""
-		#if result is not None:
-		#	retStr = str(result)
 
 		# Get column names
 		if cursor.description is not None:
