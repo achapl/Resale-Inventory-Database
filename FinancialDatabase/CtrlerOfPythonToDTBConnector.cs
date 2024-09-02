@@ -10,6 +10,7 @@ using System.Windows.Forms.VisualStyles;
 using Python.Runtime;
 using System.Xml.Linq;
 using System.IO;
+using System.Windows.Forms;
 
 
 
@@ -32,18 +33,21 @@ public class CtrlerOfPythonToDTBConnector
 
     public List<string> getTableNames()
     {
-        List<string> tableNames;
 
         string query = "SHOW TABLES";
-        string output = runStatement(query);
-        
-        removeColumnNames(ref output);
-        string[] startAndEnd = { "('", "',)" };
-        output = Util.myTrim(output, startAndEnd );
-        tableNames = new List<string>(output.Split(new string[] { "',)('" }, StringSplitOptions.None));
+        int lastrowid = -1;
+        List<string> colNames = new List<string>(new string[]{ "" });
+        string rawTablenames = runStatement(query, ref colNames, ref lastrowid);
+        List<string> tableNames = new List<string>(rawTablenames.Substring(3,rawTablenames.Length-7).Split("',), ('"));
 
+        /* removeColumnNames(ref output);
+         string[] startAndEnd = { "('", "',)" };
+         output = Util.myTrim(output, startAndEnd );
+         tableNames = new List<string>(output.Split(new string[] { "',)('" }, StringSplitOptions.None));
+        */
 
         return tableNames;
+        //return colNames.ToList<string>();
     }
 
     public Dictionary<string, string> getColDataTypes()
@@ -53,22 +57,28 @@ public class CtrlerOfPythonToDTBConnector
 
         Dictionary<string, string> colDataTypes = new Dictionary<string, string>();
         string query;
-        string output;
+        List<string> output;
         foreach (string tableName in tableNames)
         {
             query = "SHOW COLUMNS FROM " + tableName + ";";
-            output = runStatement(query);
-            removeColumnNames(ref output);
+
+            int lastrowid = -1;
+            List<string> colNames = new List<string>(new string[] {""});
+            string rawOutput = runStatement(query, ref colNames, ref lastrowid);
+            output = new List<string>(rawOutput.Substring(3, rawOutput.Length-7).Split("'), ('"));
+
+
+            //removeColumnNames(ref output);
             string[] startAndEnd = { "('", "',)" };
-            output = Util.myTrim(output, startAndEnd);
-            List<string> colAndColTypes = new List<string>(output.Split(new string[] { "')('" }, StringSplitOptions.None));
-            foreach(string colAndType in colAndColTypes)
+            //output = Util.myTrim(output, startAndEnd);
+            //List<string> colAndColTypes = new List<string>(output.Split(new string[] { "')('" }, StringSplitOptions.None));
+            /*foreach(string colAndType in colAndColTypes)
             {
                 List<string> typesForCol = new List<string>(colAndType.Split(new string[] { "', '" }, StringSplitOptions.None));
                 string colName = tableName + "." + typesForCol[0];
                 string type    = typesForCol[1];
                 colDataTypes[colName] = type;
-            }
+            }*/
         }
 
         return colDataTypes;
@@ -77,33 +87,40 @@ public class CtrlerOfPythonToDTBConnector
     // General queries, done by manual string input
     public List<ResultItem> RunItemSearchQuery(string query)
     {
-        string queryOutput = runStatement(query);
+        int lastrowid = -1;
+        List<string> colNames = new List<string>(new string[] { "" });
+        string queryOutput = runStatement(query, ref colNames, ref lastrowid);
 
-        List<ResultItem> parsedItems = parseRawQuery(queryOutput);
+        List<ResultItem> parsedItems = parseRawQuery(queryOutput, colNames);
 
         return parsedItems;
     }
 
-    public string runStatement(string statement)
+    public string runStatement(string statement, ref List<string> colNames, ref int lastrowid)
     {
         string queryOutput = "";
         string line;
+        string retList;
 
         // NOTE: Depreciated. This is the old CMD way of running python scripts
         // TODO: DELETE
         // TODO: Check if DCQControl.py is needed anymore
         //System.Diagnostics.Process p = startPython(statement);
 
-        dynamic[] result = runPython(statement);
+        string[] result = runPython(statement);
 
-        string ret = "";
-        int i = 0;
-        while (i < result.Length)
+        // Returns [0,1,2] -> result, colNames, cursor.lastrowid
+
+        /*for (int i = 0; i < result[0].Length(); i++)
         {
-            ret += result[i];
-            i++;
-        }
-        return ret;
+            string s = result[0][i].ToString();
+            //ret = ret.Concat(result[0][i].ToString());
+        }*/
+        // 
+        retList  = result[0];
+        colNames = new List<string>(result[1].Substring(2, result[1].Length - 4).Split("', '"));
+        lastrowid = Int32.Parse(result[2]);
+        return retList;//new List<string>(ret); //ret;
 
         // Old way of reading output of CMD
         // TODO: Delete
@@ -125,11 +142,14 @@ public class CtrlerOfPythonToDTBConnector
         return RunItemSearchQuery(query);
     }
 
-    private dynamic[] runPython(string query)
+    private string[] runPython(string query)
     {
-        Runtime.PythonDLL = @"C:\Users\Owner\AppData\Local\Programs\Python\Python311\python311.dll";
-        PythonEngine.Initialize();
-        dynamic result;
+        if (pythonInitialized == false) {
+            Runtime.PythonDLL = @"C:\Users\Owner\AppData\Local\Programs\Python\Python311\python311.dll";
+            PythonEngine.Initialize();
+            pythonInitialized = true;
+        }
+            string[] result = {"","",""};
         using (Py.GIL())
         {
             // Modify path to work
@@ -138,7 +158,11 @@ public class CtrlerOfPythonToDTBConnector
             sys.path.append(os.path.dirname(os.path.expanduser(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Python\")));
 
             dynamic Connector = Py.Import("Connection.DtbConnAndQuery");
-            result = Connector.runQuery(query);
+            PyObject[] rawResult = Connector.runQuery(query);
+            result[0] = rawResult[0].ToString();
+            result[1] = rawResult[1].ToString();
+            result[2] = rawResult[2].ToString();
+
 
         }
         return result;
@@ -172,20 +196,20 @@ public class CtrlerOfPythonToDTBConnector
     }
 
 
-    private List<ResultItem> parseRawQuery(string rawResult)
+    private List<ResultItem> parseRawQuery(string rawResult, List<string> colNames)
     {
-
-        List<string> colNames = removeColumnNames(ref rawResult);
+       
+        //List<string> colNames = removeColumnNames(ref rawResult);
 
         // raw result is now the format "(itemName, itemID, .etc)(item2Name, item2ID, .etc)"
         // Seperate whole string into list of multiple item strings, "[ (itemName, itemID, .etc), (item2Name, item2ID, .etc) ]"
-        List<string> rawItems = new List<string>(splitOnFirstChar(rawResult, SplitOnFirstCharOptions.SplitOnTopLevelPairs));
+        List<string> rawItems = new List<string>(splitOnFirstChar(rawResult.Substring(1, rawResult.Length-2), SplitOnFirstCharOptions.SplitOnTopLevelPairs));
 
         List<ResultItem> results = new List<ResultItem>();
         foreach(string rawItem in rawItems)
         {
             // Seperate each item into individual item attributes to make a ResultItem with it
-            List<string> itemAttributes = splitOnTopLevelCommas(rawItem);
+            List<string> itemAttributes = new List<string>(splitOnTopLevelCommas(rawItem));
             results.Add(new ResultItem(itemAttributes, colNames));
         }
 
@@ -384,7 +408,7 @@ public class CtrlerOfPythonToDTBConnector
                 if (pairCount < 0) break;
 
                 // Even top-level pairing found
-                if (pairCount == 0)
+                if (pairCount == 0 && !needNewL)
                 {
                     needNewL = true;
                     result.Add(s.Substring(lastL, i - lastL + 1).Trim(trimChars));

@@ -20,7 +20,9 @@ def runQuery(query):
 	try:
 		result = cursor.execute(query)
 		# cursor.execute(query) only returns first item. fetchall() will collect remaining items
-		result = [result, cursor.fetchall()]
+		# only use fetchall()?
+		#result = [result, cursor.fetchall()]
+		result = cursor.fetchall()
 
 		# If any changes (Create, Update, Delete) have been perforned, try and commit them to the database
 		try:

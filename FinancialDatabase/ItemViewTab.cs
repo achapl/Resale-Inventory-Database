@@ -151,7 +151,11 @@ public class ItemViewTab
                 continue;
             }
 
-            PyConnector.runStatement(query);
+            int lastrowid = -1;
+            List<string> colNames = new List<string>(new string[] { "" });
+            string output = PyConnector.runStatement(query, ref colNames, ref lastrowid);
+
+
         }
         Form1.ST.updateItemView(currItem.get_ITEM_ID());
         showItem(currItem);
