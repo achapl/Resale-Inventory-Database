@@ -126,21 +126,70 @@ public class ItemViewTab
 
         foreach (Control c in changedFields)
         {
-            string s = controlBoxAttrib[c];
-            string type = Form1.colDataTypes[controlBoxAttrib[c]];
             string query = "";
-            if (c.GetType() == typeof(TextBox))
+            string type = "";
+            string s = controlBoxAttrib[c];
+            List<int> WeightLbsOz = ozToOzLbs(currItem.get_Weight());
+            //Hardcode weight as it is the only case where a comb. of 2 textboxes must be combined into 1 value
+            if (s.CompareTo("shipping.WeightLbs") == 0)
             {
+                
+                type = Form1.colDataTypes["shipping.Weight"];
+                TextBox t_Lbs = Form1.textBox9;
+                TextBox t_oz  = Form1.textBox10;
+                Label   l_oz  = Form1.label23;
 
+                // Get lbs
+                // Type theck to make sure proper numbers are  given
+                int throwaway;
+                if (!Int32.TryParse(t_Lbs.Text, out throwaway)) { query = "ERROR: BAD USER INPUT"; continue; }
+                int lbs = Int32.Parse(t_Lbs.Text);
+
+                // Get oz
+                int oz = 0;
+                if (!Int32.TryParse(t_oz.Text, out oz)) { oz = WeightLbsOz[1]; }
+
+                int weight = 16 * lbs + oz;
+
+                query = QB.buildUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
+                t_Lbs.Clear();
+                t_oz.Clear();
+            }
+            else if (s.CompareTo("shipping.WeightOz") == 0)
+            {
+                type = Form1.colDataTypes["shipping.Weight"];
+                // Convert weight lbs to oz
+                TextBox t_Lbs = Form1.textBox9;
+                TextBox t_oz  = Form1.textBox10;
+                Label   l_Lbs = Form1.label22;
+
+                // Get lbs
+                int lbs = 0;
+                if (!Int32.TryParse(t_Lbs.Text, out lbs)) { lbs = WeightLbsOz[0]; }
+
+                // Get ounces
+                // Type theck to make sure proper numbers are  given
+                int throwaway;
+                if (!Int32.TryParse(t_oz.Text, out throwaway)) { query = "ERROR: BAD USER INPUT"; continue; }
+                int oz = Int32.Parse(t_oz.Text);
+                
+                int weight = 16 * lbs + oz;
+
+                query = QB.buildUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
+                t_Lbs.Clear();
+                t_oz.Clear();
+            }
+            else if(c.GetType() == typeof(TextBox))                
+            {
+                type = Form1.colDataTypes[controlBoxAttrib[c]];
                 TextBox t = c as TextBox;
                 query = QB.buildUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
                 t.Clear();
             }
-
             else if (c.GetType() == typeof(DateTimePicker))
             {
                 DateTimePicker dt = c as DateTimePicker;
-                
+                type = Form1.colDataTypes[controlBoxAttrib[c]];
                 query = QB.buildUpdateQuery(currItem, controlBoxAttrib[c], type, new Date(dt));
                 dt.Value = dt.MinDate; // Set as default value to show it has been "cleared" if new date does not show
             }

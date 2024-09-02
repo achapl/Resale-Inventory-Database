@@ -158,7 +158,7 @@ namespace FinancialDatabase
             if (attrib == null) { return null; }
             if (type.CompareTo("date") == 0)
             {
-                return "DATE(\\\"" + attrib + "\\\")";
+                return "DATE(\"" + attrib + "\")";
             }
             if (type.Contains("varchar") || type.Contains("text") || type.Contains("blob"))
             {

@@ -72,13 +72,13 @@ public class CtrlerOfPythonToDTBConnector
             string[] startAndEnd = { "('", "',)" };
             //output = Util.myTrim(output, startAndEnd);
             //List<string> colAndColTypes = new List<string>(output.Split(new string[] { "')('" }, StringSplitOptions.None));
-            /*foreach(string colAndType in colAndColTypes)
+            foreach(string colAndType in output)
             {
                 List<string> typesForCol = new List<string>(colAndType.Split(new string[] { "', '" }, StringSplitOptions.None));
                 string colName = tableName + "." + typesForCol[0];
                 string type    = typesForCol[1];
                 colDataTypes[colName] = type;
-            }*/
+            }
         }
 
         return colDataTypes;
