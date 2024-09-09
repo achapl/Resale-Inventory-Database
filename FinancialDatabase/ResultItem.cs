@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Date = Util.Date;
 
 
@@ -185,7 +186,231 @@ public class ResultItem : IEquatable<ResultItem>
         }
     }
 
+
+    public void getAttrib(string attrib, ref string ret)
+    {
+        switch (attrib)
+        {
+            // From item table
+            case "item.Name":
+                ret = get_Name();
+                break;
+            case "item.Notes_item":
+                ret = get_Notes_item();
+                break;
+
+            // From purchase table
+            case "purchase.Seller":
+                ret = get_Seller();
+                break;
+            case "purchase.Notes_purchase":
+                ret = get_Notes_purchase();
+                break;
+
+            // From sale table
+            case "sale.Buyer":
+                ret = get_Buyer();
+                break;
+
+            // From shipping table
+            case "shipping.Notes_shipping":
+                ret = get_Notes_shipping();
+                break;
+        }
+    }
     
+    public void getAttrib(string attrib, ref int ret)
+    {
+        switch (attrib)
+        {
+            // From item table
+            case "item.ITEM_ID":
+                ret = get_ITEM_ID();
+                break;
+            case "item.PurchaseID":
+                ret = get_PurchaseID();
+                break;
+            case "item.SaleID":
+                ret = get_SaleID();
+                break;
+            case "item.ShippingID":
+                ret = get_ShippingID();
+                break;
+            case "item.InitialQuantity":
+                ret = get_InitialQuantity();
+                break;
+            case "item.CurrentQuantity":
+                ret = get_CurrentQuantity();
+                break;
+
+            // From shipping table
+            case "shipping.Length":
+                ret = get_Length();
+                break;
+            case "shipping.Width":
+                ret = get_Width();
+                break;
+            case "shipping.Height":
+                ret = get_Height();
+                break;
+            case "shipping.Weight":
+                ret = get_Weight();
+                break;
+            case "shipping.WeightLbs":
+                ret = get_WeightLbs();
+                break;
+            case "shipping.WeightOz":
+                ret = get_WeightOz();
+                break;
+        }
+    }
+    
+    public void getAttrib(string attrib, ref double ret)
+    {
+        switch (attrib)
+        {
+            // From purchase table
+            case "purchase.Amount_purchase":
+                ret = get_Amount_purchase();
+                break;
+            case "purchase.Tax":
+                ret = get_Tax();
+                break;
+            case "purchase.Fees_purchase":
+                ret = get_Fees_purchase();
+                break;
+
+            // From sale table
+            case "sale.Amount_sale":
+                ret = get_Amount_sale();
+                break;
+            case "sale.Fees_sale":
+                ret = get_Fees_sale();
+                break;
+
+            // From shipping table
+            case "shipping.Length":
+                ret = get_Length();
+                break;
+            case "shipping.Width":
+                ret = get_Width();
+                break;
+            case "shipping.Height":
+                ret = get_Height();
+                break;
+            case "shipping.Weight":
+                ret = get_Weight();
+                break;
+        }
+    }
+    
+    public void getAttrib(string attrib, ref Date ret)
+    {
+        switch (attrib)
+        {
+            // From sale table
+            case "sale.Date_Sold":
+                ret = get_Date_Sold();
+                break;
+
+            // From purchase table
+            case "purhcase.Date_Purchased":
+                ret = get_Date_Purchased();
+                break;
+        }
+    }
+
+
+    public void getAttribAsString(string attrib, ref string ret)
+    {
+        switch (attrib)
+        {
+            // From item table
+            case "item.Name":
+                ret = get_Name();
+                break;
+            case "item.Notes_item":
+                ret = get_Notes_item();
+                break;
+
+            // From purchase table
+            case "purchase.Seller":
+                ret = get_Seller();
+                break;
+            case "purchase.Notes_purchase":
+                ret = get_Notes_purchase();
+                break;
+
+            // From sale table
+            case "sale.Buyer":
+                ret = get_Buyer();
+                break;
+
+            // From shipping table
+            case "shipping.Notes_shipping":
+                ret = get_Notes_shipping();
+                break;
+
+            // From item table
+            case "item.ITEM_ID":
+                ret = get_ITEM_ID().ToString();
+                break;
+            case "item.PurchaseID":
+                ret = get_PurchaseID().ToString();
+                break;
+            case "item.SaleID":
+                ret = get_SaleID().ToString();
+                break;
+            case "item.ShippingID":
+                ret = get_ShippingID().ToString();
+                break;
+            case "item.InitialQuantity":
+                ret = get_InitialQuantity().ToString();
+                break;
+            case "item.CurrentQuantity":
+                ret = get_CurrentQuantity().ToString();
+                break;
+
+            // From shipping table
+            case "shipping.Length":
+                ret = get_Length().ToString();
+                break;
+            case "shipping.Width":
+                ret = get_Width().ToString();
+                break;
+            case "shipping.Height":
+                ret = get_Height().ToString();
+                break;
+            case "shipping.Weight":
+                ret = get_Weight().ToString();
+                break;
+            case "shipping.WeightLbs":
+                ret = get_WeightLbs().ToString();
+                break;
+            case "shipping.WeightOz":
+                ret = get_WeightOz().ToString();
+                break;
+
+            // From purchase table
+            case "purchase.Amount_purchase":
+                ret = get_Amount_purchase().ToString();
+                break;
+            case "purchase.Tax":
+                ret = get_Tax().ToString();
+                break;
+            case "purchase.Fees_purchase":
+                ret = get_Fees_purchase().ToString();
+                break;
+
+            // From sale table
+            case "sale.Amount_sale":
+                ret = get_Amount_sale().ToString();
+                break;
+            case "sale.Fees_sale":
+                ret = get_Fees_sale().ToString();
+                break;
+        }
+    }
 
 
 
@@ -354,15 +579,15 @@ public class ResultItem : IEquatable<ResultItem>
     }
 
     // From sale table
-    public List<int> get_Date_Sold()
+    public Date get_Date_Sold()
     {
-        List<int> l = new List<int>();
+        /*List<int> l = new List<int>();
         l.Add(Date_Sold.year);
         l.Add(Date_Sold.month);
-        l.Add(Date_Sold.day);
-        return l;
+        l.Add(Date_Sold.day);*/
+        return Date_Sold;
     }
-    public double get_Amount_sale()
+        public double get_Amount_sale()
     {
         // Default value if uninitialized
         if (Amount_sale == -1)
@@ -448,6 +673,30 @@ public class ResultItem : IEquatable<ResultItem>
             return Weight;
         }
     }
+
+    public int get_WeightOz()
+    {
+        if (Weight == -1)
+        {
+            return -1;
+        }
+        else
+        {
+            return Weight % 16;
+        }
+    }
+    public int get_WeightLbs()
+    {
+        if (Weight == -1)
+        {
+            return -1;
+        }
+        else
+        {
+            return Weight / 16;
+        }
+    }
+
     public string get_Notes_shipping()
     {
         // Default value if uninitialized

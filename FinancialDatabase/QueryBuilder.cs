@@ -99,7 +99,7 @@ namespace FinancialDatabase
                 //query = "SELECT " + cols + " FROM item JOIN purchase ON item.ITEM_ID = purchase.ItemID WHERE name LIKE '%" + term + "%' AND purchase.Date_Purchased > '" + startDate + "' AND purchase.Date_Purchased < '" + endDate + "' " + stock + ";";
                 query = "SELECT " + cols + " FROM item " + join  + "WHERE item.name LIKE '%" + Q.getSingleTerm() + "%'" + stock +  ";";
             }
-            return formatQuery(query);
+            return query;
         }
 
         public string buildPurchaseQuery(ResultItem item)
@@ -117,52 +117,22 @@ namespace FinancialDatabase
             Date   = 3
         }
 
-        private bool checkTypeOkay(string attrib, string type)
-        {
-            switch(type)
-            {
-                case "date":
-                    return true;
-
-                case "double unsigned":
-                    try { Double.Parse(attrib); }
-                    catch { return false; }
-                    return true;
-
-                case "int unsigned":
-                    try { Int32.Parse(attrib); }
-                    catch { return false; }
-                    return true;                
-
-                case "varchar(255)":
-                    return true;
-
-                case "varchar(45)":
-                    return true;
-
-                case "mediumtext":
-                    return true;
-
-                case "longblob":
-                    return true;
-
-                default:
-                    return false;
-
-            }
-        }
+        
 
         private string formatAttribute(string attrib, string type)
         {
 
             if (attrib == null) { return ""; }
+
+            attrib = attrib.Replace("\"", "\\\"");
+
             if (type.CompareTo("date") == 0)
             {
                 return "DATE(\"" + attrib + "\")";
             }
             if (type.Contains("varchar") || type.Contains("text") || type.Contains("blob"))
             {
-                return "\\\"" + attrib + "\\\"";
+                return "\"" + attrib + "\"";
             }
             else
             {
@@ -173,7 +143,7 @@ namespace FinancialDatabase
 
         public string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, Date updateDate)
         {
-            if (!checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
+            if (!Util.checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
 
             if (controlAttribute.Split('.').Length != 2)
             {
@@ -199,7 +169,7 @@ namespace FinancialDatabase
 
         public string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, string updateText)
         {
-            if (!checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
+            if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
 
             if (controlAttribute.Split('.').Length != 2)
             {

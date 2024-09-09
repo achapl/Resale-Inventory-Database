@@ -28,972 +28,1046 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.manualQuery = new System.Windows.Forms.Button();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.SearchTab = new System.Windows.Forms.TabPage();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.searchButton = new System.Windows.Forms.Button();
-            this.searchBox = new System.Windows.Forms.TextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.ItemTab = new System.Windows.Forms.TabPage();
-            this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label26 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.textBox13 = new System.Windows.Forms.TextBox();
-            this.textBox12 = new System.Windows.Forms.TextBox();
-            this.textBox11 = new System.Windows.Forms.TextBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
-            this.textBox9 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.PurchaseTab = new System.Windows.Forms.TabPage();
-            this.label34 = new System.Windows.Forms.Label();
-            this.label33 = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
-            this.label28 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label16 = new System.Windows.Forms.Label();
-            this.listBox2 = new System.Windows.Forms.ListBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox14 = new System.Windows.Forms.TextBox();
-            this.textBox15 = new System.Windows.Forms.TextBox();
-            this.textBox16 = new System.Windows.Forms.TextBox();
-            this.textBox17 = new System.Windows.Forms.TextBox();
-            this.textBox18 = new System.Windows.Forms.TextBox();
-            this.textBox19 = new System.Windows.Forms.TextBox();
-            this.textBox20 = new System.Windows.Forms.TextBox();
-            this.dateTimePicker4 = new System.Windows.Forms.DateTimePicker();
-            this.label36 = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
-            this.textBox21 = new System.Windows.Forms.TextBox();
-            this.Sale = new System.Windows.Forms.TabPage();
-            this.button3 = new System.Windows.Forms.Button();
-            this.listBox3 = new System.Windows.Forms.ListBox();
-            this.resultItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.label38 = new System.Windows.Forms.Label();
-            this.dateTimePicker5 = new System.Windows.Forms.DateTimePicker();
-            this.label39 = new System.Windows.Forms.Label();
-            this.textBox22 = new System.Windows.Forms.TextBox();
-            this.textBox23 = new System.Windows.Forms.TextBox();
-            this.tabControl1.SuspendLayout();
-            this.SearchTab.SuspendLayout();
-            this.ItemTab.SuspendLayout();
-            this.PurchaseTab.SuspendLayout();
-            this.Sale.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.resultItemBindingSource)).BeginInit();
-            this.SuspendLayout();
+            components = new System.ComponentModel.Container();
+            manualQuery = new Button();
+            listBox1 = new ListBox();
+            textBox1 = new TextBox();
+            tabControl1 = new TabControl();
+            SearchTab = new TabPage();
+            checkBox5 = new CheckBox();
+            checkBox3 = new CheckBox();
+            checkBox2 = new CheckBox();
+            checkBox1 = new CheckBox();
+            label2 = new Label();
+            label1 = new Label();
+            dateTimePicker2 = new DateTimePicker();
+            dateTimePicker1 = new DateTimePicker();
+            searchButton = new Button();
+            searchBox = new TextBox();
+            comboBox1 = new ComboBox();
+            menuStrip1 = new MenuStrip();
+            ItemTab = new TabPage();
+            label40 = new Label();
+            button4 = new Button();
+            dateTimePicker3 = new DateTimePicker();
+            button1 = new Button();
+            label26 = new Label();
+            label25 = new Label();
+            label24 = new Label();
+            label23 = new Label();
+            label22 = new Label();
+            label21 = new Label();
+            label20 = new Label();
+            label19 = new Label();
+            label18 = new Label();
+            label17 = new Label();
+            textBox3 = new TextBox();
+            label14 = new Label();
+            label13 = new Label();
+            label12 = new Label();
+            label11 = new Label();
+            label10 = new Label();
+            label9 = new Label();
+            label8 = new Label();
+            label7 = new Label();
+            label6 = new Label();
+            label5 = new Label();
+            label4 = new Label();
+            linkLabel1 = new LinkLabel();
+            label3 = new Label();
+            textBox10 = new TextBox();
+            textBox9 = new TextBox();
+            textBox8 = new TextBox();
+            textBox7 = new TextBox();
+            textBox6 = new TextBox();
+            textBox5 = new TextBox();
+            textBox4 = new TextBox();
+            PurchaseTab = new TabPage();
+            button3 = new Button();
+            textBox21 = new TextBox();
+            label37 = new Label();
+            label36 = new Label();
+            dateTimePicker4 = new DateTimePicker();
+            textBox20 = new TextBox();
+            textBox19 = new TextBox();
+            textBox18 = new TextBox();
+            textBox17 = new TextBox();
+            textBox16 = new TextBox();
+            textBox15 = new TextBox();
+            textBox14 = new TextBox();
+            textBox2 = new TextBox();
+            label35 = new Label();
+            label34 = new Label();
+            label33 = new Label();
+            label32 = new Label();
+            label31 = new Label();
+            label30 = new Label();
+            label29 = new Label();
+            label28 = new Label();
+            label27 = new Label();
+            button2 = new Button();
+            label16 = new Label();
+            listBox2 = new ListBox();
+            Sale = new TabPage();
+            textBox23 = new TextBox();
+            textBox22 = new TextBox();
+            label39 = new Label();
+            dateTimePicker5 = new DateTimePicker();
+            label38 = new Label();
+            listBox3 = new ListBox();
+            resultItemBindingSource = new BindingSource(components);
+            tabControl1.SuspendLayout();
+            SearchTab.SuspendLayout();
+            ItemTab.SuspendLayout();
+            PurchaseTab.SuspendLayout();
+            Sale.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)resultItemBindingSource).BeginInit();
+            SuspendLayout();
             // 
             // manualQuery
             // 
-            this.manualQuery.Location = new System.Drawing.Point(347, 371);
-            this.manualQuery.Name = "manualQuery";
-            this.manualQuery.Size = new System.Drawing.Size(94, 23);
-            this.manualQuery.TabIndex = 1;
-            this.manualQuery.Text = "Manual Query";
-            this.manualQuery.UseVisualStyleBackColor = true;
-            this.manualQuery.Click += new System.EventHandler(this.button1_Click);
+            manualQuery.Location = new Point(405, 428);
+            manualQuery.Margin = new Padding(4, 3, 4, 3);
+            manualQuery.Name = "manualQuery";
+            manualQuery.Size = new Size(110, 27);
+            manualQuery.TabIndex = 1;
+            manualQuery.Text = "Manual Query";
+            manualQuery.UseVisualStyleBackColor = true;
+            manualQuery.Click += button1_Click;
             // 
             // listBox1
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(461, 36);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(672, 355);
-            this.listBox1.TabIndex = 2;
-            this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
+            listBox1.FormattingEnabled = true;
+            listBox1.ItemHeight = 15;
+            listBox1.Location = new Point(538, 42);
+            listBox1.Margin = new Padding(4, 3, 4, 3);
+            listBox1.Name = "listBox1";
+            listBox1.Size = new Size(783, 409);
+            listBox1.TabIndex = 2;
+            listBox1.MouseDoubleClick += listBox1_MouseDoubleClick;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(6, 374);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(335, 20);
-            this.textBox1.TabIndex = 4;
+            textBox1.Location = new Point(7, 432);
+            textBox1.Margin = new Padding(4, 3, 4, 3);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(390, 23);
+            textBox1.TabIndex = 4;
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.SearchTab);
-            this.tabControl1.Controls.Add(this.ItemTab);
-            this.tabControl1.Controls.Add(this.PurchaseTab);
-            this.tabControl1.Controls.Add(this.Sale);
-            this.tabControl1.Location = new System.Drawing.Point(12, 12);
-            this.tabControl1.Multiline = true;
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1147, 426);
-            this.tabControl1.TabIndex = 5;
+            tabControl1.Controls.Add(SearchTab);
+            tabControl1.Controls.Add(ItemTab);
+            tabControl1.Controls.Add(PurchaseTab);
+            tabControl1.Controls.Add(Sale);
+            tabControl1.Location = new Point(14, 14);
+            tabControl1.Margin = new Padding(4, 3, 4, 3);
+            tabControl1.Multiline = true;
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(1338, 492);
+            tabControl1.TabIndex = 5;
             // 
             // SearchTab
             // 
-            this.SearchTab.Controls.Add(this.checkBox5);
-            this.SearchTab.Controls.Add(this.checkBox3);
-            this.SearchTab.Controls.Add(this.listBox1);
-            this.SearchTab.Controls.Add(this.checkBox2);
-            this.SearchTab.Controls.Add(this.checkBox1);
-            this.SearchTab.Controls.Add(this.label2);
-            this.SearchTab.Controls.Add(this.label1);
-            this.SearchTab.Controls.Add(this.dateTimePicker2);
-            this.SearchTab.Controls.Add(this.dateTimePicker1);
-            this.SearchTab.Controls.Add(this.searchButton);
-            this.SearchTab.Controls.Add(this.searchBox);
-            this.SearchTab.Controls.Add(this.comboBox1);
-            this.SearchTab.Controls.Add(this.textBox1);
-            this.SearchTab.Controls.Add(this.manualQuery);
-            this.SearchTab.Controls.Add(this.menuStrip1);
-            this.SearchTab.Location = new System.Drawing.Point(4, 22);
-            this.SearchTab.Name = "SearchTab";
-            this.SearchTab.Padding = new System.Windows.Forms.Padding(3);
-            this.SearchTab.Size = new System.Drawing.Size(1139, 400);
-            this.SearchTab.TabIndex = 0;
-            this.SearchTab.Text = "Search";
-            this.SearchTab.UseVisualStyleBackColor = true;
+            SearchTab.Controls.Add(checkBox5);
+            SearchTab.Controls.Add(checkBox3);
+            SearchTab.Controls.Add(listBox1);
+            SearchTab.Controls.Add(checkBox2);
+            SearchTab.Controls.Add(checkBox1);
+            SearchTab.Controls.Add(label2);
+            SearchTab.Controls.Add(label1);
+            SearchTab.Controls.Add(dateTimePicker2);
+            SearchTab.Controls.Add(dateTimePicker1);
+            SearchTab.Controls.Add(searchButton);
+            SearchTab.Controls.Add(searchBox);
+            SearchTab.Controls.Add(comboBox1);
+            SearchTab.Controls.Add(textBox1);
+            SearchTab.Controls.Add(manualQuery);
+            SearchTab.Controls.Add(menuStrip1);
+            SearchTab.Location = new Point(4, 24);
+            SearchTab.Margin = new Padding(4, 3, 4, 3);
+            SearchTab.Name = "SearchTab";
+            SearchTab.Padding = new Padding(4, 3, 4, 3);
+            SearchTab.Size = new Size(1330, 464);
+            SearchTab.TabIndex = 0;
+            SearchTab.Text = "Search";
+            SearchTab.UseVisualStyleBackColor = true;
             // 
             // checkBox5
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(516, 11);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(98, 17);
-            this.checkBox5.TabIndex = 17;
-            this.checkBox5.Text = "Purchase Price";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            checkBox5.AutoSize = true;
+            checkBox5.Location = new Point(602, 13);
+            checkBox5.Margin = new Padding(4, 3, 4, 3);
+            checkBox5.Name = "checkBox5";
+            checkBox5.Size = new Size(103, 19);
+            checkBox5.TabIndex = 17;
+            checkBox5.Text = "Purchase Price";
+            checkBox5.UseVisualStyleBackColor = true;
             // 
             // checkBox3
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(461, 11);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(49, 17);
-            this.checkBox3.TabIndex = 15;
-            this.checkBox3.Text = "Date";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            checkBox3.AutoSize = true;
+            checkBox3.Location = new Point(538, 13);
+            checkBox3.Margin = new Padding(4, 3, 4, 3);
+            checkBox3.Name = "checkBox3";
+            checkBox3.Size = new Size(50, 19);
+            checkBox3.TabIndex = 15;
+            checkBox3.Text = "Date";
+            checkBox3.UseVisualStyleBackColor = true;
             // 
             // checkBox2
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Checked = true;
-            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Location = new System.Drawing.Point(220, 126);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(67, 17);
-            this.checkBox2.TabIndex = 14;
-            this.checkBox2.Text = "Sold Out";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            checkBox2.AutoSize = true;
+            checkBox2.Checked = true;
+            checkBox2.CheckState = CheckState.Checked;
+            checkBox2.Location = new Point(257, 145);
+            checkBox2.Margin = new Padding(4, 3, 4, 3);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(72, 19);
+            checkBox2.TabIndex = 14;
+            checkBox2.Text = "Sold Out";
+            checkBox2.UseVisualStyleBackColor = true;
             // 
             // checkBox1
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(220, 102);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(66, 17);
-            this.checkBox1.TabIndex = 13;
-            this.checkBox1.Text = "In Stock";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.AutoSize = true;
+            checkBox1.Checked = true;
+            checkBox1.CheckState = CheckState.Checked;
+            checkBox1.Location = new Point(257, 118);
+            checkBox1.Margin = new Padding(4, 3, 4, 3);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(68, 19);
+            checkBox1.TabIndex = 13;
+            checkBox1.Text = "In Stock";
+            checkBox1.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(133, 75);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(75, 13);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Bought Before";
+            label2.AutoSize = true;
+            label2.Location = new Point(155, 87);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(83, 15);
+            label2.TabIndex = 12;
+            label2.Text = "Bought Before";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(142, 49);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Bought After";
+            label1.AutoSize = true;
+            label1.Location = new Point(166, 57);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(75, 15);
+            label1.TabIndex = 11;
+            label1.Text = "Bought After";
             // 
             // dateTimePicker2
             // 
-            this.dateTimePicker2.Location = new System.Drawing.Point(220, 75);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(203, 20);
-            this.dateTimePicker2.TabIndex = 10;
+            dateTimePicker2.Location = new Point(257, 87);
+            dateTimePicker2.Margin = new Padding(4, 3, 4, 3);
+            dateTimePicker2.Name = "dateTimePicker2";
+            dateTimePicker2.Size = new Size(236, 23);
+            dateTimePicker2.TabIndex = 10;
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(220, 49);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(203, 20);
-            this.dateTimePicker1.TabIndex = 9;
-            this.dateTimePicker1.Value = new System.DateTime(2020, 1, 1, 0, 1, 0, 0);
+            dateTimePicker1.Location = new Point(257, 57);
+            dateTimePicker1.Margin = new Padding(4, 3, 4, 3);
+            dateTimePicker1.Name = "dateTimePicker1";
+            dateTimePicker1.Size = new Size(236, 23);
+            dateTimePicker1.TabIndex = 9;
+            dateTimePicker1.Value = new DateTime(2020, 1, 1, 0, 1, 0, 0);
             // 
             // searchButton
             // 
-            this.searchButton.Location = new System.Drawing.Point(347, 7);
-            this.searchButton.Name = "searchButton";
-            this.searchButton.Size = new System.Drawing.Size(94, 23);
-            this.searchButton.TabIndex = 8;
-            this.searchButton.Text = "Search";
-            this.searchButton.UseVisualStyleBackColor = true;
-            this.searchButton.Click += new System.EventHandler(this.button2_Click);
+            searchButton.Location = new Point(405, 8);
+            searchButton.Margin = new Padding(4, 3, 4, 3);
+            searchButton.Name = "searchButton";
+            searchButton.Size = new Size(110, 27);
+            searchButton.TabIndex = 8;
+            searchButton.Text = "Search";
+            searchButton.UseVisualStyleBackColor = true;
+            searchButton.Click += button2_Click;
             // 
             // searchBox
             // 
-            this.searchBox.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.searchBox.Location = new System.Drawing.Point(6, 7);
-            this.searchBox.Name = "searchBox";
-            this.searchBox.Size = new System.Drawing.Size(208, 20);
-            this.searchBox.TabIndex = 7;
-            this.searchBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchBox_KeyDown);
+            searchBox.ForeColor = SystemColors.WindowText;
+            searchBox.Location = new Point(7, 8);
+            searchBox.Margin = new Padding(4, 3, 4, 3);
+            searchBox.Name = "searchBox";
+            searchBox.Size = new Size(242, 23);
+            searchBox.TabIndex = 7;
+            searchBox.KeyDown += searchBox_KeyDown;
             // 
             // comboBox1
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Item",
-            "Fee"});
-            this.comboBox1.Location = new System.Drawing.Point(220, 7);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 6;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Items.AddRange(new object[] { "Item", "Fee" });
+            comboBox1.Location = new Point(257, 8);
+            comboBox1.Margin = new Padding(4, 3, 4, 3);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(140, 23);
+            comboBox1.TabIndex = 6;
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Location = new System.Drawing.Point(3, 3);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1133, 24);
-            this.menuStrip1.TabIndex = 5;
-            this.menuStrip1.Text = "menuStrip1";
+            menuStrip1.Location = new Point(4, 3);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Padding = new Padding(7, 2, 0, 2);
+            menuStrip1.Size = new Size(1322, 24);
+            menuStrip1.TabIndex = 5;
+            menuStrip1.Text = "menuStrip1";
             // 
             // ItemTab
             // 
-            this.ItemTab.Controls.Add(this.dateTimePicker3);
-            this.ItemTab.Controls.Add(this.button1);
-            this.ItemTab.Controls.Add(this.label26);
-            this.ItemTab.Controls.Add(this.label25);
-            this.ItemTab.Controls.Add(this.label24);
-            this.ItemTab.Controls.Add(this.label23);
-            this.ItemTab.Controls.Add(this.label22);
-            this.ItemTab.Controls.Add(this.label21);
-            this.ItemTab.Controls.Add(this.label20);
-            this.ItemTab.Controls.Add(this.label19);
-            this.ItemTab.Controls.Add(this.label18);
-            this.ItemTab.Controls.Add(this.label17);
-            this.ItemTab.Controls.Add(this.label15);
-            this.ItemTab.Controls.Add(this.textBox13);
-            this.ItemTab.Controls.Add(this.textBox12);
-            this.ItemTab.Controls.Add(this.textBox11);
-            this.ItemTab.Controls.Add(this.textBox10);
-            this.ItemTab.Controls.Add(this.textBox9);
-            this.ItemTab.Controls.Add(this.textBox8);
-            this.ItemTab.Controls.Add(this.textBox7);
-            this.ItemTab.Controls.Add(this.textBox6);
-            this.ItemTab.Controls.Add(this.textBox5);
-            this.ItemTab.Controls.Add(this.textBox4);
-            this.ItemTab.Controls.Add(this.textBox3);
-            this.ItemTab.Controls.Add(this.label14);
-            this.ItemTab.Controls.Add(this.label13);
-            this.ItemTab.Controls.Add(this.label12);
-            this.ItemTab.Controls.Add(this.label11);
-            this.ItemTab.Controls.Add(this.label10);
-            this.ItemTab.Controls.Add(this.label9);
-            this.ItemTab.Controls.Add(this.label8);
-            this.ItemTab.Controls.Add(this.label7);
-            this.ItemTab.Controls.Add(this.label6);
-            this.ItemTab.Controls.Add(this.label5);
-            this.ItemTab.Controls.Add(this.label4);
-            this.ItemTab.Controls.Add(this.linkLabel1);
-            this.ItemTab.Controls.Add(this.label3);
-            this.ItemTab.Location = new System.Drawing.Point(4, 22);
-            this.ItemTab.Name = "ItemTab";
-            this.ItemTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ItemTab.Size = new System.Drawing.Size(1139, 400);
-            this.ItemTab.TabIndex = 1;
-            this.ItemTab.Text = "Item";
-            this.ItemTab.UseVisualStyleBackColor = true;
+            ItemTab.Controls.Add(label40);
+            ItemTab.Controls.Add(button4);
+            ItemTab.Controls.Add(dateTimePicker3);
+            ItemTab.Controls.Add(button1);
+            ItemTab.Controls.Add(label26);
+            ItemTab.Controls.Add(label25);
+            ItemTab.Controls.Add(label24);
+            ItemTab.Controls.Add(label23);
+            ItemTab.Controls.Add(label22);
+            ItemTab.Controls.Add(label21);
+            ItemTab.Controls.Add(label20);
+            ItemTab.Controls.Add(label19);
+            ItemTab.Controls.Add(label18);
+            ItemTab.Controls.Add(label17);
+            ItemTab.Controls.Add(textBox3);
+            ItemTab.Controls.Add(label14);
+            ItemTab.Controls.Add(label13);
+            ItemTab.Controls.Add(label12);
+            ItemTab.Controls.Add(label11);
+            ItemTab.Controls.Add(label10);
+            ItemTab.Controls.Add(label9);
+            ItemTab.Controls.Add(label8);
+            ItemTab.Controls.Add(label7);
+            ItemTab.Controls.Add(label6);
+            ItemTab.Controls.Add(label5);
+            ItemTab.Controls.Add(label4);
+            ItemTab.Controls.Add(linkLabel1);
+            ItemTab.Controls.Add(label3);
+            ItemTab.Controls.Add(textBox10);
+            ItemTab.Controls.Add(textBox9);
+            ItemTab.Controls.Add(textBox8);
+            ItemTab.Controls.Add(textBox7);
+            ItemTab.Controls.Add(textBox6);
+            ItemTab.Controls.Add(textBox5);
+            ItemTab.Controls.Add(textBox4);
+            ItemTab.Location = new Point(4, 24);
+            ItemTab.Margin = new Padding(4, 3, 4, 3);
+            ItemTab.Name = "ItemTab";
+            ItemTab.Padding = new Padding(4, 3, 4, 3);
+            ItemTab.Size = new Size(1330, 464);
+            ItemTab.TabIndex = 1;
+            ItemTab.Text = "Item";
+            ItemTab.UseVisualStyleBackColor = true;
+            // 
+            // label40
+            // 
+            label40.AutoSize = true;
+            label40.Location = new Point(120, 52);
+            label40.Name = "label40";
+            label40.Size = new Size(44, 15);
+            label40.TabIndex = 54;
+            label40.Text = "label40";
+            // 
+            // button4
+            // 
+            button4.Location = new Point(120, 20);
+            button4.Name = "button4";
+            button4.Size = new Size(75, 23);
+            button4.TabIndex = 53;
+            button4.Text = "Edit";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // dateTimePicker3
             // 
-            this.dateTimePicker3.Location = new System.Drawing.Point(102, 68);
-            this.dateTimePicker3.Name = "dateTimePicker3";
-            this.dateTimePicker3.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker3.TabIndex = 38;
-            this.dateTimePicker3.Value = new System.DateTime(2020, 1, 1, 10, 52, 0, 0);
+            dateTimePicker3.Location = new Point(120, 78);
+            dateTimePicker3.Margin = new Padding(4, 3, 4, 3);
+            dateTimePicker3.Name = "dateTimePicker3";
+            dateTimePicker3.Size = new Size(233, 23);
+            dateTimePicker3.TabIndex = 38;
+            dateTimePicker3.Value = new DateTime(2020, 1, 1, 10, 52, 0, 0);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(188, 371);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 23);
-            this.button1.TabIndex = 37;
-            this.button1.Text = "Update";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            button1.Location = new Point(120, 431);
+            button1.Margin = new Padding(4, 3, 4, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(117, 27);
+            button1.TabIndex = 37;
+            button1.Text = "Update";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click_1;
             // 
             // label26
             // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(99, 344);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(41, 13);
-            this.label26.TabIndex = 36;
-            this.label26.Text = "label26";
+            label26.AutoSize = true;
+            label26.Location = new Point(120, 397);
+            label26.Margin = new Padding(4, 0, 4, 0);
+            label26.Name = "label26";
+            label26.Size = new Size(44, 15);
+            label26.TabIndex = 36;
+            label26.Text = "label26";
             // 
             // label25
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(99, 317);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(41, 13);
-            this.label25.TabIndex = 35;
-            this.label25.Text = "label25";
+            label25.AutoSize = true;
+            label25.Location = new Point(120, 366);
+            label25.Margin = new Padding(4, 0, 4, 0);
+            label25.Name = "label25";
+            label25.Size = new Size(44, 15);
+            label25.TabIndex = 35;
+            label25.Text = "label25";
             // 
             // label24
             // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(99, 290);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(41, 13);
-            this.label24.TabIndex = 34;
-            this.label24.Text = "label24";
+            label24.AutoSize = true;
+            label24.Location = new Point(120, 335);
+            label24.Margin = new Padding(4, 0, 4, 0);
+            label24.Name = "label24";
+            label24.Size = new Size(44, 15);
+            label24.TabIndex = 34;
+            label24.Text = "label24";
             // 
             // label23
             // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(99, 263);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(41, 13);
-            this.label23.TabIndex = 33;
-            this.label23.Text = "label23";
+            label23.AutoSize = true;
+            label23.Location = new Point(120, 303);
+            label23.Margin = new Padding(4, 0, 4, 0);
+            label23.Name = "label23";
+            label23.Size = new Size(44, 15);
+            label23.TabIndex = 33;
+            label23.Text = "label23";
             // 
             // label22
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(99, 236);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(41, 13);
-            this.label22.TabIndex = 32;
-            this.label22.Text = "label22";
+            label22.AutoSize = true;
+            label22.Location = new Point(120, 272);
+            label22.Margin = new Padding(4, 0, 4, 0);
+            label22.Name = "label22";
+            label22.Size = new Size(44, 15);
+            label22.TabIndex = 32;
+            label22.Text = "label22";
             // 
             // label21
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(99, 209);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(41, 13);
-            this.label21.TabIndex = 31;
-            this.label21.Text = "label21";
+            label21.AutoSize = true;
+            label21.Location = new Point(120, 241);
+            label21.Margin = new Padding(4, 0, 4, 0);
+            label21.Name = "label21";
+            label21.Size = new Size(44, 15);
+            label21.TabIndex = 31;
+            label21.Text = "label21";
             // 
             // label20
             // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(99, 182);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(41, 13);
-            this.label20.TabIndex = 30;
-            this.label20.Text = "label20";
+            label20.AutoSize = true;
+            label20.Location = new Point(120, 210);
+            label20.Margin = new Padding(4, 0, 4, 0);
+            label20.Name = "label20";
+            label20.Size = new Size(44, 15);
+            label20.TabIndex = 30;
+            label20.Text = "label20";
             // 
             // label19
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(99, 155);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(41, 13);
-            this.label19.TabIndex = 29;
-            this.label19.Text = "label19";
+            label19.AutoSize = true;
+            label19.Location = new Point(120, 179);
+            label19.Margin = new Padding(4, 0, 4, 0);
+            label19.Name = "label19";
+            label19.Size = new Size(44, 15);
+            label19.TabIndex = 29;
+            label19.Text = "label19";
             // 
             // label18
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(99, 128);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(41, 13);
-            this.label18.TabIndex = 28;
-            this.label18.Text = "label18";
+            label18.AutoSize = true;
+            label18.Location = new Point(120, 148);
+            label18.Margin = new Padding(4, 0, 4, 0);
+            label18.Name = "label18";
+            label18.Size = new Size(44, 15);
+            label18.TabIndex = 28;
+            label18.Text = "label18";
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(99, 101);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(41, 13);
-            this.label17.TabIndex = 27;
-            this.label17.Text = "label17";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(99, 15);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(41, 13);
-            this.label15.TabIndex = 25;
-            this.label15.Text = "label15";
-            // 
-            // textBox13
-            // 
-            this.textBox13.Location = new System.Drawing.Point(188, 341);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(100, 20);
-            this.textBox13.TabIndex = 24;
-            // 
-            // textBox12
-            // 
-            this.textBox12.Location = new System.Drawing.Point(188, 314);
-            this.textBox12.Name = "textBox12";
-            this.textBox12.Size = new System.Drawing.Size(100, 20);
-            this.textBox12.TabIndex = 23;
-            // 
-            // textBox11
-            // 
-            this.textBox11.Location = new System.Drawing.Point(188, 287);
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(100, 20);
-            this.textBox11.TabIndex = 22;
-            // 
-            // textBox10
-            // 
-            this.textBox10.Location = new System.Drawing.Point(188, 260);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(100, 20);
-            this.textBox10.TabIndex = 21;
-            // 
-            // textBox9
-            // 
-            this.textBox9.Location = new System.Drawing.Point(188, 233);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(100, 20);
-            this.textBox9.TabIndex = 20;
-            // 
-            // textBox8
-            // 
-            this.textBox8.Location = new System.Drawing.Point(188, 206);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(100, 20);
-            this.textBox8.TabIndex = 19;
-            // 
-            // textBox7
-            // 
-            this.textBox7.Location = new System.Drawing.Point(188, 179);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(100, 20);
-            this.textBox7.TabIndex = 18;
-            // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(188, 152);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 20);
-            this.textBox6.TabIndex = 17;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Location = new System.Drawing.Point(188, 125);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 20);
-            this.textBox5.TabIndex = 16;
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(188, 98);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(100, 20);
-            this.textBox4.TabIndex = 15;
+            label17.AutoSize = true;
+            label17.Location = new Point(120, 117);
+            label17.Margin = new Padding(4, 0, 4, 0);
+            label17.Name = "label17";
+            label17.Size = new Size(44, 15);
+            label17.TabIndex = 27;
+            label17.Text = "label17";
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(188, 30);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 14;
+            textBox3.Location = new Point(120, 49);
+            textBox3.Margin = new Padding(4, 3, 4, 3);
+            textBox3.Name = "textBox3";
+            textBox3.Size = new Size(233, 23);
+            textBox3.TabIndex = 14;
+            textBox3.Leave += TextBoxAttribute_Leave;
             // 
             // label14
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(55, 344);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(38, 13);
-            this.label14.TabIndex = 12;
-            this.label14.Text = "Height";
+            label14.AutoSize = true;
+            label14.Location = new Point(64, 397);
+            label14.Margin = new Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new Size(43, 15);
+            label14.TabIndex = 12;
+            label14.Text = "Height";
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(55, 317);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(35, 13);
-            this.label13.TabIndex = 11;
-            this.label13.Text = "Width";
+            label13.AutoSize = true;
+            label13.Location = new Point(68, 366);
+            label13.Margin = new Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new Size(39, 15);
+            label13.TabIndex = 11;
+            label13.Text = "Width";
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(33, 290);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(57, 13);
-            this.label12.TabIndex = 10;
-            this.label12.Text = "Length (in)";
+            label12.AutoSize = true;
+            label12.Location = new Point(42, 335);
+            label12.Margin = new Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(65, 15);
+            label12.TabIndex = 10;
+            label12.Text = "Length (in)";
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(29, 263);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(61, 13);
-            this.label11.TabIndex = 9;
-            this.label11.Text = "Weight (oz)";
+            label11.AutoSize = true;
+            label11.Location = new Point(39, 303);
+            label11.Margin = new Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(68, 15);
+            label11.TabIndex = 9;
+            label11.Text = "Weight (oz)";
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(27, 236);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(63, 13);
-            this.label10.TabIndex = 8;
-            this.label10.Text = "Weight (lbs)";
+            label10.AutoSize = true;
+            label10.Location = new Point(36, 272);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(71, 15);
+            label10.TabIndex = 8;
+            label10.Text = "Weight (lbs)";
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(46, 209);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(44, 13);
-            this.label9.TabIndex = 7;
-            this.label9.Text = "Item No";
+            label9.AutoSize = true;
+            label9.Location = new Point(57, 241);
+            label9.Margin = new Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(50, 15);
+            label9.TabIndex = 7;
+            label9.Text = "Item No";
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(17, 155);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(73, 13);
-            this.label8.TabIndex = 6;
-            this.label8.Text = "Initial Quantity";
+            label8.AutoSize = true;
+            label8.Location = new Point(22, 179);
+            label8.Margin = new Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(85, 15);
+            label8.TabIndex = 6;
+            label8.Text = "Initial Quantity";
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(7, 182);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(83, 13);
-            this.label7.TabIndex = 5;
-            this.label7.Text = "Current Quantity";
+            label7.AutoSize = true;
+            label7.Location = new Point(11, 210);
+            label7.Margin = new Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new Size(96, 15);
+            label7.TabIndex = 5;
+            label7.Text = "Current Quantity";
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(35, 128);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(55, 13);
-            this.label6.TabIndex = 4;
-            this.label6.Text = "Sold Price";
+            label6.AutoSize = true;
+            label6.Location = new Point(48, 148);
+            label6.Margin = new Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new Size(59, 15);
+            label6.TabIndex = 4;
+            label6.Text = "Sold Price";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 101);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(79, 13);
-            this.label5.TabIndex = 3;
-            this.label5.Text = "Purchase Price";
+            label5.AutoSize = true;
+            label5.Location = new Point(23, 117);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(84, 15);
+            label5.TabIndex = 3;
+            label5.Text = "Purchase Price";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 74);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(84, 13);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Date Purchased";
+            label4.AutoSize = true;
+            label4.Location = new Point(18, 85);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(89, 15);
+            label4.TabIndex = 2;
+            label4.Text = "Date Purchased";
             // 
             // linkLabel1
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(1040, 3);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(96, 13);
-            this.linkLabel1.TabIndex = 1;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "View Purchase Lot";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            linkLabel1.AutoSize = true;
+            linkLabel1.Location = new Point(1213, 3);
+            linkLabel1.Margin = new Padding(4, 0, 4, 0);
+            linkLabel1.Name = "linkLabel1";
+            linkLabel1.Size = new Size(103, 15);
+            linkLabel1.TabIndex = 1;
+            linkLabel1.TabStop = true;
+            linkLabel1.Text = "View Purchase Lot";
+            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(55, 15);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Name";
+            label3.AutoSize = true;
+            label3.Location = new Point(64, 52);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(39, 15);
+            label3.TabIndex = 0;
+            label3.Text = "Name";
+            // 
+            // textBox10
+            // 
+            textBox10.Location = new Point(120, 394);
+            textBox10.Name = "textBox10";
+            textBox10.Size = new Size(100, 23);
+            textBox10.TabIndex = 52;
+            textBox10.Leave += TextBoxAttribute_Leave;
+            // 
+            // textBox9
+            // 
+            textBox9.Location = new Point(120, 363);
+            textBox9.Name = "textBox9";
+            textBox9.Size = new Size(100, 23);
+            textBox9.TabIndex = 51;
+            textBox9.Leave += TextBoxAttribute_Leave;
+            // 
+            // textBox8
+            // 
+            textBox8.Location = new Point(120, 332);
+            textBox8.Name = "textBox8";
+            textBox8.Size = new Size(100, 23);
+            textBox8.TabIndex = 50;
+            textBox8.Leave += TextBoxAttribute_Leave;
+            // 
+            // textBox7
+            // 
+            textBox7.Location = new Point(120, 300);
+            textBox7.Name = "textBox7";
+            textBox7.Size = new Size(100, 23);
+            textBox7.TabIndex = 49;
+            textBox7.Leave += TextBoxAttribute_Leave;
+            // 
+            // textBox6
+            // 
+            textBox6.Location = new Point(120, 269);
+            textBox6.Name = "textBox6";
+            textBox6.Size = new Size(100, 23);
+            textBox6.TabIndex = 48;
+            textBox6.Leave += TextBoxAttribute_Leave;
+            // 
+            // textBox5
+            // 
+            textBox5.Location = new Point(120, 207);
+            textBox5.Name = "textBox5";
+            textBox5.Size = new Size(100, 23);
+            textBox5.TabIndex = 47;
+            textBox5.Leave += TextBoxAttribute_Leave;
+            // 
+            // textBox4
+            // 
+            textBox4.Location = new Point(120, 176);
+            textBox4.Name = "textBox4";
+            textBox4.Size = new Size(100, 23);
+            textBox4.TabIndex = 46;
+            textBox4.Leave += TextBoxAttribute_Leave;
             // 
             // PurchaseTab
             // 
-            this.PurchaseTab.Controls.Add(this.button3);
-            this.PurchaseTab.Controls.Add(this.textBox21);
-            this.PurchaseTab.Controls.Add(this.label37);
-            this.PurchaseTab.Controls.Add(this.label36);
-            this.PurchaseTab.Controls.Add(this.dateTimePicker4);
-            this.PurchaseTab.Controls.Add(this.textBox20);
-            this.PurchaseTab.Controls.Add(this.textBox19);
-            this.PurchaseTab.Controls.Add(this.textBox18);
-            this.PurchaseTab.Controls.Add(this.textBox17);
-            this.PurchaseTab.Controls.Add(this.textBox16);
-            this.PurchaseTab.Controls.Add(this.textBox15);
-            this.PurchaseTab.Controls.Add(this.textBox14);
-            this.PurchaseTab.Controls.Add(this.textBox2);
-            this.PurchaseTab.Controls.Add(this.label35);
-            this.PurchaseTab.Controls.Add(this.label34);
-            this.PurchaseTab.Controls.Add(this.label33);
-            this.PurchaseTab.Controls.Add(this.label32);
-            this.PurchaseTab.Controls.Add(this.label31);
-            this.PurchaseTab.Controls.Add(this.label30);
-            this.PurchaseTab.Controls.Add(this.label29);
-            this.PurchaseTab.Controls.Add(this.label28);
-            this.PurchaseTab.Controls.Add(this.label27);
-            this.PurchaseTab.Controls.Add(this.button2);
-            this.PurchaseTab.Controls.Add(this.label16);
-            this.PurchaseTab.Controls.Add(this.listBox2);
-            this.PurchaseTab.Location = new System.Drawing.Point(4, 22);
-            this.PurchaseTab.Name = "PurchaseTab";
-            this.PurchaseTab.Padding = new System.Windows.Forms.Padding(3);
-            this.PurchaseTab.Size = new System.Drawing.Size(1139, 400);
-            this.PurchaseTab.TabIndex = 2;
-            this.PurchaseTab.Text = "Purchase Group";
-            this.PurchaseTab.UseVisualStyleBackColor = true;
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(329, 325);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(120, 13);
-            this.label34.TabIndex = 10;
-            this.label34.Text = "Shipping Info: (Optional)";
-            // 
-            // label33
-            // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(532, 342);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(63, 13);
-            this.label33.TabIndex = 9;
-            this.label33.Text = "Weight (lbs)";
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(464, 342);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(55, 13);
-            this.label32.TabIndex = 8;
-            this.label32.Text = "Height (in)";
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(399, 342);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(52, 13);
-            this.label31.TabIndex = 7;
-            this.label31.Text = "Width (in)";
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(329, 342);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(57, 13);
-            this.label30.TabIndex = 6;
-            this.label30.Text = "Length (in)";
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(220, 342);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(73, 13);
-            this.label29.TabIndex = 5;
-            this.label29.Text = "Initial Quantity";
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(92, 342);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(58, 13);
-            this.label28.TabIndex = 4;
-            this.label28.Text = "Item Name";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(6, 325);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(77, 13);
-            this.label27.TabIndex = 3;
-            this.label27.Text = "Add New Item:";
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(692, 355);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Add Item";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(427, 6);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(79, 13);
-            this.label16.TabIndex = 1;
-            this.label16.Text = "Purchase Price";
-            // 
-            // listBox2
-            // 
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(6, 6);
-            this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(402, 277);
-            this.listBox2.TabIndex = 0;
-            this.listBox2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox2_MouseDoubleClick);
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(608, 342);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(61, 13);
-            this.label35.TabIndex = 11;
-            this.label35.Text = "Weight (oz)";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(95, 358);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(122, 20);
-            this.textBox2.TabIndex = 12;
-            // 
-            // textBox14
-            // 
-            this.textBox14.Location = new System.Drawing.Point(223, 358);
-            this.textBox14.Name = "textBox14";
-            this.textBox14.Size = new System.Drawing.Size(70, 20);
-            this.textBox14.TabIndex = 13;
-            // 
-            // textBox15
-            // 
-            this.textBox15.Location = new System.Drawing.Point(332, 358);
-            this.textBox15.Name = "textBox15";
-            this.textBox15.Size = new System.Drawing.Size(35, 20);
-            this.textBox15.TabIndex = 14;
-            // 
-            // textBox16
-            // 
-            this.textBox16.Location = new System.Drawing.Point(402, 358);
-            this.textBox16.Name = "textBox16";
-            this.textBox16.Size = new System.Drawing.Size(35, 20);
-            this.textBox16.TabIndex = 15;
-            // 
-            // textBox17
-            // 
-            this.textBox17.Location = new System.Drawing.Point(467, 358);
-            this.textBox17.Name = "textBox17";
-            this.textBox17.Size = new System.Drawing.Size(35, 20);
-            this.textBox17.TabIndex = 16;
-            // 
-            // textBox18
-            // 
-            this.textBox18.Location = new System.Drawing.Point(535, 358);
-            this.textBox18.Name = "textBox18";
-            this.textBox18.Size = new System.Drawing.Size(35, 20);
-            this.textBox18.TabIndex = 17;
-            // 
-            // textBox19
-            // 
-            this.textBox19.Location = new System.Drawing.Point(611, 358);
-            this.textBox19.Name = "textBox19";
-            this.textBox19.Size = new System.Drawing.Size(35, 20);
-            this.textBox19.TabIndex = 18;
-            // 
-            // textBox20
-            // 
-            this.textBox20.Location = new System.Drawing.Point(513, 6);
-            this.textBox20.Name = "textBox20";
-            this.textBox20.Size = new System.Drawing.Size(100, 20);
-            this.textBox20.TabIndex = 19;
-            // 
-            // dateTimePicker4
-            // 
-            this.dateTimePicker4.Location = new System.Drawing.Point(514, 53);
-            this.dateTimePicker4.Name = "dateTimePicker4";
-            this.dateTimePicker4.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker4.TabIndex = 20;
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(427, 53);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(78, 13);
-            this.label36.TabIndex = 21;
-            this.label36.Text = "Purchase Date";
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(427, 99);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(83, 13);
-            this.label37.TabIndex = 22;
-            this.label37.Text = "Purchase Notes";
-            // 
-            // textBox21
-            // 
-            this.textBox21.Location = new System.Drawing.Point(522, 102);
-            this.textBox21.Name = "textBox21";
-            this.textBox21.Size = new System.Drawing.Size(178, 20);
-            this.textBox21.TabIndex = 23;
-            // 
-            // Sale
-            // 
-            this.Sale.Controls.Add(this.textBox23);
-            this.Sale.Controls.Add(this.textBox22);
-            this.Sale.Controls.Add(this.label39);
-            this.Sale.Controls.Add(this.dateTimePicker5);
-            this.Sale.Controls.Add(this.label38);
-            this.Sale.Controls.Add(this.listBox3);
-            this.Sale.Location = new System.Drawing.Point(4, 22);
-            this.Sale.Name = "Sale";
-            this.Sale.Size = new System.Drawing.Size(1139, 400);
-            this.Sale.TabIndex = 4;
-            this.Sale.Text = "Sale";
-            this.Sale.UseVisualStyleBackColor = true;
+            PurchaseTab.Controls.Add(button3);
+            PurchaseTab.Controls.Add(textBox21);
+            PurchaseTab.Controls.Add(label37);
+            PurchaseTab.Controls.Add(label36);
+            PurchaseTab.Controls.Add(dateTimePicker4);
+            PurchaseTab.Controls.Add(textBox20);
+            PurchaseTab.Controls.Add(textBox19);
+            PurchaseTab.Controls.Add(textBox18);
+            PurchaseTab.Controls.Add(textBox17);
+            PurchaseTab.Controls.Add(textBox16);
+            PurchaseTab.Controls.Add(textBox15);
+            PurchaseTab.Controls.Add(textBox14);
+            PurchaseTab.Controls.Add(textBox2);
+            PurchaseTab.Controls.Add(label35);
+            PurchaseTab.Controls.Add(label34);
+            PurchaseTab.Controls.Add(label33);
+            PurchaseTab.Controls.Add(label32);
+            PurchaseTab.Controls.Add(label31);
+            PurchaseTab.Controls.Add(label30);
+            PurchaseTab.Controls.Add(label29);
+            PurchaseTab.Controls.Add(label28);
+            PurchaseTab.Controls.Add(label27);
+            PurchaseTab.Controls.Add(button2);
+            PurchaseTab.Controls.Add(label16);
+            PurchaseTab.Controls.Add(listBox2);
+            PurchaseTab.Location = new Point(4, 24);
+            PurchaseTab.Margin = new Padding(4, 3, 4, 3);
+            PurchaseTab.Name = "PurchaseTab";
+            PurchaseTab.Padding = new Padding(4, 3, 4, 3);
+            PurchaseTab.Size = new Size(1330, 464);
+            PurchaseTab.TabIndex = 2;
+            PurchaseTab.Text = "Purchase Group";
+            PurchaseTab.UseVisualStyleBackColor = true;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(414, 260);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 24;
-            this.button3.Text = "Clear List";
-            this.button3.UseVisualStyleBackColor = true;
+            button3.Location = new Point(483, 300);
+            button3.Margin = new Padding(4, 3, 4, 3);
+            button3.Name = "button3";
+            button3.Size = new Size(88, 27);
+            button3.TabIndex = 24;
+            button3.Text = "Clear List";
+            button3.UseVisualStyleBackColor = true;
             // 
-            // listBox3
+            // textBox21
             // 
-            this.listBox3.FormattingEnabled = true;
-            this.listBox3.Location = new System.Drawing.Point(3, 3);
-            this.listBox3.Name = "listBox3";
-            this.listBox3.Size = new System.Drawing.Size(452, 264);
-            this.listBox3.TabIndex = 0;
+            textBox21.Location = new Point(600, 114);
+            textBox21.Margin = new Padding(4, 3, 4, 3);
+            textBox21.Name = "textBox21";
+            textBox21.Size = new Size(207, 23);
+            textBox21.TabIndex = 23;
             // 
-            // resultItemBindingSource
+            // label37
             // 
-            this.resultItemBindingSource.DataSource = typeof(ResultItem);
+            label37.AutoSize = true;
+            label37.Location = new Point(498, 114);
+            label37.Margin = new Padding(4, 0, 4, 0);
+            label37.Name = "label37";
+            label37.Size = new Size(89, 15);
+            label37.TabIndex = 22;
+            label37.Text = "Purchase Notes";
             // 
-            // label38
+            // label36
             // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(461, 33);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(67, 13);
-            this.label38.TabIndex = 1;
-            this.label38.Text = "Sale Amount";
+            label36.AutoSize = true;
+            label36.Location = new Point(498, 61);
+            label36.Margin = new Padding(4, 0, 4, 0);
+            label36.Name = "label36";
+            label36.Size = new Size(82, 15);
+            label36.TabIndex = 21;
+            label36.Text = "Purchase Date";
             // 
-            // dateTimePicker5
+            // dateTimePicker4
             // 
-            this.dateTimePicker5.Location = new System.Drawing.Point(461, 3);
-            this.dateTimePicker5.Name = "dateTimePicker5";
-            this.dateTimePicker5.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker5.TabIndex = 2;
+            dateTimePicker4.Location = new Point(600, 61);
+            dateTimePicker4.Margin = new Padding(4, 3, 4, 3);
+            dateTimePicker4.Name = "dateTimePicker4";
+            dateTimePicker4.Size = new Size(233, 23);
+            dateTimePicker4.TabIndex = 20;
             // 
-            // label39
+            // textBox20
             // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(462, 64);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(62, 13);
-            this.label39.TabIndex = 3;
-            this.label39.Text = "Box Item ID";
+            textBox20.Location = new Point(598, 7);
+            textBox20.Margin = new Padding(4, 3, 4, 3);
+            textBox20.Name = "textBox20";
+            textBox20.Size = new Size(116, 23);
+            textBox20.TabIndex = 19;
             // 
-            // textBox22
+            // textBox19
             // 
-            this.textBox22.Location = new System.Drawing.Point(536, 30);
-            this.textBox22.Name = "textBox22";
-            this.textBox22.Size = new System.Drawing.Size(100, 20);
-            this.textBox22.TabIndex = 4;
+            textBox19.Location = new Point(713, 413);
+            textBox19.Margin = new Padding(4, 3, 4, 3);
+            textBox19.Name = "textBox19";
+            textBox19.Size = new Size(40, 23);
+            textBox19.TabIndex = 18;
+            // 
+            // textBox18
+            // 
+            textBox18.Location = new Point(624, 413);
+            textBox18.Margin = new Padding(4, 3, 4, 3);
+            textBox18.Name = "textBox18";
+            textBox18.Size = new Size(40, 23);
+            textBox18.TabIndex = 17;
+            // 
+            // textBox17
+            // 
+            textBox17.Location = new Point(545, 413);
+            textBox17.Margin = new Padding(4, 3, 4, 3);
+            textBox17.Name = "textBox17";
+            textBox17.Size = new Size(40, 23);
+            textBox17.TabIndex = 16;
+            // 
+            // textBox16
+            // 
+            textBox16.Location = new Point(469, 413);
+            textBox16.Margin = new Padding(4, 3, 4, 3);
+            textBox16.Name = "textBox16";
+            textBox16.Size = new Size(40, 23);
+            textBox16.TabIndex = 15;
+            // 
+            // textBox15
+            // 
+            textBox15.Location = new Point(387, 413);
+            textBox15.Margin = new Padding(4, 3, 4, 3);
+            textBox15.Name = "textBox15";
+            textBox15.Size = new Size(40, 23);
+            textBox15.TabIndex = 14;
+            // 
+            // textBox14
+            // 
+            textBox14.Location = new Point(260, 413);
+            textBox14.Margin = new Padding(4, 3, 4, 3);
+            textBox14.Name = "textBox14";
+            textBox14.Size = new Size(81, 23);
+            textBox14.TabIndex = 13;
+            // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(111, 413);
+            textBox2.Margin = new Padding(4, 3, 4, 3);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(142, 23);
+            textBox2.TabIndex = 12;
+            // 
+            // label35
+            // 
+            label35.AutoSize = true;
+            label35.Location = new Point(709, 395);
+            label35.Margin = new Padding(4, 0, 4, 0);
+            label35.Name = "label35";
+            label35.Size = new Size(68, 15);
+            label35.TabIndex = 11;
+            label35.Text = "Weight (oz)";
+            // 
+            // label34
+            // 
+            label34.AutoSize = true;
+            label34.Location = new Point(384, 375);
+            label34.Margin = new Padding(4, 0, 4, 0);
+            label34.Name = "label34";
+            label34.Size = new Size(138, 15);
+            label34.TabIndex = 10;
+            label34.Text = "Shipping Info: (Optional)";
+            // 
+            // label33
+            // 
+            label33.AutoSize = true;
+            label33.Location = new Point(621, 395);
+            label33.Margin = new Padding(4, 0, 4, 0);
+            label33.Name = "label33";
+            label33.Size = new Size(71, 15);
+            label33.TabIndex = 9;
+            label33.Text = "Weight (lbs)";
+            // 
+            // label32
+            // 
+            label32.AutoSize = true;
+            label32.Location = new Point(541, 395);
+            label32.Margin = new Padding(4, 0, 4, 0);
+            label32.Name = "label32";
+            label32.Size = new Size(64, 15);
+            label32.TabIndex = 8;
+            label32.Text = "Height (in)";
+            // 
+            // label31
+            // 
+            label31.AutoSize = true;
+            label31.Location = new Point(465, 395);
+            label31.Margin = new Padding(4, 0, 4, 0);
+            label31.Name = "label31";
+            label31.Size = new Size(60, 15);
+            label31.TabIndex = 7;
+            label31.Text = "Width (in)";
+            // 
+            // label30
+            // 
+            label30.AutoSize = true;
+            label30.Location = new Point(384, 395);
+            label30.Margin = new Padding(4, 0, 4, 0);
+            label30.Name = "label30";
+            label30.Size = new Size(65, 15);
+            label30.TabIndex = 6;
+            label30.Text = "Length (in)";
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Location = new Point(257, 395);
+            label29.Margin = new Padding(4, 0, 4, 0);
+            label29.Name = "label29";
+            label29.Size = new Size(85, 15);
+            label29.TabIndex = 5;
+            label29.Text = "Initial Quantity";
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Location = new Point(107, 395);
+            label28.Margin = new Padding(4, 0, 4, 0);
+            label28.Name = "label28";
+            label28.Size = new Size(66, 15);
+            label28.TabIndex = 4;
+            label28.Text = "Item Name";
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Location = new Point(7, 375);
+            label27.Margin = new Padding(4, 0, 4, 0);
+            label27.Name = "label27";
+            label27.Size = new Size(86, 15);
+            label27.TabIndex = 3;
+            label27.Text = "Add New Item:";
+            // 
+            // button2
+            // 
+            button2.Location = new Point(807, 410);
+            button2.Margin = new Padding(4, 3, 4, 3);
+            button2.Name = "button2";
+            button2.Size = new Size(88, 27);
+            button2.TabIndex = 2;
+            button2.Text = "Add Item";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(498, 7);
+            label16.Margin = new Padding(4, 0, 4, 0);
+            label16.Name = "label16";
+            label16.Size = new Size(84, 15);
+            label16.TabIndex = 1;
+            label16.Text = "Purchase Price";
+            // 
+            // listBox2
+            // 
+            listBox2.FormattingEnabled = true;
+            listBox2.ItemHeight = 15;
+            listBox2.Location = new Point(7, 7);
+            listBox2.Margin = new Padding(4, 3, 4, 3);
+            listBox2.Name = "listBox2";
+            listBox2.Size = new Size(468, 319);
+            listBox2.TabIndex = 0;
+            listBox2.MouseDoubleClick += listBox2_MouseDoubleClick;
+            // 
+            // Sale
+            // 
+            Sale.Controls.Add(textBox23);
+            Sale.Controls.Add(textBox22);
+            Sale.Controls.Add(label39);
+            Sale.Controls.Add(dateTimePicker5);
+            Sale.Controls.Add(label38);
+            Sale.Controls.Add(listBox3);
+            Sale.Location = new Point(4, 24);
+            Sale.Margin = new Padding(4, 3, 4, 3);
+            Sale.Name = "Sale";
+            Sale.Size = new Size(1330, 464);
+            Sale.TabIndex = 4;
+            Sale.Text = "Sale";
+            Sale.UseVisualStyleBackColor = true;
             // 
             // textBox23
             // 
-            this.textBox23.Location = new System.Drawing.Point(536, 57);
-            this.textBox23.Name = "textBox23";
-            this.textBox23.Size = new System.Drawing.Size(100, 20);
-            this.textBox23.TabIndex = 5;
+            textBox23.Location = new Point(625, 66);
+            textBox23.Margin = new Padding(4, 3, 4, 3);
+            textBox23.Name = "textBox23";
+            textBox23.Size = new Size(116, 23);
+            textBox23.TabIndex = 5;
+            // 
+            // textBox22
+            // 
+            textBox22.Location = new Point(625, 35);
+            textBox22.Margin = new Padding(4, 3, 4, 3);
+            textBox22.Name = "textBox22";
+            textBox22.Size = new Size(116, 23);
+            textBox22.TabIndex = 4;
+            // 
+            // label39
+            // 
+            label39.AutoSize = true;
+            label39.Location = new Point(539, 74);
+            label39.Margin = new Padding(4, 0, 4, 0);
+            label39.Name = "label39";
+            label39.Size = new Size(68, 15);
+            label39.TabIndex = 3;
+            label39.Text = "Box Item ID";
+            // 
+            // dateTimePicker5
+            // 
+            dateTimePicker5.Location = new Point(538, 3);
+            dateTimePicker5.Margin = new Padding(4, 3, 4, 3);
+            dateTimePicker5.Name = "dateTimePicker5";
+            dateTimePicker5.Size = new Size(233, 23);
+            dateTimePicker5.TabIndex = 2;
+            // 
+            // label38
+            // 
+            label38.AutoSize = true;
+            label38.Location = new Point(538, 38);
+            label38.Margin = new Padding(4, 0, 4, 0);
+            label38.Name = "label38";
+            label38.Size = new Size(75, 15);
+            label38.TabIndex = 1;
+            label38.Text = "Sale Amount";
+            // 
+            // listBox3
+            // 
+            listBox3.FormattingEnabled = true;
+            listBox3.ItemHeight = 15;
+            listBox3.Location = new Point(4, 3);
+            listBox3.Margin = new Padding(4, 3, 4, 3);
+            listBox3.Name = "listBox3";
+            listBox3.Size = new Size(527, 304);
+            listBox3.TabIndex = 0;
+            // 
+            // resultItemBindingSource
+            // 
+            resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1171, 450);
-            this.Controls.Add(this.tabControl1);
-            this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.tabControl1.ResumeLayout(false);
-            this.SearchTab.ResumeLayout(false);
-            this.SearchTab.PerformLayout();
-            this.ItemTab.ResumeLayout(false);
-            this.ItemTab.PerformLayout();
-            this.PurchaseTab.ResumeLayout(false);
-            this.PurchaseTab.PerformLayout();
-            this.Sale.ResumeLayout(false);
-            this.Sale.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.resultItemBindingSource)).EndInit();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1366, 519);
+            Controls.Add(tabControl1);
+            MainMenuStrip = menuStrip1;
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "Form1";
+            Text = "Form1";
+            Load += Form1_Load;
+            tabControl1.ResumeLayout(false);
+            SearchTab.ResumeLayout(false);
+            SearchTab.PerformLayout();
+            ItemTab.ResumeLayout(false);
+            ItemTab.PerformLayout();
+            PurchaseTab.ResumeLayout(false);
+            PurchaseTab.PerformLayout();
+            Sale.ResumeLayout(false);
+            Sale.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)resultItemBindingSource).EndInit();
+            ResumeLayout(false);
         }
+
+
+
 
         #endregion
         public System.Windows.Forms.Button manualQuery;
@@ -1027,16 +1101,6 @@
         public System.Windows.Forms.Label label14;
         public System.Windows.Forms.Label label13;
         public System.Windows.Forms.Label label12;
-        public System.Windows.Forms.TextBox textBox13;
-        public System.Windows.Forms.TextBox textBox12;
-        public System.Windows.Forms.TextBox textBox11;
-        public System.Windows.Forms.TextBox textBox10;
-        public System.Windows.Forms.TextBox textBox9;
-        public System.Windows.Forms.TextBox textBox8;
-        public System.Windows.Forms.TextBox textBox7;
-        public System.Windows.Forms.TextBox textBox6;
-        public System.Windows.Forms.TextBox textBox5;
-        public System.Windows.Forms.TextBox textBox4;
         public System.Windows.Forms.TextBox textBox3;
         public System.Windows.Forms.Label label25;
         public System.Windows.Forms.Label label24;
@@ -1047,44 +1111,53 @@
         public System.Windows.Forms.Label label19;
         public System.Windows.Forms.Label label18;
         public System.Windows.Forms.Label label17;
-        public System.Windows.Forms.Label label15;
         public System.Windows.Forms.Label label26;
         public System.Windows.Forms.Button button1;
         public System.Windows.Forms.TabPage PurchaseTab;
         public System.Windows.Forms.ListBox listBox2;
         public System.Windows.Forms.DateTimePicker dateTimePicker3;
-        private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.Label label33;
-        private System.Windows.Forms.Label label32;
-        private System.Windows.Forms.Label label31;
-        private System.Windows.Forms.Label label30;
-        private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TextBox textBox19;
-        private System.Windows.Forms.TextBox textBox18;
-        private System.Windows.Forms.TextBox textBox17;
-        private System.Windows.Forms.TextBox textBox16;
-        private System.Windows.Forms.TextBox textBox15;
-        private System.Windows.Forms.TextBox textBox14;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.TextBox textBox21;
-        private System.Windows.Forms.Label label37;
-        private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.DateTimePicker dateTimePicker4;
-        private System.Windows.Forms.TextBox textBox20;
-        private System.Windows.Forms.TabPage Sale;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.ListBox listBox3;
-        private System.Windows.Forms.BindingSource resultItemBindingSource;
-        private System.Windows.Forms.DateTimePicker dateTimePicker5;
-        private System.Windows.Forms.Label label38;
-        private System.Windows.Forms.TextBox textBox23;
-        private System.Windows.Forms.TextBox textBox22;
-        private System.Windows.Forms.Label label39;
+        public System.Windows.Forms.Label label34;
+        public System.Windows.Forms.Label label33;
+        public System.Windows.Forms.Label label32;
+        public System.Windows.Forms.Label label31;
+        public System.Windows.Forms.Label label30;
+        public System.Windows.Forms.Label label29;
+        public System.Windows.Forms.Label label28;
+        public System.Windows.Forms.Label label27;
+        public System.Windows.Forms.Button button2;
+        public System.Windows.Forms.Label label16;
+        public System.Windows.Forms.TextBox textBox19;
+        public System.Windows.Forms.TextBox textBox18;
+        public System.Windows.Forms.TextBox textBox17;
+        public System.Windows.Forms.TextBox textBox16;
+        public System.Windows.Forms.TextBox textBox15;
+        public System.Windows.Forms.TextBox textBox14;
+        public System.Windows.Forms.TextBox textBox2;
+        public System.Windows.Forms.Label label35;
+        public System.Windows.Forms.TextBox textBox21;
+        public System.Windows.Forms.Label label37;
+        public System.Windows.Forms.Label label36;
+        public System.Windows.Forms.DateTimePicker dateTimePicker4;
+        public System.Windows.Forms.TextBox textBox20;
+        public System.Windows.Forms.TabPage Sale;
+        public System.Windows.Forms.Button button3;
+        public System.Windows.Forms.ListBox listBox3;
+        public System.Windows.Forms.BindingSource resultItemBindingSource;
+        public System.Windows.Forms.DateTimePicker dateTimePicker5;
+        public System.Windows.Forms.Label label38;
+        public System.Windows.Forms.TextBox textBox23;
+        public System.Windows.Forms.TextBox textBox22;
+        public System.Windows.Forms.Label label39;
+        public Label label15;
+        public TextBox textBox10;
+        public TextBox textBox9;
+        public TextBox textBox7;
+        public TextBox textBox6;
+        public TextBox textBox5;
+        public TextBox textBox4;
+        public TextBox textBox8;
+        public Button button4;
+        public Label label40;
     }
 }
 

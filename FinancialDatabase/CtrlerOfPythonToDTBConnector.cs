@@ -74,6 +74,10 @@ public class CtrlerOfPythonToDTBConnector
             }
         }
 
+        //Hardcoded types for special cases
+        colDataTypes["shipping.WeightLbs"] = "int unsigned";
+        colDataTypes["shipping.WeightOz"]  = "int unsigned";
+
         return colDataTypes;
     }
 
@@ -94,7 +98,10 @@ public class CtrlerOfPythonToDTBConnector
         string retList;
 
         List<string> result = runPython(statement);
-
+        if (result[0].CompareTo("ERROR") == 0)
+        {
+            Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
+        }
         // Returns [0,1,2] -> result, colNames, cursor.lastrowid
         retList  = result[0];
         colNames = new List<string>(result[1].Substring(2, result[1].Length - 4).Split("', '"));

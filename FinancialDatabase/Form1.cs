@@ -12,10 +12,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using TextBox = System.Windows.Forms.TextBox;
 
 namespace FinancialDatabase
 {
-    
+
     public partial class Form1 : Form
     {
         public List<ResultItem> currentItems; // list of [item name, ITEM_ID]
@@ -27,6 +28,7 @@ namespace FinancialDatabase
         public PurchasedLotTab PL;
         QueryBuilder QB;
         CtrlerOfPythonToDTBConnector PyConnector;
+        public Dictionary<Control, string> controlBoxAttrib;
 
         public Form1()
         {
@@ -40,11 +42,17 @@ namespace FinancialDatabase
             PyConnector = new CtrlerOfPythonToDTBConnector();
 
             colDataTypes = PyConnector.getColDataTypes();
-            /*List<string> output = colDataTypes.Values.ToList();
-            foreach(string outputType in output)
-            {
-                Console.WriteLine(outputType);
-            }*/
+
+            controlBoxAttrib = new Dictionary<Control, string>
+           {{ dateTimePicker3,  "purchase.Date_Purchased" },
+            { textBox3,  "item.Name" },
+            { textBox4,  "item.InitialQuantity" },
+            { textBox5,  "item.CurrentQuantity" },
+            { textBox6,  "shipping.WeightLbs" },
+            { textBox7, "shipping.WeightOz" },
+            { textBox8, "shipping.Length" },
+            { textBox9, "shipping.Width" },
+            { textBox10, "shipping.Height" }};
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -53,13 +61,13 @@ namespace FinancialDatabase
             comboBox1.SelectedIndex = 0;
         }
 
-        
+
 
         private void button1_Click(object sender, EventArgs e)
         {
             this.listBox1.Items.Clear();
             currentItems.Clear();
-            
+
 
             // Activate Python Script 'DtbConnAndQuery.py' as process 'p'
             string query = this.textBox1.Text;
@@ -70,7 +78,7 @@ namespace FinancialDatabase
 
             List<ResultItem> result = PyConnector.RunItemSearchQuery(query);
 
-            foreach(ResultItem item in result)
+            foreach (ResultItem item in result)
             {
                 this.currentItems.Add(item);
                 this.listBox1.Items.Add(item.get_Name());
@@ -83,7 +91,7 @@ namespace FinancialDatabase
             ST.search();
         }
 
-        
+
 
         // Search listbox double click
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -123,6 +131,33 @@ namespace FinancialDatabase
         private void button1_Click_1(object sender, EventArgs e)
         {
             IV.editUpdate();
+            IV.flipEditState();
+
+        }
+
+        private void TextBoxAttribute_Leave(object sender, EventArgs e)
+        {
+            if (sender is null) return;
+#pragma warning disable CS8600 // Checked if sender is null
+            TextBox t = sender as TextBox;
+#pragma warning disable CS8604 // Checked if sender is null
+            if (!controlBoxAttrib.ContainsKey(t)) return;
+            string attrib = controlBoxAttrib[t];
+            string type = colDataTypes[attrib];
+
+            if (!Util.checkTypeOkay(t.Text, type))
+            {
+                t.Text = "";
+            }
+            else
+            {
+                t.BackColor = Color.LightGray;
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            IV.flipEditState();
         }
     }
 }

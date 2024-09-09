@@ -49,6 +49,47 @@ public class Util
 
     }
 
+    public static bool checkTypeOkay(string attrib, string type)
+    {
+        switch (type)
+        {
+            case "date":
+                return true;
+
+            case "double unsigned":
+                try { Double.Parse(attrib); }
+                catch { return false; }
+                return true;
+
+            case "int unsigned":
+                try { Int32.Parse(attrib); }
+                catch { return false; }
+                if (Int32.Parse(attrib) < 0) return false;
+                return true;
+
+            case "int":
+                try { Int32.Parse(attrib); }
+                catch { return false; }
+                return true;
+
+            case "varchar(255)":
+                return true;
+
+            case "varchar(45)":
+                return true;
+
+            case "mediumtext":
+                return true;
+
+            case "longblob":
+                return true;
+
+            default:
+                return false;
+
+        }
+    }
+
     public static string splitOnTopLevelCommas_StringCleanup(string s)
     {
         // Clean up the split item to be added
