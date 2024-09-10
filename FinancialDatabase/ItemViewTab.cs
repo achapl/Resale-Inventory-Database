@@ -15,6 +15,7 @@ public class ItemViewTab
     QueryBuilder QB;
     CtrlerOfPythonToDTBConnector PyConnector;
     bool inEditingState;
+    List<Label> allItemLabels;
     List<Label> labelsForEditbleFields;
     List<TextBox> tBoxesForEditableFields;
     Dictionary<TextBox, Label> editableFieldPairs;
@@ -27,6 +28,20 @@ public class ItemViewTab
         currItem = new ResultItem();
         inEditingState = false;
 
+
+        allItemLabels = new List<Label>() {
+            Form1.label40,
+            Form1.label17,
+            Form1.label18,
+            Form1.label19,
+            Form1.label20,
+            Form1.label21,
+            Form1.label22,
+            Form1.label23,
+            Form1.label24,
+            Form1.label25,
+            Form1.label26
+        };
         labelsForEditbleFields = new List<Label>(){
             Form1.label40,
             Form1.label19,
@@ -53,6 +68,7 @@ public class ItemViewTab
             editableFieldPairs[tBoxesForEditableFields[i]] = labelsForEditbleFields[i];
         }
 
+        Util.clearLabelText(allItemLabels);
         updateEditableVisibility();
     }
 
@@ -147,24 +163,39 @@ public class ItemViewTab
     
     public void showItem(ResultItem item)
 	{
+        Util.clearLabelText(allItemLabels);
+
         currItem = item;
 
-        Date datePurc = item.get_Date_Purchased();
+        if (item.hasItemEntry())
+        {
+            Form1.label40.Text = checkDefault(item.get_Name());
+            Form1.label19.Text = checkDefault(item.get_InitialQuantity());
+            Form1.label20.Text = checkDefault(item.get_CurrentQuantity());
+            Form1.label21.Text = checkDefault(item.get_ITEM_ID());
+        }
 
-        List<int> WeightLbsOz = ozToOzLbs(item.get_Weight());
-
-        Form1.label40.Text = checkDefault(item.get_Name());
-        Form1.dateTimePicker3.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
-        Form1.label17.Text = checkDefault(item.get_Amount_purchase());
-        Form1.label18.Text = checkDefault(item.get_Amount_sale());
-        Form1.label19.Text = checkDefault(item.get_InitialQuantity());
-        Form1.label20.Text = checkDefault(item.get_CurrentQuantity());
-        //Form1.label21.Text = checkDefault(.get_checkDefault(No());
-        Form1.label22.Text = checkDefault(WeightLbsOz[0]);
-        Form1.label23.Text = checkDefault(WeightLbsOz[1]);
-        Form1.label24.Text = checkDefault(item.get_Length());
-        Form1.label25.Text = checkDefault(item.get_Width());
-        Form1.label26.Text = checkDefault(item.get_Height());
+        if (item.hasPurchaseEntry())
+        {
+            Date datePurc = item.get_Date_Purchased();
+            Form1.dateTimePicker3.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
+            Form1.label17.Text = checkDefault(item.get_Amount_purchase());
+        }
+                
+        if (item.hasSaleEntry())
+        {
+            Form1.label18.Text = checkDefault(item.get_Amount_sale());
+        }
+        
+        if (item.hasShippingEntry())
+        {
+            List<int> WeightLbsOz = ozToOzLbs(item.get_Weight());
+            Form1.label22.Text = checkDefault(WeightLbsOz[0]);
+            Form1.label23.Text = checkDefault(WeightLbsOz[1]);
+            Form1.label24.Text = checkDefault(item.get_Length());
+            Form1.label25.Text = checkDefault(item.get_Width());
+            Form1.label26.Text = checkDefault(item.get_Height());
+        }
     }
 
     private List<Control> getChangedFields()

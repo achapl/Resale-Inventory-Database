@@ -49,6 +49,14 @@ public class Util
 
     }
 
+    public static void clearLabelText(List<Label> l)
+    {
+        foreach (Label label in l)
+        {
+            label.Text = "";
+        }
+    }
+
     public static bool checkTypeOkay(string attrib, string type)
     {
         switch (type)

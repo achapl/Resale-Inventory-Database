@@ -609,10 +609,6 @@ public class ResultItem : IEquatable<ResultItem>
     // From sale table
     public Date get_Date_Sold()
     {
-        /*List<int> l = new List<int>();
-        l.Add(Date_Sold.year);
-        l.Add(Date_Sold.month);
-        l.Add(Date_Sold.day);*/
         return Date_Sold;
     }
         public double get_Amount_sale()
