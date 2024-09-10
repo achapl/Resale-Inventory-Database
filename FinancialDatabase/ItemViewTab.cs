@@ -116,6 +116,11 @@ public class ItemViewTab
    
     public List<int> ozToOzLbs(int ozs)
     {
+        // Default
+        if (ozs == -1)
+        {
+            return new List<int>(){ -1, -1};
+        }
         int lbs = ozs / 16;
         int oz = ozs - (16 * lbs);
         return new List<int>(new int[] { lbs, oz });
@@ -248,13 +253,13 @@ public class ItemViewTab
             //Hardcode weight as it is the only case where a comb. of 2 fields must be combined into 1 value
             if (s.CompareTo("shipping.WeightLbs") == 0)
             {
-                type = Form1.colDataTypes["shipping.Weight"];
+                type = Form1.colDataTypes["shipping.WeightLbs"];
                 TextBox t_Lbs = Form1.textBox6;
                 TextBox t_oz  = Form1.textBox7;
                 Label   l_oz  = Form1.label23;
 
                 // Get lbs
-                // Type theck to make sure proper numbers are  given
+                // Type check to make sure proper numbers are  given
                 int throwaway;
                 if (!Int32.TryParse(t_Lbs.Text, out throwaway)) {query = "ERROR: BAD USER INPUT"; }
                 int lbs = Int32.Parse(t_Lbs.Text);
@@ -270,7 +275,7 @@ public class ItemViewTab
             }
             else if (s.CompareTo("shipping.WeightOz") == 0)
             {
-                type = Form1.colDataTypes["shipping.Weight"];
+                type = Form1.colDataTypes["shipping.WeightOz"];
                 // Convert weight lbs to oz
                 TextBox t_Lbs = Form1.textBox6;
                 TextBox t_oz  = Form1.textBox7;
