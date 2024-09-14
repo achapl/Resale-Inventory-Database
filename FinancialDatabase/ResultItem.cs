@@ -43,11 +43,10 @@ public class ResultItem : IEquatable<ResultItem>
     int Weight;
     string Notes_shipping;
 
-    int DEFAULT_INT = -1;
-    double DEFAULT_DOUBLE = -1.0;
-    string DEFAULT_STRING = null;
-    Date DEFAULT_DATE = new Date(-1,-1,-1);
-
+    public static int DEFAULT_INT = -1;
+    public static double DEFAULT_DOUBLE = -1.0;
+    public static string DEFAULT_STRING = null;
+    public static Date DEFAULT_DATE = new Date(-1, -1, -1);
 
 
 #pragma warning disable CS8618 // Defaults are set to non-null vals

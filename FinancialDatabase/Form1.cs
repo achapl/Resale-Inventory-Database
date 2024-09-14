@@ -28,7 +28,7 @@ namespace FinancialDatabase
         public PurchasedLotTab PL;
         QueryBuilder QB;
         CtrlerOfPythonToDTBConnector PyConnector;
-        public Dictionary<Control, string> controlBoxAttrib;
+        
 
         public Form1()
         {
@@ -43,16 +43,7 @@ namespace FinancialDatabase
 
             colDataTypes = PyConnector.getColDataTypes();
 
-            controlBoxAttrib = new Dictionary<Control, string>
-           {{ dateTimePicker3,  "purchase.Date_Purchased" },
-            { textBox3,  "item.Name" },
-            { textBox4,  "item.InitialQuantity" },
-            { textBox5,  "item.CurrentQuantity" },
-            { textBox6,  "shipping.WeightLbs" },
-            { textBox7, "shipping.WeightOz" },
-            { textBox8, "shipping.Length" },
-            { textBox9, "shipping.Width" },
-            { textBox10, "shipping.Height" }};
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -141,8 +132,8 @@ namespace FinancialDatabase
 #pragma warning disable CS8600 // Checked if sender is null
             TextBox t = sender as TextBox;
 #pragma warning disable CS8604 // Checked if sender is null
-            if (!controlBoxAttrib.ContainsKey(t)) return;
-            string attrib = controlBoxAttrib[t];
+            if (!IV.controlBoxAttrib.ContainsKey(t)) return;
+            string attrib = IV.controlBoxAttrib[t];
             string type = colDataTypes[attrib];
 
             if (!Util.checkTypeOkay(t.Text, type))

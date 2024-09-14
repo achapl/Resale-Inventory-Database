@@ -15,19 +15,25 @@ public class ItemViewTab
     QueryBuilder QB;
     CtrlerOfPythonToDTBConnector PyConnector;
     bool inEditingState;
+
     List<Label> allItemLabels;
-    List<Label> labelsForEditbleFields;
-    List<TextBox> tBoxesForEditableFields;
+    List<Label> nonEditingLabels;
+    List<Control> nonEditingControls;
+
+    List<TextBox> itemTBoxes;
+    List<TextBox> shippingTBoxes;
+    List<Control> editingControls;
+    List<TextBox> editingTextBoxes;
     Dictionary<TextBox, Label> editableFieldPairs;
+    public Dictionary<Control, string> controlBoxAttrib;
 
     public ItemViewTab(Form1 Form1)
-	{
-		this.Form1 = Form1;
+    {
+        this.Form1 = Form1;
         QB = new QueryBuilder();
         PyConnector = new CtrlerOfPythonToDTBConnector();
         currItem = new ResultItem();
         inEditingState = false;
-
 
         allItemLabels = new List<Label>() {
             Form1.label40,
@@ -42,7 +48,7 @@ public class ItemViewTab
             Form1.label25,
             Form1.label26
         };
-        labelsForEditbleFields = new List<Label>(){
+        nonEditingLabels = new List<Label>(){
             Form1.label40,
             Form1.label19,
             Form1.label20,
@@ -50,9 +56,34 @@ public class ItemViewTab
             Form1.label23,
             Form1.label24,
             Form1.label25,
-            Form1.label26
+            Form1.label26,
         };
-        tBoxesForEditableFields = new List<TextBox>(){
+        nonEditingControls = new List<Control>(){
+            Form1.label40,
+            Form1.label19,
+            Form1.label20,
+            Form1.label22,
+            Form1.label23,
+            Form1.label24,
+            Form1.label25,
+            Form1.label26,
+        };
+
+        itemTBoxes = new List<TextBox>()
+        {
+            Form1.textBox3,
+            Form1.textBox4,
+            Form1.textBox5
+        };
+        shippingTBoxes = new List<TextBox>()
+        {
+            Form1.textBox6,
+            Form1.textBox7,
+            Form1.textBox8,
+            Form1.textBox9,
+            Form1.textBox10
+        };
+        editingTextBoxes = new List<TextBox>() {
             Form1.textBox3,
             Form1.textBox4,
             Form1.textBox5,
@@ -61,12 +92,38 @@ public class ItemViewTab
             Form1.textBox8,
             Form1.textBox9,
             Form1.textBox10
+
         };
+        editingControls = new List<Control>(){
+            Form1.textBox3,
+            Form1.textBox4,
+            Form1.textBox5,
+            Form1.textBox6,
+            Form1.textBox7,
+            Form1.textBox8,
+            Form1.textBox9,
+            Form1.textBox10,
+            Form1.button5
+        };
+
         editableFieldPairs = new Dictionary<TextBox, Label>();
-        for (int i = 0; i < tBoxesForEditableFields.Count; i++)
+
+
+        for (int i = 0; i < editingTextBoxes.Count; i++)
         {
-            editableFieldPairs[tBoxesForEditableFields[i]] = labelsForEditbleFields[i];
+            editableFieldPairs[editingTextBoxes[i]] = nonEditingLabels[i];
         }
+
+        controlBoxAttrib = new Dictionary<Control, string>
+        {{ Form1.dateTimePicker3,  "purchase.Date_Purchased" },
+        { Form1.textBox3,  "item.Name" },
+        { Form1.textBox4,  "item.InitialQuantity" },
+        { Form1.textBox5,  "item.CurrentQuantity" },
+        { Form1.textBox6,  "shipping.WeightLbs" },
+        { Form1.textBox7, "shipping.WeightOz" },
+        { Form1.textBox8, "shipping.Length" },
+        { Form1.textBox9, "shipping.Width" },
+        { Form1.textBox10, "shipping.Height" }};
 
         Util.clearLabelText(allItemLabels);
         updateEditableVisibility();
@@ -104,27 +161,30 @@ public class ItemViewTab
             Form1.button1.Visible = false;
         }
 
-        foreach (Label l in labelsForEditbleFields)
+        foreach (Control c in nonEditingControls)
         {
             if (inEditingState)
             {
-                l.Visible = false;
+                c.Visible = false;
             }
             else
             {
-                l.Visible = true;
+                c.Visible = true;
             }
         }
-        foreach (TextBox t in tBoxesForEditableFields)
+        foreach (Control c in editingControls)
         {
             if (inEditingState)
             {
-                t.Visible = true;
-                t.Text = editableFieldPairs[t].Text;
+                c.Visible = true;
+                if (c is TextBox)
+                {
+                    c.Text = editableFieldPairs[c as TextBox].Text;
+                }
             }
             else
             {
-                t.Visible = false;
+                c.Visible = false;
             }
         }
     }
@@ -215,7 +275,7 @@ public class ItemViewTab
             if (f.GetType() == typeof(TextBox) && f.Text.Length > 0)
             {
                 string ret = "";
-                currItem.getAttribAsString(Form1.controlBoxAttrib[f], ref ret);
+                currItem.getAttribAsString(controlBoxAttrib[f], ref ret);
                 // If text doesn't match currItem for same field add it
                 // Ignore any given text that already matches currItem
                 if (((TextBox)f).Text.CompareTo(ret) != 0)
@@ -226,7 +286,7 @@ public class ItemViewTab
             } else if (f.GetType() == typeof(NumericUpDown) && ((NumericUpDown)f).Value != null)
             {
                 string ret = "";
-                currItem.getAttrib(Form1.controlBoxAttrib[f], ref ret);
+                currItem.getAttrib(controlBoxAttrib[f], ref ret);
                 // If text doesn'f match currItem for same field add it
                 // Ignore any given text that already matches currItem
                 if (((TextBox)f).Text.CompareTo(ret) != 0)
@@ -266,6 +326,36 @@ public class ItemViewTab
         }
     }
 
+    private bool tableEntryExists(TextBox t)
+    {
+        if (controlBoxAttrib.ContainsKey(t))
+        {
+            string ret = "";
+            // Check if the attribute associated with the textbox is a default value in the curr item
+            currItem.getAttribAsString(controlBoxAttrib[t], ref ret);
+            if (ret.CompareTo(ResultItem.DEFAULT_INT.ToString()) == 0 ||
+                ret.CompareTo(ResultItem.DEFAULT_DOUBLE.ToString()) == 0 ||
+                ret.CompareTo(ResultItem.DEFAULT_STRING.ToString()) == 0 ||
+                ret.CompareTo(ResultItem.DEFAULT_DATE.ToString()) == 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public bool allShippingBoxesFilled()
+    {
+        foreach (Control c in shippingTBoxes)
+        {
+            if (c.Text.CompareTo("") == 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void editUpdate()
     {
         if (currItem == null) { return; }
@@ -274,11 +364,43 @@ public class ItemViewTab
 
         foreach (Control c in changedFields)
         {
+            TextBox t = c as TextBox ?? new TextBox();// ?? denotes null assignment
+
+            if (!tableEntryExists(t))
+            {
+                if (shippingTBoxes.Contains(t))
+                { 
+                    if (allShippingBoxesFilled())
+                    {
+                        /*TODO: Add entry into database to add shipping/weight*/
+                    
+                    }
+                    else
+                    {
+                        /*TODO: Create dialog box for warning, not all shipping boxes filled out*/
+                    }
+                }
+            }
+
+            if (itemTBoxes.Contains(t))
+            {
+                if (currItem.hasItemEntry())
+                {
+
+                }
+            } else if (shippingTBoxes.Contains(t))
+            {
+                if (currItem.hasShippingEntry())
+                {
+
+                }
+            }
+
             if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); continue; }
 
             string query = "";
             string type = "";
-            string s = Form1.controlBoxAttrib[c!];
+            string s = controlBoxAttrib[c!];
             List<int> WeightLbsOz = ozToOzLbs(currItem.get_Weight());
             
             //Hardcode weight as it is the only case where a comb. of 2 fields must be combined into 1 value
@@ -330,17 +452,17 @@ public class ItemViewTab
             // ! denotes to the compiler that c will not be null
             else if(c!.GetType() == typeof(TextBox))                
             {
-                type = Form1.colDataTypes[Form1.controlBoxAttrib[c]];
-                TextBox t = c as TextBox ?? new TextBox();// ?? denotes null assignment
-                query = QB.buildUpdateQuery(currItem, Form1.controlBoxAttrib[t], type, t.Text);
+                type = Form1.colDataTypes[controlBoxAttrib[c]];
+                
+                query = QB.buildUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
                 t.Clear();
                 t.BackColor = Color.White;
             }
             else if (c.GetType() == typeof(DateTimePicker))
             {
                 DateTimePicker dt = c as DateTimePicker ?? new DateTimePicker();
-                type = Form1.colDataTypes[Form1.controlBoxAttrib[c]];
-                query = QB.buildUpdateQuery(currItem, Form1.controlBoxAttrib[c], type, new Date(dt));
+                type = Form1.colDataTypes[controlBoxAttrib[c]];
+                query = QB.buildUpdateQuery(currItem, controlBoxAttrib[c], type, new Date(dt));
                 dt.Value = dt.MinDate; // Set as default value to show it has been "cleared" if new date does not show
             }
 

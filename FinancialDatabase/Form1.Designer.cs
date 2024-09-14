@@ -116,6 +116,7 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
+            button5 = new Button();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -321,6 +322,7 @@
             // 
             // ItemTab
             // 
+            ItemTab.Controls.Add(button5);
             ItemTab.Controls.Add(label40);
             ItemTab.Controls.Add(button4);
             ItemTab.Controls.Add(dateTimePicker3);
@@ -407,7 +409,7 @@
             // label26
             // 
             label26.AutoSize = true;
-            label26.Location = new Point(120, 397);
+            label26.Location = new Point(329, 242);
             label26.Margin = new Padding(4, 0, 4, 0);
             label26.Name = "label26";
             label26.Size = new Size(44, 15);
@@ -417,7 +419,7 @@
             // label25
             // 
             label25.AutoSize = true;
-            label25.Location = new Point(120, 366);
+            label25.Location = new Point(329, 211);
             label25.Margin = new Padding(4, 0, 4, 0);
             label25.Name = "label25";
             label25.Size = new Size(44, 15);
@@ -427,7 +429,7 @@
             // label24
             // 
             label24.AutoSize = true;
-            label24.Location = new Point(120, 335);
+            label24.Location = new Point(329, 180);
             label24.Margin = new Padding(4, 0, 4, 0);
             label24.Name = "label24";
             label24.Size = new Size(44, 15);
@@ -437,7 +439,7 @@
             // label23
             // 
             label23.AutoSize = true;
-            label23.Location = new Point(120, 303);
+            label23.Location = new Point(329, 148);
             label23.Margin = new Padding(4, 0, 4, 0);
             label23.Name = "label23";
             label23.Size = new Size(44, 15);
@@ -447,7 +449,7 @@
             // label22
             // 
             label22.AutoSize = true;
-            label22.Location = new Point(120, 272);
+            label22.Location = new Point(329, 117);
             label22.Margin = new Padding(4, 0, 4, 0);
             label22.Name = "label22";
             label22.Size = new Size(44, 15);
@@ -509,14 +511,14 @@
             textBox3.Location = new Point(120, 49);
             textBox3.Margin = new Padding(4, 3, 4, 3);
             textBox3.Name = "textBox3";
-            textBox3.Size = new Size(233, 23);
+            textBox3.Size = new Size(309, 23);
             textBox3.TabIndex = 14;
             textBox3.Leave += TextBoxAttribute_Leave;
             // 
             // label14
             // 
             label14.AutoSize = true;
-            label14.Location = new Point(64, 397);
+            label14.Location = new Point(273, 242);
             label14.Margin = new Padding(4, 0, 4, 0);
             label14.Name = "label14";
             label14.Size = new Size(43, 15);
@@ -526,7 +528,7 @@
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(68, 366);
+            label13.Location = new Point(277, 211);
             label13.Margin = new Padding(4, 0, 4, 0);
             label13.Name = "label13";
             label13.Size = new Size(39, 15);
@@ -536,7 +538,7 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(42, 335);
+            label12.Location = new Point(251, 180);
             label12.Margin = new Padding(4, 0, 4, 0);
             label12.Name = "label12";
             label12.Size = new Size(65, 15);
@@ -546,7 +548,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(39, 303);
+            label11.Location = new Point(248, 148);
             label11.Margin = new Padding(4, 0, 4, 0);
             label11.Name = "label11";
             label11.Size = new Size(68, 15);
@@ -556,7 +558,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(36, 272);
+            label10.Location = new Point(245, 117);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
             label10.Size = new Size(71, 15);
@@ -647,7 +649,7 @@
             // 
             // textBox10
             // 
-            textBox10.Location = new Point(120, 394);
+            textBox10.Location = new Point(329, 239);
             textBox10.Name = "textBox10";
             textBox10.Size = new Size(100, 23);
             textBox10.TabIndex = 52;
@@ -655,7 +657,7 @@
             // 
             // textBox9
             // 
-            textBox9.Location = new Point(120, 363);
+            textBox9.Location = new Point(329, 208);
             textBox9.Name = "textBox9";
             textBox9.Size = new Size(100, 23);
             textBox9.TabIndex = 51;
@@ -663,7 +665,7 @@
             // 
             // textBox8
             // 
-            textBox8.Location = new Point(120, 332);
+            textBox8.Location = new Point(329, 177);
             textBox8.Name = "textBox8";
             textBox8.Size = new Size(100, 23);
             textBox8.TabIndex = 50;
@@ -671,7 +673,7 @@
             // 
             // textBox7
             // 
-            textBox7.Location = new Point(120, 300);
+            textBox7.Location = new Point(329, 145);
             textBox7.Name = "textBox7";
             textBox7.Size = new Size(100, 23);
             textBox7.TabIndex = 49;
@@ -679,7 +681,7 @@
             // 
             // textBox6
             // 
-            textBox6.Location = new Point(120, 269);
+            textBox6.Location = new Point(329, 114);
             textBox6.Name = "textBox6";
             textBox6.Size = new Size(100, 23);
             textBox6.TabIndex = 48;
@@ -1042,6 +1044,15 @@
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
+            // button5
+            // 
+            button5.Location = new Point(303, 277);
+            button5.Name = "button5";
+            button5.Size = new Size(126, 23);
+            button5.TabIndex = 55;
+            button5.Text = "Delete Shipping Info";
+            button5.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1158,6 +1169,7 @@
         public TextBox textBox8;
         public Button button4;
         public Label label40;
+        public Button button5;
     }
 }
 
