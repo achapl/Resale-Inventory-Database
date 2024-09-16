@@ -7,6 +7,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using TextBox = System.Windows.Forms.TextBox;
 using Date = Util.Date;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
+using System.Diagnostics.Eventing.Reader;
 
 public class ItemViewTab
 {
@@ -21,6 +22,7 @@ public class ItemViewTab
     List<Control> nonEditingControls;
 
     List<TextBox> itemTBoxes;
+    List<TextBox> weightTBoxes;
     List<TextBox> shippingTBoxes;
     List<Control> editingControls;
     List<TextBox> editingTextBoxes;
@@ -75,6 +77,11 @@ public class ItemViewTab
             Form1.textBox4,
             Form1.textBox5
         };
+        weightTBoxes = new List<TextBox>()
+        {
+            Form1.textBox6,
+            Form1.textBox7
+        };
         shippingTBoxes = new List<TextBox>()
         {
             Form1.textBox6,
@@ -83,6 +90,7 @@ public class ItemViewTab
             Form1.textBox9,
             Form1.textBox10
         };
+
         editingTextBoxes = new List<TextBox>() {
             Form1.textBox3,
             Form1.textBox4,
@@ -371,17 +379,38 @@ public class ItemViewTab
             string query = "";
             if (tableEntryExists(t))
             {
-                if (itemTBoxes.Contains(t))
+                if (weightTBoxes.Contains(t))
+                {
+                    if (t.Text == "") { continue; }
+
+                    // Get info for weight
+                    int lbs = Int32.Parse(Form1.textBox6.Text);
+                    int oz = Int32.Parse(Form1.textBox7.Text);
+                    int ttlWeight = lbs * 16 + oz;
+
+                    // Execute query
+                    string attrib = "shipping.Weight";
+                    string type = Form1.colDataTypes[attrib];
+                    query = QB.buildUpdateQuery(currItem, attrib, type, ttlWeight.ToString());
+                    string output = PyConnector.runStatement(query);
+
+                    // Clear shipping textboxes
+                    Form1.textBox6.BackColor = Color.White;
+                    Form1.textBox7.BackColor = Color.White;
+                    Form1.textBox6.Clear();
+                    Form1.textBox7.Clear();
+                }
+                else
                 {
                     string type = Form1.colDataTypes[controlBoxAttrib[c]];
 
-                    query = QB.buildItemUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
+                    query = QB.buildUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
+
+                    // Update the item table with the new shipping info
+                    string output = PyConnector.runStatement(query);
+                    updateItemView(currItem.get_ITEM_ID()); // Will also reset currItem with new search for it
                     t.Clear();
                     t.BackColor = Color.White;
-                }
-                else if (shippingTBoxes.Contains(t))
-                {
-                
                 }
             } 
             else if (!tableEntryExists(t))
@@ -399,16 +428,15 @@ public class ItemViewTab
                         query = QB.buildShipInfoInsertQuery(currItem, weightLbs, weightOz, l, w, h);
 
                         int lastrowid = -1;
-                        List<string> colNames = new List<string>(new string[] { "" });
-                        string output = PyConnector.runStatement(query, ref colNames, ref lastrowid);
+                        string output = PyConnector.runStatement(query, ref lastrowid);
 
                         string attrib = "item.ShippingID";
                         string type = Form1.colDataTypes[attrib];
                         int shippingID = lastrowid;
-                        query = QB.buildItemUpdateQuery(currItem, attrib, type, shippingID.ToString());
+                        query = QB.buildUpdateQuery(currItem, attrib, type, shippingID.ToString());
 
                         // Update the item table with the new shipping info
-                        output = PyConnector.runStatement(query, ref colNames, ref lastrowid);
+                        output = PyConnector.runStatement(query);
                         updateItemView(currItem.get_ITEM_ID()); // Will also reset currItem with new search for it
                     }
                     else
@@ -455,7 +483,7 @@ public class ItemViewTab
 
                 int weight = 16 * lbs + oz;
 
-                query = QB.buildItemUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
+                query = QB.buildUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
                 
             }
             else if (s.CompareTo("shipping.WeightOz") == 0)
@@ -478,7 +506,7 @@ public class ItemViewTab
                 
                 int weight = 16 * lbs + oz;
 
-                query = QB.buildItemUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
+                query = QB.buildUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
                 
             }
             // ! denotes to the compiler that c will not be null
@@ -486,7 +514,7 @@ public class ItemViewTab
             {
                 type = Form1.colDataTypes[controlBoxAttrib[c]];
                 
-                query = QB.buildItemUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
+                query = QB.buildUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
                 t.Clear();
                 t.BackColor = Color.White;
             }
@@ -494,7 +522,7 @@ public class ItemViewTab
             {
                 DateTimePicker dt = c as DateTimePicker ?? new DateTimePicker();
                 type = Form1.colDataTypes[controlBoxAttrib[c]];
-                query = QB.buildItemUpdateQuery(currItem, controlBoxAttrib[c], type, new Date(dt));
+                query = QB.buildUpdateQuery(currItem, controlBoxAttrib[c], type, new Date(dt));
                 dt.Value = dt.MinDate; // Set as default value to show it has been "cleared" if new date does not show
             }
 
@@ -529,7 +557,7 @@ public class ItemViewTab
         // Remove foreign key reference to shipping info from item table
         string attrib = "item.ShippingID";
         string type = Form1.colDataTypes[attrib];
-        query = QB.buildItemUpdateQuery(currItem, attrib, type, null);
+        query = QB.buildUpdateQuery(currItem, attrib, type, null);
         output = PyConnector.runStatement(query);
 
         if (output.CompareTo("ERROR") != 0)
