@@ -47,6 +47,7 @@
             comboBox1 = new ComboBox();
             menuStrip1 = new MenuStrip();
             ItemTab = new TabPage();
+            button5 = new Button();
             label40 = new Label();
             button4 = new Button();
             dateTimePicker3 = new DateTimePicker();
@@ -116,7 +117,6 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
-            button5 = new Button();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -366,6 +366,16 @@
             ItemTab.TabIndex = 1;
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            button5.Location = new Point(303, 277);
+            button5.Name = "button5";
+            button5.Size = new Size(126, 23);
+            button5.TabIndex = 55;
+            button5.Text = "Delete Shipping Info";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
             // 
             // label40
             // 
@@ -1043,15 +1053,6 @@
             // resultItemBindingSource
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
-            // 
-            // button5
-            // 
-            button5.Location = new Point(303, 277);
-            button5.Name = "button5";
-            button5.Size = new Size(126, 23);
-            button5.TabIndex = 55;
-            button5.Text = "Delete Shipping Info";
-            button5.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 

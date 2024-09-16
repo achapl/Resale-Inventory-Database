@@ -83,35 +83,7 @@ public class SearchTab
         return getItemList(itemsAndHits);
     }
 
-    public void updateItemView(int itemID)
-    {
-
-        string queryItem = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE ITEM_ID = " + itemID.ToString() + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
-
-        List<ResultItem> result = PyController.RunItemSearchQuery(queryItem);
-
-        // Error Checking
-        if (result.Count > 1)
-        {
-            Console.WriteLine("Error: >1 Items Found for itemID: " + itemID.ToString());
-            for (int i = 0; i < result.Count; i++)
-            {
-                Console.WriteLine(result[i].ToString());
-            }
-            return;
-        }
-        else if (result.Count() == 0)
-        {
-            Console.WriteLine("Error: No Items Found for ItemID: " + itemID.ToString());
-        }
-
-        ResultItem item = result[0];
-
-        Form1.IV.showItem(item);
-
-        Form1.tabControl1.SelectTab(1);
-
-    }
+    
 
 
 

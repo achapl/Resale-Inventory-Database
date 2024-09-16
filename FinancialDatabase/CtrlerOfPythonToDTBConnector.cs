@@ -109,6 +109,50 @@ public class CtrlerOfPythonToDTBConnector
         return retList;
     }
 
+    public string runStatement(string statement, ref List<string> colNames)
+    {
+        string retList;
+
+        List<string> result = runPython(statement);
+        if (result[0].CompareTo("ERROR") == 0)
+        {
+            Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
+        }
+        // Returns [0,1,2] -> result, colNames, cursor.lastrowid
+        retList = result[0];
+        colNames = new List<string>(result[1].Substring(2, result[1].Length - 4).Split("', '"));
+        return retList;
+    }
+
+    public string runStatement(string statement, ref int lastrowid)
+    {
+        string retList;
+
+        List<string> result = runPython(statement);
+        if (result[0].CompareTo("ERROR") == 0)
+        {
+            Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
+        }
+        // Returns [0,1,2] -> result, colNames, cursor.lastrowid
+        retList = result[0];
+        lastrowid = Int32.Parse(result[2]);
+        return retList;
+    }
+
+    public string runStatement(string statement)
+    {
+        string retList;
+
+        List<string> result = runPython(statement);
+        if (result[0].CompareTo("ERROR") == 0)
+        {
+            Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
+        }
+        // Returns [0,1,2] -> result, colNames, cursor.lastrowid
+        retList = result[0];
+        return retList;
+    }
+
     // Given a search query, turn it into a string query and run it
     public List<ResultItem> RunSearchQuery(SearchQuery Q)
     {

@@ -122,7 +122,7 @@ namespace FinancialDatabase
         private string formatAttribute(string attrib, string type)
         {
 
-            if (attrib == null) { return ""; }
+            if (attrib == null) { return "NULL"; }
 
             attrib = attrib.Replace("\"", "\\\"");
 
@@ -141,7 +141,31 @@ namespace FinancialDatabase
         }
 
 
-        public string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, Date updateDate)
+        public string buildShipInfoInsertQuery(ResultItem currItem, int weightLbs, int weightOz, int l, int w, int h)
+        {
+            if (l <= 0 ||  w <= 0 || h <= 0 || weightOz < 0 || weightLbs < 0 || (weightOz == 0 && weightLbs == 0))
+            {
+                return "ERROR: Incorrect Shipping Info Given";
+            }
+
+            int ttlWeight = weightLbs * 16 + weightOz;
+            return "INSERT INTO shipping (Length, Width, Height, Weight, ItemID_shipping) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + currItem.get_ITEM_ID() + ")";
+        }
+
+        public string buildDelShipInfoQuery(ResultItem item)
+        {
+            if (item.get_ShippingID() == ResultItem.DEFAULT_INT)
+            {
+                return "ERROR: NO shipping info to delete. QueryBuilder.BuildDelShipInfoQuery()";
+            }
+
+            int shipID = item.get_ShippingID();
+
+            return "DELETE FROM shipping WHERE SHIPPING_ID = " + shipID + ";";
+        }
+
+
+        public string buildItemUpdateQuery(ResultItem currItem, string controlAttribute, string type, Date updateDate)
         {
             if (!Util.checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
 
@@ -167,8 +191,9 @@ namespace FinancialDatabase
             return query;
         }
 
-        public string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, string updateText)
+        public string buildItemUpdateQuery(ResultItem currItem, string controlAttribute, string type, string updateText)
         {
+
             if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
 
             if (controlAttribute.Split('.').Length != 2)
@@ -180,6 +205,7 @@ namespace FinancialDatabase
             string query;
             string itemID;
 
+            
             string updatedText = formatAttribute(updateText, type);
 
             if (table.CompareTo("item") == 0)

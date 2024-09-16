@@ -59,6 +59,8 @@ public class Util
 
     public static bool checkTypeOkay(string attrib, string type)
     {
+        // It is not this function's job to catch null values for data types. That would depend on the way the database table is set up for the corresponding column
+        if (attrib == null) { return true; }
         switch (type)
         {
             case "date":

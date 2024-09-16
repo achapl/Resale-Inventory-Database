@@ -28,7 +28,7 @@ namespace FinancialDatabase
         public PurchasedLotTab PL;
         QueryBuilder QB;
         CtrlerOfPythonToDTBConnector PyConnector;
-        
+
 
         public Form1()
         {
@@ -43,7 +43,7 @@ namespace FinancialDatabase
 
             colDataTypes = PyConnector.getColDataTypes();
 
-            
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -90,7 +90,7 @@ namespace FinancialDatabase
             int index = this.listBox1.IndexFromPoint(e.Location);
             int item_id = currentItems[index].get_ITEM_ID();
 
-            ST.updateItemView(item_id);
+            IV.updateItemView(item_id);
 
         }
 
@@ -100,7 +100,7 @@ namespace FinancialDatabase
             int index = this.listBox2.IndexFromPoint(e.Location);
             int item_id = currentPurchaseItems[index].get_ITEM_ID();
 
-            ST.updateItemView(item_id);
+            IV.updateItemView(item_id);
 
         }
 
@@ -149,6 +149,11 @@ namespace FinancialDatabase
         private void button4_Click(object sender, EventArgs e)
         {
             IV.flipEditState();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            IV.deleteShippingInfo();
         }
     }
 }

@@ -204,7 +204,7 @@ public class ItemViewTab
     
     public string checkDefault(int val)
     {
-        if (val == -1) { return ""; }
+        if (val == ResultItem.DEFAULT_INT) { return ""; }
         else { return val.ToString(); }
     }
 
@@ -335,7 +335,7 @@ public class ItemViewTab
             currItem.getAttribAsString(controlBoxAttrib[t], ref ret);
             if (ret.CompareTo(ResultItem.DEFAULT_INT.ToString()) == 0 ||
                 ret.CompareTo(ResultItem.DEFAULT_DOUBLE.ToString()) == 0 ||
-                ret.CompareTo(ResultItem.DEFAULT_STRING.ToString()) == 0 ||
+                ret is null ||
                 ret.CompareTo(ResultItem.DEFAULT_DATE.ToString()) == 0)
             {
                 return false;
@@ -360,46 +360,78 @@ public class ItemViewTab
     {
         if (currItem == null) { return; }
         List<Control> changedFields = getChangedFields();
-        
+
 
         foreach (Control c in changedFields)
         {
+            if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); continue; }
+
             TextBox t = c as TextBox ?? new TextBox();// ?? denotes null assignment
 
-            if (!tableEntryExists(t))
+            string query = "";
+            if (tableEntryExists(t))
+            {
+                if (itemTBoxes.Contains(t))
+                {
+                    string type = Form1.colDataTypes[controlBoxAttrib[c]];
+
+                    query = QB.buildItemUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
+                    t.Clear();
+                    t.BackColor = Color.White;
+                }
+                else if (shippingTBoxes.Contains(t))
+                {
+                
+                }
+            } 
+            else if (!tableEntryExists(t))
             {
                 if (shippingTBoxes.Contains(t))
-                { 
+                {
                     if (allShippingBoxesFilled())
                     {
-                        /*TODO: Add entry into database to add shipping/weight*/
-                    
+                        int weightLbs = Int32.Parse(Form1.textBox6.Text);
+                        int weightOz = Int32.Parse(Form1.textBox7.Text);
+                        int l = Int32.Parse(Form1.textBox8.Text);
+                        int w = Int32.Parse(Form1.textBox9.Text);
+                        int h = Int32.Parse(Form1.textBox10.Text);
+
+                        query = QB.buildShipInfoInsertQuery(currItem, weightLbs, weightOz, l, w, h);
+
+                        int lastrowid = -1;
+                        List<string> colNames = new List<string>(new string[] { "" });
+                        string output = PyConnector.runStatement(query, ref colNames, ref lastrowid);
+
+                        string attrib = "item.ShippingID";
+                        string type = Form1.colDataTypes[attrib];
+                        int shippingID = lastrowid;
+                        query = QB.buildItemUpdateQuery(currItem, attrib, type, shippingID.ToString());
+
+                        // Update the item table with the new shipping info
+                        output = PyConnector.runStatement(query, ref colNames, ref lastrowid);
+                        updateItemView(currItem.get_ITEM_ID()); // Will also reset currItem with new search for it
                     }
                     else
                     {
-                        /*TODO: Create dialog box for warning, not all shipping boxes filled out*/
+                        MessageBox.Show(
+                            "To Add Shipping Info, all fields must be filled (Lbs, Oz, L, W, H)",
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                            );
                     }
                 }
-            }
-
-            if (itemTBoxes.Contains(t))
-            {
-                if (currItem.hasItemEntry())
+                else if (itemTBoxes.Contains(t))
                 {
-
-                }
-            } else if (shippingTBoxes.Contains(t))
-            {
-                if (currItem.hasShippingEntry())
-                {
-
+                    Console.WriteLine("ERROR: no item entry for CurrItem, This should not be possible");
+                    continue;
                 }
             }
 
-            if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); continue; }
 
-            string query = "";
-            string type = "";
+
+            // OLD CODE
+            /*
             string s = controlBoxAttrib[c!];
             List<int> WeightLbsOz = ozToOzLbs(currItem.get_Weight());
             
@@ -423,7 +455,7 @@ public class ItemViewTab
 
                 int weight = 16 * lbs + oz;
 
-                query = QB.buildUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
+                query = QB.buildItemUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
                 
             }
             else if (s.CompareTo("shipping.WeightOz") == 0)
@@ -446,7 +478,7 @@ public class ItemViewTab
                 
                 int weight = 16 * lbs + oz;
 
-                query = QB.buildUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
+                query = QB.buildItemUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
                 
             }
             // ! denotes to the compiler that c will not be null
@@ -454,7 +486,7 @@ public class ItemViewTab
             {
                 type = Form1.colDataTypes[controlBoxAttrib[c]];
                 
-                query = QB.buildUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
+                query = QB.buildItemUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
                 t.Clear();
                 t.BackColor = Color.White;
             }
@@ -462,7 +494,7 @@ public class ItemViewTab
             {
                 DateTimePicker dt = c as DateTimePicker ?? new DateTimePicker();
                 type = Form1.colDataTypes[controlBoxAttrib[c]];
-                query = QB.buildUpdateQuery(currItem, controlBoxAttrib[c], type, new Date(dt));
+                query = QB.buildItemUpdateQuery(currItem, controlBoxAttrib[c], type, new Date(dt));
                 dt.Value = dt.MinDate; // Set as default value to show it has been "cleared" if new date does not show
             }
 
@@ -480,12 +512,64 @@ public class ItemViewTab
 
             int lastrowid = -1;
             List<string> colNames = new List<string>(new string[] { "" });
-            string output = PyConnector.runStatement(query, ref colNames, ref lastrowid);
+            string output = PyConnector.runStatement(query, ref colNames, ref lastrowid);*/
 
         }
-        Form1.ST.updateItemView(currItem.get_ITEM_ID());
+        updateItemView(currItem.get_ITEM_ID());
         showItem(currItem);
     }
+
+
+    public void deleteShippingInfo()
+    {
+        // Delete shipping info entry
+        string query = QB.buildDelShipInfoQuery(currItem);
+        string output = PyConnector.runStatement(query);
+
+        // Remove foreign key reference to shipping info from item table
+        string attrib = "item.ShippingID";
+        string type = Form1.colDataTypes[attrib];
+        query = QB.buildItemUpdateQuery(currItem, attrib, type, null);
+        output = PyConnector.runStatement(query);
+
+        if (output.CompareTo("ERROR") != 0)
+        {
+            updateItemView(currItem.get_ITEM_ID());
+        }
+        flipEditState();
+
+    }
+
+    public void updateItemView(int itemID)
+    {
+
+        string queryItem = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE ITEM_ID = " + itemID.ToString() + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
+
+        List<ResultItem> result = PyConnector.RunItemSearchQuery(queryItem);
+
+        // Error Checking
+        if (result.Count > 1)
+        {
+            Console.WriteLine("Error: >1 Items Found for itemID: " + itemID.ToString());
+            for (int i = 0; i < result.Count; i++)
+            {
+                Console.WriteLine(result[i].ToString());
+            }
+            return;
+        }
+        else if (result.Count() == 0)
+        {
+            Console.WriteLine("Error: No Items Found for ItemID: " + itemID.ToString());
+        }
+
+        ResultItem item = result[0];
+
+        showItem(item);
+
+        Form1.tabControl1.SelectTab(1);
+
+    }
+
 
     public ResultItem getCurrItem() => currItem;
 }
