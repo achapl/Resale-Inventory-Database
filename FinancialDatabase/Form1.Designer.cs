@@ -84,6 +84,9 @@
             textBox5 = new TextBox();
             textBox4 = new TextBox();
             PurchaseTab = new TabPage();
+            label41 = new Label();
+            label15 = new Label();
+            button6 = new Button();
             button3 = new Button();
             textBox21 = new TextBox();
             label37 = new Label();
@@ -117,7 +120,7 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
-            button6 = new Button();
+            button7 = new Button();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -716,6 +719,9 @@
             // 
             // PurchaseTab
             // 
+            PurchaseTab.Controls.Add(button7);
+            PurchaseTab.Controls.Add(label41);
+            PurchaseTab.Controls.Add(label15);
             PurchaseTab.Controls.Add(button6);
             PurchaseTab.Controls.Add(button3);
             PurchaseTab.Controls.Add(textBox21);
@@ -751,6 +757,34 @@
             PurchaseTab.Text = "Purchase Group";
             PurchaseTab.UseVisualStyleBackColor = true;
             // 
+            // label41
+            // 
+            label41.AutoSize = true;
+            label41.Location = new Point(603, 158);
+            label41.Name = "label41";
+            label41.Size = new Size(44, 15);
+            label41.TabIndex = 27;
+            label41.Text = "label41";
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new Point(603, 51);
+            label15.Name = "label15";
+            label15.Size = new Size(44, 15);
+            label15.TabIndex = 26;
+            label15.Text = "label15";
+            // 
+            // button6
+            // 
+            button6.Location = new Point(633, 7);
+            button6.Name = "button6";
+            button6.Size = new Size(75, 27);
+            button6.TabIndex = 25;
+            button6.Text = "Edit";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
+            // 
             // button3
             // 
             button3.Location = new Point(501, 7);
@@ -763,7 +797,7 @@
             // 
             // textBox21
             // 
-            textBox21.Location = new Point(603, 158);
+            textBox21.Location = new Point(603, 155);
             textBox21.Margin = new Padding(4, 3, 4, 3);
             textBox21.Name = "textBox21";
             textBox21.Size = new Size(207, 23);
@@ -799,7 +833,7 @@
             // 
             // textBox20
             // 
-            textBox20.Location = new Point(601, 51);
+            textBox20.Location = new Point(603, 48);
             textBox20.Margin = new Padding(4, 3, 4, 3);
             textBox20.Name = "textBox20";
             textBox20.Size = new Size(116, 23);
@@ -1056,14 +1090,14 @@
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
-            // button6
+            // button7
             // 
-            button6.Location = new Point(633, 7);
-            button6.Name = "button6";
-            button6.Size = new Size(75, 27);
-            button6.TabIndex = 25;
-            button6.Text = "Edit";
-            button6.UseVisualStyleBackColor = true;
+            button7.Location = new Point(603, 198);
+            button7.Name = "button7";
+            button7.Size = new Size(75, 23);
+            button7.TabIndex = 28;
+            button7.Text = "Update";
+            button7.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1171,7 +1205,6 @@
         public System.Windows.Forms.TextBox textBox23;
         public System.Windows.Forms.TextBox textBox22;
         public System.Windows.Forms.Label label39;
-        public Label label15;
         public TextBox textBox10;
         public TextBox textBox9;
         public TextBox textBox7;
@@ -1182,7 +1215,10 @@
         public Button button4;
         public Label label40;
         public Button button5;
-        private Button button6;
+        public Button button6;
+        public Label label41;
+        public Label label15;
+        public Button button7;
     }
 }
 

@@ -157,5 +157,10 @@ namespace FinancialDatabase
         {
             IV.deleteShippingInfo();
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            PL.flipEditState();
+        }
     }
 }
