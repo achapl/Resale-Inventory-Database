@@ -28,6 +28,7 @@ namespace FinancialDatabase
         public PurchasedLotTab PL;
         QueryBuilder QB;
         CtrlerOfPythonToDTBConnector PyConnector;
+        public ResultItem currItem;
 
 
         public Form1()
@@ -90,8 +91,9 @@ namespace FinancialDatabase
             int index = this.listBox1.IndexFromPoint(e.Location);
             int item_id = currentItems[index].get_ITEM_ID();
 
-            IV.updateItemView(item_id);
-
+            ResultItem item = PyConnector.getItem(item_id);
+            PL.update(item);
+            IV.updateItemView(item);
         }
 
         // Purchased Lot listbox double click
@@ -100,7 +102,7 @@ namespace FinancialDatabase
             int index = this.listBox2.IndexFromPoint(e.Location);
             int item_id = currentPurchaseItems[index].get_ITEM_ID();
 
-            IV.updateItemView(item_id);
+            IV.updateItemView(PyConnector.getItem(item_id));
 
         }
 

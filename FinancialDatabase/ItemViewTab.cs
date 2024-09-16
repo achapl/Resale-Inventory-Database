@@ -12,7 +12,6 @@ using System.Diagnostics.Eventing.Reader;
 public class ItemViewTab
 {
 	Form1 Form1;
-    ResultItem currItem;
     QueryBuilder QB;
     CtrlerOfPythonToDTBConnector PyConnector;
     bool inEditingState;
@@ -34,7 +33,6 @@ public class ItemViewTab
         this.Form1 = Form1;
         QB = new QueryBuilder();
         PyConnector = new CtrlerOfPythonToDTBConnector();
-        currItem = new ResultItem();
         inEditingState = false;
 
         allItemLabels = new List<Label>() {
@@ -233,7 +231,7 @@ public class ItemViewTab
 	{
         Util.clearLabelText(allItemLabels);
 
-        currItem = item;
+        Form1.currItem = item;
 
         if (item.hasItemEntry())
         {
@@ -283,7 +281,7 @@ public class ItemViewTab
             if (f.GetType() == typeof(TextBox) && f.Text.Length > 0)
             {
                 string ret = "";
-                currItem.getAttribAsString(controlBoxAttrib[f], ref ret);
+                Form1.currItem.getAttribAsString(controlBoxAttrib[f], ref ret);
                 // If text doesn't match currItem for same field add it
                 // Ignore any given text that already matches currItem
                 if (((TextBox)f).Text.CompareTo(ret) != 0)
@@ -294,7 +292,7 @@ public class ItemViewTab
             } else if (f.GetType() == typeof(NumericUpDown) && ((NumericUpDown)f).Value != null)
             {
                 string ret = "";
-                currItem.getAttrib(controlBoxAttrib[f], ref ret);
+                Form1.currItem.getAttrib(controlBoxAttrib[f], ref ret);
                 // If text doesn'f match currItem for same field add it
                 // Ignore any given text that already matches currItem
                 if (((TextBox)f).Text.CompareTo(ret) != 0)
@@ -304,7 +302,7 @@ public class ItemViewTab
                 }
             }
 
-            else if (f.GetType() == typeof(DateTimePicker) && new Date(f).toDateString().CompareTo(currItem.get_Date_Purchased().toDateString()) != 0)
+            else if (f.GetType() == typeof(DateTimePicker) && new Date(f).toDateString().CompareTo(Form1.currItem.get_Date_Purchased().toDateString()) != 0)
             {
                 returnList.Add(f);
             }
@@ -340,7 +338,7 @@ public class ItemViewTab
         {
             string ret = "";
             // Check if the attribute associated with the textbox is a default value in the curr item
-            currItem.getAttribAsString(controlBoxAttrib[t], ref ret);
+            Form1.currItem.getAttribAsString(controlBoxAttrib[t], ref ret);
             if (ret.CompareTo(ResultItem.DEFAULT_INT.ToString()) == 0 ||
                 ret.CompareTo(ResultItem.DEFAULT_DOUBLE.ToString()) == 0 ||
                 ret is null ||
@@ -366,7 +364,7 @@ public class ItemViewTab
 
     public void editUpdate()
     {
-        if (currItem == null) { return; }
+        if (Form1.currItem == null) { return; }
         List<Control> changedFields = getChangedFields();
 
 
@@ -391,7 +389,7 @@ public class ItemViewTab
                     // Execute query
                     string attrib = "shipping.Weight";
                     string type = Form1.colDataTypes[attrib];
-                    query = QB.buildUpdateQuery(currItem, attrib, type, ttlWeight.ToString());
+                    query = QB.buildUpdateQuery(Form1.currItem, attrib, type, ttlWeight.ToString());
                     string output = PyConnector.runStatement(query);
 
                     // Clear shipping textboxes
@@ -404,11 +402,11 @@ public class ItemViewTab
                 {
                     string type = Form1.colDataTypes[controlBoxAttrib[c]];
 
-                    query = QB.buildUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
+                    query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[t], type, t.Text);
 
                     // Update the item table with the new shipping info
                     string output = PyConnector.runStatement(query);
-                    updateItemView(currItem.get_ITEM_ID()); // Will also reset currItem with new search for it
+                    updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
                     t.Clear();
                     t.BackColor = Color.White;
                 }
@@ -425,7 +423,7 @@ public class ItemViewTab
                         int w = Int32.Parse(Form1.textBox9.Text);
                         int h = Int32.Parse(Form1.textBox10.Text);
 
-                        query = QB.buildShipInfoInsertQuery(currItem, weightLbs, weightOz, l, w, h);
+                        query = QB.buildShipInfoInsertQuery(Form1.currItem, weightLbs, weightOz, l, w, h);
 
                         int lastrowid = -1;
                         string output = PyConnector.runStatement(query, ref lastrowid);
@@ -433,11 +431,11 @@ public class ItemViewTab
                         string attrib = "item.ShippingID";
                         string type = Form1.colDataTypes[attrib];
                         int shippingID = lastrowid;
-                        query = QB.buildUpdateQuery(currItem, attrib, type, shippingID.ToString());
+                        query = QB.buildUpdateQuery(Form1.currItem, attrib, type, shippingID.ToString());
 
                         // Update the item table with the new shipping info
                         output = PyConnector.runStatement(query);
-                        updateItemView(currItem.get_ITEM_ID()); // Will also reset currItem with new search for it
+                        updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
                     }
                     else
                     {
@@ -543,61 +541,37 @@ public class ItemViewTab
             string output = PyConnector.runStatement(query, ref colNames, ref lastrowid);*/
 
         }
-        updateItemView(currItem.get_ITEM_ID());
-        showItem(currItem);
+        updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID()));
+        showItem(Form1.currItem);
     }
 
 
     public void deleteShippingInfo()
     {
         // Delete shipping info entry
-        string query = QB.buildDelShipInfoQuery(currItem);
+        string query = QB.buildDelShipInfoQuery(Form1.currItem);
         string output = PyConnector.runStatement(query);
 
         // Remove foreign key reference to shipping info from item table
         string attrib = "item.ShippingID";
         string type = Form1.colDataTypes[attrib];
-        query = QB.buildUpdateQuery(currItem, attrib, type, null);
+        query = QB.buildUpdateQuery(Form1.currItem, attrib, type, null);
         output = PyConnector.runStatement(query);
 
         if (output.CompareTo("ERROR") != 0)
         {
-            updateItemView(currItem.get_ITEM_ID());
+            updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID()));
         }
         flipEditState();
 
     }
 
-    public void updateItemView(int itemID)
+    public void updateItemView(ResultItem item)
     {
-
-        string queryItem = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE ITEM_ID = " + itemID.ToString() + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
-
-        List<ResultItem> result = PyConnector.RunItemSearchQuery(queryItem);
-
-        // Error Checking
-        if (result.Count > 1)
-        {
-            Console.WriteLine("Error: >1 Items Found for itemID: " + itemID.ToString());
-            for (int i = 0; i < result.Count; i++)
-            {
-                Console.WriteLine(result[i].ToString());
-            }
-            return;
-        }
-        else if (result.Count() == 0)
-        {
-            Console.WriteLine("Error: No Items Found for ItemID: " + itemID.ToString());
-        }
-
-        ResultItem item = result[0];
-
         showItem(item);
-
         Form1.tabControl1.SelectTab(1);
-
     }
 
 
-    public ResultItem getCurrItem() => currItem;
+    public ResultItem getCurrItem() => Form1.currItem;
 }
