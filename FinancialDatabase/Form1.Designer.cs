@@ -117,6 +117,7 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
+            button6 = new Button();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -715,6 +716,7 @@
             // 
             // PurchaseTab
             // 
+            PurchaseTab.Controls.Add(button6);
             PurchaseTab.Controls.Add(button3);
             PurchaseTab.Controls.Add(textBox21);
             PurchaseTab.Controls.Add(label37);
@@ -751,17 +753,17 @@
             // 
             // button3
             // 
-            button3.Location = new Point(483, 300);
+            button3.Location = new Point(501, 7);
             button3.Margin = new Padding(4, 3, 4, 3);
             button3.Name = "button3";
-            button3.Size = new Size(88, 27);
+            button3.Size = new Size(122, 27);
             button3.TabIndex = 24;
-            button3.Text = "Clear List";
+            button3.Text = "New Purchase";
             button3.UseVisualStyleBackColor = true;
             // 
             // textBox21
             // 
-            textBox21.Location = new Point(600, 114);
+            textBox21.Location = new Point(603, 158);
             textBox21.Margin = new Padding(4, 3, 4, 3);
             textBox21.Name = "textBox21";
             textBox21.Size = new Size(207, 23);
@@ -770,7 +772,7 @@
             // label37
             // 
             label37.AutoSize = true;
-            label37.Location = new Point(498, 114);
+            label37.Location = new Point(501, 158);
             label37.Margin = new Padding(4, 0, 4, 0);
             label37.Name = "label37";
             label37.Size = new Size(89, 15);
@@ -780,7 +782,7 @@
             // label36
             // 
             label36.AutoSize = true;
-            label36.Location = new Point(498, 61);
+            label36.Location = new Point(501, 105);
             label36.Margin = new Padding(4, 0, 4, 0);
             label36.Name = "label36";
             label36.Size = new Size(82, 15);
@@ -789,7 +791,7 @@
             // 
             // dateTimePicker4
             // 
-            dateTimePicker4.Location = new Point(600, 61);
+            dateTimePicker4.Location = new Point(603, 105);
             dateTimePicker4.Margin = new Padding(4, 3, 4, 3);
             dateTimePicker4.Name = "dateTimePicker4";
             dateTimePicker4.Size = new Size(233, 23);
@@ -797,7 +799,7 @@
             // 
             // textBox20
             // 
-            textBox20.Location = new Point(598, 7);
+            textBox20.Location = new Point(601, 51);
             textBox20.Margin = new Padding(4, 3, 4, 3);
             textBox20.Name = "textBox20";
             textBox20.Size = new Size(116, 23);
@@ -951,7 +953,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(807, 410);
+            button2.Location = new Point(7, 409);
             button2.Margin = new Padding(4, 3, 4, 3);
             button2.Name = "button2";
             button2.Size = new Size(88, 27);
@@ -962,7 +964,7 @@
             // label16
             // 
             label16.AutoSize = true;
-            label16.Location = new Point(498, 7);
+            label16.Location = new Point(501, 51);
             label16.Margin = new Padding(4, 0, 4, 0);
             label16.Name = "label16";
             label16.Size = new Size(84, 15);
@@ -1053,6 +1055,15 @@
             // resultItemBindingSource
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
+            // 
+            // button6
+            // 
+            button6.Location = new Point(633, 7);
+            button6.Name = "button6";
+            button6.Size = new Size(75, 27);
+            button6.TabIndex = 25;
+            button6.Text = "Edit";
+            button6.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1171,6 +1182,7 @@
         public Button button4;
         public Label label40;
         public Button button5;
+        private Button button6;
     }
 }
 
