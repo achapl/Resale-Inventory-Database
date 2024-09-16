@@ -108,6 +108,7 @@ namespace FinancialDatabase
             return query;
         }
 
+
         enum AttributeType
         {
             Null   = -1,
@@ -175,19 +176,29 @@ namespace FinancialDatabase
             }
             string table = controlAttribute.Split('.')[0];
             string query;
-            string itemID;
+            string itemID = "";
 
             string updatedText = formatAttribute(updateDate.toDateString(), type);
-            if (table.CompareTo("item") == 0)
+            switch (table)
             {
-                itemID = table + ".ITEM_ID";
-            }
-            else
-            {
-                itemID = table + ".ItemID_" + table;
-            }
+                case "item":
+                    itemID = table + ".ITEM_ID = " + currItem.get_ITEM_ID();
+                    break;
+                case "shipping":
+                    itemID = table + ".SHIPPING_ID = " + currItem.get_ShippingID();
+                    break;
+                case "purchase":
+                    itemID = table + ".PURCHASE_ID = " + currItem.get_PurchaseID();
+                    break;
+                case "sale":
+                    itemID = table + "._ID = " + currItem.get_SaleID();
+                    break;
 
-            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE " + itemID + " = " + currItem.get_ITEM_ID() + ";";
+
+            }
+            // Note: Since, for example, item : purchase is a many to 1 relationship (buying a lot),
+            // one must update the purchase price with the purchaseID, not itemID of the current item
+            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE " + itemID + ";";
             return query;
         }
 

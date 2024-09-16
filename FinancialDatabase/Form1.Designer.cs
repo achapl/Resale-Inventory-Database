@@ -74,7 +74,6 @@
             label6 = new Label();
             label5 = new Label();
             label4 = new Label();
-            linkLabel1 = new LinkLabel();
             label3 = new Label();
             textBox10 = new TextBox();
             textBox9 = new TextBox();
@@ -84,6 +83,7 @@
             textBox5 = new TextBox();
             textBox4 = new TextBox();
             PurchaseTab = new TabPage();
+            button7 = new Button();
             label41 = new Label();
             label15 = new Label();
             button6 = new Button();
@@ -120,7 +120,6 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
-            button7 = new Button();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -353,7 +352,6 @@
             ItemTab.Controls.Add(label6);
             ItemTab.Controls.Add(label5);
             ItemTab.Controls.Add(label4);
-            ItemTab.Controls.Add(linkLabel1);
             ItemTab.Controls.Add(label3);
             ItemTab.Controls.Add(textBox10);
             ItemTab.Controls.Add(textBox9);
@@ -639,18 +637,6 @@
             label4.TabIndex = 2;
             label4.Text = "Date Purchased";
             // 
-            // linkLabel1
-            // 
-            linkLabel1.AutoSize = true;
-            linkLabel1.Location = new Point(1213, 3);
-            linkLabel1.Margin = new Padding(4, 0, 4, 0);
-            linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(103, 15);
-            linkLabel1.TabIndex = 1;
-            linkLabel1.TabStop = true;
-            linkLabel1.Text = "View Purchase Lot";
-            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
-            // 
             // label3
             // 
             label3.AutoSize = true;
@@ -756,6 +742,16 @@
             PurchaseTab.TabIndex = 2;
             PurchaseTab.Text = "Purchase Group";
             PurchaseTab.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            button7.Location = new Point(603, 198);
+            button7.Name = "button7";
+            button7.Size = new Size(75, 23);
+            button7.TabIndex = 28;
+            button7.Text = "Update";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
             // 
             // label41
             // 
@@ -1090,15 +1086,6 @@
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
-            // button7
-            // 
-            button7.Location = new Point(603, 198);
-            button7.Name = "button7";
-            button7.Size = new Size(75, 23);
-            button7.TabIndex = 28;
-            button7.Text = "Update";
-            button7.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1145,7 +1132,6 @@
         public System.Windows.Forms.CheckBox checkBox2;
         public System.Windows.Forms.CheckBox checkBox5;
         public System.Windows.Forms.CheckBox checkBox3;
-        public System.Windows.Forms.LinkLabel linkLabel1;
         public System.Windows.Forms.Label label3;
         public System.Windows.Forms.Label label11;
         public System.Windows.Forms.Label label10;
