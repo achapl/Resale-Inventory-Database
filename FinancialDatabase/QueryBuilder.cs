@@ -241,5 +241,11 @@ namespace FinancialDatabase
             query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE " + itemID + ";";
             return query;
         }
+    
+        public string buildItemInsertQuery(ResultItem item)
+        {
+            return "INSERT INTO item (Name, InitialQuantity, CurrentQuantity, PurchaseID) VALUES (" + "\"" + item.get_Name() + "\"" + ", " + item.get_InitialQuantity() + ", " + item.get_CurrentQuantity() + ", " + item.get_PurchaseID() + ");";
+        }
+    
     }
 }

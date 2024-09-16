@@ -15,6 +15,8 @@ public class PurchasedLotTab
     List<Control> nonEditingControls;
     List<Label>   nonEditingLabels;
     List<Label>   allPurchaseLabels;
+    List<TextBox> shippingTBoxes;
+    List<TextBox> itemTBoxes;
     Dictionary<TextBox, Label> editableFieldPairs;
     Dictionary<Control, string> controlBoxAttrib;
 
@@ -56,6 +58,24 @@ public class PurchasedLotTab
         {
             Form1.label15,
             Form1.label41
+        };
+
+        itemTBoxes = new List<TextBox>()
+        {
+            Form1.textBox2,
+            Form1.textBox14,
+            Form1.textBox11
+
+        };
+        
+        shippingTBoxes = new List<TextBox>()
+        {
+            Form1.textBox15,
+            Form1.textBox16,
+            Form1.textBox17,
+            Form1.textBox18,
+            Form1.textBox19,
+
         };
 
         editableFieldPairs = new Dictionary<TextBox, Label>();
@@ -304,5 +324,56 @@ public class PurchasedLotTab
         Form1.label41.Text = item.get_Notes_purchase();
     }
 
+
+    public bool allNewShippingBoxesFilled()
+    {
+        foreach (Control c in shippingTBoxes)
+        {
+            if (c.Text.CompareTo("") == 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+
+    public void addItem()
+    {
+        // Must at least have name. Init and curr quantites are given a default val of 1
+        if (Form1.textBox2.Text == "")
+        {
+            return;
+        }
+        ResultItem newItem = new ResultItem();
+        newItem.set_Name(Form1.textBox2.Text);
+
+        // If no Init or curr quantities, set to default 1
+        if (Form1.textBox14.Text.CompareTo("") == 0)
+        {
+            newItem.set_InitialQuantity(1);
+        }
+        else
+        {
+            newItem.set_InitialQuantity(Form1.textBox14.Text);
+        }
+
+        if (Form1.textBox15.Text.CompareTo("") == 0)
+        {
+            newItem.set_CurrentQuantity(1);
+        }
+        else
+        {
+            newItem.set_CurrentQuantity(Form1.textBox15.Text);
+        }
+
+        newItem.set_PurchaseID(Form1.currItem.get_PurchaseID());
+
+        PyConnector.insertItem(newItem);
+
+        updateItemView(Form1.currItem);
+    }
 
 }

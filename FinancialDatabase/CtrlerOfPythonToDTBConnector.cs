@@ -178,6 +178,12 @@ public class CtrlerOfPythonToDTBConnector
         return retList;
     }
 
+    public string insertItem(ResultItem item)
+    {
+        string query = QB.buildItemInsertQuery(item);
+        return runStatement(query);
+    }
+
     // Given a search query, turn it into a string query and run it
     public List<ResultItem> RunSearchQuery(SearchQuery Q)
     {

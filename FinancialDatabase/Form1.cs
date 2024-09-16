@@ -101,7 +101,7 @@ namespace FinancialDatabase
         {
             int index = this.listBox2.IndexFromPoint(e.Location);
             int item_id = currentPurchaseItems[index].get_ITEM_ID();
-            
+
             PL.updateItemView(PyConnector.getItem(item_id));
             IV.updateItemView(PyConnector.getItem(item_id));
         }
@@ -167,6 +167,11 @@ namespace FinancialDatabase
         {
             PL.editUpdate();
             PL.flipEditState();
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            PL.addItem();
         }
     }
 }

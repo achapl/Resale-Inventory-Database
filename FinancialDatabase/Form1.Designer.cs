@@ -120,6 +120,8 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
+            label42 = new Label();
+            textBox11 = new TextBox();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -705,6 +707,8 @@
             // 
             // PurchaseTab
             // 
+            PurchaseTab.Controls.Add(textBox11);
+            PurchaseTab.Controls.Add(label42);
             PurchaseTab.Controls.Add(button7);
             PurchaseTab.Controls.Add(label41);
             PurchaseTab.Controls.Add(label15);
@@ -837,7 +841,7 @@
             // 
             // textBox19
             // 
-            textBox19.Location = new Point(713, 413);
+            textBox19.Location = new Point(801, 413);
             textBox19.Margin = new Padding(4, 3, 4, 3);
             textBox19.Name = "textBox19";
             textBox19.Size = new Size(40, 23);
@@ -845,7 +849,7 @@
             // 
             // textBox18
             // 
-            textBox18.Location = new Point(624, 413);
+            textBox18.Location = new Point(712, 413);
             textBox18.Margin = new Padding(4, 3, 4, 3);
             textBox18.Name = "textBox18";
             textBox18.Size = new Size(40, 23);
@@ -853,7 +857,7 @@
             // 
             // textBox17
             // 
-            textBox17.Location = new Point(545, 413);
+            textBox17.Location = new Point(633, 413);
             textBox17.Margin = new Padding(4, 3, 4, 3);
             textBox17.Name = "textBox17";
             textBox17.Size = new Size(40, 23);
@@ -861,7 +865,7 @@
             // 
             // textBox16
             // 
-            textBox16.Location = new Point(469, 413);
+            textBox16.Location = new Point(557, 413);
             textBox16.Margin = new Padding(4, 3, 4, 3);
             textBox16.Name = "textBox16";
             textBox16.Size = new Size(40, 23);
@@ -869,7 +873,7 @@
             // 
             // textBox15
             // 
-            textBox15.Location = new Point(387, 413);
+            textBox15.Location = new Point(475, 413);
             textBox15.Margin = new Padding(4, 3, 4, 3);
             textBox15.Name = "textBox15";
             textBox15.Size = new Size(40, 23);
@@ -894,7 +898,7 @@
             // label35
             // 
             label35.AutoSize = true;
-            label35.Location = new Point(709, 395);
+            label35.Location = new Point(797, 395);
             label35.Margin = new Padding(4, 0, 4, 0);
             label35.Name = "label35";
             label35.Size = new Size(68, 15);
@@ -904,7 +908,7 @@
             // label34
             // 
             label34.AutoSize = true;
-            label34.Location = new Point(384, 375);
+            label34.Location = new Point(472, 375);
             label34.Margin = new Padding(4, 0, 4, 0);
             label34.Name = "label34";
             label34.Size = new Size(138, 15);
@@ -914,7 +918,7 @@
             // label33
             // 
             label33.AutoSize = true;
-            label33.Location = new Point(621, 395);
+            label33.Location = new Point(709, 395);
             label33.Margin = new Padding(4, 0, 4, 0);
             label33.Name = "label33";
             label33.Size = new Size(71, 15);
@@ -924,7 +928,7 @@
             // label32
             // 
             label32.AutoSize = true;
-            label32.Location = new Point(541, 395);
+            label32.Location = new Point(629, 395);
             label32.Margin = new Padding(4, 0, 4, 0);
             label32.Name = "label32";
             label32.Size = new Size(64, 15);
@@ -934,7 +938,7 @@
             // label31
             // 
             label31.AutoSize = true;
-            label31.Location = new Point(465, 395);
+            label31.Location = new Point(553, 395);
             label31.Margin = new Padding(4, 0, 4, 0);
             label31.Name = "label31";
             label31.Size = new Size(60, 15);
@@ -944,7 +948,7 @@
             // label30
             // 
             label30.AutoSize = true;
-            label30.Location = new Point(384, 395);
+            label30.Location = new Point(472, 395);
             label30.Margin = new Padding(4, 0, 4, 0);
             label30.Name = "label30";
             label30.Size = new Size(65, 15);
@@ -990,6 +994,7 @@
             button2.TabIndex = 2;
             button2.Text = "Add Item";
             button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click_1;
             // 
             // label16
             // 
@@ -1085,6 +1090,23 @@
             // resultItemBindingSource
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
+            // 
+            // label42
+            // 
+            label42.AutoSize = true;
+            label42.Location = new Point(349, 394);
+            label42.Name = "label42";
+            label42.Size = new Size(96, 15);
+            label42.TabIndex = 29;
+            label42.Text = "Current Quantity";
+            // 
+            // textBox11
+            // 
+            textBox11.Location = new Point(349, 412);
+            textBox11.Margin = new Padding(4, 3, 4, 3);
+            textBox11.Name = "textBox11";
+            textBox11.Size = new Size(96, 23);
+            textBox11.TabIndex = 30;
             // 
             // Form1
             // 
@@ -1205,6 +1227,8 @@
         public Label label41;
         public Label label15;
         public Button button7;
+        public TextBox textBox11;
+        public Label label42;
     }
 }
 
