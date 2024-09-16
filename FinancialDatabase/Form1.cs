@@ -109,7 +109,7 @@ namespace FinancialDatabase
         // Link to Purchased Lot
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            PL.update(IV.getCurrItem());
+            PL.update(currItem);
         }
 
         // Enter key pressed for search

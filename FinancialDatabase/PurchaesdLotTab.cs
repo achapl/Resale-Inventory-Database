@@ -87,6 +87,9 @@ public class PurchasedLotTab
             Form1.currentPurchaseItems.Add(i);
         }
 
+        Form1.label15.Text = item.get_Amount_purchase().ToString();
+        Form1.label41.Text = item.get_Notes_purchase();
+
 		Form1.tabControl1.SelectTab(2);
 
 	}
