@@ -181,7 +181,42 @@ public class CtrlerOfPythonToDTBConnector
     public string insertItem(ResultItem item)
     {
         string query = QB.buildItemInsertQuery(item);
-        return runStatement(query);
+        int lastrowid = -1;
+        string output = runStatement(query, ref lastrowid);
+        if (lastrowid == -1)
+        {
+            Console.WriteLine("ERROR, BAD INPUT INTO DATABASE: insertItem");
+            return null;
+        }
+
+        if (output.CompareTo("ERROR") == 0)
+        {
+            Console.WriteLine("ERROR insertItem");
+            return null;
+        }
+        int lastrowid2 = -1;
+        // If given item also has shipping info, insert that into the database too
+        if (item.get_Weight() != ResultItem.DEFAULT_INT)
+        {
+            item.set_ITEM_ID(lastrowid);
+            query = QB.buildShipInfoInsertQuery(item);
+            output = runStatement(query, ref lastrowid2);
+            if (lastrowid2 == -1)
+            {
+                Console.WriteLine("ERROR IN INSERTING SHIPPING INFO");
+            }
+
+            string attrib = "item.ShippingID";
+            string type = "int unsigned";
+            int shippingID = lastrowid2;
+            query = QB.buildUpdateQuery(item, attrib, type, shippingID.ToString());
+
+            // Update the item table with the new shipping info
+            output = runStatement(query);
+        }
+        
+        return output;
+
     }
 
     // Given a search query, turn it into a string query and run it

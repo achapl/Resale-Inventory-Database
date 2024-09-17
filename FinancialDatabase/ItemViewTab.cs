@@ -196,17 +196,7 @@ public class ItemViewTab
     }
 
    
-    public List<int> ozToOzLbs(int ozs)
-    {
-        // Default
-        if (ozs == -1)
-        {
-            return new List<int>(){ -1, -1};
-        }
-        int lbs = ozs / 16;
-        int oz = ozs - (16 * lbs);
-        return new List<int>(new int[] { lbs, oz });
-    }
+    
     
     public string checkDefault(int val)
     {
@@ -255,7 +245,7 @@ public class ItemViewTab
         
         if (item.hasShippingEntry())
         {
-            List<int> WeightLbsOz = ozToOzLbs(item.get_Weight());
+            List<int> WeightLbsOz = Util.ozToOzLbs(item.get_Weight());
             Form1.label22.Text = checkDefault(WeightLbsOz[0]);
             Form1.label23.Text = checkDefault(WeightLbsOz[1]);
             Form1.label24.Text = checkDefault(item.get_Length());

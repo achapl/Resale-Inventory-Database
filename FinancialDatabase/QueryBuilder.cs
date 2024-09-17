@@ -141,6 +141,10 @@ namespace FinancialDatabase
             }
         }
 
+        public string buildShipInfoInsertQuery(ResultItem item) {
+            List<int> weight = Util.ozToOzLbs(item.get_Weight());
+            return buildShipInfoInsertQuery(item, weight[0], weight[1], item.get_Length(), item.get_Width(), item.get_Height());
+        }
 
         public string buildShipInfoInsertQuery(ResultItem currItem, int weightLbs, int weightOz, int l, int w, int h)
         {

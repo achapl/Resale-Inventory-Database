@@ -360,13 +360,22 @@ public class PurchasedLotTab
             newItem.set_InitialQuantity(Form1.textBox14.Text);
         }
 
-        if (Form1.textBox15.Text.CompareTo("") == 0)
+        if (Form1.textBox11.Text.CompareTo("") == 0)
         {
             newItem.set_CurrentQuantity(1);
         }
         else
         {
-            newItem.set_CurrentQuantity(Form1.textBox15.Text);
+            newItem.set_CurrentQuantity(Form1.textBox11.Text);
+        }
+
+        if (allNewShippingBoxesFilled())
+        {
+            int ttlWeight = Int32.Parse(Form1.textBox18.Text) * 16 + Int32.Parse(Form1.textBox19.Text);
+            newItem.set_Weight(ttlWeight);
+            newItem.set_Length(Int32.Parse(Form1.textBox15.Text));
+            newItem.set_Width( Int32.Parse(Form1.textBox16.Text));
+            newItem.set_Height(Int32.Parse(Form1.textBox17.Text));
         }
 
         newItem.set_PurchaseID(Form1.currItem.get_PurchaseID());

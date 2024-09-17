@@ -57,6 +57,18 @@ public class Util
         }
     }
 
+    public static List<int> ozToOzLbs(int ozs)
+    {
+        // Default
+        if (ozs == -1)
+        {
+            return new List<int>() { -1, -1 };
+        }
+        int lbs = ozs / 16;
+        int oz = ozs - (16 * lbs);
+        return new List<int>(new int[] { lbs, oz });
+    }
+
     public static bool checkTypeOkay(string attrib, string type)
     {
         // It is not this function's job to catch null values for data types. That would depend on the way the database table is set up for the corresponding column
