@@ -11,13 +11,13 @@ public class PurchasedLotTab
 
     bool inEditingState;
     List<Control> editingControls;
-    List<TextBox> editingTextBoxes;
+    List<Control> editingTextBoxes;
     List<Control> nonEditingControls;
     List<Label>   nonEditingLabels;
     List<Label>   allPurchaseLabels;
     List<TextBox> shippingTBoxes;
     List<TextBox> itemTBoxes;
-    Dictionary<TextBox, Label> editableFieldPairs;
+    Dictionary<Control, Label> editableFieldPairs;
     Dictionary<Control, string> controlBoxAttrib;
 
     bool isNewPurchase;
@@ -34,38 +34,43 @@ public class PurchasedLotTab
         editingControls = new List<Control>()
         {
             Form1.textBox20,
-            Form1.textBox21
+            Form1.textBox21,
+            Form1.dateTimePicker4
         };
 
-        editingTextBoxes = new List<TextBox>()
+        editingTextBoxes = new List<Control>()
         {
             Form1.textBox20,
-            Form1.textBox21
+            Form1.textBox21,
+            Form1.dateTimePicker4
         };
 
         nonEditingControls = new List<Control>()
         {
             Form1.label15,
-            Form1.label41
+            Form1.label41,
+            Form1.label44
         };
-        
+
         nonEditingLabels = new List<Label>()
         {
             Form1.label15,
-            Form1.label41
+            Form1.label41,
+            Form1.label44
         };
         
         allPurchaseLabels = new List<Label>()
         {
             Form1.label15,
-            Form1.label41
+            Form1.label41,
+            Form1.label44
         };
 
         itemTBoxes = new List<TextBox>()
         {
             Form1.textBox2,
             Form1.textBox14,
-            Form1.textBox11
+            Form1.textBox11,
 
         };
         
@@ -75,11 +80,11 @@ public class PurchasedLotTab
             Form1.textBox16,
             Form1.textBox17,
             Form1.textBox18,
-            Form1.textBox19,
+            Form1.textBox19
 
         };
 
-        editableFieldPairs = new Dictionary<TextBox, Label>();
+        editableFieldPairs = new Dictionary<Control, Label>();
 
         for (int i = 0; i < editingTextBoxes.Count; i++)
         {
@@ -130,6 +135,7 @@ public class PurchasedLotTab
             Form1.dateTimePicker4.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
             Form1.label15.Text = checkDefault(item.get_Amount_purchase());
             Form1.label41.Text = checkDefault(item.get_Notes_purchase());
+            Form1.label44.Text = item.get_Date_Purchased().toDateString();
         }
     }
 
@@ -171,15 +177,15 @@ public class PurchasedLotTab
         updateEditableVisibility();
     }
 
-    public void updateEditableVisibility()
+    private void updateEditableVisibility()
     {
         if (inEditingState)
         {
-            Form1.button7.Visible = true;
+            Form1.button1.Visible = true;
         }
         else
         {
-            Form1.button7.Visible = false;
+            Form1.button1.Visible = false;
         }
 
         foreach (Control c in nonEditingControls)
@@ -201,6 +207,12 @@ public class PurchasedLotTab
                 if (c is TextBox)
                 {
                     c.Text = editableFieldPairs[c as TextBox].Text;
+                }
+                if (c is DateTimePicker)
+                {
+                    DateTimePicker d = c as DateTimePicker;
+                    Date date = new Date(editableFieldPairs[c].Text);
+                    //d.Value.Year = editableFieldPairs[]
                 }
             }
             else
@@ -290,7 +302,14 @@ public class PurchasedLotTab
             {
                 string type = Form1.colDataTypes[controlBoxAttrib[c]];
 
-                query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[t], type, t.Text);
+                if (c is TextBox)
+                {
+                    query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, t.Text);
+                }
+                else if (c is DateTimePicker)
+                {
+                    query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, new Date(c));
+                }
 
                 // Update the item table with the new shipping info
                 string output = PyConnector.runStatement(query);

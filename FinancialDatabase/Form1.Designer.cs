@@ -47,10 +47,10 @@
             comboBox1 = new ComboBox();
             menuStrip1 = new MenuStrip();
             ItemTab = new TabPage();
+            label43 = new Label();
             button5 = new Button();
             label40 = new Label();
             button4 = new Button();
-            dateTimePicker3 = new DateTimePicker();
             button1 = new Button();
             label26 = new Label();
             label25 = new Label();
@@ -83,6 +83,7 @@
             textBox5 = new TextBox();
             textBox4 = new TextBox();
             PurchaseTab = new TabPage();
+            label44 = new Label();
             textBox11 = new TextBox();
             label42 = new Label();
             button7 = new Button();
@@ -122,7 +123,6 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
-            label43 = new Label();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -332,7 +332,6 @@
             ItemTab.Controls.Add(button5);
             ItemTab.Controls.Add(label40);
             ItemTab.Controls.Add(button4);
-            ItemTab.Controls.Add(dateTimePicker3);
             ItemTab.Controls.Add(button1);
             ItemTab.Controls.Add(label26);
             ItemTab.Controls.Add(label25);
@@ -373,6 +372,15 @@
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
             // 
+            // label43
+            // 
+            label43.AutoSize = true;
+            label43.Location = new Point(120, 99);
+            label43.Name = "label43";
+            label43.Size = new Size(44, 15);
+            label43.TabIndex = 56;
+            label43.Text = "label43";
+            // 
             // button5
             // 
             button5.Location = new Point(373, 317);
@@ -401,15 +409,6 @@
             button4.Text = "Edit";
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
-            // 
-            // dateTimePicker3
-            // 
-            dateTimePicker3.Location = new Point(120, 93);
-            dateTimePicker3.Margin = new Padding(4, 3, 4, 3);
-            dateTimePicker3.Name = "dateTimePicker3";
-            dateTimePicker3.Size = new Size(233, 23);
-            dateTimePicker3.TabIndex = 38;
-            dateTimePicker3.Value = new DateTime(2020, 1, 1, 10, 52, 0, 0);
             // 
             // button1
             // 
@@ -709,6 +708,7 @@
             // 
             // PurchaseTab
             // 
+            PurchaseTab.Controls.Add(label44);
             PurchaseTab.Controls.Add(textBox11);
             PurchaseTab.Controls.Add(label42);
             PurchaseTab.Controls.Add(button7);
@@ -748,6 +748,15 @@
             PurchaseTab.TabIndex = 2;
             PurchaseTab.Text = "Purchase Group";
             PurchaseTab.UseVisualStyleBackColor = true;
+            // 
+            // label44
+            // 
+            label44.AutoSize = true;
+            label44.Location = new Point(603, 105);
+            label44.Name = "label44";
+            label44.Size = new Size(44, 15);
+            label44.TabIndex = 31;
+            label44.Text = "label44";
             // 
             // textBox11
             // 
@@ -845,7 +854,7 @@
             // 
             // dateTimePicker4
             // 
-            dateTimePicker4.Location = new Point(603, 105);
+            dateTimePicker4.Location = new Point(603, 99);
             dateTimePicker4.Margin = new Padding(4, 3, 4, 3);
             dateTimePicker4.Name = "dateTimePicker4";
             dateTimePicker4.Size = new Size(233, 23);
@@ -1111,15 +1120,6 @@
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
-            // label43
-            // 
-            label43.AutoSize = true;
-            label43.Location = new Point(373, 96);
-            label43.Name = "label43";
-            label43.Size = new Size(44, 15);
-            label43.TabIndex = 56;
-            label43.Text = "label43";
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1192,7 +1192,6 @@
         public System.Windows.Forms.Button button1;
         public System.Windows.Forms.TabPage PurchaseTab;
         public System.Windows.Forms.ListBox listBox2;
-        public System.Windows.Forms.DateTimePicker dateTimePicker3;
         public System.Windows.Forms.Label label34;
         public System.Windows.Forms.Label label33;
         public System.Windows.Forms.Label label32;
@@ -1242,6 +1241,7 @@
         public TextBox textBox11;
         public Label label42;
         public Label label43;
+        public Label label44;
     }
 }
 

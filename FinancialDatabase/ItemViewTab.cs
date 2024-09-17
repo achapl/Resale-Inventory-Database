@@ -46,7 +46,8 @@ public class ItemViewTab
             Form1.label23,
             Form1.label24,
             Form1.label25,
-            Form1.label26
+            Form1.label26,
+            Form1.label43
         };
         nonEditingLabels = new List<Label>(){
             Form1.label40,
@@ -57,7 +58,6 @@ public class ItemViewTab
             Form1.label24,
             Form1.label25,
             Form1.label26,
-            Form1.label43
         };
         nonEditingControls = new List<Control>(){
             Form1.label40,
@@ -68,7 +68,6 @@ public class ItemViewTab
             Form1.label24,
             Form1.label25,
             Form1.label26,
-            Form1.label43
         };
 
         itemTBoxes = new List<TextBox>()
@@ -99,8 +98,7 @@ public class ItemViewTab
             Form1.textBox7,
             Form1.textBox8,
             Form1.textBox9,
-            Form1.textBox10,
-            Form1.dateTimePicker3
+            Form1.textBox10
         };
         editingControls = new List<Control>(){
             Form1.textBox3,
@@ -111,8 +109,7 @@ public class ItemViewTab
             Form1.textBox8,
             Form1.textBox9,
             Form1.textBox10,
-            Form1.button5,
-            Form1.dateTimePicker3
+            Form1.button5
             
         };
 
@@ -125,8 +122,7 @@ public class ItemViewTab
         }
 
         controlBoxAttrib = new Dictionary<Control, string>
-        {{ Form1.dateTimePicker3,  "purchase.Date_Purchased" },
-        { Form1.textBox3,  "item.Name" },
+        {{ Form1.textBox3,  "item.Name" },
         { Form1.textBox4,  "item.InitialQuantity" },
         { Form1.textBox5,  "item.CurrentQuantity" },
         { Form1.textBox6,  "shipping.WeightLbs" },
@@ -245,7 +241,6 @@ public class ItemViewTab
         {
             Date datePurc = item.get_Date_Purchased();
             Form1.label43.Text = datePurc.toDateString();
-            Form1.dateTimePicker3.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
             Form1.label17.Text = checkDefault(item.get_Amount_purchase());
         }
                 
@@ -267,7 +262,7 @@ public class ItemViewTab
 
     private List<Control> getChangedFields()
     {
-        List<Control> fields = new List<Control>(new Control[] {Form1.dateTimePicker3,
+        List<Control> fields = new List<Control>(new Control[] {
                                                     Form1.textBox3,
                                                     Form1.textBox4,
                                                     Form1.textBox5,
