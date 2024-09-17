@@ -12,6 +12,7 @@ using System.Xml.Linq;
 using System.IO;
 using System.Windows.Forms;
 using System.Reflection.Metadata.Ecma335;
+using Date = Util.Date;
 
 
 
@@ -24,7 +25,7 @@ public class CtrlerOfPythonToDTBConnector
     const string START_COL_MARKER = "Column Names:"; // Marker to the Start of Column Names
     const string END_COL_MARKER = "END OF COLUMN NAMES"; // Marker to the End of Column Names
     const string EOS = "EOS";     // end-of-stream
-    
+
     QueryBuilder QB;
 
     public CtrlerOfPythonToDTBConnector()
@@ -38,9 +39,9 @@ public class CtrlerOfPythonToDTBConnector
 
         string query = "SHOW TABLES";
         int lastrowid = -1;
-        List<string> colNames = new List<string>(new string[]{ "" });
+        List<string> colNames = new List<string>(new string[] { "" });
         string rawTablenames = runStatement(query, ref colNames, ref lastrowid);
-        List<string> tableNames = new List<string>(rawTablenames.Substring(3,rawTablenames.Length-7).Split("',), ('"));
+        List<string> tableNames = new List<string>(rawTablenames.Substring(3, rawTablenames.Length - 7).Split("',), ('"));
 
         return tableNames;
     }
@@ -83,25 +84,25 @@ public class CtrlerOfPythonToDTBConnector
             query = "SHOW COLUMNS FROM " + tableName + ";";
 
             int lastrowid = -1;
-            List<string> colNames = new List<string>(new string[] {""});
+            List<string> colNames = new List<string>(new string[] { "" });
             string rawOutput = runStatement(query, ref colNames, ref lastrowid);
-            output = new List<string>(rawOutput.Substring(3, rawOutput.Length-7).Split("'), ('"));
+            output = new List<string>(rawOutput.Substring(3, rawOutput.Length - 7).Split("'), ('"));
 
 
             //removeColumnNames(ref output);
             string[] startAndEnd = { "('", "',)" };
-            foreach(string colAndType in output)
+            foreach (string colAndType in output)
             {
                 List<string> typesForCol = new List<string>(colAndType.Split(new string[] { "', '" }, StringSplitOptions.None));
                 string colName = tableName + "." + typesForCol[0];
-                string type    = typesForCol[1];
+                string type = typesForCol[1];
                 colDataTypes[colName] = type;
             }
         }
 
         //Hardcoded types for special cases
         colDataTypes["shipping.WeightLbs"] = "int unsigned";
-        colDataTypes["shipping.WeightOz"]  = "int unsigned";
+        colDataTypes["shipping.WeightOz"] = "int unsigned";
 
         return colDataTypes;
     }
@@ -128,7 +129,7 @@ public class CtrlerOfPythonToDTBConnector
             Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
         }
         // Returns [0,1,2] -> result, colNames, cursor.lastrowid
-        retList  = result[0];
+        retList = result[0];
         colNames = new List<string>(result[1].Substring(2, result[1].Length - 4).Split("', '"));
         lastrowid = Int32.Parse(result[2]);
         return retList;
@@ -176,6 +177,14 @@ public class CtrlerOfPythonToDTBConnector
         // Returns [0,1,2] -> result, colNames, cursor.lastrowid
         retList = result[0];
         return retList;
+    }
+
+    public int newPurchase(int purcPrice, string notes, Date PurcDate)
+    {
+        string query = QB.buildInsertPurchaseQuery(purcPrice, notes, PurcDate);
+        int lastrowid = -1;
+        runStatement(query, ref lastrowid);
+        return lastrowid;
     }
 
     public string insertItem(ResultItem item)

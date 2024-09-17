@@ -169,9 +169,16 @@ namespace FinancialDatabase
             PL.flipEditState();
         }
 
+        // Add item to purchase
         private void button2_Click_1(object sender, EventArgs e)
         {
             PL.addItem();
+        }
+
+        // New Purchase
+        private void button3_Click(object sender, EventArgs e)
+        {
+            PL.newPurchase();
         }
     }
 }

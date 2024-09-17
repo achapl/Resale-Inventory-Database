@@ -83,6 +83,8 @@
             textBox5 = new TextBox();
             textBox4 = new TextBox();
             PurchaseTab = new TabPage();
+            textBox11 = new TextBox();
+            label42 = new Label();
             button7 = new Button();
             label41 = new Label();
             label15 = new Label();
@@ -120,8 +122,7 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
-            label42 = new Label();
-            textBox11 = new TextBox();
+            label43 = new Label();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -327,6 +328,7 @@
             // 
             // ItemTab
             // 
+            ItemTab.Controls.Add(label43);
             ItemTab.Controls.Add(button5);
             ItemTab.Controls.Add(label40);
             ItemTab.Controls.Add(button4);
@@ -747,6 +749,23 @@
             PurchaseTab.Text = "Purchase Group";
             PurchaseTab.UseVisualStyleBackColor = true;
             // 
+            // textBox11
+            // 
+            textBox11.Location = new Point(349, 412);
+            textBox11.Margin = new Padding(4, 3, 4, 3);
+            textBox11.Name = "textBox11";
+            textBox11.Size = new Size(96, 23);
+            textBox11.TabIndex = 30;
+            // 
+            // label42
+            // 
+            label42.AutoSize = true;
+            label42.Location = new Point(349, 394);
+            label42.Name = "label42";
+            label42.Size = new Size(96, 15);
+            label42.TabIndex = 29;
+            label42.Text = "Current Quantity";
+            // 
             // button7
             // 
             button7.Location = new Point(603, 198);
@@ -794,6 +813,7 @@
             button3.TabIndex = 24;
             button3.Text = "New Purchase";
             button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // textBox21
             // 
@@ -1091,22 +1111,14 @@
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
-            // label42
+            // label43
             // 
-            label42.AutoSize = true;
-            label42.Location = new Point(349, 394);
-            label42.Name = "label42";
-            label42.Size = new Size(96, 15);
-            label42.TabIndex = 29;
-            label42.Text = "Current Quantity";
-            // 
-            // textBox11
-            // 
-            textBox11.Location = new Point(349, 412);
-            textBox11.Margin = new Padding(4, 3, 4, 3);
-            textBox11.Name = "textBox11";
-            textBox11.Size = new Size(96, 23);
-            textBox11.TabIndex = 30;
+            label43.AutoSize = true;
+            label43.Location = new Point(373, 96);
+            label43.Name = "label43";
+            label43.Size = new Size(44, 15);
+            label43.TabIndex = 56;
+            label43.Text = "label43";
             // 
             // Form1
             // 
@@ -1229,6 +1241,7 @@
         public Button button7;
         public TextBox textBox11;
         public Label label42;
+        public Label label43;
     }
 }
 

@@ -20,6 +20,7 @@ public class PurchasedLotTab
     Dictionary<TextBox, Label> editableFieldPairs;
     Dictionary<Control, string> controlBoxAttrib;
 
+    bool isNewPurchase;
 
     public PurchasedLotTab(Form1 Form1)
 	{
@@ -91,6 +92,8 @@ public class PurchasedLotTab
             { Form1.textBox20,        "purchase.Amount_purchase" },
             { Form1.textBox21,        "purchase.Notes_purchase" }
         };
+
+        isNewPurchase = false;
 
         Util.clearLabelText(allPurchaseLabels);
         updateEditableVisibility();
@@ -324,9 +327,26 @@ public class PurchasedLotTab
         Form1.label41.Text = item.get_Notes_purchase();
     }
 
+    
+    public bool allNewPurchaseBoxesFilled()
+    {
+        foreach (Control c in shippingTBoxes)
+        {
+            if (c.Text.CompareTo("") == 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public bool allNewShippingBoxesFilled()
     {
+        // Shouldn't be pulling from these fields if not in editing state
+        if (!inEditingState)
+        {
+            return false;
+        }
         foreach (Control c in shippingTBoxes)
         {
             if (c.Text.CompareTo("") == 0)
@@ -342,11 +362,22 @@ public class PurchasedLotTab
 
     public void addItem()
     {
+
         // Must at least have name. Init and curr quantites are given a default val of 1
         if (Form1.textBox2.Text == "")
         {
             return;
         }
+
+        if (isNewPurchase && allNewPurchaseBoxesFilled())
+        { 
+            DateTime dt = Form1.dateTimePicker4.Value;
+            Date d = new (dt.Year, dt.Month, dt.Day);
+            int purcID = PyConnector.newPurchase(Int32.Parse(Form1.textBox20.Text),Form1.textBox21.Text, d);
+
+            isNewPurchase = false;
+        }
+        
         ResultItem newItem = new ResultItem();
         newItem.set_Name(Form1.textBox2.Text);
 
@@ -383,6 +414,16 @@ public class PurchasedLotTab
         PyConnector.insertItem(newItem);
 
         updateItemView(Form1.currItem);
+    }
+
+    public void newPurchase()
+    {
+        // clear the box
+        Form1.listBox2.Items.Clear();
+
+        isNewPurchase = true;
+        addItem();
+
     }
 
 }

@@ -24,8 +24,8 @@ public class ItemViewTab
     List<TextBox> weightTBoxes;
     List<TextBox> shippingTBoxes;
     List<Control> editingControls;
-    List<TextBox> editingTextBoxes;
-    Dictionary<TextBox, Label> editableFieldPairs;
+    List<Control> editingTextBoxes;
+    Dictionary<Control, Label> editableFieldPairs;
     public Dictionary<Control, string> controlBoxAttrib;
 
     public ItemViewTab(Form1 Form1)
@@ -57,6 +57,7 @@ public class ItemViewTab
             Form1.label24,
             Form1.label25,
             Form1.label26,
+            Form1.label43
         };
         nonEditingControls = new List<Control>(){
             Form1.label40,
@@ -67,6 +68,7 @@ public class ItemViewTab
             Form1.label24,
             Form1.label25,
             Form1.label26,
+            Form1.label43
         };
 
         itemTBoxes = new List<TextBox>()
@@ -89,7 +91,7 @@ public class ItemViewTab
             Form1.textBox10
         };
 
-        editingTextBoxes = new List<TextBox>() {
+        editingTextBoxes = new List<Control>() {
             Form1.textBox3,
             Form1.textBox4,
             Form1.textBox5,
@@ -97,8 +99,8 @@ public class ItemViewTab
             Form1.textBox7,
             Form1.textBox8,
             Form1.textBox9,
-            Form1.textBox10
-
+            Form1.textBox10,
+            Form1.dateTimePicker3
         };
         editingControls = new List<Control>(){
             Form1.textBox3,
@@ -109,10 +111,12 @@ public class ItemViewTab
             Form1.textBox8,
             Form1.textBox9,
             Form1.textBox10,
-            Form1.button5
+            Form1.button5,
+            Form1.dateTimePicker3
+            
         };
 
-        editableFieldPairs = new Dictionary<TextBox, Label>();
+        editableFieldPairs = new Dictionary<Control, Label>();
 
 
         for (int i = 0; i < editingTextBoxes.Count; i++)
@@ -187,6 +191,12 @@ public class ItemViewTab
                 {
                     c.Text = editableFieldPairs[c as TextBox].Text;
                 }
+                if (c is DateTimePicker)
+                {
+                    DateTimePicker d = c as DateTimePicker;
+                    Date date = new Date(editableFieldPairs[c].Text);
+                    //d.Value.Year = editableFieldPairs[]
+                }
             }
             else
             {
@@ -234,6 +244,7 @@ public class ItemViewTab
         if (item.hasPurchaseEntry())
         {
             Date datePurc = item.get_Date_Purchased();
+            Form1.label43.Text = datePurc.toDateString();
             Form1.dateTimePicker3.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
             Form1.label17.Text = checkDefault(item.get_Amount_purchase());
         }
@@ -391,8 +402,14 @@ public class ItemViewTab
                 else
                 {
                     string type = Form1.colDataTypes[controlBoxAttrib[c]];
-
-                    query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[t], type, t.Text);
+                    if (c is TextBox)
+                    {
+                        query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, t.Text);
+                    }
+                    else if (c is DateTimePicker)
+                    {
+                        query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, new Date(c));
+                    }
 
                     // Update the item table with the new shipping info
                     string output = PyConnector.runStatement(query);

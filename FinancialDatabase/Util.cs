@@ -289,6 +289,11 @@ public class Util
             this.day = d;
         }
 
+        public Date(string s)
+        {
+            // Assumed to be format
+        }
+
         public Date(Control d)
         {
             // If not the a DateTimePicker, set to error values and output error

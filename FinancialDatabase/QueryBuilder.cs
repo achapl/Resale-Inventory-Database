@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using Date = Util.Date;
 
@@ -108,6 +109,10 @@ namespace FinancialDatabase
             return query;
         }
 
+        public string buildInsertPurchaseQuery(int purcPrice, string purcNotes, Date d)
+        {
+            return "INSRET INTO purchase (Amount_purchase, " + formatAttribute(d.toDateString(), "date") + ");";
+        }
 
         enum AttributeType
         {
