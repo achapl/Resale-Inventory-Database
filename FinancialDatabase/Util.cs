@@ -59,6 +59,14 @@ public class Util
         }
     }
 
+    public static void clearTBoxText(List<TextBox> t)
+    {
+        foreach (TextBox tb in t)
+        {
+            tb.Text = "";
+        } 
+    }
+
     public static List<int> ozToOzLbs(int ozs)
     {
         // Default

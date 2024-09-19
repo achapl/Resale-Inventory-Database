@@ -180,11 +180,6 @@ public class PurchasedLotTab : Tab
 
     public bool allNewShippingBoxesFilled()
     {
-        // Shouldn't be pulling from these fields if not in editing state
-        if (!inEditingState)
-        {
-            return false;
-        }
         foreach (Control c in shippingTBoxes)
         {
             if (c.Text.CompareTo("") == 0)
@@ -255,8 +250,9 @@ public class PurchasedLotTab : Tab
         {
             newItem.set_PurchaseID(Form1.currItem.get_PurchaseID());
         }
-        
 
+        Util.clearTBoxText(itemTBoxes);
+        Util.clearTBoxText(shippingTBoxes);
         PyConnector.insertItem(newItem);
 
         updateItemView(Form1.currItem);

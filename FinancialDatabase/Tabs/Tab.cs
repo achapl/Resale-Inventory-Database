@@ -88,7 +88,8 @@ public abstract class Tab
     // Redundant, but exists for sake of extensibility
     protected string checkDefault(string val)
     {
-        if (val.CompareTo("") == 0) { return ""; }
+        if (val is null) return "";
+        if (val.CompareTo("") == 0) return "";
         else { return val.ToString(); }
     }
 

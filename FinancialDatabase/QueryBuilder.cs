@@ -111,7 +111,7 @@ namespace FinancialDatabase
 
         public string buildInsertPurchaseQuery(int purcPrice, string purcNotes, Date d)
         {
-            return "INSRET INTO purchase (Amount_purchase, " + formatAttribute(d.toDateString(), "date") + ");";
+            return "INSRET INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", " + purcNotes + ", " + formatAttribute(d.toDateString(), "date") + ");";
         }
 
         enum AttributeType
