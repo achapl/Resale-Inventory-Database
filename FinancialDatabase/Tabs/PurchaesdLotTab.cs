@@ -251,8 +251,8 @@ public class PurchasedLotTab : Tab
             newItem.set_PurchaseID(Form1.currItem.get_PurchaseID());
         }
 
-        Util.clearTBoxText(itemTBoxes);
-        Util.clearTBoxText(shippingTBoxes);
+        Util.clearTBox(itemTBoxes);
+        Util.clearTBox(shippingTBoxes);
         PyConnector.insertItem(newItem);
 
         updateItemView(Form1.currItem);

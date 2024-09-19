@@ -108,7 +108,7 @@ public abstract class Tab
         
     }
 
-    protected void showControlVisibility()
+    public void showControlVisibility()
     {
         editButton.Text = inEditingState ? "View" : "Edit";
         updateButton.Visible = inEditingState;

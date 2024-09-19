@@ -9,6 +9,7 @@ using Date = Util.Date;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 using System.Diagnostics.Eventing.Reader;
 using System.Transactions;
+using System.ComponentModel;
 
 public class ItemViewTab : Tab
 {
@@ -136,12 +137,21 @@ public class ItemViewTab : Tab
 
     public void editUpdate()
     {
+        // Triggers escape of edit mode into view mode if true. Will otherwise cause to stay in edit mode
+        bool goodEdit = true;
         if (Form1.currItem == null) { return; }
         List<Control> changedFields = getChangedFields();
 
-
+        // Skip the current (what was previously the "next") element in the loop
+        // Used for skipping ounces after it is cleared from being "used" in conjugation with lbs textbox
+        bool skipElem = false;
         foreach (Control c in changedFields)
         {
+            if (skipElem)
+            {
+                skipElem = false;
+                continue;
+            }
             if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); continue; }
 
             TextBox t = c as TextBox ?? new TextBox();// ?? denotes null assignment
@@ -149,45 +159,60 @@ public class ItemViewTab : Tab
             string query = "";
             if (tableEntryExists(t))
             {
+                string output = "";
                 if (weightTBoxes.Contains(t))
                 {
-                    if (t.Text == "") { continue; }
-
                     // Get info for weight
-                    int lbs = Int32.Parse(Form1.textBox6.Text);
-                    int oz = Int32.Parse(Form1.textBox7.Text);
+                    int lbs = 0;
+                    int oz = 0;
+                    if (!Int32.TryParse(Form1.textBox6.Text, out lbs)
+                     || !Int32.TryParse(Form1.textBox7.Text, out oz))
+                    {
+                        goodEdit = false;
+                        Util.clearTBox(Form1.textBox6);
+                        Util.clearTBox(Form1.textBox7);
+                        continue;
+                    }
                     int ttlWeight = lbs * 16 + oz;
 
                     // Execute query
                     string attrib = "shipping.Weight";
                     string type = Form1.colDataTypes[attrib];
                     query = QB.buildUpdateQuery(Form1.currItem, attrib, type, ttlWeight.ToString());
-                    string output = PyConnector.runStatement(query);
+                    output = PyConnector.runStatement(query);
+                    // These must be cleared manually since they are both used at the same time.
+                    // Clearing one produces an error when the other textbox is then used to get the total weight
+                    Util.clearTBox(Form1.textBox6);
+                    Util.clearTBox(Form1.textBox7);
+                    skipElem = true;
 
-                    // Clear shipping textboxes
-                    Form1.textBox6.BackColor = Color.White;
-                    Form1.textBox7.BackColor = Color.White;
-                    Form1.textBox6.Clear();
-                    Form1.textBox7.Clear();
                 }
                 else
                 {
-                    string type = Form1.colDataTypes[controlBoxAttrib[c]];
-                    if (c is TextBox)
+                    string attrib = controlBoxAttrib[c];
+                    string type = Form1.colDataTypes[attrib];
+                    if (!Util.checkTypeOkay(attrib, type))
                     {
-                        query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, t.Text);
+                        goodEdit = false;
+                        continue;
                     }
-                    else if (c is DateTimePicker)
-                    {
-                        query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, new Date(c));
+                    switch (c) { 
+                        case TextBox:
+                            query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, t.Text);
+                            break;
+                        case DateTimePicker:
+                            query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, new Date(c));
+                            break;
                     }
-
-                    // Update the item table with the new shipping info
-                    string output = PyConnector.runStatement(query);
-                    updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
-                    t.Clear();
-                    t.BackColor = Color.White;
+                    output = PyConnector.runStatement(query);
                 }
+                // Update the item in the view
+                if (output.CompareTo("ERROR") != 0)
+                {
+                    updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
+                    Util.clearTBox(t);
+                }
+
             } 
             else if (!tableEntryExists(t))
             {
@@ -195,11 +220,24 @@ public class ItemViewTab : Tab
                 {
                     if (allShippingBoxesFilled())
                     {
-                        int weightLbs = Int32.Parse(Form1.textBox6.Text);
-                        int weightOz = Int32.Parse(Form1.textBox7.Text);
-                        int l = Int32.Parse(Form1.textBox8.Text);
-                        int w = Int32.Parse(Form1.textBox9.Text);
-                        int h = Int32.Parse(Form1.textBox10.Text);
+                        int weightLbs = 0;
+                        int weightOz = 0;
+                        int l = 0;
+                        int w = 0;
+                        int h = 0;
+                        try
+                        {
+                            weightLbs = Int32.Parse(Form1.textBox6.Text);
+                            weightOz = Int32.Parse(Form1.textBox7.Text);
+                            l = Int32.Parse(Form1.textBox8.Text);
+                            w = Int32.Parse(Form1.textBox9.Text);
+                            h = Int32.Parse(Form1.textBox10.Text);
+                        }
+                        catch
+                        {
+                            goodEdit = false;
+                            continue;
+                        }
 
                         query = QB.buildShipInfoInsertQuery(Form1.currItem, weightLbs, weightOz, l, w, h);
 
@@ -213,6 +251,11 @@ public class ItemViewTab : Tab
 
                         // Update the item table with the new shipping info
                         output = PyConnector.runStatement(query);
+                        if (output.CompareTo("ERROR") != 0)
+                        {
+                            goodEdit = false;
+                            Util.clearTBox(weightTBoxes);
+                        }
                         updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
                     }
                     else
@@ -223,10 +266,13 @@ public class ItemViewTab : Tab
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning
                             );
+                        goodEdit = false;
+                        break;
                     }
                 }
                 else if (itemTBoxes.Contains(t))
                 {
+                    goodEdit = false;
                     Console.WriteLine("ERROR: no item entry for CurrItem, This should not be possible");
                     continue;
                 }
@@ -319,8 +365,11 @@ public class ItemViewTab : Tab
             string output = PyConnector.runStatement(query, ref colNames, ref lastrowid);*/
 
         }
+
+        if (goodEdit) inEditingState = false;
         updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID()));
         showItem(Form1.currItem);
+        
     }
 
     public void deleteShippingInfo()
@@ -342,6 +391,7 @@ public class ItemViewTab : Tab
         flipEditState();
 
     }
+
 
     public void updateItemView(ResultItem item)
     {

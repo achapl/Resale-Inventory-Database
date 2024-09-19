@@ -59,12 +59,19 @@ public class Util
         }
     }
 
-    public static void clearTBoxText(List<TextBox> t)
+    public static void clearTBox(List<TextBox> t)
     {
         foreach (TextBox tb in t)
         {
             tb.Text = "";
+            tb.BackColor = Color.White;
         } 
+    }
+
+    public static void clearTBox(TextBox t)
+    {
+        t.Text = "";
+        t.BackColor = Color.White;
     }
 
     public static List<int> ozToOzLbs(int ozs)

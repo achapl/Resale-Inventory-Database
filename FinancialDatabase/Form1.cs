@@ -118,28 +118,47 @@ namespace FinancialDatabase
         private void button1_Click_1(object sender, EventArgs e)
         {
             IV.editUpdate();
-            IV.flipEditState();
+            IV.showControlVisibility();
 
         }
 
         private void TextBoxAttribute_Leave(object sender, EventArgs e)
         {
             if (sender is null) return;
-#pragma warning disable CS8600 // Checked if sender is null
+
+            #pragma warning disable CS8600 // Checked if sender is null
+
             TextBox t = sender as TextBox;
+
 #pragma warning disable CS8604 // Checked if sender is null
-            if (!IV.controlBoxAttrib.ContainsKey(t)) return;
-            string attrib = IV.controlBoxAttrib[t];
+            string attrib = "";
+            if (IV.controlBoxAttrib.ContainsKey(t))
+            {
+                attrib = IV.controlBoxAttrib[t];
+            } else if (PL.controlBoxAttrib.ContainsKey(t))
+            {
+                attrib = PL.controlBoxAttrib[t];
+            } else
+            {
+                return;
+            }
+
             string type = colDataTypes[attrib];
 
+            // If not right type, return
             if (!Util.checkTypeOkay(t.Text, type))
             {
                 t.Text = "";
+                return;
             }
-            else
+
+            string ret = "";
+            currItem.getAttribAsStr(attrib, ref ret);
+            if (ret.CompareTo(t.Text) != 0)
             {
                 t.BackColor = Color.LightGray;
             }
+
         }
 
         private void button4_Click(object sender, EventArgs e)
