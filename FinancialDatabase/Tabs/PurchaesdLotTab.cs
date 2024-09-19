@@ -13,6 +13,9 @@ public class PurchasedLotTab : Tab
         isNewPurchase = false;
         updateButton = Form1.button7;
         editButton   = Form1.button6;
+        generateTBoxGroups();
+        Util.clearLabelText(allAttribLabels);
+        showControlVisibility();
     }
 
     protected override void generateTBoxGroups()
@@ -45,7 +48,7 @@ public class PurchasedLotTab : Tab
             Form1.label44
         };
 
-        allPurchaseLabels = new List<Label>()
+        allAttribLabels = new List<Label>()
         {
             Form1.label15,
             Form1.label41,

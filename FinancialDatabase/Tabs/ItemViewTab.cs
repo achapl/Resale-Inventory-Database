@@ -12,16 +12,19 @@ using System.Transactions;
 
 public class ItemViewTab : Tab
 {
-
+    protected List<TextBox> weightTBoxes;
     public ItemViewTab(Form1 Form1) : base(Form1)
     {
         updateButton = Form1.button1;
         editButton   = Form1.button4;
+        generateTBoxGroups();
+        Util.clearLabelText(allAttribLabels);
+        showControlVisibility();
     }
 
     protected override void generateTBoxGroups()
     {
-        allItemLabels = new List<Label>() {
+        allAttribLabels = new List<Label>() {
             Form1.label40,
             Form1.label17,
             Form1.label18,

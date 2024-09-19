@@ -106,12 +106,6 @@ namespace FinancialDatabase
             IV.updateItemView(PyConnector.getItem(item_id));
         }
 
-        // Link to Purchased Lot
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            PL.update(currItem);
-        }
-
         // Enter key pressed for search
         private void searchBox_KeyDown(object sender, KeyEventArgs e)
         {

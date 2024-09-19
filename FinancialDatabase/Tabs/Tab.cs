@@ -16,16 +16,13 @@ public abstract class Tab
     protected List<TextBox> itemTBoxes;
     protected Dictionary<Control, Label> labelTextboxPairs;
     public    Dictionary<Control, string> controlBoxAttrib;
+    protected List<Label> allAttribLabels;
 
     protected Button updateButton;
     protected Button editButton;
 
     // Extra from PurchasedLotsTab
-    protected List<Label> allPurchaseLabels;
-
-    // Extra form ItemViewTab
-    protected List<Label> allItemLabels;
-    protected List<TextBox> weightTBoxes;
+    
 
     protected Form1 Form1;
     protected CtrlerOfPythonToDTBConnector PyConnector;
@@ -38,10 +35,6 @@ public abstract class Tab
         PyConnector = new CtrlerOfPythonToDTBConnector();
         inEditingState = false;
 
-        generateTBoxGroups();
-
-
-        Util.clearLabelText(allItemLabels);
 
     }
 
@@ -109,6 +102,13 @@ public abstract class Tab
 
     public void flipEditState()
     {
+        inEditingState = !inEditingState;
+        showControlVisibility();
+        
+    }
+
+    protected void showControlVisibility()
+    {
         editButton.Text = inEditingState ? "View" : "Edit";
         updateButton.Visible = inEditingState;
 
@@ -142,7 +142,7 @@ public abstract class Tab
     {
 
         // Item View Tab
-        Util.clearLabelText(allItemLabels);
+        Util.clearLabelText(allAttribLabels);
 
         Form1.currItem = item;
 
@@ -177,8 +177,6 @@ public abstract class Tab
         }
 
         // PurchasedLot Tab
-
-        Util.clearLabelText(allPurchaseLabels);
 
         if (item.hasPurchaseEntry())
         {
