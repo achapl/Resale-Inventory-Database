@@ -3,34 +3,20 @@ using System.Collections.Generic;
 using FinancialDatabase;
 using Date = Util.Date;
 
-public class PurchasedLotTab
+public class PurchasedLotTab : Tab
 {
-	Form1 Form1;
-	CtrlerOfPythonToDTBConnector PyConnector;
-	QueryBuilder QB;
-
-    bool inEditingState;
-    List<Control> editingControls;
-    List<Control> editingTextBoxes;
-    List<Control> nonEditingControls;
-    List<Label>   nonEditingLabels;
-    List<Label>   allPurchaseLabels;
-    List<TextBox> shippingTBoxes;
-    List<TextBox> itemTBoxes;
-    Dictionary<Control, Label> editableFieldPairs;
-    Dictionary<Control, string> controlBoxAttrib;
 
     bool isNewPurchase;
 
-    public PurchasedLotTab(Form1 Form1)
+    public PurchasedLotTab(Form1 Form1) : base(Form1)
 	{
-		this.Form1 = Form1;
-		QB = new QueryBuilder();
-        PyConnector = new CtrlerOfPythonToDTBConnector();
+        isNewPurchase = false;
+        updateButton = Form1.button7;
+        editButton   = Form1.button6;
+    }
 
-
-        inEditingState = false;
-
+    protected override void generateTBoxGroups()
+    {
         editingControls = new List<Control>()
         {
             Form1.textBox20,
@@ -38,7 +24,7 @@ public class PurchasedLotTab
             Form1.dateTimePicker4
         };
 
-        editingTextBoxes = new List<Control>()
+        editControls = new List<Control>()
         {
             Form1.textBox20,
             Form1.textBox21,
@@ -58,7 +44,7 @@ public class PurchasedLotTab
             Form1.label41,
             Form1.label44
         };
-        
+
         allPurchaseLabels = new List<Label>()
         {
             Form1.label15,
@@ -73,7 +59,7 @@ public class PurchasedLotTab
             Form1.textBox11,
 
         };
-        
+
         shippingTBoxes = new List<TextBox>()
         {
             Form1.textBox15,
@@ -84,11 +70,11 @@ public class PurchasedLotTab
 
         };
 
-        editableFieldPairs = new Dictionary<Control, Label>();
+        labelTextboxPairs = new Dictionary<Control, Label>();
 
-        for (int i = 0; i < editingTextBoxes.Count; i++)
+        for (int i = 0; i < editControls.Count; i++)
         {
-            editableFieldPairs[editingTextBoxes[i]] = nonEditingLabels[i];
+            labelTextboxPairs[editControls[i]] = nonEditingLabels[i];
         }
 
         controlBoxAttrib = new Dictionary<Control, string>
@@ -97,36 +83,7 @@ public class PurchasedLotTab
             { Form1.textBox20,        "purchase.Amount_purchase" },
             { Form1.textBox21,        "purchase.Notes_purchase" }
         };
-
-        isNewPurchase = false;
-
-        
     }
-
-    public string checkDefault(int val)
-    {
-        if (val == ResultItem.DEFAULT_INT) { return ""; }
-        else { return val.ToString(); }
-    }
-
-    public string checkDefault(double val)
-    {
-        if (val == -1) { return ""; }
-        else { return val.ToString(); }
-    }
-
-    // Redundant, but exists for sake of extensibility
-    public string checkDefault(string val)
-    {
-        if (val.CompareTo("") == 0) { return ""; }
-        else { return val.ToString(); }
-    }
-
-    public void showItem(ResultItem item)
-    {
-        
-    }
-
 
     public void update(ResultItem item)
 	{
@@ -144,134 +101,6 @@ public class PurchasedLotTab
         Form1.label41.Text = item.get_Notes_purchase();
 
 	}
-
-    public void flipEditState()
-    {
-
-
-        inEditingState = !inEditingState;
-
-        if (inEditingState)
-        {
-            // Now button, when pressed will change it to "viewing" state
-            Form1.button6.Text = "View";
-
-        }
-        else
-        {
-            Form1.button6.Text = "Edit";
-        }
-
-        updateEditableVisibility();
-    }
-
-    private void updateEditableVisibility()
-    {
-        if (inEditingState)
-        {
-            Form1.button1.Visible = true;
-        }
-        else
-        {
-            Form1.button1.Visible = false;
-        }
-
-        foreach (Control c in nonEditingControls)
-        {
-            if (inEditingState)
-            {
-                c.Visible = false;
-            }
-            else
-            {
-                c.Visible = true;
-            }
-        }
-        foreach (Control c in editingControls)
-        {
-            if (inEditingState)
-            {
-                c.Visible = true;
-                if (c is TextBox)
-                {
-                    c.Text = editableFieldPairs[c as TextBox].Text;
-                }
-                if (c is DateTimePicker)
-                {
-                    DateTimePicker d = c as DateTimePicker;
-                    Date date = new Date(editableFieldPairs[c].Text);
-                    //d.Value.Year = editableFieldPairs[]
-                }
-            }
-            else
-            {
-                c.Visible = false;
-            }
-        }
-    }
-
-
-    private bool tableEntryExists(TextBox t)
-    {
-        if (controlBoxAttrib.ContainsKey(t))
-        {
-            string ret = "";
-            // Check if the attribute associated with the textbox is a default value in the curr item
-            Form1.currItem.getAttribAsString(controlBoxAttrib[t], ref ret);
-            if (ret.CompareTo(ResultItem.DEFAULT_INT.ToString()) == 0 ||
-                ret.CompareTo(ResultItem.DEFAULT_DOUBLE.ToString()) == 0 ||
-                ret is null ||
-                ret.CompareTo(ResultItem.DEFAULT_DATE.ToString()) == 0)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private List<Control> getChangedFields()
-    {
-        List<Control> fields = new List<Control>(new Control[] {Form1.dateTimePicker4,
-                                                    Form1.textBox20,
-                                                    Form1.textBox21,});
-        List<Control> returnList = new List<Control>();
-        foreach (Control f in fields)
-        {
-            if (f.GetType() == typeof(TextBox) && f.Text.Length > 0)
-            {
-                string ret = "";
-                Form1.currItem.getAttribAsString(controlBoxAttrib[f], ref ret);
-                // If text doesn't match currItem for same field add it
-                // Ignore any given text that already matches currItem
-                if (((TextBox)f).Text.CompareTo(ret) != 0)
-                {
-                    returnList.Add(f);
-
-                }
-            }
-            else if (f.GetType() == typeof(NumericUpDown) && ((NumericUpDown)f).Value != null)
-            {
-                string ret = "";
-                Form1.currItem.getAttrib(controlBoxAttrib[f], ref ret);
-                // If text doesn'f match currItem for same field add it
-                // Ignore any given text that already matches currItem
-                if (((TextBox)f).Text.CompareTo(ret) != 0)
-                {
-                    returnList.Add(f);
-
-                }
-            }
-
-            else if (f.GetType() == typeof(DateTimePicker) && new Date(f).toDateString().CompareTo(Form1.currItem.get_Date_Purchased().toDateString()) != 0)
-            {
-                returnList.Add(f);
-            }
-        }
-
-        return returnList;
-
-    }
-
 
     public void editUpdate()
     {
@@ -334,7 +163,6 @@ public class PurchasedLotTab
         Form1.label41.Text = item.get_Notes_purchase();
     }
 
-    
     public bool allNewPurchaseBoxesFilled()
     {
         foreach (Control c in shippingTBoxes)
@@ -363,9 +191,6 @@ public class PurchasedLotTab
         }
         return true;
     }
-
-
-
 
     public void addItem()
     {
@@ -444,4 +269,5 @@ public class PurchasedLotTab
 
     }
 
+   
 }

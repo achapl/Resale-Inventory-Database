@@ -76,7 +76,7 @@ public class ItemViewTab : Tab
             Form1.textBox10
         };
 
-        editingTextBoxes = new List<Control>() {
+        editControls = new List<Control>() {
             Form1.textBox3,
             Form1.textBox4,
             Form1.textBox5,
@@ -99,12 +99,12 @@ public class ItemViewTab : Tab
 
         };
 
-        editableFieldPairs = new Dictionary<Control, Label>();
+        labelTextboxPairs = new Dictionary<Control, Label>();
 
 
-        for (int i = 0; i < editingTextBoxes.Count; i++)
+        for (int i = 0; i < editControls.Count; i++)
         {
-            editableFieldPairs[editingTextBoxes[i]] = nonEditingLabels[i];
+            labelTextboxPairs[editControls[i]] = nonEditingLabels[i];
         }
 
         controlBoxAttrib = new Dictionary<Control, string>

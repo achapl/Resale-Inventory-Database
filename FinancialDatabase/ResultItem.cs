@@ -328,7 +328,7 @@ public class ResultItem : IEquatable<ResultItem>
         }
     }
 
-    public void getAttribAsString(string attrib, ref string ret)
+    public void getAttribAsStr(string attrib, ref string ret)
     {
         switch (attrib)
         {
@@ -459,7 +459,7 @@ public class ResultItem : IEquatable<ResultItem>
         // Default value if uninitialized
         if (Name == DEFAULT_STRING)
         {
-            return "";
+            return DEFAULT_STRING;
         }
         else
         {
@@ -531,7 +531,7 @@ public class ResultItem : IEquatable<ResultItem>
         // Default value if uninitialized
         if (Notes_item == DEFAULT_STRING)
         {
-            return "";
+            return DEFAULT_STRING;
         }
         else
         {
@@ -543,6 +543,10 @@ public class ResultItem : IEquatable<ResultItem>
     public Date get_Date_Purchased()
     {
         return this.Date_Purchased;
+    }
+    public string get_Date_Purchased_str()
+    {
+        return this.Date_Purchased.toDateString();
     }
     public double get_Amount_purchase()
     {
@@ -585,7 +589,7 @@ public class ResultItem : IEquatable<ResultItem>
         // Default value if uninitialized
         if (Seller == DEFAULT_STRING)
         {
-            return "";
+            return DEFAULT_STRING;
         }
         else
         {
@@ -597,7 +601,7 @@ public class ResultItem : IEquatable<ResultItem>
         // Default value if uninitialized
         if (Notes_purchase == DEFAULT_STRING)
         {
-            return "";
+            return DEFAULT_STRING;
         }
         else
         {
@@ -610,7 +614,13 @@ public class ResultItem : IEquatable<ResultItem>
     {
         return Date_Sold;
     }
-        public double get_Amount_sale()
+
+    public string get_Date_Sold_str()
+    {
+        return this.Date_Sold.toDateString();
+    }
+
+    public double get_Amount_sale()
     {
         // Default value if uninitialized
         if (Amount_sale == DEFAULT_DOUBLE)
@@ -639,7 +649,7 @@ public class ResultItem : IEquatable<ResultItem>
         // Default value if uninitialized
         if (Buyer == DEFAULT_STRING)
         {
-            return "";
+            return DEFAULT_STRING;
         }
         else
         {
@@ -725,7 +735,7 @@ public class ResultItem : IEquatable<ResultItem>
         // Default value if uninitialized
         if (Notes_shipping == DEFAULT_STRING)
         {
-            return "";
+            return DEFAULT_STRING;
         }
         else
         {
