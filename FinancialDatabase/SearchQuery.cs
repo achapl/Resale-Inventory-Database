@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Date = Util.Date;
 
 public class SearchQuery
 {
 
     List<string> searchTerms;
     string singleTerm;
-    string startDate;
-    string endDate;
+    Date startDate;
+    Date endDate;
     bool inStock;
     bool soldOut;
     bool dateCol;
@@ -16,8 +17,8 @@ public class SearchQuery
     public SearchQuery(
         List<string> searchTerms,
         string singleTerm,
-        string startDate,
-        string endDate,
+        Date startDate,
+        Date endDate,
         bool inStock,
         bool soldOut,
         bool dateCol,
@@ -35,8 +36,8 @@ public class SearchQuery
     
     public List<string> getSearchTerms() => this.searchTerms;
     public string getSingleTerm() => this.singleTerm;
-    public string getStartDate() => this.startDate;
-    public string getEndDate() => this.endDate;
+    public string getStartDate() => this.startDate.toDateString();
+    public string getEndDate() => this.endDate.toDateString();
     public bool getInStock() => this.inStock;
     public bool getSoldOut() => this.soldOut;
     public bool getDateCol() => this.dateCol;

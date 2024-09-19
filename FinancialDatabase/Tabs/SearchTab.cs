@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using ItemHitPair = System.Tuple<ResultItem, int>;
+using Date = Util.Date;
 
 public class SearchTab
 {
@@ -99,8 +100,10 @@ public class SearchTab
         bool dateCol = Form1.checkBox3.Checked;
         bool priceCol = Form1.checkBox5.Checked;
 
-        string startDate = startDateRaw.Year.ToString() + "-" + startDateRaw.Month.ToString() + "-" + startDateRaw.Day.ToString();
-        string endDate = endDateRaw.Year.ToString() + "-" + endDateRaw.Month.ToString() + "-" + endDateRaw.Day.ToString();
+        Date startDate = new Date(Form1.dateTimePicker1);
+        Date endDate  = new Date(Form1.dateTimePicker2);
+        //string startDate = startDateRaw.Year.ToString() + "-" + startDateRaw.Month.ToString() + "-" + startDateRaw.Day.ToString();
+        //string endDate = endDateRaw.Year.ToString() + "-" + endDateRaw.Month.ToString() + "-" + endDateRaw.Day.ToString();
 
         SearchQuery Q = new SearchQuery(searchTerms,
                                         "",

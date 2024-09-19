@@ -50,7 +50,6 @@ namespace FinancialDatabase
             string stock = "";
             string join = "";
 
-            bool needPurchaseJoin = false;
 
             List<string> columns = new List<string>();
             string cols;
@@ -61,15 +60,11 @@ namespace FinancialDatabase
 
             if (Q.getDateCol()) { columns.Add("purchase.Date_Purchased"); }
             if (Q.getPriceCol()) { columns.Add("purchase.Amount_purchase"); }
-            if (Q.getPriceCol() || Q.getDateCol()) {  needPurchaseJoin = true; }
-
             cols = String.Join(", ", columns);
 
+            string dateRange = "AND purchase.Date_Purchased > '" + Q.getStartDate() + "' AND purchase.Date_Purchased < '" + Q.getEndDate() + "'";
 
-            if (needPurchaseJoin)
-            {
-                join = "JOIN purchase ON purchase.PURCHASE_ID = item.PurchaseID ";
-            }
+            join = "JOIN purchase ON purchase.PURCHASE_ID = item.PurchaseID ";
 
             // If both are true, don't need to add to query since it's looking for all cases of the current quantity
             if (Q.getInStock() && !Q.getSoldOut())
@@ -98,7 +93,7 @@ namespace FinancialDatabase
             else
             {
                 //query = "SELECT " + cols + " FROM item JOIN purchase ON item.ITEM_ID = purchase.ItemID WHERE name LIKE '%" + term + "%' AND purchase.Date_Purchased > '" + startDate + "' AND purchase.Date_Purchased < '" + endDate + "' " + stock + ";";
-                query = "SELECT " + cols + " FROM item " + join  + "WHERE item.name LIKE '%" + Q.getSingleTerm() + "%'" + stock +  ";";
+                query = "SELECT " + cols + " FROM item " + join  + "WHERE item.name LIKE '%" + Q.getSingleTerm() + "%'" + stock + " " + dateRange + ";";
             }
             return query;
         }
