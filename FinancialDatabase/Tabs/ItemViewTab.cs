@@ -8,33 +8,19 @@ using TextBox = System.Windows.Forms.TextBox;
 using Date = Util.Date;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 using System.Diagnostics.Eventing.Reader;
+using System.Transactions;
 
-public class ItemViewTab
+public class ItemViewTab : Tab
 {
-	Form1 Form1;
-    QueryBuilder QB;
-    CtrlerOfPythonToDTBConnector PyConnector;
-    bool inEditingState;
 
-    List<Label> allItemLabels;
-    List<Label> nonEditingLabels;
-    List<Control> nonEditingControls;
-
-    List<TextBox> itemTBoxes;
-    List<TextBox> weightTBoxes;
-    List<TextBox> shippingTBoxes;
-    List<Control> editingControls;
-    List<Control> editingTextBoxes;
-    Dictionary<Control, Label> editableFieldPairs;
-    public Dictionary<Control, string> controlBoxAttrib;
-
-    public ItemViewTab(Form1 Form1)
+    public ItemViewTab(Form1 Form1) : base(Form1)
     {
-        this.Form1 = Form1;
-        QB = new QueryBuilder();
-        PyConnector = new CtrlerOfPythonToDTBConnector();
-        inEditingState = false;
+        updateButton = Form1.button1;
+        editButton   = Form1.button4;
+    }
 
+    protected override void generateTBoxGroups()
+    {
         allItemLabels = new List<Label>() {
             Form1.label40,
             Form1.label17,
@@ -110,7 +96,7 @@ public class ItemViewTab
             Form1.textBox9,
             Form1.textBox10,
             Form1.button5
-            
+
         };
 
         editableFieldPairs = new Dictionary<Control, Label>();
@@ -130,221 +116,8 @@ public class ItemViewTab
         { Form1.textBox8, "shipping.Length" },
         { Form1.textBox9, "shipping.Width" },
         { Form1.textBox10, "shipping.Height" }};
-
-        Util.clearLabelText(allItemLabels);
-        updateEditableVisibility();
     }
 
-
-    public void flipEditState()
-    {
-
-        
-        inEditingState = !inEditingState;
-
-        if (inEditingState)
-        {
-            // Now button, when pressed will change it to "viewing" state
-            Form1.button4.Text = "View";
-            
-        }
-        else
-        {
-            Form1.button4.Text = "Edit";
-        }
-
-        updateEditableVisibility();
-    }
-
-    private void updateEditableVisibility()
-    {
-        if (inEditingState)
-        {
-            Form1.button1.Visible = true;
-        }
-        else
-        {
-            Form1.button1.Visible = false;
-        }
-
-        foreach (Control c in nonEditingControls)
-        {
-            if (inEditingState)
-            {
-                c.Visible = false;
-            }
-            else
-            {
-                c.Visible = true;
-            }
-        }
-        foreach (Control c in editingControls)
-        {
-            if (inEditingState)
-            {
-                c.Visible = true;
-                if (c is TextBox)
-                {
-                    c.Text = editableFieldPairs[c as TextBox].Text;
-                }
-                if (c is DateTimePicker)
-                {
-                    DateTimePicker d = c as DateTimePicker;
-                    Date date = new Date(editableFieldPairs[c].Text);
-                    //d.Value.Year = editableFieldPairs[]
-                }
-            }
-            else
-            {
-                c.Visible = false;
-            }
-        }
-    }
-
-   
-    
-    
-    public string checkDefault(int val)
-    {
-        if (val == ResultItem.DEFAULT_INT) { return ""; }
-        else { return val.ToString(); }
-    }
-
-    public string checkDefault(double val)
-    {
-        if (val == -1) { return ""; }
-        else { return val.ToString(); }
-    }
-
-    // Redundant, but exists for sake of extensibility
-    public string checkDefault(string val)
-    {
-        if (val.CompareTo("") == 0) { return ""; }
-        else { return val.ToString(); }
-    }
-    
-    public void showItem(ResultItem item)
-	{
-        Util.clearLabelText(allItemLabels);
-
-        Form1.currItem = item;
-
-        if (item.hasItemEntry())
-        {
-            Form1.label40.Text = checkDefault(item.get_Name());
-            Form1.label19.Text = checkDefault(item.get_InitialQuantity());
-            Form1.label20.Text = checkDefault(item.get_CurrentQuantity());
-            Form1.label21.Text = checkDefault(item.get_ITEM_ID());
-        }
-
-        if (item.hasPurchaseEntry())
-        {
-            Date datePurc = item.get_Date_Purchased();
-            Form1.label43.Text = datePurc.toDateString();
-            Form1.label17.Text = checkDefault(item.get_Amount_purchase());
-        }
-                
-        if (item.hasSaleEntry())
-        {
-            Form1.label18.Text = checkDefault(item.get_Amount_sale());
-        }
-        
-        if (item.hasShippingEntry())
-        {
-            List<int> WeightLbsOz = Util.ozToOzLbs(item.get_Weight());
-            Form1.label22.Text = checkDefault(WeightLbsOz[0]);
-            Form1.label23.Text = checkDefault(WeightLbsOz[1]);
-            Form1.label24.Text = checkDefault(item.get_Length());
-            Form1.label25.Text = checkDefault(item.get_Width());
-            Form1.label26.Text = checkDefault(item.get_Height());
-        }
-    }
-
-    private List<Control> getChangedFields()
-    {
-        List<Control> fields = new List<Control>(new Control[] {
-                                                    Form1.textBox3,
-                                                    Form1.textBox4,
-                                                    Form1.textBox5,
-                                                    Form1.textBox6,
-                                                    Form1.textBox7,
-                                                    Form1.textBox8,
-                                                    Form1.textBox9,
-                                                    Form1.textBox10});
-        List<Control> returnList = new List<Control>();
-        foreach (Control f in fields)
-        {
-            if (f.GetType() == typeof(TextBox) && f.Text.Length > 0)
-            {
-                string ret = "";
-                Form1.currItem.getAttribAsString(controlBoxAttrib[f], ref ret);
-                // If text doesn't match currItem for same field add it
-                // Ignore any given text that already matches currItem
-                if (((TextBox)f).Text.CompareTo(ret) != 0)
-                {
-                    returnList.Add(f);
-
-                }
-            } else if (f.GetType() == typeof(NumericUpDown) && ((NumericUpDown)f).Value != null)
-            {
-                string ret = "";
-                Form1.currItem.getAttrib(controlBoxAttrib[f], ref ret);
-                // If text doesn'f match currItem for same field add it
-                // Ignore any given text that already matches currItem
-                if (((TextBox)f).Text.CompareTo(ret) != 0)
-                {
-                    returnList.Add(f);
-
-                }
-            }
-
-            else if (f.GetType() == typeof(DateTimePicker) && new Date(f).toDateString().CompareTo(Form1.currItem.get_Date_Purchased().toDateString()) != 0)
-            {
-                returnList.Add(f);
-            }
-        }
-
-        return returnList;
-
-    }
-
-    private void clearTextBoxes()
-    {
-        List<TextBox> textBoxes = new List<TextBox>() 
-        {   Form1.textBox3,
-            Form1.textBox4,
-            Form1.textBox5,
-            Form1.textBox6,
-            Form1.textBox6,
-            Form1.textBox7,
-            Form1.textBox8,
-            Form1.textBox9,
-            Form1.textBox10};
-
-        foreach (TextBox t in textBoxes)
-        {
-            t.Clear();
-            t.BackColor = Color.White;
-        }
-    }
-
-    private bool tableEntryExists(TextBox t)
-    {
-        if (controlBoxAttrib.ContainsKey(t))
-        {
-            string ret = "";
-            // Check if the attribute associated with the textbox is a default value in the curr item
-            Form1.currItem.getAttribAsString(controlBoxAttrib[t], ref ret);
-            if (ret.CompareTo(ResultItem.DEFAULT_INT.ToString()) == 0 ||
-                ret.CompareTo(ResultItem.DEFAULT_DOUBLE.ToString()) == 0 ||
-                ret is null ||
-                ret.CompareTo(ResultItem.DEFAULT_DATE.ToString()) == 0)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
 
     public bool allShippingBoxesFilled()
     {
@@ -547,7 +320,6 @@ public class ItemViewTab
         showItem(Form1.currItem);
     }
 
-
     public void deleteShippingInfo()
     {
         // Delete shipping info entry
@@ -574,6 +346,7 @@ public class ItemViewTab
         Form1.tabControl1.SelectTab(1);
     }
 
+    
 
-    public ResultItem getCurrItem() => Form1.currItem;
+    
 }

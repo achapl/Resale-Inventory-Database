@@ -100,8 +100,7 @@ public class PurchasedLotTab
 
         isNewPurchase = false;
 
-        Util.clearLabelText(allPurchaseLabels);
-        updateEditableVisibility();
+        
     }
 
     public string checkDefault(int val)
@@ -125,18 +124,7 @@ public class PurchasedLotTab
 
     public void showItem(ResultItem item)
     {
-        Util.clearLabelText(allPurchaseLabels);
-
-        Form1.currItem = item;
-
-        if (item.hasPurchaseEntry())
-        {
-            Date datePurc = item.get_Date_Purchased();
-            Form1.dateTimePicker4.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
-            Form1.label15.Text = checkDefault(item.get_Amount_purchase());
-            Form1.label41.Text = checkDefault(item.get_Notes_purchase());
-            Form1.label44.Text = item.get_Date_Purchased().toDateString();
-        }
+        
     }
 
 
@@ -387,14 +375,18 @@ public class PurchasedLotTab
         {
             return;
         }
-
+        int purcID = -1;
         if (isNewPurchase && allNewPurchaseBoxesFilled())
         { 
             DateTime dt = Form1.dateTimePicker4.Value;
             Date d = new (dt.Year, dt.Month, dt.Day);
-            int purcID = PyConnector.newPurchase(Int32.Parse(Form1.textBox20.Text),Form1.textBox21.Text, d);
+            purcID = PyConnector.newPurchase(Int32.Parse(Form1.textBox20.Text),Form1.textBox21.Text, d);
 
-            isNewPurchase = false;
+        }
+        // Incorrectly formed new purchase from user input, don't continue on
+        else if (!allNewPurchaseBoxesFilled())
+        {
+            return;
         }
         
         ResultItem newItem = new ResultItem();
@@ -427,8 +419,15 @@ public class PurchasedLotTab
             newItem.set_Width( Int32.Parse(Form1.textBox16.Text));
             newItem.set_Height(Int32.Parse(Form1.textBox17.Text));
         }
-
-        newItem.set_PurchaseID(Form1.currItem.get_PurchaseID());
+        if (isNewPurchase)
+        {
+            newItem.set_PurchaseID(purcID);
+            isNewPurchase = false;
+        } else
+        {
+            newItem.set_PurchaseID(Form1.currItem.get_PurchaseID());
+        }
+        
 
         PyConnector.insertItem(newItem);
 
