@@ -9,7 +9,6 @@ public abstract class Tab
     protected bool inEditingState;
     protected List<Control> editingControls;
     protected List<Control> editControls;
-    protected List<Control> nonEditingControls;
     protected List<Label> nonEditingLabels;
 
     protected List<TextBox> shippingTBoxes;
@@ -45,10 +44,12 @@ public abstract class Tab
     {
         
         List<Control> returnList = new List<Control>();
-        foreach (Control control in editControls)
+        foreach (Control control in editingControls)
         {
             string itemValue = "";
             string userValue = "";
+
+            bool hasMatch = false;
 
             switch (control)
             {
@@ -56,14 +57,17 @@ public abstract class Tab
                     string attrib = controlBoxAttrib[control];
                     getCurrItem().getAttribAsStr(attrib, ref itemValue);
                     userValue = control.Text;
+                    hasMatch = true;
                     break;
                 case DateTimePicker:
                     itemValue = getCurrItem().get_Date_Purchased_str();
                     userValue = new Date(control).toDateString();
+                    hasMatch = true;
                     break;
         }
 
-            if (userValue.CompareTo(itemValue) != 0)
+            // Must check if hasMatch, so that matching default vals when there is no match does not incorrectly add the control to the return list
+            if (hasMatch && userValue.CompareTo(itemValue) != 0)
             {
                 returnList.Add(control);
             }
@@ -113,7 +117,7 @@ public abstract class Tab
         editButton.Text = inEditingState ? "View" : "Edit";
         updateButton.Visible = inEditingState;
 
-        foreach (Control field in nonEditingControls)
+        foreach (Label field in nonEditingLabels)
         {
             field.Visible = !inEditingState;
         }

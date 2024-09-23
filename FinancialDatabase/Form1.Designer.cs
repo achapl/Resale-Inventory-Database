@@ -116,13 +116,27 @@
             label16 = new Label();
             listBox2 = new ListBox();
             Sale = new TabPage();
+            label53 = new Label();
+            label52 = new Label();
+            dateTimePicker5 = new DateTimePicker();
+            label51 = new Label();
+            label50 = new Label();
+            dateTimePicker3 = new DateTimePicker();
+            label49 = new Label();
+            label48 = new Label();
+            textBox12 = new TextBox();
+            textBox13 = new TextBox();
+            label45 = new Label();
+            label46 = new Label();
+            label47 = new Label();
+            button8 = new Button();
             textBox23 = new TextBox();
             textBox22 = new TextBox();
             label39 = new Label();
-            dateTimePicker5 = new DateTimePicker();
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
+            button9 = new Button();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -1048,10 +1062,24 @@
             // 
             // Sale
             // 
+            Sale.Controls.Add(button9);
+            Sale.Controls.Add(label53);
+            Sale.Controls.Add(label52);
+            Sale.Controls.Add(dateTimePicker5);
+            Sale.Controls.Add(label51);
+            Sale.Controls.Add(label50);
+            Sale.Controls.Add(dateTimePicker3);
+            Sale.Controls.Add(label49);
+            Sale.Controls.Add(label48);
+            Sale.Controls.Add(textBox12);
+            Sale.Controls.Add(textBox13);
+            Sale.Controls.Add(label45);
+            Sale.Controls.Add(label46);
+            Sale.Controls.Add(label47);
+            Sale.Controls.Add(button8);
             Sale.Controls.Add(textBox23);
             Sale.Controls.Add(textBox22);
             Sale.Controls.Add(label39);
-            Sale.Controls.Add(dateTimePicker5);
             Sale.Controls.Add(label38);
             Sale.Controls.Add(listBox3);
             Sale.Location = new Point(4, 24);
@@ -1062,9 +1090,133 @@
             Sale.Text = "Sale";
             Sale.UseVisualStyleBackColor = true;
             // 
+            // label53
+            // 
+            label53.AutoSize = true;
+            label53.Location = new Point(547, 44);
+            label53.Name = "label53";
+            label53.Size = new Size(66, 15);
+            label53.TabIndex = 27;
+            label53.Text = "Item Name";
+            // 
+            // label52
+            // 
+            label52.AutoSize = true;
+            label52.Location = new Point(558, 148);
+            label52.Name = "label52";
+            label52.Size = new Size(55, 15);
+            label52.TabIndex = 26;
+            label52.Text = "Sale Date";
+            // 
+            // dateTimePicker5
+            // 
+            dateTimePicker5.Location = new Point(625, 142);
+            dateTimePicker5.Name = "dateTimePicker5";
+            dateTimePicker5.Size = new Size(200, 23);
+            dateTimePicker5.TabIndex = 25;
+            // 
+            // label51
+            // 
+            label51.AutoSize = true;
+            label51.Location = new Point(625, 44);
+            label51.Name = "label51";
+            label51.Size = new Size(44, 15);
+            label51.TabIndex = 24;
+            label51.Text = "label51";
+            // 
+            // label50
+            // 
+            label50.AutoSize = true;
+            label50.Location = new Point(278, 356);
+            label50.Name = "label50";
+            label50.Size = new Size(55, 15);
+            label50.TabIndex = 23;
+            label50.Text = "Sale Date";
+            // 
+            // dateTimePicker3
+            // 
+            dateTimePicker3.Location = new Point(278, 374);
+            dateTimePicker3.Name = "dateTimePicker3";
+            dateTimePicker3.Size = new Size(200, 23);
+            dateTimePicker3.TabIndex = 22;
+            // 
+            // label49
+            // 
+            label49.AutoSize = true;
+            label49.Location = new Point(625, 110);
+            label49.Name = "label49";
+            label49.Size = new Size(44, 15);
+            label49.TabIndex = 21;
+            label49.Text = "label49";
+            // 
+            // label48
+            // 
+            label48.AutoSize = true;
+            label48.Location = new Point(625, 79);
+            label48.Name = "label48";
+            label48.Size = new Size(44, 15);
+            label48.TabIndex = 20;
+            label48.Text = "label48";
+            // 
+            // textBox12
+            // 
+            textBox12.Location = new Point(196, 374);
+            textBox12.Margin = new Padding(4, 3, 4, 3);
+            textBox12.Name = "textBox12";
+            textBox12.Size = new Size(75, 23);
+            textBox12.TabIndex = 19;
+            // 
+            // textBox13
+            // 
+            textBox13.Location = new Point(108, 374);
+            textBox13.Margin = new Padding(4, 3, 4, 3);
+            textBox13.Name = "textBox13";
+            textBox13.Size = new Size(80, 23);
+            textBox13.TabIndex = 18;
+            // 
+            // label45
+            // 
+            label45.AutoSize = true;
+            label45.Location = new Point(196, 356);
+            label45.Margin = new Padding(4, 0, 4, 0);
+            label45.Name = "label45";
+            label45.Size = new Size(41, 15);
+            label45.TabIndex = 17;
+            label45.Text = "Box ID";
+            // 
+            // label46
+            // 
+            label46.AutoSize = true;
+            label46.Location = new Point(104, 356);
+            label46.Margin = new Padding(4, 0, 4, 0);
+            label46.Name = "label46";
+            label46.Size = new Size(75, 15);
+            label46.TabIndex = 16;
+            label46.Text = "Sale Amount";
+            // 
+            // label47
+            // 
+            label47.AutoSize = true;
+            label47.Location = new Point(4, 336);
+            label47.Margin = new Padding(4, 0, 4, 0);
+            label47.Name = "label47";
+            label47.Size = new Size(83, 15);
+            label47.TabIndex = 15;
+            label47.Text = "Add New Sale:";
+            // 
+            // button8
+            // 
+            button8.Location = new Point(4, 370);
+            button8.Margin = new Padding(4, 3, 4, 3);
+            button8.Name = "button8";
+            button8.Size = new Size(88, 27);
+            button8.TabIndex = 14;
+            button8.Text = "Add Sale";
+            button8.UseVisualStyleBackColor = true;
+            // 
             // textBox23
             // 
-            textBox23.Location = new Point(625, 66);
+            textBox23.Location = new Point(625, 107);
             textBox23.Margin = new Padding(4, 3, 4, 3);
             textBox23.Name = "textBox23";
             textBox23.Size = new Size(116, 23);
@@ -1072,7 +1224,7 @@
             // 
             // textBox22
             // 
-            textBox22.Location = new Point(625, 35);
+            textBox22.Location = new Point(625, 76);
             textBox22.Margin = new Padding(4, 3, 4, 3);
             textBox22.Name = "textBox22";
             textBox22.Size = new Size(116, 23);
@@ -1081,25 +1233,17 @@
             // label39
             // 
             label39.AutoSize = true;
-            label39.Location = new Point(539, 74);
+            label39.Location = new Point(545, 115);
             label39.Margin = new Padding(4, 0, 4, 0);
             label39.Name = "label39";
             label39.Size = new Size(68, 15);
             label39.TabIndex = 3;
             label39.Text = "Box Item ID";
             // 
-            // dateTimePicker5
-            // 
-            dateTimePicker5.Location = new Point(538, 3);
-            dateTimePicker5.Margin = new Padding(4, 3, 4, 3);
-            dateTimePicker5.Name = "dateTimePicker5";
-            dateTimePicker5.Size = new Size(233, 23);
-            dateTimePicker5.TabIndex = 2;
-            // 
             // label38
             // 
             label38.AutoSize = true;
-            label38.Location = new Point(538, 38);
+            label38.Location = new Point(538, 79);
             label38.Margin = new Padding(4, 0, 4, 0);
             label38.Name = "label38";
             label38.Size = new Size(75, 15);
@@ -1119,6 +1263,15 @@
             // resultItemBindingSource
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
+            // 
+            // button9
+            // 
+            button9.Location = new Point(625, 3);
+            button9.Name = "button9";
+            button9.Size = new Size(75, 23);
+            button9.TabIndex = 28;
+            button9.Text = "Edit";
+            button9.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -1219,7 +1372,6 @@
         public System.Windows.Forms.Button button3;
         public System.Windows.Forms.ListBox listBox3;
         public System.Windows.Forms.BindingSource resultItemBindingSource;
-        public System.Windows.Forms.DateTimePicker dateTimePicker5;
         public System.Windows.Forms.Label label38;
         public System.Windows.Forms.TextBox textBox23;
         public System.Windows.Forms.TextBox textBox22;
@@ -1242,6 +1394,21 @@
         public Label label42;
         public Label label43;
         public Label label44;
+        public Label label51;
+        public Label label50;
+        public DateTimePicker dateTimePicker3;
+        public Label label49;
+        public Label label48;
+        public TextBox textBox12;
+        public TextBox textBox13;
+        public Label label45;
+        public Label label46;
+        public Label label47;
+        public Button button8;
+        public DateTimePicker dateTimePicker5;
+        public Label label53;
+        public Label label52;
+        public Button button9;
     }
 }
 

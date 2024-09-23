@@ -49,16 +49,6 @@ public class ItemViewTab : Tab
             Form1.label25,
             Form1.label26,
         };
-        nonEditingControls = new List<Control>(){
-            Form1.label40,
-            Form1.label19,
-            Form1.label20,
-            Form1.label22,
-            Form1.label23,
-            Form1.label24,
-            Form1.label25,
-            Form1.label26,
-        };
 
         itemTBoxes = new List<TextBox>()
         {

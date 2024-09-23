@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using FinancialDatabase;
 using Date = Util.Date;
 
-public class PurchasedLotTab : Tab
+public class SaleTab : Tab
 {
 
-    bool isNewPurchase;
-
-    public PurchasedLotTab(Form1 Form1) : base(Form1)
+    public SaleTab(Form1 Form1) : base(Form1)
 	{
-        isNewPurchase = false;
         updateButton = Form1.button7;
         editButton   = Form1.button6;
         generateTBoxGroups();
@@ -20,49 +17,31 @@ public class PurchasedLotTab : Tab
 
     protected override void generateTBoxGroups()
     {
+        
         editingControls = new List<Control>()
         {
-            Form1.textBox20,
-            Form1.textBox21,
-            Form1.dateTimePicker4
-        };
+            Form1.textBox22,
+            Form1.textBox23,
+            Form1.dateTimePicker5
+        };        
 
         editControls = new List<Control>()
         {
-            Form1.textBox20,
-            Form1.textBox21,
-            Form1.dateTimePicker4
-        };
-
-        nonEditingLabels = new List<Label>()
-        {
-            Form1.label15,
-            Form1.label41,
-            Form1.label44
+            Form1.textBox22,
+            Form1.textBox23
         };
 
         allAttribLabels = new List<Label>()
         {
-            Form1.label15,
-            Form1.label41,
-            Form1.label44
+            Form1.label51,
+            Form1.label48,
+            Form1.label49
         };
 
         itemTBoxes = new List<TextBox>()
         {
-            Form1.textBox2,
-            Form1.textBox14,
-            Form1.textBox11,
-
-        };
-
-        shippingTBoxes = new List<TextBox>()
-        {
-            Form1.textBox15,
-            Form1.textBox16,
-            Form1.textBox17,
-            Form1.textBox18,
-            Form1.textBox19
+            Form1.textBox12,
+            Form1.textBox13,
 
         };
 
@@ -183,7 +162,7 @@ public class PurchasedLotTab : Tab
         return true;
     }
 
-    public void addItem()
+    /*public void addItem()
     {
 
         // Must at least have name. Init and curr quantites are given a default val of 1
@@ -260,6 +239,6 @@ public class PurchasedLotTab : Tab
         addItem();
 
     }
-
+    */
    
 }
