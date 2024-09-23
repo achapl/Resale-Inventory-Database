@@ -10,6 +10,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolBar;
 using System.Diagnostics.Eventing.Reader;
 using System.Transactions;
 using System.ComponentModel;
+using Button = System.Windows.Forms.Button;
 
 public class ItemViewTab : Tab
 {
@@ -69,17 +70,6 @@ public class ItemViewTab : Tab
             Form1.textBox9,
             Form1.textBox10
         };
-
-        editControls = new List<Control>() {
-            Form1.textBox3,
-            Form1.textBox4,
-            Form1.textBox5,
-            Form1.textBox6,
-            Form1.textBox7,
-            Form1.textBox8,
-            Form1.textBox9,
-            Form1.textBox10
-        };
         editingControls = new List<Control>(){
             Form1.textBox3,
             Form1.textBox4,
@@ -95,10 +85,13 @@ public class ItemViewTab : Tab
 
         labelTextboxPairs = new Dictionary<Control, Label>();
 
-
-        for (int i = 0; i < editControls.Count; i++)
+        int i = 0;
+        foreach (Control c in editingControls)
         {
-            labelTextboxPairs[editControls[i]] = nonEditingLabels[i];
+            if (c is not Button)
+            {
+                labelTextboxPairs[c] = nonEditingLabels[i++];
+            }
         }
 
         controlBoxAttrib = new Dictionary<Control, string>
@@ -179,8 +172,8 @@ public class ItemViewTab : Tab
                 }
                 else
                 {
-                    string attrib = controlBoxAttrib[c];
-                    string type = Form1.colDataTypes[attrib];
+                    string attrib = t.Text;
+                    string type = Form1.colDataTypes[controlBoxAttrib[c]];
                     if (!Util.checkTypeOkay(attrib, type))
                     {
                         goodEdit = false;

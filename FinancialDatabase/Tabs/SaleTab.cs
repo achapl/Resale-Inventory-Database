@@ -17,18 +17,12 @@ public class SaleTab : Tab
 
     protected override void generateTBoxGroups()
     {
-        
+
         editingControls = new List<Control>()
         {
             Form1.textBox22,
             Form1.textBox23,
             Form1.dateTimePicker5
-        };        
-
-        editControls = new List<Control>()
-        {
-            Form1.textBox22,
-            Form1.textBox23
         };
 
         allAttribLabels = new List<Label>()
@@ -47,9 +41,13 @@ public class SaleTab : Tab
 
         labelTextboxPairs = new Dictionary<Control, Label>();
 
-        for (int i = 0; i < editControls.Count; i++)
+        int i = 0;
+        foreach (Control c in editingControls)
         {
-            labelTextboxPairs[editControls[i]] = nonEditingLabels[i];
+            if (c is not Button)
+            {
+                labelTextboxPairs[c] = nonEditingLabels[i++];
+            }
         }
 
         controlBoxAttrib = new Dictionary<Control, string>
@@ -95,6 +93,7 @@ public class SaleTab : Tab
                 string type = Form1.colDataTypes[controlBoxAttrib[c]];
 
                 if (c is TextBox)
+                    // TODO: Tpye Check?
                 {
                     query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, t.Text);
                 }

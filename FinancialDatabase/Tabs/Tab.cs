@@ -8,7 +8,6 @@ public abstract class Tab
 
     protected bool inEditingState;
     protected List<Control> editingControls;
-    protected List<Control> editControls;
     protected List<Label> nonEditingLabels;
 
     protected List<TextBox> shippingTBoxes;
@@ -64,12 +63,16 @@ public abstract class Tab
                     userValue = new Date(control).toDateString();
                     hasMatch = true;
                     break;
-        }
+            
+            }
 
             // Must check if hasMatch, so that matching default vals when there is no match does not incorrectly add the control to the return list
-            if (hasMatch && userValue.CompareTo(itemValue) != 0)
+            if (hasMatch)
             {
-                returnList.Add(control);
+                if (userValue.CompareTo(itemValue) != 0)
+                {
+                    returnList.Add(control);
+                }
             }
         }
 

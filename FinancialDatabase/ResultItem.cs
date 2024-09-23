@@ -417,6 +417,14 @@ public class ResultItem : IEquatable<ResultItem>
                 ret = get_Fees_sale().ToString();
                 break;
         }
+
+        if (ret.CompareTo(DEFAULT_DATE.toDateString()) == 0 || 
+            ret.CompareTo(DEFAULT_DOUBLE.ToString()) == 0 ||
+            ret.CompareTo(DEFAULT_INT.ToString())  == 0 ||
+            ret.CompareTo(DEFAULT_STRING) == 0)
+        {
+            ret = "";
+        }
     }
 
 

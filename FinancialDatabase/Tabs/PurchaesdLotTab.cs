@@ -27,13 +27,6 @@ public class PurchasedLotTab : Tab
             Form1.dateTimePicker4
         };
 
-        editControls = new List<Control>()
-        {
-            Form1.textBox20,
-            Form1.textBox21,
-            Form1.dateTimePicker4
-        };
-
         nonEditingLabels = new List<Label>()
         {
             Form1.label15,
@@ -68,9 +61,13 @@ public class PurchasedLotTab : Tab
 
         labelTextboxPairs = new Dictionary<Control, Label>();
 
-        for (int i = 0; i < editControls.Count; i++)
+        int i = 0;
+        foreach (Control c in editingControls)
         {
-            labelTextboxPairs[editControls[i]] = nonEditingLabels[i];
+            if (c is not Button)
+            {
+                labelTextboxPairs[c] = nonEditingLabels[i++];
+            }
         }
 
         controlBoxAttrib = new Dictionary<Control, string>
@@ -117,6 +114,7 @@ public class PurchasedLotTab : Tab
 
                 if (c is TextBox)
                 {
+                    // TODO: Add type check?
                     query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, t.Text);
                 }
                 else if (c is DateTimePicker)
