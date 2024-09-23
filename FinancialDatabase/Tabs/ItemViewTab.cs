@@ -179,7 +179,8 @@ public class ItemViewTab : Tab
                         goodEdit = false;
                         continue;
                     }
-                    switch (c) { 
+                    switch (c)
+                    {
                         case TextBox:
                             query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, t.Text);
                             break;
@@ -196,7 +197,7 @@ public class ItemViewTab : Tab
                     Util.clearTBox(t);
                 }
 
-            } 
+            }
             else if (!tableEntryExists(t))
             {
                 if (shippingTBoxes.Contains(t))
@@ -352,9 +353,8 @@ public class ItemViewTab : Tab
         if (goodEdit) inEditingState = false;
         updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID()));
         showItem(Form1.currItem);
-        
-    }
 
+    }
     public void deleteShippingInfo()
     {
         // Delete shipping info entry

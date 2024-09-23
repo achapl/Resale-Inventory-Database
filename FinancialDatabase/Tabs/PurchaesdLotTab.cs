@@ -100,7 +100,7 @@ public class PurchasedLotTab : Tab
         if (Form1.currItem == null) { return; }
         List<Control> changedFields = getChangedFields();
 
-
+        bool goodEdit = true;
         foreach (Control c in changedFields)
         {
             if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); continue; }
@@ -111,10 +111,15 @@ public class PurchasedLotTab : Tab
             if (tableEntryExists(t))
             {
                 string type = Form1.colDataTypes[controlBoxAttrib[c]];
-
                 if (c is TextBox)
                 {
-                    // TODO: Add type check?
+                    
+                    string attrib = t.Text;
+                    if (!Util.checkTypeOkay(attrib, type))
+                    {
+                        goodEdit = false;
+                        continue;
+                    }
                     query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, t.Text);
                 }
                 else if (c is DateTimePicker)
@@ -122,11 +127,17 @@ public class PurchasedLotTab : Tab
                     query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, new Date(c));
                 }
 
-                // Update the item table with the new shipping info
-                string output = PyConnector.runStatement(query);
-                updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
-                t.Clear();
-                t.BackColor = Color.White;
+                if (goodEdit)
+                {
+                    // Update the item table with the new shipping info
+                    string output = PyConnector.runStatement(query);
+                    if (output.CompareTo("ERROR") != 0)
+                    {
+                        updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
+                        t.Clear();
+                        t.BackColor = Color.White;
+                    }
+                }
             }
             else if (!tableEntryExists(t))
             {
