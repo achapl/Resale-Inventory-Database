@@ -116,6 +116,8 @@
             label16 = new Label();
             listBox2 = new ListBox();
             Sale = new TabPage();
+            label54 = new Label();
+            button9 = new Button();
             label53 = new Label();
             label52 = new Label();
             dateTimePicker5 = new DateTimePicker();
@@ -136,7 +138,6 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
-            button9 = new Button();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -163,7 +164,7 @@
             listBox1.Location = new Point(538, 42);
             listBox1.Margin = new Padding(4, 3, 4, 3);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(783, 409);
+            listBox1.Size = new Size(564, 409);
             listBox1.TabIndex = 2;
             listBox1.MouseDoubleClick += listBox1_MouseDoubleClick;
             // 
@@ -186,7 +187,7 @@
             tabControl1.Multiline = true;
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(1338, 492);
+            tabControl1.Size = new Size(1119, 492);
             tabControl1.TabIndex = 5;
             // 
             // SearchTab
@@ -210,7 +211,7 @@
             SearchTab.Margin = new Padding(4, 3, 4, 3);
             SearchTab.Name = "SearchTab";
             SearchTab.Padding = new Padding(4, 3, 4, 3);
-            SearchTab.Size = new Size(1330, 464);
+            SearchTab.Size = new Size(1111, 464);
             SearchTab.TabIndex = 0;
             SearchTab.Text = "Search";
             SearchTab.UseVisualStyleBackColor = true;
@@ -336,7 +337,7 @@
             menuStrip1.Location = new Point(4, 3);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(7, 2, 0, 2);
-            menuStrip1.Size = new Size(1322, 24);
+            menuStrip1.Size = new Size(1103, 24);
             menuStrip1.TabIndex = 5;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -381,7 +382,7 @@
             ItemTab.Margin = new Padding(4, 3, 4, 3);
             ItemTab.Name = "ItemTab";
             ItemTab.Padding = new Padding(4, 3, 4, 3);
-            ItemTab.Size = new Size(1330, 464);
+            ItemTab.Size = new Size(1111, 464);
             ItemTab.TabIndex = 1;
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
@@ -758,7 +759,7 @@
             PurchaseTab.Margin = new Padding(4, 3, 4, 3);
             PurchaseTab.Name = "PurchaseTab";
             PurchaseTab.Padding = new Padding(4, 3, 4, 3);
-            PurchaseTab.Size = new Size(1330, 464);
+            PurchaseTab.Size = new Size(1111, 464);
             PurchaseTab.TabIndex = 2;
             PurchaseTab.Text = "Purchase Group";
             PurchaseTab.UseVisualStyleBackColor = true;
@@ -1062,6 +1063,7 @@
             // 
             // Sale
             // 
+            Sale.Controls.Add(label54);
             Sale.Controls.Add(button9);
             Sale.Controls.Add(label53);
             Sale.Controls.Add(label52);
@@ -1085,10 +1087,29 @@
             Sale.Location = new Point(4, 24);
             Sale.Margin = new Padding(4, 3, 4, 3);
             Sale.Name = "Sale";
-            Sale.Size = new Size(1330, 464);
+            Sale.Size = new Size(1111, 464);
             Sale.TabIndex = 4;
             Sale.Text = "Sale";
             Sale.UseVisualStyleBackColor = true;
+            // 
+            // label54
+            // 
+            label54.AutoSize = true;
+            label54.Location = new Point(625, 148);
+            label54.Name = "label54";
+            label54.Size = new Size(44, 15);
+            label54.TabIndex = 29;
+            label54.Text = "label54";
+            // 
+            // button9
+            // 
+            button9.Location = new Point(625, 3);
+            button9.Name = "button9";
+            button9.Size = new Size(75, 23);
+            button9.TabIndex = 28;
+            button9.Text = "Edit";
+            button9.UseVisualStyleBackColor = true;
+            button9.Click += button9_Click;
             // 
             // label53
             // 
@@ -1264,20 +1285,11 @@
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
-            // button9
-            // 
-            button9.Location = new Point(625, 3);
-            button9.Name = "button9";
-            button9.Size = new Size(75, 23);
-            button9.TabIndex = 28;
-            button9.Text = "Edit";
-            button9.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1366, 519);
+            ClientSize = new Size(1146, 519);
             Controls.Add(tabControl1);
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4, 3, 4, 3);
@@ -1409,6 +1421,7 @@
         public Label label53;
         public Label label52;
         public Button button9;
+        public Label label54;
     }
 }
 

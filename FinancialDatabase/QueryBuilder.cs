@@ -104,6 +104,11 @@ namespace FinancialDatabase
             return query;
         }
 
+        public string buildSaleQuery(ResultItem item)
+        {
+            return "SELECT * FROM sale WHERE ItemID_sale = " + item.get_ITEM_ID().ToString() + ";";
+        }
+
         public string buildInsertPurchaseQuery(int purcPrice, string purcNotes, Date d)
         {
             return "INSRET INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", " + purcNotes + ", " + formatAttribute(d.toDateString(), "date") + ");";

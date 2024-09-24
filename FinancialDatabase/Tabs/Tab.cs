@@ -8,13 +8,13 @@ public abstract class Tab
 
     protected bool inEditingState;
     protected List<Control> editingControls;
-    protected List<Label> nonEditingLabels;
+    protected List<Label> editableAttribLables;
 
     protected List<TextBox> shippingTBoxes;
     protected List<TextBox> itemTBoxes;
     protected Dictionary<Control, Label> labelTextboxPairs;
     public    Dictionary<Control, string> controlBoxAttrib;
-    protected List<Label> allAttribLabels;
+    protected List<Label> clearableAttribLables;
 
     protected Button updateButton;
     protected Button editButton;
@@ -23,14 +23,14 @@ public abstract class Tab
     
 
     protected Form1 Form1;
-    protected CtrlerOfPythonToDTBConnector PyConnector;
+    protected DatabaseConnector PyConnector;
     protected QueryBuilder QB;
 
     public Tab(Form1 Form1)
     {
         this.Form1 = Form1;
         QB = new QueryBuilder();
-        PyConnector = new CtrlerOfPythonToDTBConnector();
+        PyConnector = new DatabaseConnector();
         inEditingState = false;
 
 
@@ -120,7 +120,7 @@ public abstract class Tab
         editButton.Text = inEditingState ? "View" : "Edit";
         updateButton.Visible = inEditingState;
 
-        foreach (Label field in nonEditingLabels)
+        foreach (Label field in editableAttribLables)
         {
             field.Visible = !inEditingState;
         }
@@ -145,12 +145,16 @@ public abstract class Tab
         }
     }
 
+    public void showItem(Sale sale)
+    {
+        throw new NotImplementedException();
+    }
 
     public void showItem(ResultItem item)
     {
 
         // Item View Tab
-        Util.clearLabelText(allAttribLabels);
+        Util.clearLabelText(clearableAttribLables);
 
         Form1.currItem = item;
 

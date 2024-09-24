@@ -20,13 +20,13 @@ public class ItemViewTab : Tab
         updateButton = Form1.button1;
         editButton   = Form1.button4;
         generateTBoxGroups();
-        Util.clearLabelText(allAttribLabels);
+        Util.clearLabelText(clearableAttribLables);
         showControlVisibility();
     }
 
     protected override void generateTBoxGroups()
     {
-        allAttribLabels = new List<Label>() {
+        clearableAttribLables = new List<Label>() {
             Form1.label40,
             Form1.label17,
             Form1.label18,
@@ -40,7 +40,7 @@ public class ItemViewTab : Tab
             Form1.label26,
             Form1.label43
         };
-        nonEditingLabels = new List<Label>(){
+        editableAttribLables = new List<Label>(){
             Form1.label40,
             Form1.label19,
             Form1.label20,
@@ -90,7 +90,7 @@ public class ItemViewTab : Tab
         {
             if (c is not Button)
             {
-                labelTextboxPairs[c] = nonEditingLabels[i++];
+                labelTextboxPairs[c] = editableAttribLables[i++];
             }
         }
 

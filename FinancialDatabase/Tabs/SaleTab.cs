@@ -11,13 +11,13 @@ public class SaleTab : Tab
         updateButton = Form1.button7;
         editButton   = Form1.button6;
         generateTBoxGroups();
-        Util.clearLabelText(allAttribLabels);
+        Util.clearLabelText(clearableAttribLables);
         showControlVisibility();
     }
 
     protected override void generateTBoxGroups()
     {
-
+        editButton = Form1.button9;
         editingControls = new List<Control>()
         {
             Form1.textBox22,
@@ -25,7 +25,7 @@ public class SaleTab : Tab
             Form1.dateTimePicker5
         };
 
-        allAttribLabels = new List<Label>()
+        clearableAttribLables = new List<Label>()
         {
             Form1.label51,
             Form1.label48,
@@ -38,6 +38,12 @@ public class SaleTab : Tab
             Form1.textBox13,
 
         };
+        editableAttribLables = new List<Label>()
+        {
+            Form1.label48,
+            Form1.label49,
+            Form1.label54
+        };
 
         labelTextboxPairs = new Dictionary<Control, Label>();
 
@@ -46,7 +52,7 @@ public class SaleTab : Tab
         {
             if (c is not Button)
             {
-                labelTextboxPairs[c] = nonEditingLabels[i++];
+                labelTextboxPairs[c] = editableAttribLables[i++];
             }
         }
 
@@ -133,20 +139,23 @@ public class SaleTab : Tab
 
     public void updateItemView(ResultItem item)
     {
-        showItem(item);
+        //showItem(item);
 
-        Form1.listBox2.Items.Clear();
-        Form1.currentPurchaseItems.Clear();
-        List<ResultItem> result = PyConnector.RunItemSearchQuery(QB.buildPurchaseQuery(item));
+        Form1.listBox3.Items.Clear();
+        Form1.currentItemSales.Clear();
+        List<Sale> result = PyConnector.RunSaleSearchQuery(QB.buildSaleQuery(item));
 
-        foreach (ResultItem i in result)
+        foreach (Sale s in result)
         {
-            Form1.listBox2.Items.Add(i.get_Name());
-            Form1.currentPurchaseItems.Add(i);
+            Form1.listBox3.Items.Add(s.get_Date_Sold().toDateString());
+            Form1.currentItemSales.Add(s);
         }
 
-        Form1.label15.Text = item.get_Amount_purchase().ToString();
-        Form1.label41.Text = item.get_Notes_purchase();
+        double totalSales = 0;
+        foreach (Sale s in Form1.currentItemSales)
+        {
+            totalSales += s.get_Amount_sale();
+        }
     }
 
     public bool allNewPurchaseBoxesFilled()

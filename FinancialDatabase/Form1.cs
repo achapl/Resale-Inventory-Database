@@ -21,13 +21,15 @@ namespace FinancialDatabase
     {
         public List<ResultItem> currentItems; // list of [item name, ITEM_ID]
         public List<ResultItem> currentPurchaseItems; // list of [item name, ITEM_ID]
+        public List<Sale> currentItemSales;
         public Dictionary<string, string> colDataTypes;
         // Each tab has it's own object
+        public SaleTab saleT;
         public SearchTab ST;
         public ItemViewTab IV;
         public PurchasedLotTab PL;
         QueryBuilder QB;
-        CtrlerOfPythonToDTBConnector PyConnector;
+        DatabaseConnector PyConnector;
         public ResultItem currItem;
 
 
@@ -36,11 +38,14 @@ namespace FinancialDatabase
             InitializeComponent();
             currentItems = new List<ResultItem>();
             currentPurchaseItems = new List<ResultItem>();
+            currentItemSales = new List<Sale>();
             QB = new QueryBuilder();
+            saleT = new SaleTab(this);
             ST = new SearchTab(this);
             IV = new ItemViewTab(this);
             PL = new PurchasedLotTab(this);
-            PyConnector = new CtrlerOfPythonToDTBConnector();
+
+            PyConnector = new DatabaseConnector();
 
             colDataTypes = PyConnector.getColDataTypes();
 
@@ -94,6 +99,7 @@ namespace FinancialDatabase
             ResultItem item = PyConnector.getItem(item_id);
             PL.updateItemView(item);
             IV.updateItemView(item);
+            saleT.updateItemView(item);
         }
 
         // Purchased Lot listbox double click
@@ -102,8 +108,10 @@ namespace FinancialDatabase
             int index = this.listBox2.IndexFromPoint(e.Location);
             int item_id = currentPurchaseItems[index].get_ITEM_ID();
 
-            PL.updateItemView(PyConnector.getItem(item_id));
-            IV.updateItemView(PyConnector.getItem(item_id));
+            ResultItem item = PyConnector.getItem(item_id);
+            PL.updateItemView(item);
+            IV.updateItemView(item);
+            saleT.updateItemView(item);
         }
 
         // Enter key pressed for search
@@ -126,7 +134,7 @@ namespace FinancialDatabase
         {
             if (sender is null) return;
 
-            #pragma warning disable CS8600 // Checked if sender is null
+#pragma warning disable CS8600 // Checked if sender is null
 
             TextBox t = sender as TextBox;
 
@@ -135,10 +143,12 @@ namespace FinancialDatabase
             if (IV.controlBoxAttrib.ContainsKey(t))
             {
                 attrib = IV.controlBoxAttrib[t];
-            } else if (PL.controlBoxAttrib.ContainsKey(t))
+            }
+            else if (PL.controlBoxAttrib.ContainsKey(t))
             {
                 attrib = PL.controlBoxAttrib[t];
-            } else
+            }
+            else
             {
                 return;
             }
@@ -192,6 +202,11 @@ namespace FinancialDatabase
         private void button3_Click(object sender, EventArgs e)
         {
             PL.newPurchase();
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            saleT.flipEditState();
         }
     }
 }

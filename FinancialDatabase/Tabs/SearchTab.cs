@@ -14,12 +14,12 @@ using Date = Util.Date;
 public class SearchTab
 {
 
-    CtrlerOfPythonToDTBConnector PyController;
+    DatabaseConnector PyController;
     QueryBuilder QB;
     Form1 Form1;
     public SearchTab(Form1 Form1)
     {
-        PyController = new CtrlerOfPythonToDTBConnector();
+        PyController = new DatabaseConnector();
         QB = new QueryBuilder();
         this.Form1 = Form1;
     }

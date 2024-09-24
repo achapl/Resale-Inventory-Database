@@ -14,7 +14,7 @@ public class PurchasedLotTab : Tab
         updateButton = Form1.button7;
         editButton   = Form1.button6;
         generateTBoxGroups();
-        Util.clearLabelText(allAttribLabels);
+        Util.clearLabelText(clearableAttribLables);
         showControlVisibility();
     }
 
@@ -27,14 +27,14 @@ public class PurchasedLotTab : Tab
             Form1.dateTimePicker4
         };
 
-        nonEditingLabels = new List<Label>()
+        editableAttribLables = new List<Label>()
         {
             Form1.label15,
             Form1.label41,
             Form1.label44
         };
 
-        allAttribLabels = new List<Label>()
+        clearableAttribLables = new List<Label>()
         {
             Form1.label15,
             Form1.label41,
@@ -66,7 +66,7 @@ public class PurchasedLotTab : Tab
         {
             if (c is not Button)
             {
-                labelTextboxPairs[c] = nonEditingLabels[i++];
+                labelTextboxPairs[c] = editableAttribLables[i++];
             }
         }
 
