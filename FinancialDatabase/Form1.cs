@@ -99,7 +99,7 @@ namespace FinancialDatabase
             ResultItem item = PyConnector.getItem(item_id);
             saleT.updateItemView(item);
             PL.updateItemView(item);
-            
+
             IV.updateItemView(item);
         }
 
@@ -214,6 +214,8 @@ namespace FinancialDatabase
         // SaleTab select sale
         private void listBox3_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            saleT.viewMode();
+
             int index = this.listBox3.IndexFromPoint(e.Location);
 
             // Bad mouse click
@@ -235,6 +237,20 @@ namespace FinancialDatabase
         private void button8_Click(object sender, EventArgs e)
         {
             saleT.addItem();
+        }
+
+        // SaleTab Delete Button
+        private void button11_Click(object sender, EventArgs e)
+        {
+            string query = QB.buildDelSaleQuery(currSale);
+            string output = "";
+            output = PyConnector.runStatement(query);
+            if (output.CompareTo("ERROR") == 0)
+            {
+                throw new Exception("ERROR: Could not delete sale object");
+            }
+
+            saleT.updateItemView(currItem);
         }
     }
 }

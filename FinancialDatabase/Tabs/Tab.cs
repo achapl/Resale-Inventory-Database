@@ -7,8 +7,9 @@ public abstract class Tab
 
 
     protected bool inEditingState;
-    protected List<Control> editingControls;
+    protected List<Control> editingAttributeControls;
     protected List<Label> editableAttribLables;
+    protected List<Control> editingControls;
 
     protected List<TextBox> shippingTBoxes;
     protected List<TextBox> itemTBoxes;
@@ -43,7 +44,7 @@ public abstract class Tab
     {
         
         List<Control> returnList = new List<Control>();
-        foreach (Control control in editingControls)
+        foreach (Control control in editingAttributeControls)
         {
             string itemValue = "";
             string userValue = "";

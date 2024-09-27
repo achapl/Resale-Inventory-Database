@@ -19,10 +19,18 @@ public class SaleTab : Tab
     {
         editButton = Form1.button9;
 
-        editingControls = new List<Control>()
+        editingAttributeControls = new List<Control>()
         {
             Form1.textBox22,
             Form1.dateTimePicker5
+        };
+
+        editingControls = new List<Control>()
+        {
+            Form1.textBox22,
+            Form1.dateTimePicker5,
+            Form1.button10,
+            Form1.button11
         };
 
         clearableAttribLables = new List<Label>()
@@ -45,7 +53,7 @@ public class SaleTab : Tab
         labelTextboxPairs = new Dictionary<Control, Label>();
 
         int i = 0;
-        foreach (Control c in editingControls)
+        foreach (Control c in editingAttributeControls)
         {
             if (c is not Button)
             {

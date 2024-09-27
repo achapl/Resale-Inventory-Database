@@ -133,6 +133,7 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
+            button11 = new Button();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -1058,6 +1059,7 @@
             // 
             // Sale
             // 
+            Sale.Controls.Add(button11);
             Sale.Controls.Add(button10);
             Sale.Controls.Add(label54);
             Sale.Controls.Add(button9);
@@ -1232,6 +1234,16 @@
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
+            // button11
+            // 
+            button11.Location = new Point(706, 136);
+            button11.Name = "button11";
+            button11.Size = new Size(75, 23);
+            button11.TabIndex = 31;
+            button11.Text = "Delete";
+            button11.UseVisualStyleBackColor = true;
+            button11.Click += button11_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1366,6 +1378,7 @@
         public Label label54;
         public Label label49;
         public Button button10;
+        public Button button11;
     }
 }
 

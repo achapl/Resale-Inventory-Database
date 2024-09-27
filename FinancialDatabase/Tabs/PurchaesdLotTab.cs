@@ -20,6 +20,13 @@ public class PurchasedLotTab : Tab
 
     protected override void generateTBoxGroups()
     {
+        editingAttributeControls = new List<Control>()
+        {
+            Form1.textBox20,
+            Form1.textBox21,
+            Form1.dateTimePicker4
+        };
+
         editingControls = new List<Control>()
         {
             Form1.textBox20,
@@ -62,7 +69,7 @@ public class PurchasedLotTab : Tab
         labelTextboxPairs = new Dictionary<Control, Label>();
 
         int i = 0;
-        foreach (Control c in editingControls)
+        foreach (Control c in editingAttributeControls)
         {
             if (c is not Button)
             {

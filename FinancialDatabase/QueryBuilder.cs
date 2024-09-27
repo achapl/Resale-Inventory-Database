@@ -174,6 +174,10 @@ namespace FinancialDatabase
             return "DELETE FROM shipping WHERE SHIPPING_ID = " + shipID + ";";
         }
 
+        public string buildDelSaleQuery(Sale sale)
+        {
+            return "DELETE FROM sale WHERE SALE_ID = " + sale.get_SALE_ID().ToString() + ";";
+        }
 
         public string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, Date updateDate)
         {

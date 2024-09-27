@@ -70,6 +70,18 @@ public class ItemViewTab : Tab
             Form1.textBox9,
             Form1.textBox10
         };
+        editingAttributeControls = new List<Control>(){
+            Form1.textBox3,
+            Form1.textBox4,
+            Form1.textBox5,
+            Form1.textBox6,
+            Form1.textBox7,
+            Form1.textBox8,
+            Form1.textBox9,
+            Form1.textBox10
+
+        };
+
         editingControls = new List<Control>(){
             Form1.textBox3,
             Form1.textBox4,
@@ -80,13 +92,12 @@ public class ItemViewTab : Tab
             Form1.textBox9,
             Form1.textBox10,
             Form1.button5
-
         };
 
         labelTextboxPairs = new Dictionary<Control, Label>();
 
         int i = 0;
-        foreach (Control c in editingControls)
+        foreach (Control c in editingAttributeControls)
         {
             if (c is not Button)
             {
