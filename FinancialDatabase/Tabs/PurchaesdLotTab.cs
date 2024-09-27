@@ -102,6 +102,16 @@ public class PurchasedLotTab : Tab
 
 	}
 
+    override public void flipEditMode()
+    {
+        // Don't go into edit mode if there is no item to edit
+        if (!inEditingState && Form1.currItem == null) { return; }
+
+        inEditingState = !inEditingState;
+        showControlVisibility();
+
+    }
+
     public void editUpdate()
     {
         if (Form1.currItem == null) { return; }
@@ -271,6 +281,10 @@ public class PurchasedLotTab : Tab
     {
         // clear the box
         Form1.listBox2.Items.Clear();
+
+        editMode();
+        Form1.currItem = null;
+        Form1.IV.clearCurrItem();
 
         isNewPurchase = true;
         addItem();

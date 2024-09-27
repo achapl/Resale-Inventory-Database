@@ -386,8 +386,18 @@ public class ItemViewTab : Tab
 
     }
 
+    override public void flipEditMode()
+    {
+        // Don't go into edit mode if there is no item to edit
+        if (!inEditingState && Form1.currItem == null) { return; }
 
-    public void updateItemView(ResultItem item)
+        inEditingState = !inEditingState;
+        showControlVisibility();
+
+    }
+
+
+public void updateItemView(ResultItem item)
     {
         showItem(item);
         Form1.tabControl1.SelectTab(1);

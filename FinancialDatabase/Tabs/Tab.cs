@@ -17,6 +17,8 @@ public abstract class Tab
     public    Dictionary<Control, string> controlBoxAttrib;
     protected List<Label> clearableAttribLables;
 
+    protected List<Control> allClearableControl;
+
     protected Button updateButton;
     protected Button editButton;
 
@@ -34,7 +36,52 @@ public abstract class Tab
         PyConnector = new DatabaseConnector();
         inEditingState = false;
 
-
+        allClearableControl = new List<Control>()
+        {
+            Form1.label17,
+            Form1.label18,
+            Form1.label19,
+            Form1.label20,
+            Form1.label21,
+            Form1.label22,
+            Form1.label23,
+            Form1.label24,
+            Form1.label25,
+            Form1.label26,
+            Form1.label40,
+            Form1.label43,
+            Form1.label15,
+            Form1.label41,
+            Form1.label44,
+            Form1.label48,
+            Form1.label51,
+            Form1.label54,
+            Form1.textBox3,
+            Form1.textBox4,
+            Form1.textBox5,
+            Form1.textBox6,
+            Form1.textBox7,
+            Form1.textBox8,
+            Form1.textBox9,
+            Form1.textBox10,
+            Form1.textBox14,
+            Form1.textBox15,
+            Form1.textBox16,
+            Form1.textBox17,
+            Form1.textBox18,
+            Form1.textBox19,
+            Form1.textBox2,
+            Form1.textBox11,
+            Form1.textBox20,
+            Form1.textBox21,
+            Form1.textBox22,
+            Form1.textBox13,
+            Form1.dateTimePicker3,
+            Form1.dateTimePicker4,
+            Form1.dateTimePicker5,
+            Form1.listBox2,
+            Form1.listBox3
+        };
     }
 
     public ResultItem getCurrItem() => Form1.currItem;
@@ -126,12 +173,7 @@ public abstract class Tab
     }
 
 
-    public void flipEditMode()
-    {
-        inEditingState = !inEditingState;
-        showControlVisibility();
-        
-    }
+    abstract public void flipEditMode();
 
     public void showControlVisibility()
     {
@@ -219,6 +261,30 @@ public abstract class Tab
             Form1.label41.Text = checkDefault(item.get_Notes_purchase());
             Form1.label44.Text = item.get_Date_Purchased().toDateString();
         }
+    }
+
+    // Set curr item to null and clear all shown info about currItem
+    public void clearCurrItem()
+    {
+        Form1.currItem = null;
+
+        foreach (Control c in allClearableControl)
+        {
+            if (c is Label || c is TextBox) { c.Text = ""; }
+            if (c is DateTimePicker)
+            {
+                DateTimePicker d = c as DateTimePicker;
+                d.Value = new DateTime(2000, 1, 1);
+            }
+            if (c is ListBox)
+            {
+                ListBox b = c as ListBox;
+                b.Items.Clear();
+            }
+        }
+
+        // TODO: Make tabContorller object to switch all tabs to view mode
+
     }
 
     protected bool tableEntryExists(TextBox t)

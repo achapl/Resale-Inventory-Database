@@ -206,6 +206,7 @@ namespace FinancialDatabase
             PL.newPurchase();
         }
 
+        // SaleTab View/Edit button
         private void button9_Click(object sender, EventArgs e)
         {
             saleT.flipEditMode();
@@ -236,7 +237,7 @@ namespace FinancialDatabase
         // SaleTab Add Sale
         private void button8_Click(object sender, EventArgs e)
         {
-            saleT.addItem();
+            saleT.addSale();
         }
 
         // SaleTab Delete Button
@@ -251,6 +252,11 @@ namespace FinancialDatabase
             }
 
             saleT.updateItemView(currItem);
+            IV.updateItemView(currItem);
+            saleT.clearAttribs();
+            saleT.viewMode();
+            tabControl1.SelectTab(3);
+            currSale = null;
         }
     }
 }

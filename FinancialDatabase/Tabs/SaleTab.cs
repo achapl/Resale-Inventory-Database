@@ -152,6 +152,16 @@ public class SaleTab : Tab
         Util.clearLabelText(clearableAttribLables);
     }
 
+    override public void flipEditMode()
+    {
+        // Don't go into edit mode if there is no item to edit
+        if (!inEditingState && Form1.currItem == null) { return; }
+
+        inEditingState = !inEditingState;
+        showControlVisibility();
+
+    }
+
     public void updateItemView(ResultItem item)
     {
         //showItem(item);
@@ -184,7 +194,7 @@ public class SaleTab : Tab
         Form1.label54.Text = currSale.get_Date_Sold().toDateString();
     }
 
-    public void addItem()
+    public void addSale()
     {
 
         // Must at least have name. Init and curr quantites are given a default val of 1
@@ -229,84 +239,11 @@ public class SaleTab : Tab
         }
         return true;
     }
-
-    /*public void addItem()
+    
+    public void clearAttribs()
     {
-
-        // Must at least have name. Init and curr quantites are given a default val of 1
-        if (Form1.textBox2.Text == "")
-        {
-            return;
-        }
-        int purcID = -1;
-        if (isNewPurchase && allNewPurchaseBoxesFilled())
-        { 
-            DateTime dt = Form1.dateTimePicker4.Value;
-            Date d = new (dt.Year, dt.Month, dt.Day);
-            purcID = PyConnector.newPurchase(Int32.Parse(Form1.textBox20.Text),Form1.textBox21.Text, d);
-
-        }
-        // Incorrectly formed new purchase from user input, don't continue on
-        else if (!allNewPurchaseBoxesFilled())
-        {
-            return;
-        }
-        
-        ResultItem newItem = new ResultItem();
-        newItem.set_Name(Form1.textBox2.Text);
-
-        // If no Init or curr quantities, set to default 1
-        if (Form1.textBox14.Text.CompareTo("") == 0)
-        {
-            newItem.set_InitialQuantity(1);
-        }
-        else
-        {
-            newItem.set_InitialQuantity(Form1.textBox14.Text);
-        }
-
-        if (Form1.textBox11.Text.CompareTo("") == 0)
-        {
-            newItem.set_CurrentQuantity(1);
-        }
-        else
-        {
-            newItem.set_CurrentQuantity(Form1.textBox11.Text);
-        }
-
-        if (allNewShippingBoxesFilled())
-        {
-            int ttlWeight = Int32.Parse(Form1.textBox18.Text) * 16 + Int32.Parse(Form1.textBox19.Text);
-            newItem.set_Weight(ttlWeight);
-            newItem.set_Length(Int32.Parse(Form1.textBox15.Text));
-            newItem.set_Width( Int32.Parse(Form1.textBox16.Text));
-            newItem.set_Height(Int32.Parse(Form1.textBox17.Text));
-        }
-        if (isNewPurchase)
-        {
-            newItem.set_PurchaseID(purcID);
-            isNewPurchase = false;
-        } else
-        {
-            newItem.set_PurchaseID(Form1.currItem.get_PurchaseID());
-        }
-
+        Util.clearLabelText(clearableAttribLables);
         Util.clearTBox(itemTBoxes);
-        Util.clearTBox(shippingTBoxes);
-        PyConnector.insertItem(newItem);
-
-        updateItemView(Form1.currItem);
+        Form1.dateTimePicker4.Value = DateTime.Now;
     }
-
-    public void newPurchase()
-    {
-        // clear the box
-        Form1.listBox2.Items.Clear();
-
-        isNewPurchase = true;
-        addItem();
-
-    }
-    */
-   
 }
