@@ -55,7 +55,7 @@ public class DatabaseConnector
         // Error Checking
         if (result.Count > 1)
         {
-            Console.WriteLine("Error: >1 Items Found for itemID: " + itemID.ToString());
+            Console.WriteLine("Error: >1 Items Found for saleID: " + itemID.ToString());
             for (int i = 0; i < result.Count; i++)
             {
                 Console.WriteLine(result[i].ToString());
@@ -69,6 +69,31 @@ public class DatabaseConnector
 
         ResultItem item = result[0];
         return item;
+    }
+
+    public Sale getSale(int saleID)
+    {
+        string querySale = "SELECT * FROM sale WHERE SALE_ID = " + saleID.ToString() + ";";
+
+        List<Sale> result = RunSaleSearchQuery(querySale);
+
+        // Error Checking
+        if (result.Count > 1)
+        {
+            Console.WriteLine("Error: >1 Sales Found for SALE_ID: " + saleID.ToString());
+            for (int i = 0; i < result.Count; i++)
+            {
+                Console.WriteLine(result[i].ToString());
+            }
+            return null;
+        }
+        else if (result.Count() == 0)
+        {
+            Console.WriteLine("Error: No Items Found for SALE_ID: " + saleID.ToString());
+        }
+
+        Sale sale = result[0];
+        return sale;
     }
 
     public Dictionary<string, string> getColDataTypes()
@@ -239,6 +264,26 @@ public class DatabaseConnector
 
     }
 
+    public string insertSale(Sale sale)
+    {
+        string query = QB.buildSaleInsertQuery(sale);
+        int lastrowid = -1;
+        string output = runStatement(query, ref lastrowid);
+        if (lastrowid == -1)
+        {
+            Console.WriteLine("ERROR, BAD INPUT INTO DATABASE: insertSale");
+            return null;
+        }
+
+        if (output.CompareTo("ERROR") == 0)
+        {
+            Console.WriteLine("ERROR insertSale");
+            return null;
+        }
+        return output;
+    }
+
+
     // Given a search query, turn it into a string query and run it
     public List<ResultItem> RunSearchQuery(SearchQuery Q)
     {
@@ -284,8 +329,8 @@ public class DatabaseConnector
     private List<ResultItem> parseItemSearchResult(string rawResult, List<string> colNames)
     {
 
-        // raw result is now the format "(itemName, itemID, .etc)(item2Name, item2ID, .etc)"
-        // Seperate whole string into list of multiple item strings, "[ (itemName, itemID, .etc), (item2Name, item2ID, .etc) ]"
+        // raw result is now the format "(itemName, saleID, .etc)(item2Name, item2ID, .etc)"
+        // Seperate whole string into list of multiple item strings, "[ (itemName, saleID, .etc), (item2Name, item2ID, .etc) ]"
         rawResult = rawResult.Trim('[', ']');
         List<string> rawItems = Util.PairedCharTopLevelSplit(rawResult, '(');
 

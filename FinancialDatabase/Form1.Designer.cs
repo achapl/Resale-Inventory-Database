@@ -116,6 +116,7 @@
             label16 = new Label();
             listBox2 = new ListBox();
             Sale = new TabPage();
+            button10 = new Button();
             label54 = new Label();
             button9 = new Button();
             label53 = new Label();
@@ -124,17 +125,11 @@
             label51 = new Label();
             label50 = new Label();
             dateTimePicker3 = new DateTimePicker();
-            label49 = new Label();
             label48 = new Label();
-            textBox12 = new TextBox();
             textBox13 = new TextBox();
-            label45 = new Label();
             label46 = new Label();
-            label47 = new Label();
             button8 = new Button();
-            textBox23 = new TextBox();
             textBox22 = new TextBox();
-            label39 = new Label();
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
@@ -427,7 +422,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(120, 431);
+            button1.Location = new Point(120, 315);
             button1.Margin = new Padding(4, 3, 4, 3);
             button1.Name = "button1";
             button1.Size = new Size(117, 27);
@@ -1063,6 +1058,7 @@
             // 
             // Sale
             // 
+            Sale.Controls.Add(button10);
             Sale.Controls.Add(label54);
             Sale.Controls.Add(button9);
             Sale.Controls.Add(label53);
@@ -1071,17 +1067,11 @@
             Sale.Controls.Add(label51);
             Sale.Controls.Add(label50);
             Sale.Controls.Add(dateTimePicker3);
-            Sale.Controls.Add(label49);
             Sale.Controls.Add(label48);
-            Sale.Controls.Add(textBox12);
             Sale.Controls.Add(textBox13);
-            Sale.Controls.Add(label45);
             Sale.Controls.Add(label46);
-            Sale.Controls.Add(label47);
             Sale.Controls.Add(button8);
-            Sale.Controls.Add(textBox23);
             Sale.Controls.Add(textBox22);
-            Sale.Controls.Add(label39);
             Sale.Controls.Add(label38);
             Sale.Controls.Add(listBox3);
             Sale.Location = new Point(4, 24);
@@ -1092,10 +1082,20 @@
             Sale.Text = "Sale";
             Sale.UseVisualStyleBackColor = true;
             // 
+            // button10
+            // 
+            button10.Location = new Point(625, 136);
+            button10.Name = "button10";
+            button10.Size = new Size(75, 23);
+            button10.TabIndex = 30;
+            button10.Text = "Update";
+            button10.UseVisualStyleBackColor = true;
+            button10.Click += button10_Click;
+            // 
             // label54
             // 
             label54.AutoSize = true;
-            label54.Location = new Point(625, 148);
+            label54.Location = new Point(625, 113);
             label54.Name = "label54";
             label54.Size = new Size(44, 15);
             label54.TabIndex = 29;
@@ -1123,7 +1123,7 @@
             // label52
             // 
             label52.AutoSize = true;
-            label52.Location = new Point(558, 148);
+            label52.Location = new Point(558, 113);
             label52.Name = "label52";
             label52.Size = new Size(55, 15);
             label52.TabIndex = 26;
@@ -1131,7 +1131,7 @@
             // 
             // dateTimePicker5
             // 
-            dateTimePicker5.Location = new Point(625, 142);
+            dateTimePicker5.Location = new Point(625, 107);
             dateTimePicker5.Name = "dateTimePicker5";
             dateTimePicker5.Size = new Size(200, 23);
             dateTimePicker5.TabIndex = 25;
@@ -1148,7 +1148,7 @@
             // label50
             // 
             label50.AutoSize = true;
-            label50.Location = new Point(278, 356);
+            label50.Location = new Point(201, 356);
             label50.Name = "label50";
             label50.Size = new Size(55, 15);
             label50.TabIndex = 23;
@@ -1156,19 +1156,10 @@
             // 
             // dateTimePicker3
             // 
-            dateTimePicker3.Location = new Point(278, 374);
+            dateTimePicker3.Location = new Point(201, 374);
             dateTimePicker3.Name = "dateTimePicker3";
             dateTimePicker3.Size = new Size(200, 23);
             dateTimePicker3.TabIndex = 22;
-            // 
-            // label49
-            // 
-            label49.AutoSize = true;
-            label49.Location = new Point(625, 110);
-            label49.Name = "label49";
-            label49.Size = new Size(44, 15);
-            label49.TabIndex = 21;
-            label49.Text = "label49";
             // 
             // label48
             // 
@@ -1179,14 +1170,6 @@
             label48.TabIndex = 20;
             label48.Text = "label48";
             // 
-            // textBox12
-            // 
-            textBox12.Location = new Point(196, 374);
-            textBox12.Margin = new Padding(4, 3, 4, 3);
-            textBox12.Name = "textBox12";
-            textBox12.Size = new Size(75, 23);
-            textBox12.TabIndex = 19;
-            // 
             // textBox13
             // 
             textBox13.Location = new Point(108, 374);
@@ -1194,16 +1177,6 @@
             textBox13.Name = "textBox13";
             textBox13.Size = new Size(80, 23);
             textBox13.TabIndex = 18;
-            // 
-            // label45
-            // 
-            label45.AutoSize = true;
-            label45.Location = new Point(196, 356);
-            label45.Margin = new Padding(4, 0, 4, 0);
-            label45.Name = "label45";
-            label45.Size = new Size(41, 15);
-            label45.TabIndex = 17;
-            label45.Text = "Box ID";
             // 
             // label46
             // 
@@ -1215,16 +1188,6 @@
             label46.TabIndex = 16;
             label46.Text = "Sale Amount";
             // 
-            // label47
-            // 
-            label47.AutoSize = true;
-            label47.Location = new Point(4, 336);
-            label47.Margin = new Padding(4, 0, 4, 0);
-            label47.Name = "label47";
-            label47.Size = new Size(83, 15);
-            label47.TabIndex = 15;
-            label47.Text = "Add New Sale:";
-            // 
             // button8
             // 
             button8.Location = new Point(4, 370);
@@ -1234,14 +1197,7 @@
             button8.TabIndex = 14;
             button8.Text = "Add Sale";
             button8.UseVisualStyleBackColor = true;
-            // 
-            // textBox23
-            // 
-            textBox23.Location = new Point(625, 107);
-            textBox23.Margin = new Padding(4, 3, 4, 3);
-            textBox23.Name = "textBox23";
-            textBox23.Size = new Size(116, 23);
-            textBox23.TabIndex = 5;
+            button8.Click += button8_Click;
             // 
             // textBox22
             // 
@@ -1250,16 +1206,6 @@
             textBox22.Name = "textBox22";
             textBox22.Size = new Size(116, 23);
             textBox22.TabIndex = 4;
-            // 
-            // label39
-            // 
-            label39.AutoSize = true;
-            label39.Location = new Point(545, 115);
-            label39.Margin = new Padding(4, 0, 4, 0);
-            label39.Name = "label39";
-            label39.Size = new Size(68, 15);
-            label39.TabIndex = 3;
-            label39.Text = "Box Item ID";
             // 
             // label38
             // 
@@ -1280,6 +1226,7 @@
             listBox3.Name = "listBox3";
             listBox3.Size = new Size(527, 304);
             listBox3.TabIndex = 0;
+            listBox3.MouseDoubleClick += listBox3_MouseDoubleClick;
             // 
             // resultItemBindingSource
             // 
@@ -1385,9 +1332,7 @@
         public System.Windows.Forms.ListBox listBox3;
         public System.Windows.Forms.BindingSource resultItemBindingSource;
         public System.Windows.Forms.Label label38;
-        public System.Windows.Forms.TextBox textBox23;
         public System.Windows.Forms.TextBox textBox22;
-        public System.Windows.Forms.Label label39;
         public TextBox textBox10;
         public TextBox textBox9;
         public TextBox textBox7;
@@ -1409,11 +1354,8 @@
         public Label label51;
         public Label label50;
         public DateTimePicker dateTimePicker3;
-        public Label label49;
         public Label label48;
-        public TextBox textBox12;
         public TextBox textBox13;
-        public Label label45;
         public Label label46;
         public Label label47;
         public Button button8;
@@ -1422,6 +1364,8 @@
         public Label label52;
         public Button button9;
         public Label label54;
+        public Label label49;
+        public Button button10;
     }
 }
 

@@ -371,7 +371,7 @@ public class ItemViewTab : Tab
         {
             updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID()));
         }
-        flipEditState();
+        flipEditMode();
 
     }
 

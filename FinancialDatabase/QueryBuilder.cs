@@ -251,9 +251,66 @@ namespace FinancialDatabase
             return query;
         }
     
+        public string buildUpdateQuery(Sale sale, string controlAttribute, string type, string updateText)
+        {
+
+            if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
+
+            if (controlAttribute.Split('.').Length != 2)
+            {
+                Console.WriteLine("ERROR: controlAttribute does not have exactly 2 fields when splitting on '.': " + controlAttribute);
+            }
+            string table = controlAttribute.Split('.')[0];
+            string attrib = controlAttribute.Split('.')[1];
+            string query;
+            string itemID = sale.get_SALE_ID().ToString();
+
+            
+            string updatedText = formatAttribute(updateText, type);
+
+            if (table.CompareTo("sale") != 0) {
+                throw new Exception("Trying to update SALE item, but not updating Sale table");
+            }
+                    
+            // Note: Since, for example, item : purchase is a many to 1 relationship (buying a lot),
+            // one must update the purchase price with the purchaseID, not itemID of the current item
+            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE " + itemID + ";";
+            return query;
+        }
+
+        public string buildUpdateQuery(Sale sale, string controlAttribute, string type, Date updateDate)
+        {
+            if (!Util.checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
+
+            if (controlAttribute.Split('.').Length != 2)
+            {
+                Console.WriteLine("ERROR: controlAttribute does not have exactly 2 fields when splitting on '.': " + controlAttribute);
+            }
+            string table = controlAttribute.Split('.')[0];
+            string query;
+            string itemID = sale.get_SALE_ID().ToString();
+
+
+            string updatedText = formatAttribute(updateDate.toDateString(), type);
+
+            if (table.CompareTo("sale") != 0) {
+                throw new Exception("Trying to update SALE item, but not updating Sale table");
+            }
+                    
+            // Note: Since, for example, item : purchase is a many to 1 relationship (buying a lot),
+            // one must update the purchase price with the purchaseID, not itemID of the current item
+            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE " + itemID + ";";
+            return query;
+        }
+
         public string buildItemInsertQuery(ResultItem item)
         {
             return "INSERT INTO item (Name, InitialQuantity, CurrentQuantity, PurchaseID) VALUES (" + "\"" + item.get_Name() + "\"" + ", " + item.get_InitialQuantity() + ", " + item.get_CurrentQuantity() + ", " + item.get_PurchaseID() + ");";
+        }
+
+        public string buildSaleInsertQuery(Sale sale)
+        {
+            return "INSERT INTO sale (Date_Sold, Amount_sale, ItemID_sale) VALUES (" + formatAttribute(sale.get_Date_Sold().toDateString(), "date") + ", " + sale.get_Amount_sale().ToString() + ", " + sale.get_ItemID_sale().ToString() + ");";
         }
     
     }

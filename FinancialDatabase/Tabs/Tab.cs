@@ -108,7 +108,24 @@ public abstract class Tab
     protected abstract void generateTBoxGroups();
 
 
-    public void flipEditState()
+    public void viewMode()
+    {
+        if (inEditingState)
+        {
+            flipEditMode();
+        }
+    }
+
+    public void editMode()
+    {
+        if (!inEditingState)
+        {
+            flipEditMode();
+        }
+    }
+
+
+    public void flipEditMode()
     {
         inEditingState = !inEditingState;
         showControlVisibility();
@@ -140,6 +157,8 @@ public abstract class Tab
                 {
                     DateTimePicker d = field as DateTimePicker;
                     Date date = new Date(labelTextboxPairs[field].Text);
+                    d.Value = date.toDateTime();
+
                 }
             }
         }
@@ -164,13 +183,14 @@ public abstract class Tab
             Form1.label19.Text = checkDefault(item.get_InitialQuantity());
             Form1.label20.Text = checkDefault(item.get_CurrentQuantity());
             Form1.label21.Text = checkDefault(item.get_ITEM_ID());
+            Form1.label51.Text = checkDefault(item.get_Name());
         }
 
         if (item.hasPurchaseEntry())
         {
             Date datePurc = item.get_Date_Purchased();
             Form1.label43.Text = datePurc.toDateString();
-            Form1.label17.Text = checkDefault(item.get_Amount_purchase());
+            Form1.label17.Text = Form1.saleT.getTotalSales().ToString();
         }
 
         if (item.hasSaleEntry())

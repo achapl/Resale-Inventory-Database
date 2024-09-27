@@ -3,6 +3,7 @@ using Date = Util.Date;
 
 public class Sale
 {
+    int SALE_ID;
     Date Date_Sold;
     double Amount_sale;
     double Fees_sale;
@@ -29,6 +30,9 @@ public class Sale
             }
             switch (colNames[i])
             {
+                case "SALE_ID":
+                    set_SALE_ID(Int32.Parse(item[i]));
+                    break;
                 case "Date_Sold":
                     set_Date_Sold(new Date(item[i]));
                     break;
@@ -49,12 +53,14 @@ public class Sale
     }
 
 
+    public int get_SALE_ID() => this.SALE_ID;
     public Date get_Date_Sold() => this.Date_Sold;
     public double get_Amount_sale() => this.Amount_sale;
     public double get_Fees_sale() => this.Fees_sale;
     public string get_Buyer() => this.Buyer;
     public int get_ItemID_sale() => this.ItemID_sale;
 
+    public void set_SALE_ID(int s) => this.SALE_ID = s;
     public void set_Date_Sold(Date d) => this.Date_Sold = d;
     public void set_Amount_sale(double a) => this.Amount_sale = a;
     public void set_Fees_sale(double f) => this.Fees_sale = f;

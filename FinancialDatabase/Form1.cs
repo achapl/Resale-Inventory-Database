@@ -19,8 +19,8 @@ namespace FinancialDatabase
 
     public partial class Form1 : Form
     {
-        public List<ResultItem> currentItems; // list of [item name, ITEM_ID]
-        public List<ResultItem> currentPurchaseItems; // list of [item name, ITEM_ID]
+        public List<ResultItem> currentItems; // list of [sale name, ITEM_ID]
+        public List<ResultItem> currentPurchaseItems; // list of [sale name, ITEM_ID]
         public List<Sale> currentItemSales;
         public Dictionary<string, string> colDataTypes;
         // Each tab has it's own object
@@ -31,6 +31,7 @@ namespace FinancialDatabase
         QueryBuilder QB;
         DatabaseConnector PyConnector;
         public ResultItem currItem;
+        public Sale currSale;
 
 
         public Form1()
@@ -48,7 +49,6 @@ namespace FinancialDatabase
             PyConnector = new DatabaseConnector();
 
             colDataTypes = PyConnector.getColDataTypes();
-
 
         }
 
@@ -97,9 +97,10 @@ namespace FinancialDatabase
             int item_id = currentItems[index].get_ITEM_ID();
 
             ResultItem item = PyConnector.getItem(item_id);
-            PL.updateItemView(item);
-            IV.updateItemView(item);
             saleT.updateItemView(item);
+            PL.updateItemView(item);
+            
+            IV.updateItemView(item);
         }
 
         // Purchased Lot listbox double click
@@ -123,6 +124,7 @@ namespace FinancialDatabase
             }
         }
 
+        // Update Item in ItemTab
         private void button1_Click_1(object sender, EventArgs e)
         {
             IV.editUpdate();
@@ -173,7 +175,7 @@ namespace FinancialDatabase
 
         private void button4_Click(object sender, EventArgs e)
         {
-            IV.flipEditState();
+            IV.flipEditMode();
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -183,16 +185,16 @@ namespace FinancialDatabase
 
         private void button6_Click(object sender, EventArgs e)
         {
-            PL.flipEditState();
+            PL.flipEditMode();
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
             PL.editUpdate();
-            PL.flipEditState();
+            PL.flipEditMode();
         }
 
-        // Add item to purchase
+        // Add sale to purchase
         private void button2_Click_1(object sender, EventArgs e)
         {
             PL.addItem();
@@ -206,7 +208,33 @@ namespace FinancialDatabase
 
         private void button9_Click(object sender, EventArgs e)
         {
-            saleT.flipEditState();
+            saleT.flipEditMode();
+        }
+
+        // SaleTab select sale
+        private void listBox3_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = this.listBox3.IndexFromPoint(e.Location);
+
+            // Bad mouse click
+            if (index == -1) { return; }
+            int sale_id = currentItemSales[index].get_SALE_ID();
+
+            Sale sale = PyConnector.getSale(sale_id);
+            saleT.updateSale(sale);
+        }
+
+        // Update SaleTab Sale info
+        private void button10_Click(object sender, EventArgs e)
+        {
+            saleT.editUpdate();
+            saleT.viewMode();
+        }
+
+        // SaleTab Add Sale
+        private void button8_Click(object sender, EventArgs e)
+        {
+            saleT.addItem();
         }
     }
 }

@@ -308,8 +308,16 @@ public class Util
 
         public Date(string s)
         {
-            // TODO: COMPLETE THIS
-            // Assumed to be format
+            if (s.CompareTo("") == 0) { this = new Date(); }
+
+            // Assumed to be format "datetime.date(yyyy, mm, dd)"
+            if (s.Length > 14 && s.Substring(0, 14).CompareTo("datetime.date(") == 0)
+            {
+                List<string> components = new List<string>(s.Split(", "));
+                year = Int32.Parse(components[0].Substring(14, (components[0].Length) - 14));
+                month = Int32.Parse(components[1]);
+                day = Int32.Parse(components[2].Trim(')'));
+            }
         }
 
         public Date(Control d)
@@ -345,7 +353,17 @@ public class Util
         {
             return  year + "-" + month + "-" + day;
         }
+        
+        public DateTime toDateTime()
+        {
+            // Cannot have DateTime(0,0,0), set to min DateTime 
+            if (year == 0 && month == 0 && day == 0)
+            {
+                return new DateTime(2000, 1, 1);
+            }
 
+            return new DateTime(year, month, day);
+        }
         
     };
 
