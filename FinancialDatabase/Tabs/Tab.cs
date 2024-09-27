@@ -233,12 +233,12 @@ public abstract class Tab
         {
             Date datePurc = item.get_Date_Purchased();
             Form1.label43.Text = datePurc.toDateString();
-            Form1.label17.Text = Form1.saleT.getTotalSales().ToString();
+            Form1.label17.Text = checkDefault(item.get_Amount_purchase());
         }
 
         if (item.hasSaleEntry())
         {
-            Form1.label18.Text = checkDefault(item.get_Amount_sale());
+            Form1.label18.Text = Form1.saleT.getTotalSales().ToString();
         }
 
         if (item.hasShippingEntry())
