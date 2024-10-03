@@ -15,8 +15,9 @@ using Button = System.Windows.Forms.Button;
 public class ItemViewTab : Tab
 {
     protected List<TextBox> weightTBoxes;
-    public ItemViewTab(Form1 Form1) : base(Form1)
+    public ItemViewTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
     {
+        this.tabController = tabController;
         updateButton = Form1.button1;
         editButton   = Form1.button4;
         generateTBoxGroups();
@@ -129,11 +130,13 @@ public class ItemViewTab : Tab
         return true;
     }
 
-    public void editUpdate()
+    // Take user input, and use it to update the currItem
+    // UpdateCurrItemWithUserInput
+    public void UpdateCurrItemWithUserInput()
     {
         // Triggers escape of edit mode into view mode if true. Will otherwise cause to stay in edit mode
         bool goodEdit = true;
-        if (Form1.currItem == null) { return; }
+        if (tabController.getCurrItem() == null) { return; }
         List<Control> changedFields = getChangedFields();
 
         // Skip the current (what was previously the "next") element in the loop
@@ -171,9 +174,9 @@ public class ItemViewTab : Tab
 
                     // Execute query
                     string attrib = "shipping.Weight";
-                    string type = Form1.colDataTypes[attrib];
-                    query = QB.buildUpdateQuery(Form1.currItem, attrib, type, ttlWeight.ToString());
-                    output = PyConnector.runStatement(query);
+                    string type = tabController.colDataTypes[attrib];
+                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), attrib, type, ttlWeight.ToString());
+                    output = DatabaseConnector.runStatement(query);
                     // These must be cleared manually since they are both used at the same time.
                     // Clearing one produces an error when the other textbox is then used to get the total weight
                     Util.clearTBox(Form1.textBox6);
@@ -184,7 +187,7 @@ public class ItemViewTab : Tab
                 else
                 {
                     string attrib = t.Text;
-                    string type = Form1.colDataTypes[controlBoxAttrib[c]];
+                    string type = tabController.colDataTypes[controlBoxAttrib[c]];
                     if (!Util.checkTypeOkay(attrib, type))
                     {
                         goodEdit = false;
@@ -193,18 +196,18 @@ public class ItemViewTab : Tab
                     switch (c)
                     {
                         case TextBox:
-                            query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, t.Text);
+                            query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlBoxAttrib[c], type, t.Text);
                             break;
                         case DateTimePicker:
-                            query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, new Date(c));
+                            query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlBoxAttrib[c], type, new Date(c));
                             break;
                     }
-                    output = PyConnector.runStatement(query);
+                    output = DatabaseConnector.runStatement(query);
                 }
                 // Update the item in the view
                 if (output.CompareTo("ERROR") != 0)
                 {
-                    updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
+                    showItem(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
                     Util.clearTBox(t);
                 }
 
@@ -234,24 +237,24 @@ public class ItemViewTab : Tab
                             continue;
                         }
 
-                        query = QB.buildShipInfoInsertQuery(Form1.currItem, weightLbs, weightOz, l, w, h);
+                        query = QueryBuilder.buildShipInfoInsertQuery(tabController.getCurrItem(), weightLbs, weightOz, l, w, h);
 
                         int lastrowid = -1;
-                        string output = PyConnector.runStatement(query, ref lastrowid);
+                        string output = DatabaseConnector.runStatement(query, ref lastrowid);
 
                         string attrib = "item.ShippingID";
-                        string type = Form1.colDataTypes[attrib];
+                        string type = tabController.colDataTypes[attrib];
                         int shippingID = lastrowid;
-                        query = QB.buildUpdateQuery(Form1.currItem, attrib, type, shippingID.ToString());
+                        query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), attrib, type, shippingID.ToString());
 
                         // Update the item table with the new shipping info
-                        output = PyConnector.runStatement(query);
+                        output = DatabaseConnector.runStatement(query);
                         if (output.CompareTo("ERROR") != 0)
                         {
                             goodEdit = false;
                             Util.clearTBox(weightTBoxes);
                         }
-                        updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
+                        showItem(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
                     }
                     else
                     {
@@ -272,138 +275,84 @@ public class ItemViewTab : Tab
                     continue;
                 }
             }
-
-
-
-            // OLD CODE
-            /*
-            string s = controlBoxAttrib[c!];
-            List<int> WeightLbsOz = ozToOzLbs(currItem.get_Weight());
-            
-            //Hardcode weight as it is the only case where a comb. of 2 fields must be combined into 1 value
-            if (s.CompareTo("shipping.WeightLbs") == 0)
-            {
-                type = Form1.colDataTypes["shipping.WeightLbs"];
-                TextBox t_Lbs = Form1.textBox6;
-                TextBox t_oz  = Form1.textBox7;
-                Label   l_oz  = Form1.label23;
-
-                // Get lbs
-                // Type check to make sure proper numbers are  given
-                int throwaway;
-                if (!Int32.TryParse(t_Lbs.Text, out throwaway)) {query = "ERROR: BAD USER INPUT"; }
-                int lbs = Int32.Parse(t_Lbs.Text);
-
-                // Get oz
-                int oz = 0;
-                if (!Int32.TryParse(t_oz.Text, out oz)) { oz = WeightLbsOz[1]; }
-
-                int weight = 16 * lbs + oz;
-
-                query = QB.buildUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
-                
-            }
-            else if (s.CompareTo("shipping.WeightOz") == 0)
-            {
-                type = Form1.colDataTypes["shipping.WeightOz"];
-                // Convert weight lbs to oz
-                TextBox t_Lbs = Form1.textBox6;
-                TextBox t_oz  = Form1.textBox7;
-                Label   l_Lbs = Form1.label22;
-
-                // Get lbs
-                int lbs = 0;
-                if (!Int32.TryParse(t_Lbs.Text, out lbs)) { lbs = WeightLbsOz[0]; }
-
-                // Get ounces
-                // Type theck to make sure proper numbers are  given
-                int throwaway;
-                if (!Int32.TryParse(t_oz.Text, out throwaway)) {query = "ERROR: BAD USER INPUT"; }
-                int oz = Int32.Parse(t_oz.Text);
-                
-                int weight = 16 * lbs + oz;
-
-                query = QB.buildUpdateQuery(currItem, "shipping.Weight", type, weight.ToString());
-                
-            }
-            // ! denotes to the compiler that c will not be null
-            else if(c!.GetType() == typeof(TextBox))                
-            {
-                type = Form1.colDataTypes[controlBoxAttrib[c]];
-                
-                query = QB.buildUpdateQuery(currItem, controlBoxAttrib[t], type, t.Text);
-                t.Clear();
-                t.BackColor = Color.White;
-            }
-            else if (c.GetType() == typeof(DateTimePicker))
-            {
-                DateTimePicker dt = c as DateTimePicker ?? new DateTimePicker();
-                type = Form1.colDataTypes[controlBoxAttrib[c]];
-                query = QB.buildUpdateQuery(currItem, controlBoxAttrib[c], type, new Date(dt));
-                dt.Value = dt.MinDate; // Set as default value to show it has been "cleared" if new date does not show
-            }
-
-            // Clear shipping textboxes
-            Form1.textBox6.Clear();
-            Form1.textBox6.BackColor = Color.White;
-            Form1.textBox7.Clear();
-            Form1.textBox7.BackColor = Color.White;
-
-            // Got bad input from user, QB could not create a query
-            if (query.CompareTo("ERROR: BAD USER INPUT") == 0) 
-            {
-                continue ;
-            }
-
-            int lastrowid = -1;
-            List<string> colNames = new List<string>(new string[] { "" });
-            string output = PyConnector.runStatement(query, ref colNames, ref lastrowid);*/
-
         }
 
         if (goodEdit) inEditingState = false;
-        updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID()));
-        showItem(Form1.currItem);
 
+        // It is correct to run showItem, updateCurrItem, and viewMode
+        // from inside this function since you will always need to
+        // update the shown informationafter updating the
+        // ResultItem copy of it
+        tabController.updateCurrItem();
+        showItem(tabController.getCurrItem());
+        viewMode();
     }
+
+
     public void deleteShippingInfo()
     {
         // Delete shipping info entry
-        string query = QB.buildDelShipInfoQuery(Form1.currItem);
-        string output = PyConnector.runStatement(query);
+        string query = QueryBuilder.buildDelShipInfoQuery(tabController.getCurrItem());
+        string output = DatabaseConnector.runStatement(query);
 
         // Remove foreign key reference to shipping info from item table
         string attrib = "item.ShippingID";
-        string type = Form1.colDataTypes[attrib];
-        query = QB.buildUpdateQuery(Form1.currItem, attrib, type, null);
-        output = PyConnector.runStatement(query);
+        string type = tabController.colDataTypes[attrib];
+        query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), attrib, type, null);
+        output = DatabaseConnector.runStatement(query);
 
         if (output.CompareTo("ERROR") != 0)
         {
-            updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID()));
+            showItem(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
         }
         flipEditMode();
-
     }
 
     override public void flipEditMode()
     {
         // Don't go into edit mode if there is no item to edit
-        if (!inEditingState && Form1.currItem == null) { return; }
+        if (!inEditingState && tabController.getCurrItem() == null) { return; }
 
         inEditingState = !inEditingState;
         showControlVisibility();
 
     }
 
+    public override void showItem(ResultItem item)
+    { 
+        Util.clearLabelText(clearableAttribLables);
 
-public void updateItemView(ResultItem item)
-    {
-        showItem(item);
-        Form1.tabControl1.SelectTab(1);
+        if (item.hasItemEntry())
+        {
+            Form1.label40.Text = checkDefault(item.get_Name());
+            Form1.label19.Text = checkDefault(item.get_InitialQuantity());
+            Form1.label20.Text = checkDefault(item.get_CurrentQuantity());
+            Form1.label21.Text = checkDefault(item.get_ITEM_ID());
+            Form1.label51.Text = checkDefault(item.get_Name());
+        }
+
+        if (item.hasPurchaseEntry())
+        {
+            Date datePurc = item.get_Date_Purchased();
+            Form1.label43.Text = datePurc.toDateString();
+            Form1.label17.Text = checkDefault(item.get_Amount_purchase());
+        }
+
+        if (item.hasSaleEntry())
+        {
+            Form1.label18.Text = item.getTotalSales().ToString();
+        }
+
+        if (item.hasShippingEntry())
+        {
+            List<int> WeightLbsOz = Util.ozToOzLbs(item.get_Weight());
+            Form1.label22.Text = checkDefault(WeightLbsOz[0]);
+            Form1.label23.Text = checkDefault(WeightLbsOz[1]);
+            Form1.label24.Text = checkDefault(item.get_Length());
+            Form1.label25.Text = checkDefault(item.get_Width());
+            Form1.label26.Text = checkDefault(item.get_Height());
+        }
+        updateUserInputDefaultText();
     }
-
-    
-
     
 }

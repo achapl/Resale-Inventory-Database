@@ -17,7 +17,7 @@ using Date = Util.Date;
 
 
 
-public class DatabaseConnector
+public static class DatabaseConnector
 {
     static bool pythonInitialized = false;
 
@@ -26,15 +26,7 @@ public class DatabaseConnector
     const string END_COL_MARKER = "END OF COLUMN NAMES"; // Marker to the End of Column Names
     const string EOS = "EOS";     // end-of-stream
 
-    QueryBuilder QB;
-
-    public DatabaseConnector()
-    {
-        QB = new QueryBuilder();
-    }
-
-
-    public List<string> getTableNames()
+    public static List<string> getTableNames()
     {
 
         string query = "SHOW TABLES";
@@ -46,7 +38,7 @@ public class DatabaseConnector
         return tableNames;
     }
 
-    public ResultItem getItem(int itemID)
+    public static ResultItem getItem(int itemID)
     {
         string queryItem = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE ITEM_ID = " + itemID.ToString() + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
 
@@ -71,7 +63,7 @@ public class DatabaseConnector
         return item;
     }
 
-    public Sale getSale(int saleID)
+    public static Sale getSale(int saleID)
     {
         string querySale = "SELECT * FROM sale WHERE SALE_ID = " + saleID.ToString() + ";";
 
@@ -96,7 +88,7 @@ public class DatabaseConnector
         return sale;
     }
 
-    public Dictionary<string, string> getColDataTypes()
+    public static Dictionary<string, string> getColDataTypes()
     {
 
         List<string> tableNames = getTableNames();
@@ -133,8 +125,13 @@ public class DatabaseConnector
     }
 
     // General queries, done by manual string input
-    public List<ResultItem> RunItemSearchQuery(string query)
+    public static List<ResultItem> RunItemSearchQuery(string query)
     {
+        if (query.CompareTo("") == 0)
+        {
+            query = QueryBuilder.defaultQuery();
+        }
+
         int lastrowid = -1;
         List<string> colNames = new List<string>(new string[] { "" });
         string queryOutput = runStatement(query, ref colNames, ref lastrowid);
@@ -144,7 +141,7 @@ public class DatabaseConnector
         return parsedItems;
     }
 
-    public List<Sale> RunSaleSearchQuery(string query)
+    public static List<Sale> RunSaleSearchQuery(string query)
     {
         int lastrowid = -1;
         List<string> colNames = new List<string>(new string[] { "" });
@@ -155,7 +152,7 @@ public class DatabaseConnector
         return parsedItems;
     }
 
-    public string runStatement(string statement, ref List<string> colNames, ref int lastrowid)
+    public static string runStatement(string statement, ref List<string> colNames, ref int lastrowid)
     {
         string retList;
 
@@ -171,7 +168,7 @@ public class DatabaseConnector
         return retList;
     }
 
-    public string runStatement(string statement, ref List<string> colNames)
+    public static string runStatement(string statement, ref List<string> colNames)
     {
         string retList;
 
@@ -186,7 +183,7 @@ public class DatabaseConnector
         return retList;
     }
 
-    public string runStatement(string statement, ref int lastrowid)
+    public static string runStatement(string statement, ref int lastrowid)
     {
         string retList;
 
@@ -201,7 +198,7 @@ public class DatabaseConnector
         return retList;
     }
 
-    public string runStatement(string statement)
+    public static string runStatement(string statement)
     {
         string retList;
 
@@ -215,17 +212,17 @@ public class DatabaseConnector
         return retList;
     }
 
-    public int newPurchase(int purcPrice, string notes, Date PurcDate)
+    public static int newPurchase(int purcPrice, string notes, Date PurcDate)
     {
-        string query = QB.buildInsertPurchaseQuery(purcPrice, notes, PurcDate);
+        string query = QueryBuilder.buildInsertPurchaseQuery(purcPrice, notes, PurcDate);
         int lastrowid = -1;
         runStatement(query, ref lastrowid);
         return lastrowid;
     }
 
-    public string insertItem(ResultItem item)
+    public static string insertItem(ResultItem item)
     {
-        string query = QB.buildItemInsertQuery(item);
+        string query = QueryBuilder.buildItemInsertQuery(item);
         int lastrowid = -1;
         string output = runStatement(query, ref lastrowid);
         if (lastrowid == -1)
@@ -244,7 +241,7 @@ public class DatabaseConnector
         if (item.get_Weight() != ResultItem.DEFAULT_INT)
         {
             item.set_ITEM_ID(lastrowid);
-            query = QB.buildShipInfoInsertQuery(item);
+            query = QueryBuilder.buildShipInfoInsertQuery(item);
             output = runStatement(query, ref lastrowid2);
             if (lastrowid2 == -1)
             {
@@ -254,7 +251,7 @@ public class DatabaseConnector
             string attrib = "item.ShippingID";
             string type = "int unsigned";
             int shippingID = lastrowid2;
-            query = QB.buildUpdateQuery(item, attrib, type, shippingID.ToString());
+            query = QueryBuilder.buildUpdateQuery(item, attrib, type, shippingID.ToString());
 
             // Update the item table with the new shipping info
             output = runStatement(query);
@@ -264,9 +261,9 @@ public class DatabaseConnector
 
     }
 
-    public string insertSale(Sale sale)
+    public static string insertSale(Sale sale)
     {
-        string query = QB.buildSaleInsertQuery(sale);
+        string query = QueryBuilder.buildSaleInsertQuery(sale);
         int lastrowid = -1;
         string output = runStatement(query, ref lastrowid);
         if (lastrowid == -1)
@@ -285,13 +282,13 @@ public class DatabaseConnector
 
 
     // Given a search query, turn it into a string query and run it
-    public List<ResultItem> RunSearchQuery(SearchQuery Q)
+    public static List<ResultItem> RunSearchQuery(SearchQuery Q)
     {
-        string query = QB.buildSearchByNameQuery(Q);
+        string query = QueryBuilder.buildSearchByNameQuery(Q);
         return RunItemSearchQuery(query);
     }
 
-    private List<string> runPython(string query)
+    private static List<string> runPython(string query)
     {
         // Startup Python
         if (pythonInitialized == false) {
@@ -326,7 +323,7 @@ public class DatabaseConnector
         return result;
     }
 
-    private List<ResultItem> parseItemSearchResult(string rawResult, List<string> colNames)
+    private static List<ResultItem> parseItemSearchResult(string rawResult, List<string> colNames)
     {
 
         // raw result is now the format "(itemName, saleID, .etc)(item2Name, item2ID, .etc)"
@@ -345,7 +342,7 @@ public class DatabaseConnector
         return results;
     }
 
-    private List<Sale> parseSaleSearchResult(string rawResult, List<string> colNames)
+    private static List<Sale> parseSaleSearchResult(string rawResult, List<string> colNames)
     {
         // raw result is now the format "(saleAmount, saleID, .etc)(sale2Amount, sale2ID, .etc)"
         // Seperate whole string into list of multiple sale strings, "[ (saleAmount, saleID, .etc), (sale2Amount, sale2ID, .etc) ]"

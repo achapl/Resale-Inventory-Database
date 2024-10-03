@@ -22,18 +22,13 @@ public abstract class Tab
     protected Button updateButton;
     protected Button editButton;
 
-    // Extra from PurchasedLotsTab
-    
+    protected Form1.TabController tabController;
 
     protected Form1 Form1;
-    protected DatabaseConnector PyConnector;
-    protected QueryBuilder QB;
 
     public Tab(Form1 Form1)
     {
         this.Form1 = Form1;
-        QB = new QueryBuilder();
-        PyConnector = new DatabaseConnector();
         inEditingState = false;
 
         allClearableControl = new List<Control>()
@@ -84,7 +79,7 @@ public abstract class Tab
         };
     }
 
-    public ResultItem getCurrItem() => Form1.currItem;
+    public ResultItem getCurrItem() => tabController.getCurrItem();
 
 
     protected List<Control> getChangedFields()
@@ -189,85 +184,33 @@ public abstract class Tab
         foreach (Control field in editingControls)
         {
             field.Visible = inEditingState;
+        }
+    }
 
-            if (inEditingState)
+    public void updateUserInputDefaultText()
+    {
+        foreach (Control field in editingControls)
+        {
+            if (field is TextBox)
             {
-                if (field is TextBox)
-                {
-                    field.Text = labelTextboxPairs[field as TextBox].Text;
-                }
-                if (field is DateTimePicker)
-                {
-                    DateTimePicker d = field as DateTimePicker;
-                    Date date = new Date(labelTextboxPairs[field].Text);
-                    d.Value = date.toDateTime();
+                field.Text = labelTextboxPairs[field as TextBox].Text;
+            }
+            if (field is DateTimePicker)
+            {
+                DateTimePicker d = field as DateTimePicker;
+                Date date = new Date(labelTextboxPairs[field].Text);
+                d.Value = date.toDateTime();
 
-                }
             }
         }
     }
 
-    public void showItem(Sale sale)
-    {
-        throw new NotImplementedException();
-    }
 
-    public void showItem(ResultItem item)
-    {
-
-        // Item View Tab
-        Util.clearLabelText(clearableAttribLables);
-
-        Form1.currItem = item;
-
-        if (item.hasItemEntry())
-        {
-            Form1.label40.Text = checkDefault(item.get_Name());
-            Form1.label19.Text = checkDefault(item.get_InitialQuantity());
-            Form1.label20.Text = checkDefault(item.get_CurrentQuantity());
-            Form1.label21.Text = checkDefault(item.get_ITEM_ID());
-            Form1.label51.Text = checkDefault(item.get_Name());
-        }
-
-        if (item.hasPurchaseEntry())
-        {
-            Date datePurc = item.get_Date_Purchased();
-            Form1.label43.Text = datePurc.toDateString();
-            Form1.label17.Text = checkDefault(item.get_Amount_purchase());
-        }
-
-        if (item.hasSaleEntry())
-        {
-            Form1.label18.Text = Form1.saleT.getTotalSales().ToString();
-        }
-
-        if (item.hasShippingEntry())
-        {
-            List<int> WeightLbsOz = Util.ozToOzLbs(item.get_Weight());
-            Form1.label22.Text = checkDefault(WeightLbsOz[0]);
-            Form1.label23.Text = checkDefault(WeightLbsOz[1]);
-            Form1.label24.Text = checkDefault(item.get_Length());
-            Form1.label25.Text = checkDefault(item.get_Width());
-            Form1.label26.Text = checkDefault(item.get_Height());
-        }
-
-        // PurchasedLot Tab
-
-        if (item.hasPurchaseEntry())
-        {
-            Date datePurc = item.get_Date_Purchased();
-            Form1.dateTimePicker4.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
-            Form1.label15.Text = checkDefault(item.get_Amount_purchase());
-            Form1.label41.Text = checkDefault(item.get_Notes_purchase());
-            Form1.label44.Text = item.get_Date_Purchased().toDateString();
-        }
-    }
+    abstract public void showItem(ResultItem item);
 
     // Set curr item to null and clear all shown info about currItem
     public void clearCurrItem()
     {
-        Form1.currItem = null;
-
         foreach (Control c in allClearableControl)
         {
             if (c is Label || c is TextBox) { c.Text = ""; }
@@ -282,9 +225,7 @@ public abstract class Tab
                 b.Items.Clear();
             }
         }
-
-        // TODO: Make tabContorller object to switch all tabs to view mode
-
+        viewMode();
     }
 
     protected bool tableEntryExists(TextBox t)
@@ -293,7 +234,7 @@ public abstract class Tab
         {
             string ret = "";
             // Check if the attribute associated with the textbox is a default value in the curr item
-            Form1.currItem.getAttribAsStr(controlBoxAttrib[t], ref ret);
+            tabController.getCurrItem().getAttribAsStr(controlBoxAttrib[t], ref ret);
             if (ret.CompareTo(ResultItem.DEFAULT_INT.ToString()) == 0 ||
                 ret.CompareTo(ResultItem.DEFAULT_DOUBLE.ToString()) == 0 ||
                 ret is null ||

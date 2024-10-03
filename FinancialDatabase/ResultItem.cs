@@ -43,6 +43,9 @@ public class ResultItem : IEquatable<ResultItem>
     int Weight;
     string Notes_shipping;
 
+    // Extra
+    double totalSales;
+
     public static int DEFAULT_INT = -1;
     public static double DEFAULT_DOUBLE = -1.0;
     public static string DEFAULT_STRING = null;
@@ -60,7 +63,7 @@ public class ResultItem : IEquatable<ResultItem>
         this.setDefaults();
 		this.rawResult = item;
 	}
-
+    
     void setDefaults()
     {
         //string rawResult;
@@ -96,6 +99,9 @@ public class ResultItem : IEquatable<ResultItem>
         Height          = DEFAULT_INT;
         Weight          = DEFAULT_INT;
         Notes_shipping  = DEFAULT_STRING;
+        
+        // Extra
+        totalSales      = SaleTab.getTotalSales(this);
     }
 
     public ResultItem(List<string> item, List<string> colNames)
@@ -714,7 +720,6 @@ public class ResultItem : IEquatable<ResultItem>
             return Weight;
         }
     }
-
     public int get_WeightOz()
     {
         if (Weight == DEFAULT_INT)
@@ -737,7 +742,6 @@ public class ResultItem : IEquatable<ResultItem>
             return Weight / 16;
         }
     }
-
     public string get_Notes_shipping()
     {
         // Default value if uninitialized
@@ -748,6 +752,19 @@ public class ResultItem : IEquatable<ResultItem>
         else
         {
             return Notes_shipping;
+        }
+    }
+
+    // Extra
+    public double getTotalSales()
+    {
+        if (totalSales == DEFAULT_DOUBLE)
+        {
+            return DEFAULT_DOUBLE;
+        }
+        else
+        {
+            return totalSales;
         }
     }
 
@@ -950,6 +967,18 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public void set_Notes_shipping(string Notes_shipping) => this.Notes_shipping = Notes_shipping;
 
+    // Extra
+    public void set_totalSales(double totalSales)
+    {
+        if (totalSales == null)
+        {
+            this.totalSales = -1;
+        }
+        else
+        {
+            this.totalSales = totalSales;
+        }
+    }
 
     #pragma warning disable CS8767 // 'other' and 'this' are checked for null
     public bool Equals(ResultItem other)

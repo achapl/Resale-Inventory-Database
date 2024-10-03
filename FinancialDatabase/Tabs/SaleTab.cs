@@ -6,8 +6,9 @@ using Date = Util.Date;
 public class SaleTab : Tab
 {
 
-    public SaleTab(Form1 Form1) : base(Form1)
+    public SaleTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
 	{
+        this.tabController = tabController;
         updateButton = Form1.button10;
         editButton   = Form1.button9;
         generateTBoxGroups();
@@ -71,13 +72,13 @@ public class SaleTab : Tab
     public void update(ResultItem item)
 	{
         Form1.listBox2.Items.Clear();
-		Form1.currentPurchaseItems.Clear();
-        List<ResultItem> result = PyConnector.RunItemSearchQuery(QB.buildPurchaseQuery(item));
+        tabController.clearCurrentPurchaseItems();
+        List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item));
 
 		foreach(ResultItem i in result)
 		{
 			Form1.listBox2.Items.Add(i.get_Name() + i.get_Amount_sale);
-            Form1.currentPurchaseItems.Add(i);
+            tabController.addCurrentPurchaseItems(i);
         }
 
         Form1.label15.Text = item.get_Amount_purchase().ToString();
@@ -87,7 +88,7 @@ public class SaleTab : Tab
 
     public void editUpdate()
     {
-        if (Form1.currItem == null) { return; }
+        if (tabController.getCurrItem() == null) { return; }
         List<Control> changedFields = getChangedFields();
 
         bool goodEdit = true;
@@ -100,7 +101,7 @@ public class SaleTab : Tab
             string query = "";
             if (tableEntryExists(t))
             {
-                string type = Form1.colDataTypes[controlBoxAttrib[c]];
+                string type = tabController.colDataTypes[controlBoxAttrib[c]];
                 if (c is TextBox)
                 // TODO: Tpye Check?
                 {
@@ -111,21 +112,21 @@ public class SaleTab : Tab
                         goodEdit = false;
                         continue;
                     }
-                    query = QB.buildUpdateQuery(Form1.currSale, controlBoxAttrib[c], type, t.Text);
+                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrSale(), controlBoxAttrib[c], type, t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    query = QB.buildUpdateQuery(Form1.currSale, controlBoxAttrib[c], type, new Date(c));
+                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrSale(), controlBoxAttrib[c], type, new Date(c));
                 }
 
                 if (goodEdit)
                 {
                     // Update the item table with the new shipping info
-                    string output = PyConnector.runStatement(query);
+                    string output = DatabaseConnector.runStatement(query);
 
                     if (output.CompareTo("ERROR") != 0)
                     {
-                        updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
+                        updateItemView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
                         t.Clear();
                         t.BackColor = Color.White;
                     }
@@ -137,8 +138,8 @@ public class SaleTab : Tab
                 continue;
             }
         }
-        updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID()));
-        showItem(Form1.currItem);
+        updateItemView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
+        showItem(tabController.getCurrItem());
         clearCurrSale();
     }
 
@@ -155,7 +156,7 @@ public class SaleTab : Tab
     override public void flipEditMode()
     {
         // Don't go into edit mode if there is no item to edit
-        if (!inEditingState && Form1.currItem == null) { return; }
+        if (!inEditingState && tabController.getCurrItem() == null) { return; }
 
         inEditingState = !inEditingState;
         showControlVisibility();
@@ -167,20 +168,37 @@ public class SaleTab : Tab
         //showItem(item);
 
         Form1.listBox3.Items.Clear();
-        Form1.currentItemSales.Clear();
-        List<Sale> result = PyConnector.RunSaleSearchQuery(QB.buildSaleQuery(item));
+        tabController.clearCurrentItemSales();
 
-        foreach (Sale s in result)
+        List<Sale> sales = getSales(item);
+
+        foreach (Sale s in sales)
         {
             Form1.listBox3.Items.Add(s.get_Date_Sold().toDateString() + ", " + s.get_Amount_sale());
-            Form1.currentItemSales.Add(s);
-        }   
+            tabController.addCurrentItemSales(s);
+        }
+    }
+
+    public static List<Sale> getSales(ResultItem item)
+    {
+        return DatabaseConnector.RunSaleSearchQuery(QueryBuilder.buildSaleQuery(item));
+    }
+
+    public static double getTotalSales(ResultItem item)
+    {
+        double totalSales = 0;
+        List<Sale> sales = getSales(item);
+        foreach (Sale s in sales)
+        {
+            totalSales += s.get_Amount_sale();
+        }
+        return totalSales;
     }
 
     public double getTotalSales()
     {
         double totalSales = 0;
-        foreach (Sale s in Form1.currentItemSales)
+        foreach (Sale s in tabController.getCurrSales())
         {
             totalSales += s.get_Amount_sale();
         }
@@ -189,7 +207,7 @@ public class SaleTab : Tab
 
     public void updateSale(Sale currSale)
     {
-        Form1.currSale = currSale;
+        tabController.setCurrSale(currSale);
         Form1.label48.Text = currSale.get_Amount_sale().ToString();
         Form1.label54.Text = currSale.get_Date_Sold().toDateString();
     }
@@ -210,9 +228,8 @@ public class SaleTab : Tab
         newItem.set_ItemID_sale(getCurrItem().get_ITEM_ID());
 
         Util.clearTBox(itemTBoxes);
-        PyConnector.insertSale(newItem);
+        DatabaseConnector.insertSale(newItem);
         updateItemView(getCurrItem());
-        Form1.IV.showItem(getCurrItem());
     }
 
 
@@ -245,5 +262,19 @@ public class SaleTab : Tab
         Util.clearLabelText(clearableAttribLables);
         Util.clearTBox(itemTBoxes);
         Form1.dateTimePicker4.Value = DateTime.Now;
+    }
+
+    public void showSale(Sale sale)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void showItem(ResultItem item)
+    {
+        Util.clearLabelText(clearableAttribLables);
+
+        if (item.hasItemEntry()){
+            Form1.label51.Text = item.get_Name();
+        }
     }
 }

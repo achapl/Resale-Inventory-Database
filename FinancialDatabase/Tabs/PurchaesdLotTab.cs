@@ -8,8 +8,9 @@ public class PurchasedLotTab : Tab
 
     bool isNewPurchase;
 
-    public PurchasedLotTab(Form1 Form1) : base(Form1)
+    public PurchasedLotTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
 	{
+        this.tabController = tabController;
         isNewPurchase = false;
         updateButton = Form1.button7;
         editButton   = Form1.button6;
@@ -88,13 +89,13 @@ public class PurchasedLotTab : Tab
     public void update(ResultItem item)
 	{
         Form1.listBox2.Items.Clear();
-		Form1.currentPurchaseItems.Clear();
-        List<ResultItem> result = PyConnector.RunItemSearchQuery(QB.buildPurchaseQuery(item));
+		tabController.clearCurrentPurchaseItems();
+        List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item));
 
 		foreach(ResultItem i in result)
 		{
 			Form1.listBox2.Items.Add(i.get_Name());
-            Form1.currentPurchaseItems.Add(i);
+            tabController.addCurrentPurchaseItems(i);
         }
 
         Form1.label15.Text = item.get_Amount_purchase().ToString();
@@ -105,16 +106,31 @@ public class PurchasedLotTab : Tab
     override public void flipEditMode()
     {
         // Don't go into edit mode if there is no item to edit
-        if (!inEditingState && Form1.currItem == null) { return; }
+        if (!inEditingState && tabController.getCurrItem() == null) { return; }
 
         inEditingState = !inEditingState;
         showControlVisibility();
 
     }
 
+    public override void showItem(ResultItem item)
+    {
+        Util.clearLabelText(clearableAttribLables);
+
+        if (item.hasPurchaseEntry())
+        {
+            Date datePurc = item.get_Date_Purchased();
+            Form1.dateTimePicker4.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
+            Form1.label15.Text = checkDefault(item.get_Amount_purchase());
+            Form1.label41.Text = checkDefault(item.get_Notes_purchase());
+            Form1.label44.Text = item.get_Date_Purchased().toDateString();
+        }
+        updateUserInputDefaultText();
+    }
+
     public void editUpdate()
     {
-        if (Form1.currItem == null) { return; }
+        if (tabController.getCurrItem() == null) { return; }
         List<Control> changedFields = getChangedFields();
 
         bool goodEdit = true;
@@ -127,7 +143,7 @@ public class PurchasedLotTab : Tab
             string query = "";
             if (tableEntryExists(t))
             {
-                string type = Form1.colDataTypes[controlBoxAttrib[c]];
+                string type = tabController.colDataTypes[controlBoxAttrib[c]];
                 if (c is TextBox)
                 {
                     
@@ -137,20 +153,20 @@ public class PurchasedLotTab : Tab
                         goodEdit = false;
                         continue;
                     }
-                    query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, t.Text);
+                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlBoxAttrib[c], type, t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    query = QB.buildUpdateQuery(Form1.currItem, controlBoxAttrib[c], type, new Date(c));
+                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlBoxAttrib[c], type, new Date(c));
                 }
 
                 if (goodEdit)
                 {
                     // Update the item table with the new shipping info
-                    string output = PyConnector.runStatement(query);
+                    string output = DatabaseConnector.runStatement(query);
                     if (output.CompareTo("ERROR") != 0)
                     {
-                        updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID())); // Will also reset currItem with new search for it
+                        updateItemView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
                         t.Clear();
                         t.BackColor = Color.White;
                     }
@@ -163,8 +179,12 @@ public class PurchasedLotTab : Tab
             }
 
         }
-        updateItemView(PyConnector.getItem(Form1.currItem.get_ITEM_ID()));
-        showItem(Form1.currItem);
+        if (goodEdit)
+        {
+            updateItemView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
+            showItem(tabController.getCurrItem());
+            viewMode();
+        }
     }
 
     public void updateItemView(ResultItem item)
@@ -172,13 +192,13 @@ public class PurchasedLotTab : Tab
         showItem(item);
 
         Form1.listBox2.Items.Clear();
-        Form1.currentPurchaseItems.Clear();
-        List<ResultItem> result = PyConnector.RunItemSearchQuery(QB.buildPurchaseQuery(item));
+        tabController.clearCurrentPurchaseItems();
+        List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item));
 
         foreach (ResultItem i in result)
         {
             Form1.listBox2.Items.Add(i.get_Name());
-            Form1.currentPurchaseItems.Add(i);
+            tabController.addCurrentPurchaseItems(i);
         }
 
         Form1.label15.Text = item.get_Amount_purchase().ToString();
@@ -222,7 +242,7 @@ public class PurchasedLotTab : Tab
         { 
             DateTime dt = Form1.dateTimePicker4.Value;
             Date d = new (dt.Year, dt.Month, dt.Day);
-            purcID = PyConnector.newPurchase(Int32.Parse(Form1.textBox20.Text),Form1.textBox21.Text, d);
+            purcID = DatabaseConnector.newPurchase(Int32.Parse(Form1.textBox20.Text),Form1.textBox21.Text, d);
 
         }
         // Incorrectly formed new purchase from user input, don't continue on
@@ -267,29 +287,25 @@ public class PurchasedLotTab : Tab
             isNewPurchase = false;
         } else
         {
-            newItem.set_PurchaseID(Form1.currItem.get_PurchaseID());
+            newItem.set_PurchaseID(tabController.getCurrItem().get_PurchaseID());
         }
 
         Util.clearTBox(itemTBoxes);
         Util.clearTBox(shippingTBoxes);
-        PyConnector.insertItem(newItem);
+        DatabaseConnector.insertItem(newItem);
 
-        updateItemView(Form1.currItem);
+        updateItemView(tabController.getCurrItem());
     }
 
+    // Clear out old information
+    // If there is a purchased item able to be added,
+    // make a new purchase in the database and add it
     public void newPurchase()
     {
-        // clear the box
         Form1.listBox2.Items.Clear();
-
         editMode();
-        Form1.currItem = null;
-        Form1.IV.clearCurrItem();
-
         isNewPurchase = true;
         addItem();
 
     }
-
-   
 }

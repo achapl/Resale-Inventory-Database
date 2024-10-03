@@ -7,17 +7,17 @@ using Date = Util.Date;
 
 namespace FinancialDatabase
 {
-	public class QueryBuilder
+	public static class QueryBuilder
 	{
-        private const string DEFAULTQUERY = "SELECT * FROM item;";
+        public const string DEFAULTQUERY = "SELECT * FROM item;";
 
-        public string defaultQuery()
+        public static string defaultQuery()
         {
             return formatQuery(DEFAULTQUERY);
         }
 
         // Insert escape characters
-        private string formatQuery(string query)
+        private static string formatQuery(string query)
         {
             string escapeChar = "^";
             // Add '^' before special characters ('*', '<', '>', .etc), 
@@ -44,7 +44,7 @@ namespace FinancialDatabase
             return sb.ToString();
         }
 
-        public string buildSearchByNameQuery(SearchQuery Q)
+        public static string buildSearchByNameQuery(SearchQuery Q)
         {
             string query;
             string stock = "";
@@ -98,34 +98,23 @@ namespace FinancialDatabase
             return query;
         }
 
-        public string buildPurchaseQuery(ResultItem item)
+        public static string buildPurchaseQuery(ResultItem item)
         {
             string query = "SELECT item.ITEM_ID, item.Name FROM item WHERE item.PurchaseID = " + item.get_PurchaseID() + ";";
             return query;
         }
 
-        public string buildSaleQuery(ResultItem item)
+        public static string buildSaleQuery(ResultItem item)
         {
             return "SELECT * FROM sale WHERE ItemID_sale = " + item.get_ITEM_ID().ToString() + ";";
         }
 
-        public string buildInsertPurchaseQuery(int purcPrice, string purcNotes, Date d)
+        public static string buildInsertPurchaseQuery(int purcPrice, string purcNotes, Date d)
         {
             return "INSRET INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", " + purcNotes + ", " + formatAttribute(d.toDateString(), "date") + ");";
         }
-
-        enum AttributeType
-        {
-            Null   = -1,
-            String = 0,
-            Int    = 1,
-            Double = 2,
-            Date   = 3
-        }
-
         
-
-        private string formatAttribute(string attrib, string type)
+        private static string formatAttribute(string attrib, string type)
         {
 
             if (attrib == null) { return "NULL"; }
@@ -146,12 +135,12 @@ namespace FinancialDatabase
             }
         }
 
-        public string buildShipInfoInsertQuery(ResultItem item) {
+        public static string buildShipInfoInsertQuery(ResultItem item) {
             List<int> weight = Util.ozToOzLbs(item.get_Weight());
             return buildShipInfoInsertQuery(item, weight[0], weight[1], item.get_Length(), item.get_Width(), item.get_Height());
         }
 
-        public string buildShipInfoInsertQuery(ResultItem currItem, int weightLbs, int weightOz, int l, int w, int h)
+        public static string buildShipInfoInsertQuery(ResultItem currItem, int weightLbs, int weightOz, int l, int w, int h)
         {
             if (l <= 0 ||  w <= 0 || h <= 0 || weightOz < 0 || weightLbs < 0 || (weightOz == 0 && weightLbs == 0))
             {
@@ -162,7 +151,7 @@ namespace FinancialDatabase
             return "INSERT INTO shipping (Length, Width, Height, Weight, ItemID_shipping) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + currItem.get_ITEM_ID() + ")";
         }
 
-        public string buildDelShipInfoQuery(ResultItem item)
+        public static string buildDelShipInfoQuery(ResultItem item)
         {
             if (item.get_ShippingID() == ResultItem.DEFAULT_INT)
             {
@@ -174,12 +163,12 @@ namespace FinancialDatabase
             return "DELETE FROM shipping WHERE SHIPPING_ID = " + shipID + ";";
         }
 
-        public string buildDelSaleQuery(Sale sale)
+        public static string buildDelSaleQuery(Sale sale)
         {
             return "DELETE FROM sale WHERE SALE_ID = " + sale.get_SALE_ID().ToString() + ";";
         }
 
-        public string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, Date updateDate)
+        public static string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, Date updateDate)
         {
             if (!Util.checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
 
@@ -215,7 +204,7 @@ namespace FinancialDatabase
             return query;
         }
 
-        public string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, string updateText)
+        public static string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, string updateText)
         {
 
             if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
@@ -255,7 +244,7 @@ namespace FinancialDatabase
             return query;
         }
     
-        public string buildUpdateQuery(Sale sale, string controlAttribute, string type, string updateText)
+        public static string buildUpdateQuery(Sale sale, string controlAttribute, string type, string updateText)
         {
 
             if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
@@ -282,7 +271,7 @@ namespace FinancialDatabase
             return query;
         }
 
-        public string buildUpdateQuery(Sale sale, string controlAttribute, string type, Date updateDate)
+        public static string buildUpdateQuery(Sale sale, string controlAttribute, string type, Date updateDate)
         {
             if (!Util.checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
 
@@ -307,12 +296,12 @@ namespace FinancialDatabase
             return query;
         }
 
-        public string buildItemInsertQuery(ResultItem item)
+        public static string buildItemInsertQuery(ResultItem item)
         {
             return "INSERT INTO item (Name, InitialQuantity, CurrentQuantity, PurchaseID) VALUES (" + "\"" + item.get_Name() + "\"" + ", " + item.get_InitialQuantity() + ", " + item.get_CurrentQuantity() + ", " + item.get_PurchaseID() + ");";
         }
 
-        public string buildSaleInsertQuery(Sale sale)
+        public static string buildSaleInsertQuery(Sale sale)
         {
             return "INSERT INTO sale (Date_Sold, Amount_sale, ItemID_sale) VALUES (" + formatAttribute(sale.get_Date_Sold().toDateString(), "date") + ", " + sale.get_Amount_sale().ToString() + ", " + sale.get_ItemID_sale().ToString() + ");";
         }

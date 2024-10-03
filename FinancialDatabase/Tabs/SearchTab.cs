@@ -13,14 +13,11 @@ using Date = Util.Date;
 
 public class SearchTab
 {
-
-    DatabaseConnector PyController;
-    QueryBuilder QB;
     Form1 Form1;
-    public SearchTab(Form1 Form1)
+    Form1.TabController tabController;
+    public SearchTab(Form1.TabController tabController, Form1 Form1)
     {
-        PyController = new DatabaseConnector();
-        QB = new QueryBuilder();
+        this.tabController = tabController;
         this.Form1 = Form1;
     }
 
@@ -46,7 +43,7 @@ public class SearchTab
         foreach (string searchTerm in Q.getSearchTerms())
         {
             Q.setSingleSearchTerm(searchTerm);
-            List<ResultItem> result = PyController.RunSearchQuery(Q);
+            List<ResultItem> result = DatabaseConnector.RunSearchQuery(Q);
 
             // Put the results from the search term into itemAndHitsPair
             // If already in there, increase the hit cound for that term
@@ -90,8 +87,9 @@ public class SearchTab
 
     public void search()
     {
+
         Form1.listBox1.Items.Clear();
-        Form1.currentItems.Clear();
+        tabController.currentItems.Clear();
         List<string> searchTerms = new List<string>(Form1.searchBox.Text.Split(' '));
         DateTime startDateRaw = Form1.dateTimePicker1.Value;
         DateTime endDateRaw = Form1.dateTimePicker2.Value;
@@ -122,7 +120,7 @@ public class SearchTab
             if (priceCol) { itemStr = result[i].get_Amount_purchase() + ", " + itemStr; }
             if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
             Form1.listBox1.Items.Add(itemStr);
-            Form1.currentItems.Add(result[i]);
+            tabController.currentItems.Add(result[i]);
         }
     }
 
