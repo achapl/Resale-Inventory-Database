@@ -238,7 +238,7 @@ public static class DatabaseConnector
         }
         int lastrowid2 = -1;
         // If given item also has shipping info, insert that into the database too
-        if (item.get_Weight() != ResultItem.DEFAULT_INT)
+        if (item.get_Weight() != Util.DEFAULT_INT)
         {
             item.set_ITEM_ID(lastrowid);
             query = QueryBuilder.buildShipInfoInsertQuery(item);

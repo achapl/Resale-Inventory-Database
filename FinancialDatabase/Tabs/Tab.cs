@@ -10,12 +10,14 @@ public abstract class Tab
     protected List<Control> editingAttributeControls;
     protected List<Label> editableAttribLables;
     protected List<Control> editingControls;
+    private List<Control> saleControls;
 
     protected List<TextBox> shippingTBoxes;
     protected List<TextBox> itemTBoxes;
     protected Dictionary<Control, Label> labelTextboxPairs;
     public    Dictionary<Control, string> controlBoxAttrib;
     protected List<Label> clearableAttribLables;
+    
 
     protected List<Control> allClearableControl;
 
@@ -77,6 +79,7 @@ public abstract class Tab
             Form1.listBox2,
             Form1.listBox3
         };
+        saleControls = new List<Control> { Form1.textBox22 };
     }
 
     public ResultItem getCurrItem() => tabController.getCurrItem();
@@ -89,6 +92,7 @@ public abstract class Tab
         foreach (Control control in editingAttributeControls)
         {
             string itemValue = "";
+            string saleValue = "";
             string userValue = "";
 
             bool hasMatch = false;
@@ -97,7 +101,16 @@ public abstract class Tab
             {
                 case TextBox:
                     string attrib = controlBoxAttrib[control];
-                    getCurrItem().getAttribAsStr(attrib, ref itemValue);
+                    
+                    // Determine which table (sale/item) the Textbox belongs to to compare it with the propor attribute
+                    if (saleControls.Contains(control as TextBox))
+                    {
+                        tabController.getCurrSale().getAttribAsStr(attrib, ref saleValue);
+                    }
+                    else
+                    {
+                        getCurrItem().getAttribAsStr(attrib, ref itemValue);
+                    }
                     userValue = control.Text;
                     hasMatch = true;
                     break;
@@ -126,7 +139,7 @@ public abstract class Tab
     // Check if a value is a defualt value
     protected string checkDefault(int    val)
     {
-        if (val == ResultItem.DEFAULT_INT) { return ""; }
+        if (val == Util.DEFAULT_INT) { return ""; }
         else { return val.ToString(); }
     }
     // Check if a value is a defualt value
@@ -235,10 +248,10 @@ public abstract class Tab
             string ret = "";
             // Check if the attribute associated with the textbox is a default value in the curr item
             tabController.getCurrItem().getAttribAsStr(controlBoxAttrib[t], ref ret);
-            if (ret.CompareTo(ResultItem.DEFAULT_INT.ToString()) == 0 ||
-                ret.CompareTo(ResultItem.DEFAULT_DOUBLE.ToString()) == 0 ||
+            if (ret.CompareTo(Util.DEFAULT_INT.ToString()) == 0 ||
+                ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
                 ret is null ||
-                ret.CompareTo(ResultItem.DEFAULT_DATE.ToString()) == 0)
+                ret.CompareTo(Util.DEFAULT_DATE.ToString()) == 0)
             {
                 return false;
             }

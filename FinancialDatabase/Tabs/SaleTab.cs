@@ -110,6 +110,7 @@ public class SaleTab : Tab
                     if (!Util.checkTypeOkay(attrib, type))
                     {
                         goodEdit = false;
+                        // TODO: Show an error message for incorrect attribute inputted!
                         continue;
                     }
                     query = QueryBuilder.buildUpdateQuery(tabController.getCurrSale(), controlBoxAttrib[c], type, t.Text);
@@ -123,12 +124,14 @@ public class SaleTab : Tab
                 {
                     // Update the item table with the new shipping info
                     string output = DatabaseConnector.runStatement(query);
-
                     if (output.CompareTo("ERROR") != 0)
                     {
-                        updateItemView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
                         t.Clear();
                         t.BackColor = Color.White;
+                    }
+                    else
+                    {
+                        throw new Exception("ERROR: Bad DatabaseConnector.runStatement: " + query);
                     }
                 }
             }
@@ -138,9 +141,6 @@ public class SaleTab : Tab
                 continue;
             }
         }
-        updateItemView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
-        showItem(tabController.getCurrItem());
-        clearCurrSale();
     }
 
     private void clearCurrSale()
@@ -159,13 +159,14 @@ public class SaleTab : Tab
         if (!inEditingState && tabController.getCurrItem() == null) { return; }
 
         inEditingState = !inEditingState;
+        if (inEditingState) updateUserInputDefaultText();
         showControlVisibility();
 
     }
 
-    public void updateItemView(ResultItem item)
+    public void updateSaleViewListBox(ResultItem item)
     {
-        //showItem(item);
+        
 
         Form1.listBox3.Items.Clear();
         tabController.clearCurrentItemSales();
@@ -195,23 +196,6 @@ public class SaleTab : Tab
         return totalSales;
     }
 
-    public double getTotalSales()
-    {
-        double totalSales = 0;
-        foreach (Sale s in tabController.getCurrSales())
-        {
-            totalSales += s.get_Amount_sale();
-        }
-        return totalSales;
-    }
-
-    public void updateSale(Sale currSale)
-    {
-        tabController.setCurrSale(currSale);
-        Form1.label48.Text = currSale.get_Amount_sale().ToString();
-        Form1.label54.Text = currSale.get_Date_Sold().toDateString();
-    }
-
     public void addSale()
     {
 
@@ -229,7 +213,7 @@ public class SaleTab : Tab
 
         Util.clearTBox(itemTBoxes);
         DatabaseConnector.insertSale(newItem);
-        updateItemView(getCurrItem());
+        updateSaleViewListBox(getCurrItem());
     }
 
 
@@ -266,13 +250,15 @@ public class SaleTab : Tab
 
     public void showSale(Sale sale)
     {
-        throw new NotImplementedException();
+        Form1.label48.Text = sale.get_Amount_sale().ToString();
+        Form1.label54.Text = sale.get_Date_Sold().toDateString();
+
     }
 
     public override void showItem(ResultItem item)
     {
-        Util.clearLabelText(clearableAttribLables);
-
+        Form1.label51.Text = ""; // Must be cleared manually as to not clear sale fields after showSale has been called (or visa versa from showSale's perspective)
+        
         if (item.hasItemEntry()){
             Form1.label51.Text = item.get_Name();
         }

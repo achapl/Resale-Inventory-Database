@@ -153,7 +153,7 @@ namespace FinancialDatabase
 
         public static string buildDelShipInfoQuery(ResultItem item)
         {
-            if (item.get_ShippingID() == ResultItem.DEFAULT_INT)
+            if (item.get_ShippingID() == Util.DEFAULT_INT)
             {
                 return "ERROR: NO shipping info to delete. QueryBuilder.BuildDelShipInfoQuery()";
             }
@@ -246,6 +246,11 @@ namespace FinancialDatabase
     
         public static string buildUpdateQuery(Sale sale, string controlAttribute, string type, string updateText)
         {
+
+            if (sale is null)
+            {
+                throw new Exception("Sale was null, QueryBuilder.buildUpdateQuery()");
+            }
 
             if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
 

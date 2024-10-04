@@ -5,8 +5,11 @@ using System.Windows.Forms;
 public class Util
 {
 
-
-	public Util()
+    public static int DEFAULT_INT = -1;
+    public static double DEFAULT_DOUBLE = -1.0;
+    public static string DEFAULT_STRING = null;
+    public static Date DEFAULT_DATE = new Date(-1, -1, -1);
+    public Util()
 	{
 	}
 
@@ -317,6 +320,14 @@ public class Util
                 year = Int32.Parse(components[0].Substring(14, (components[0].Length) - 14));
                 month = Int32.Parse(components[1]);
                 day = Int32.Parse(components[2].Trim(')'));
+            }
+            // Assumed to be format "yyyy-mm-d"
+            else
+            {
+                List<string> components = new List<string>(s.Split("-"));
+                year = Int32.Parse(components[0]);
+                month = Int32.Parse(components[1]);
+                day = Int32.Parse(components[2]);
             }
         }
 

@@ -46,18 +46,13 @@ public class ResultItem : IEquatable<ResultItem>
     // Extra
     double totalSales;
 
-    public static int DEFAULT_INT = -1;
-    public static double DEFAULT_DOUBLE = -1.0;
-    public static string DEFAULT_STRING = null;
-    public static Date DEFAULT_DATE = new Date(-1, -1, -1);
 
-
-#pragma warning disable CS8618 // Defaults are set to non-null vals
+#pragma warning disable CS8618 // Util.DEFAULTs are set to non-null vals
     public ResultItem()
     {
         setDefaults();
     }
-    #pragma warning disable CS8618 // Defaults are set to non-null vals
+    #pragma warning disable CS8618 // Util.DEFAULTs are set to non-null vals
     public ResultItem(string item, List<string> colNames)
 	{
         this.setDefaults();
@@ -70,35 +65,35 @@ public class ResultItem : IEquatable<ResultItem>
         //List<string> rawList;
 
         // From item table
-        ITEM_ID         = DEFAULT_INT;
-        Name            = DEFAULT_STRING;
-        PurchaseID      = DEFAULT_INT;
-        SaleID          = DEFAULT_INT;
-        ShippingID      = DEFAULT_INT;
-        InitialQuantity = DEFAULT_INT;
-        CurrentQuantity = DEFAULT_INT;
-        Notes_item      = DEFAULT_STRING;
+        ITEM_ID         = Util.DEFAULT_INT;
+        Name            = Util.DEFAULT_STRING;
+        PurchaseID      = Util.DEFAULT_INT;
+        SaleID          = Util.DEFAULT_INT;
+        ShippingID      = Util.DEFAULT_INT;
+        InitialQuantity = Util.DEFAULT_INT;
+        CurrentQuantity = Util.DEFAULT_INT;
+        Notes_item      = Util.DEFAULT_STRING;
 
         // From purchase table
-        Date_Purchased  = DEFAULT_DATE;
-        Amount_purchase = DEFAULT_DOUBLE;
-        Tax             = DEFAULT_DOUBLE;
-        Fees_purchase   = DEFAULT_DOUBLE;
-        Seller          = DEFAULT_STRING;
-        Notes_purchase  = DEFAULT_STRING;
+        Date_Purchased  = Util.DEFAULT_DATE;
+        Amount_purchase = Util.DEFAULT_DOUBLE;
+        Tax             = Util.DEFAULT_DOUBLE;
+        Fees_purchase   = Util.DEFAULT_DOUBLE;
+        Seller          = Util.DEFAULT_STRING;
+        Notes_purchase  = Util.DEFAULT_STRING;
 
         // From sale table
-        Date_Sold       = DEFAULT_DATE;
-        Amount_sale     = DEFAULT_DOUBLE;
-        Fees_sale       = DEFAULT_DOUBLE;
-        Buyer           = DEFAULT_STRING;
+        Date_Sold       = Util.DEFAULT_DATE;
+        Amount_sale     = Util.DEFAULT_DOUBLE;
+        Fees_sale       = Util.DEFAULT_DOUBLE;
+        Buyer           = Util.DEFAULT_STRING;
 
         // From shipping table
-        Length          = DEFAULT_INT;
-        Width           = DEFAULT_INT;
-        Height          = DEFAULT_INT;
-        Weight          = DEFAULT_INT;
-        Notes_shipping  = DEFAULT_STRING;
+        Length          = Util.DEFAULT_INT;
+        Width           = Util.DEFAULT_INT;
+        Height          = Util.DEFAULT_INT;
+        Weight          = Util.DEFAULT_INT;
+        Notes_shipping  = Util.DEFAULT_STRING;
         
         // Extra
         totalSales      = SaleTab.getTotalSales(this);
@@ -424,10 +419,10 @@ public class ResultItem : IEquatable<ResultItem>
                 break;
         }
 
-        if (ret.CompareTo(DEFAULT_DATE.toDateString()) == 0 || 
-            ret.CompareTo(DEFAULT_DOUBLE.ToString()) == 0 ||
-            ret.CompareTo(DEFAULT_INT.ToString())  == 0 ||
-            ret.CompareTo(DEFAULT_STRING) == 0)
+        if (ret.CompareTo(Util.DEFAULT_DATE.toDateString()) == 0 || 
+            ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
+            ret.CompareTo(Util.DEFAULT_INT.ToString())  == 0 ||
+            ret.CompareTo(Util.DEFAULT_STRING) == 0)
         {
             ret = "";
         }
@@ -436,32 +431,32 @@ public class ResultItem : IEquatable<ResultItem>
 
     public bool hasItemEntry()
     {
-        return this.ITEM_ID != DEFAULT_INT;
+        return this.ITEM_ID != Util.DEFAULT_INT;
     }
 
     public bool hasPurchaseEntry()
     {
-        return this.PurchaseID != DEFAULT_INT;
+        return this.PurchaseID != Util.DEFAULT_INT;
     }
 
     public bool hasSaleEntry()
     {
-        return this.SaleID != DEFAULT_INT;
+        return this.SaleID != Util.DEFAULT_INT;
     }
 
     public bool hasShippingEntry()
     {
-        return this.ShippingID != DEFAULT_INT;
+        return this.ShippingID != Util.DEFAULT_INT;
     }
 
 
     // From item table
     public int get_ITEM_ID()
     {
-        // Default value if uninitialized
-        if (ITEM_ID == DEFAULT_INT)
+        // Util.DEFAULT value if uninitialized
+        if (ITEM_ID == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -470,10 +465,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public string get_Name()
     {
-        // Default value if uninitialized
-        if (Name == DEFAULT_STRING)
+        // Util.DEFAULT value if uninitialized
+        if (Name == Util.DEFAULT_STRING)
         {
-            return DEFAULT_STRING;
+            return Util.DEFAULT_STRING;
         }
         else
         {
@@ -482,10 +477,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public int get_PurchaseID()
     {
-        // Default value if uninitialized
-        if (PurchaseID == DEFAULT_INT)
+        // Util.DEFAULT value if uninitialized
+        if (PurchaseID == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -494,10 +489,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public int get_SaleID()
     {
-        // Default value if uninitialized
-        if (SaleID == DEFAULT_INT)
+        // Util.DEFAULT value if uninitialized
+        if (SaleID == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -506,10 +501,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public int get_ShippingID()
     {
-        // Default value if uninitialized
-        if (ShippingID == DEFAULT_INT)
+        // Util.DEFAULT value if uninitialized
+        if (ShippingID == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -518,10 +513,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public int get_InitialQuantity()
     {
-        // Default value if uninitialized
-        if (InitialQuantity == DEFAULT_INT)
+        // Util.DEFAULT value if uninitialized
+        if (InitialQuantity == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -530,10 +525,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public int get_CurrentQuantity()
     {
-        // Default value if uninitialized
-        if (CurrentQuantity == DEFAULT_INT)
+        // Util.DEFAULT value if uninitialized
+        if (CurrentQuantity == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -542,10 +537,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public string get_Notes_item()
     {
-        // Default value if uninitialized
-        if (Notes_item == DEFAULT_STRING)
+        // Util.DEFAULT value if uninitialized
+        if (Notes_item == Util.DEFAULT_STRING)
         {
-            return DEFAULT_STRING;
+            return Util.DEFAULT_STRING;
         }
         else
         {
@@ -564,10 +559,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public double get_Amount_purchase()
     {
-        // Default value if uninitialized
-        if (Amount_purchase == DEFAULT_DOUBLE)
+        // Util.DEFAULT value if uninitialized
+        if (Amount_purchase == Util.DEFAULT_DOUBLE)
         {
-            return DEFAULT_DOUBLE;
+            return Util.DEFAULT_DOUBLE;
         }
         else
         {
@@ -576,10 +571,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public double get_Tax()
     {
-        // Default value if uninitialized
-        if (Tax == DEFAULT_DOUBLE)
+        // Util.DEFAULT value if uninitialized
+        if (Tax == Util.DEFAULT_DOUBLE)
         {
-            return DEFAULT_DOUBLE;
+            return Util.DEFAULT_DOUBLE;
         }
         else
         {
@@ -588,10 +583,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public double get_Fees_purchase()
     {
-        // Default value if uninitialized
-        if (Fees_purchase == DEFAULT_DOUBLE)
+        // Util.DEFAULT value if uninitialized
+        if (Fees_purchase == Util.DEFAULT_DOUBLE)
         {
-            return DEFAULT_DOUBLE;
+            return Util.DEFAULT_DOUBLE;
         }
         else
         {
@@ -600,10 +595,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public string get_Seller()
     {
-        // Default value if uninitialized
-        if (Seller == DEFAULT_STRING)
+        // Util.DEFAULT value if uninitialized
+        if (Seller == Util.DEFAULT_STRING)
         {
-            return DEFAULT_STRING;
+            return Util.DEFAULT_STRING;
         }
         else
         {
@@ -612,10 +607,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public string get_Notes_purchase()
     {
-        // Default value if uninitialized
-        if (Notes_purchase == DEFAULT_STRING)
+        // Util.DEFAULT value if uninitialized
+        if (Notes_purchase == Util.DEFAULT_STRING)
         {
-            return DEFAULT_STRING;
+            return Util.DEFAULT_STRING;
         }
         else
         {
@@ -636,10 +631,10 @@ public class ResultItem : IEquatable<ResultItem>
 
     public double get_Amount_sale()
     {
-        // Default value if uninitialized
-        if (Amount_sale == DEFAULT_DOUBLE)
+        // Util.DEFAULT value if uninitialized
+        if (Amount_sale == Util.DEFAULT_DOUBLE)
         {
-            return DEFAULT_DOUBLE;
+            return Util.DEFAULT_DOUBLE;
         }
         else
         {
@@ -648,10 +643,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public double get_Fees_sale()
     {
-        // Default value if uninitialized
-        if (Fees_sale == DEFAULT_DOUBLE)
+        // Util.DEFAULT value if uninitialized
+        if (Fees_sale == Util.DEFAULT_DOUBLE)
         {
-            return DEFAULT_DOUBLE;
+            return Util.DEFAULT_DOUBLE;
         }
         else
         {
@@ -660,10 +655,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public string get_Buyer()
     {
-        // Default value if uninitialized
-        if (Buyer == DEFAULT_STRING)
+        // Util.DEFAULT value if uninitialized
+        if (Buyer == Util.DEFAULT_STRING)
         {
-            return DEFAULT_STRING;
+            return Util.DEFAULT_STRING;
         }
         else
         {
@@ -674,10 +669,10 @@ public class ResultItem : IEquatable<ResultItem>
     // From shipping table
     public int get_Length()
     {
-        // Default value if uninitialized
-        if (Length == DEFAULT_INT)
+        // Util.DEFAULT value if uninitialized
+        if (Length == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -686,10 +681,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public int get_Width()
     {
-        // Default value if uninitialized
-        if (Width == DEFAULT_INT)
+        // Util.DEFAULT value if uninitialized
+        if (Width == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -698,10 +693,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public int get_Height()
     {
-        // Default value if uninitialized
-        if (Height == DEFAULT_INT)
+        // Util.DEFAULT value if uninitialized
+        if (Height == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -710,10 +705,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public int get_Weight()
     {
-        // Default value if uninitialized
-        if (Weight == DEFAULT_INT)
+        // Util.DEFAULT value if uninitialized
+        if (Weight == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -722,9 +717,9 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public int get_WeightOz()
     {
-        if (Weight == DEFAULT_INT)
+        if (Weight == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -733,9 +728,9 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public int get_WeightLbs()
     {
-        if (Weight == DEFAULT_INT)
+        if (Weight == Util.DEFAULT_INT)
         {
-            return DEFAULT_INT;
+            return Util.DEFAULT_INT;
         }
         else
         {
@@ -744,10 +739,10 @@ public class ResultItem : IEquatable<ResultItem>
     }
     public string get_Notes_shipping()
     {
-        // Default value if uninitialized
-        if (Notes_shipping == DEFAULT_STRING)
+        // Util.DEFAULT value if uninitialized
+        if (Notes_shipping == Util.DEFAULT_STRING)
         {
-            return DEFAULT_STRING;
+            return Util.DEFAULT_STRING;
         }
         else
         {
@@ -758,9 +753,9 @@ public class ResultItem : IEquatable<ResultItem>
     // Extra
     public double getTotalSales()
     {
-        if (totalSales == DEFAULT_DOUBLE)
+        if (totalSales == Util.DEFAULT_DOUBLE)
         {
-            return DEFAULT_DOUBLE;
+            return Util.DEFAULT_DOUBLE;
         }
         else
         {

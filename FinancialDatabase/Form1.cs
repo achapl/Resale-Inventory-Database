@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,14 +60,28 @@ namespace FinancialDatabase
                 this.Form1 = Form1;
 
                 colDataTypes = DatabaseConnector.getColDataTypes();
+                currentPurchaseItems = new List<ResultItem>();
+                currentItems = new List<ResultItem>();
+                currentItemSales = new List<Sale>();
+
+                currItem = null;
+
                 purchasedLotTab = new PurchasedLotTab(this, Form1);
                 itemViewTab = new ItemViewTab(this, Form1);
                 searchTab = new SearchTab(this, Form1);
                 saleTab = new SaleTab(this, Form1);
             }
             
-            public ResultItem getCurrItem() => currItem;
-            public ResultItem getCurrentItemsAt(int index) => currentItems[index];
+            public ResultItem getCurrItem()
+            {
+                updateItem(currItem);
+                return currItem;
+            }
+            public ResultItem getCurrentItemsAt(int index)
+            {
+                updateItem(currentItems[index]);
+                return currentItems[index];
+            }
             public ResultItem getCurrentPurchaseItemsAt(int index) => currentPurchaseItems[index];
             public List<ResultItem> getCurrentPurchaseItems() => currentPurchaseItems;
             public List<ResultItem> getCurrentItems()         => currentItems;
@@ -92,14 +108,39 @@ namespace FinancialDatabase
 
             public void updateItem(ResultItem item)
             {
-                // Double check if this works!!!
                 int index = currentItems.IndexOf(item);
                 if (index == -1)
                 {
                     throw new Exception("Item Not Found: Form1.TabController.updateItem()");
                 }
 
-                currentItems[index] = DatabaseConnector.getItem(index);
+                currentItems[index] = DatabaseConnector.getItem(item.get_ITEM_ID());
+            }
+
+            public void UpdateCurrSaleWithUserInput()
+            {
+                saleTab.editUpdate();
+                saleTab.updateSaleViewListBox(currItem);
+                updateCurrSale();
+                saleTab.showSale(getCurrSale());
+                saleTab.viewMode();
+            }
+
+            public void updateCurrSale()
+            {
+                updateSale(getCurrSale());
+                currSale = currentItemSales[currentItemSales.IndexOf(currSale)];
+            }
+
+            public void updateSale(Sale s)
+            {
+                int index = currentItemSales.IndexOf(s);
+                if (index == -1)
+                {
+                    throw new Exception("Sale Not Found: Form1.TabController.updateSale()");
+                }
+
+                currentItemSales[index] = DatabaseConnector.getSale(s.get_SALE_ID());
             }
 
             public ResultItem getItem(int index)
@@ -140,7 +181,7 @@ namespace FinancialDatabase
 
             public void setCurrItem(ResultItem newItem)
             {
-                if (!currentItems.Contains(newItem) ||
+                if (!currentItems.Contains(newItem) &&
                     !currentPurchaseItems.Contains(newItem))
                 {
                     throw new Exception("Form1.TabController.setCurrItem,"
@@ -165,7 +206,7 @@ namespace FinancialDatabase
 
             public void setCurrSale(int index)
             {
-                // Bad mouse click
+                // Check bad mouse click
                 if (index == -1) { return; }
                 int sale_id = currentItemSales[index].get_SALE_ID();
 
@@ -188,7 +229,10 @@ namespace FinancialDatabase
                     throw new Exception("Sale Not Found: Form1.TabControl.setCurrSale()");
                 }
 
-                saleTab.updateSale(s); // This func will set currSale. Only tab should update currSale, since of the 2, the tab is the only one that can be justifiablly necessary to have that functionality
+                currSale = s;
+
+                saleTab.showSale(s);
+                saleTab.updateUserInputDefaultText();
                 saleTab.viewMode();
             }
 
@@ -205,7 +249,7 @@ namespace FinancialDatabase
 
             public void setNewItemSaleItem(ResultItem newItem)
             {
-                saleTab.showItem(newItem);
+                saleTab.updateSaleViewListBox(newItem);
             }
 
             public void runManualQuery(string query)
@@ -307,11 +351,7 @@ namespace FinancialDatabase
                 purchasedLotTab.editUpdate();
             }
 
-            public void updateCurrSale()
-            {
-                saleTab.editUpdate();
-                saleTab.viewMode();
-            }
+
 
             public void saleTDelete()
             {
@@ -323,9 +363,10 @@ namespace FinancialDatabase
                     throw new Exception("ERROR: Could not delete sale object");
                 }
 
-                saleTab.updateItemView(currItem);
+                saleTab.updateSaleViewListBox(currItem);
                 updateCurrItem();
                 setCurrItem(currItem);
+                saleTab.clearAttribs();
                 saleTab.viewMode();
                 Form1.tabControl1.SelectTab(3);
                 currSale = null;
@@ -363,9 +404,11 @@ namespace FinancialDatabase
         // Search listbox double click
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            int index = this.listBox1.IndexFromPoint(e.Location);
-            tabControl.setCurrItem(tabControl.getCurrentItemsAt(index));
+            int index = this.listBox1.IndexFromPoint(e.Location); // listBox1.SelectedIndex???
+            ResultItem indexItem = tabControl.getCurrentItemsAt(index);
+            tabControl.setCurrItem(indexItem);
             tabControl1.SelectTab(itemViewTab);
+
         }
 
         // Purchased Lot listbox double click
@@ -455,10 +498,10 @@ namespace FinancialDatabase
             tabControl1.SelectTab(saleTab);
         }
 
-        // Update SaleTab Sale info
+        // SaleTab Update button
         private void button10_Click(object sender, EventArgs e)
         {
-            tabControl.updateCurrSale();
+            tabControl.UpdateCurrSaleWithUserInput();
         }
 
         // SaleTab Add Sale
