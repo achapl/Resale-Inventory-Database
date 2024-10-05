@@ -6,7 +6,7 @@ public abstract class Tab
 {
 
 
-    protected bool inEditingState;
+    public bool inEditingState;
     protected List<Control> editingAttributeControls;
     protected List<Label> editableAttribLables;
     protected List<Control> editingControls;

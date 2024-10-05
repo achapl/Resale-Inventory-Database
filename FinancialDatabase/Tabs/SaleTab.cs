@@ -9,8 +9,8 @@ public class SaleTab : Tab
     public SaleTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
 	{
         this.tabController = tabController;
+        editButton = Form1.button9;
         updateButton = Form1.button10;
-        editButton   = Form1.button9;
         generateTBoxGroups();
         Util.clearLabelText(clearableAttribLables);
         showControlVisibility();
@@ -18,7 +18,7 @@ public class SaleTab : Tab
 
     protected override void generateTBoxGroups()
     {
-        editButton = Form1.button9;
+        
 
         editingAttributeControls = new List<Control>()
         {
@@ -36,6 +36,7 @@ public class SaleTab : Tab
 
         clearableAttribLables = new List<Label>()
         {
+            Form1.label51,
             Form1.label48,
             Form1.label54
         };
@@ -198,7 +199,7 @@ public class SaleTab : Tab
 
     public void addSale()
     {
-
+        if (tabController.getCurrItem() == null) return;
         // Must at least have name. Init and curr quantites are given a default val of 1
         if (Form1.textBox13.Text == "")
         {

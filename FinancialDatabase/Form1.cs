@@ -74,7 +74,10 @@ namespace FinancialDatabase
             
             public ResultItem getCurrItem()
             {
-                updateItem(currItem);
+                if (currItem != null)
+                {
+                    updateItem(currItem);
+                }
                 return currItem;
             }
             public ResultItem getCurrentItemsAt(int index)
@@ -181,6 +184,7 @@ namespace FinancialDatabase
 
             public void setCurrItem(ResultItem newItem)
             {
+                if (newItem == null) { return; }
                 if (!currentItems.Contains(newItem) &&
                     !currentPurchaseItems.Contains(newItem))
                 {
@@ -337,7 +341,10 @@ namespace FinancialDatabase
 
             public void saleTflipEditMode()
             {
-                saleTab.flipEditMode();
+                if (!saleTab.inEditingState && getCurrSale != null)
+                {
+                    saleTab.flipEditMode();
+                }
             }
 
             public void saleTaddSale()
