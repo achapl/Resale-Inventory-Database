@@ -116,6 +116,7 @@
             label16 = new Label();
             listBox2 = new ListBox();
             Sale = new TabPage();
+            button11 = new Button();
             button10 = new Button();
             label54 = new Label();
             button9 = new Button();
@@ -133,7 +134,6 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
-            button11 = new Button();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -1084,6 +1084,16 @@
             Sale.Text = "Sale";
             Sale.UseVisualStyleBackColor = true;
             // 
+            // button11
+            // 
+            button11.Location = new Point(706, 136);
+            button11.Name = "button11";
+            button11.Size = new Size(75, 23);
+            button11.TabIndex = 31;
+            button11.Text = "Delete";
+            button11.UseVisualStyleBackColor = true;
+            button11.Click += button11_Click;
+            // 
             // button10
             // 
             button10.Location = new Point(625, 136);
@@ -1233,16 +1243,6 @@
             // resultItemBindingSource
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
-            // 
-            // button11
-            // 
-            button11.Location = new Point(706, 136);
-            button11.Name = "button11";
-            button11.Size = new Size(75, 23);
-            button11.TabIndex = 31;
-            button11.Text = "Delete";
-            button11.UseVisualStyleBackColor = true;
-            button11.Click += button11_Click;
             // 
             // Form1
             // 

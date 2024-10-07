@@ -25,11 +25,7 @@ namespace FinancialDatabase
     {        
         TabController tabControl;
 
-        // TODO: Make CONST
-        int searchTab = 0;
-        int itemViewTab = 1;
-        int purcLotTab = 2;
-        int saleTab = 3;
+        
 
         // Used when tabs are required to work in harmony and
         // send information between each other
@@ -49,11 +45,19 @@ namespace FinancialDatabase
             private ResultItem currItem;
             Sale currSale;
 
+
             // Tab references
             PurchasedLotTab purchasedLotTab;
             ItemViewTab itemViewTab;
             SearchTab searchTab;
             SaleTab saleTab;
+
+
+            // TODO: Make CONST
+            public int searchTabNum = 0;
+            public int itemViewTabNum = 1;
+            public int purcLotTabNum = 2;
+            public int saleTabNum = 3;
 
             public TabController(Form1 Form1)
             {
@@ -111,12 +115,13 @@ namespace FinancialDatabase
 
             public void updateItem(ResultItem item)
             {
+                if (purchasedLotTab.isNewPurchase) { return; }
+
                 int index = currentItems.IndexOf(item);
                 if (index == -1)
                 {
                     throw new Exception("Item Not Found: Form1.TabController.updateItem()");
                 }
-
                 currentItems[index] = DatabaseConnector.getItem(item.get_ITEM_ID());
             }
 
@@ -185,8 +190,13 @@ namespace FinancialDatabase
             public void setCurrItem(ResultItem newItem)
             {
                 if (newItem == null) { return; }
+                if (purchasedLotTab.isNewPurchase)
+                {
+                    currentItems.Clear();
+                    currentItems.Add(newItem);
+                }
                 if (!currentItems.Contains(newItem) &&
-                    !currentPurchaseItems.Contains(newItem))
+                    !currentPurchaseItems.Contains(newItem) && !purchasedLotTab.isNewPurchase)
                 {
                     throw new Exception("Form1.TabController.setCurrItem,"
                                       + "Result item ID: " + newItem.get_ITEM_ID().ToString() + ", "
@@ -206,6 +216,7 @@ namespace FinancialDatabase
                 setNewItemItemView(newItem);
                 setNewItemPurchasedLots(newItem);
                 setNewItemSaleItem(newItem);
+                Form1.tabControl1.SelectTab(itemViewTabNum);
             }
 
             public void setCurrSale(int index)
@@ -414,7 +425,7 @@ namespace FinancialDatabase
             int index = this.listBox1.IndexFromPoint(e.Location); // listBox1.SelectedIndex???
             ResultItem indexItem = tabControl.getCurrentItemsAt(index);
             tabControl.setCurrItem(indexItem);
-            tabControl1.SelectTab(itemViewTab);
+            tabControl1.SelectTab(tabControl.itemViewTabNum);
 
         }
 
@@ -422,7 +433,8 @@ namespace FinancialDatabase
         private void listBox2_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             int index = this.listBox2.IndexFromPoint(e.Location);
-            tabControl.setCurrItem(tabControl.getCurrentPurchaseItemsAt(index));
+            ResultItem item = tabControl.getCurrentPurchaseItemsAt(index);
+            tabControl.setCurrItem(item);
         }
 
         // Enter key pressed for search
@@ -502,7 +514,7 @@ namespace FinancialDatabase
         {
             int index = this.listBox3.IndexFromPoint(e.Location);
             tabControl.setCurrSale(index);
-            tabControl1.SelectTab(saleTab);
+            tabControl1.SelectTab(tabControl.saleTabNum);
         }
 
         // SaleTab Update button

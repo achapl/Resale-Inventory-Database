@@ -109,13 +109,30 @@ public abstract class Tab
                     }
                     else
                     {
-                        getCurrItem().getAttribAsStr(attrib, ref itemValue);
+                        // If there is no item to compare it against, compare it to empty string, which is what textbox is by default when there is no currItem
+                        if (getCurrItem() is null)
+                        {
+                            itemValue = "";
+                        }
+                        else
+                        {
+                            getCurrItem().getAttribAsStr(attrib, ref itemValue);
+                        }
                     }
                     userValue = control.Text;
                     hasMatch = true;
                     break;
                 case DateTimePicker:
-                    itemValue = getCurrItem().get_Date_Purchased_str();
+                    // If there is no item to compare it against, compare it to "empty" date
+                    if (getCurrItem() is null)
+                    {
+                        itemValue = new Date(0,0,0).toDateString();
+                    }
+                    else
+                    {
+                        itemValue = getCurrItem().get_Date_Purchased_str();
+                    }
+                    
                     userValue = new Date(control).toDateString();
                     hasMatch = true;
                     break;

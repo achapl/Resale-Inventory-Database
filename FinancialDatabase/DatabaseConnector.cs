@@ -30,9 +30,9 @@ public static class DatabaseConnector
     {
 
         string query = "SHOW TABLES";
-        int lastrowid = -1;
+        int lastrowid;
         List<string> colNames = new List<string>(new string[] { "" });
-        string rawTablenames = runStatement(query, ref colNames, ref lastrowid);
+        string rawTablenames = runStatement(query, ref colNames, out lastrowid);
         List<string> tableNames = new List<string>(rawTablenames.Substring(3, rawTablenames.Length - 7).Split("',), ('"));
 
         return tableNames;
@@ -100,9 +100,9 @@ public static class DatabaseConnector
         {
             query = "SHOW COLUMNS FROM " + tableName + ";";
 
-            int lastrowid = -1;
+            int lastrowid;
             List<string> colNames = new List<string>(new string[] { "" });
-            string rawOutput = runStatement(query, ref colNames, ref lastrowid);
+            string rawOutput = runStatement(query, ref colNames, out lastrowid);
             output = new List<string>(rawOutput.Substring(3, rawOutput.Length - 7).Split("'), ('"));
 
 
@@ -132,9 +132,9 @@ public static class DatabaseConnector
             query = QueryBuilder.defaultQuery();
         }
 
-        int lastrowid = -1;
+        int lastrowid;
         List<string> colNames = new List<string>(new string[] { "" });
-        string queryOutput = runStatement(query, ref colNames, ref lastrowid);
+        string queryOutput = runStatement(query, ref colNames, out lastrowid);
 
         List<ResultItem> parsedItems = parseItemSearchResult(queryOutput, colNames);
 
@@ -143,16 +143,16 @@ public static class DatabaseConnector
 
     public static List<Sale> RunSaleSearchQuery(string query)
     {
-        int lastrowid = -1;
+        int lastrowid;
         List<string> colNames = new List<string>(new string[] { "" });
-        string queryOutput = runStatement(query, ref colNames, ref lastrowid);
+        string queryOutput = runStatement(query, ref colNames, out lastrowid);
 
         List<Sale> parsedItems = parseSaleSearchResult(queryOutput, colNames);
 
         return parsedItems;
     }
 
-    public static string runStatement(string statement, ref List<string> colNames, ref int lastrowid)
+    public static string runStatement(string statement, ref List<string> colNames, out int lastrowid)
     {
         string retList;
 
@@ -183,7 +183,7 @@ public static class DatabaseConnector
         return retList;
     }
 
-    public static string runStatement(string statement, ref int lastrowid)
+    public static string runStatement(string statement, out int lastrowid)
     {
         string retList;
 
@@ -214,17 +214,23 @@ public static class DatabaseConnector
 
     public static int newPurchase(int purcPrice, string notes, Date PurcDate)
     {
+
         string query = QueryBuilder.buildInsertPurchaseQuery(purcPrice, notes, PurcDate);
-        int lastrowid = -1;
-        runStatement(query, ref lastrowid);
-        return lastrowid;
+        int purcID;
+        runStatement(query, out purcID);
+        return purcID;
     }
 
     public static string insertItem(ResultItem item)
     {
+        int throwaway;
+        return insertItem(item, out throwaway);
+    }
+    public static string insertItem(ResultItem item, out int lastrowid)
+    {
         string query = QueryBuilder.buildItemInsertQuery(item);
-        int lastrowid = -1;
-        string output = runStatement(query, ref lastrowid);
+        lastrowid = -1;
+        string output = runStatement(query, out lastrowid);
         if (lastrowid == -1)
         {
             Console.WriteLine("ERROR, BAD INPUT INTO DATABASE: insertItem");
@@ -242,7 +248,7 @@ public static class DatabaseConnector
         {
             item.set_ITEM_ID(lastrowid);
             query = QueryBuilder.buildShipInfoInsertQuery(item);
-            output = runStatement(query, ref lastrowid2);
+            output = runStatement(query, out lastrowid2);
             if (lastrowid2 == -1)
             {
                 Console.WriteLine("ERROR IN INSERTING SHIPPING INFO");
@@ -264,8 +270,8 @@ public static class DatabaseConnector
     public static string insertSale(Sale sale)
     {
         string query = QueryBuilder.buildSaleInsertQuery(sale);
-        int lastrowid = -1;
-        string output = runStatement(query, ref lastrowid);
+        int lastrowid;
+        string output = runStatement(query, out lastrowid);
         if (lastrowid == -1)
         {
             Console.WriteLine("ERROR, BAD INPUT INTO DATABASE: insertSale");

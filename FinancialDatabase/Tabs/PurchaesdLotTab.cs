@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using FinancialDatabase;
 using Date = Util.Date;
 
 public class PurchasedLotTab : Tab
 {
 
-    bool isNewPurchase;
+    public bool isNewPurchase;
+
+    private List<Control> newPurchaseGroupControls;
 
     public PurchasedLotTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
 	{
@@ -67,6 +70,17 @@ public class PurchasedLotTab : Tab
 
         };
 
+        newPurchaseGroupControls = new List<Control>()
+        {
+            Form1.textBox20,
+            Form1.dateTimePicker4
+        };
+
+        foreach (Control c in itemTBoxes)
+        {
+            newPurchaseGroupControls.Add(c);
+        }
+
         labelTextboxPairs = new Dictionary<Control, Label>();
 
         int i = 0;
@@ -106,7 +120,7 @@ public class PurchasedLotTab : Tab
     override public void flipEditMode()
     {
         // Don't go into edit mode if there is no item to edit
-        if (!inEditingState && tabController.getCurrItem() == null) { return; }
+        if (!isNewPurchase && !inEditingState && tabController.getCurrItem() == null) { return; }
 
         inEditingState = !inEditingState;
         showControlVisibility();
@@ -130,7 +144,17 @@ public class PurchasedLotTab : Tab
 
     public void editUpdate()
     {
-        if (tabController.getCurrItem() == null) { return; }
+
+        if (isNewPurchase)
+        {
+            addItem();
+            return;
+        }
+        else if (tabController.getCurrItem() is null)
+        {
+            return;
+        }
+
         List<Control> changedFields = getChangedFields();
 
         bool goodEdit = true;
@@ -187,18 +211,21 @@ public class PurchasedLotTab : Tab
         }
     }
 
+    // TODO: Delete or make part of TabController?
     public void updateItemView(ResultItem item)
     {
+        if (item == null) { return; }
         showItem(item);
 
         Form1.listBox2.Items.Clear();
         tabController.clearCurrentPurchaseItems();
+        // TODO: Make RunItemSearchQuery for ResultItem parameter
         List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item));
 
         foreach (ResultItem i in result)
         {
             Form1.listBox2.Items.Add(i.get_Name());
-            tabController.addCurrentPurchaseItems(i);
+            tabController.addCurrentPurchaseItems(DatabaseConnector.getItem(i.get_ITEM_ID()));
         }
 
         Form1.label15.Text = item.get_Amount_purchase().ToString();
@@ -207,12 +234,17 @@ public class PurchasedLotTab : Tab
 
     public bool allNewPurchaseBoxesFilled()
     {
-        foreach (Control c in shippingTBoxes)
+        foreach (Control c in newPurchaseGroupControls)
         {
-            if (c.Text.CompareTo("") == 0)
+            if (c is TextBox)
             {
-                return false;
+                TextBox t = c as TextBox;
+                if (t.Text.CompareTo("") == 0)
+                {
+                    return false;
+                }
             }
+            
         }
         return true;
     }
@@ -231,28 +263,38 @@ public class PurchasedLotTab : Tab
 
     public void addItem()
     {
-
-        // Must at least have name. Init and curr quantites are given a default val of 1
-        if (Form1.textBox2.Text == "")
-        {
-            return;
-        }
         int purcID = -1;
+        Date purcDate = new Date();
+        if (tabController.getCurrItem() is not null)
+        {
+            purcDate = tabController.getCurrItem().get_Date_Purchased();
+        } else
+        {
+            purcDate = new Date();
+        }
+        
         if (isNewPurchase && allNewPurchaseBoxesFilled())
         { 
             DateTime dt = Form1.dateTimePicker4.Value;
-            Date d = new (dt.Year, dt.Month, dt.Day);
-            purcID = DatabaseConnector.newPurchase(Int32.Parse(Form1.textBox20.Text),Form1.textBox21.Text, d);
+            purcDate = new (dt.Year, dt.Month, dt.Day);
+            purcID = DatabaseConnector.newPurchase(Int32.Parse(Form1.textBox20.Text),Form1.textBox21.Text, purcDate);
 
         }
         // Incorrectly formed new purchase from user input, don't continue on
-        else if (!allNewPurchaseBoxesFilled())
+        else if (isNewPurchase && !allNewPurchaseBoxesFilled())
         {
+            MessageBox.Show(
+                            "To Add New Purchase, a Purchase Price, Purchase Date, and NEW ITEM Name, Initial Quantity, and Current Quantity must each be filled out",
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                            );
             return;
         }
         
         ResultItem newItem = new ResultItem();
         newItem.set_Name(Form1.textBox2.Text);
+        newItem.set_Date_Purchased(purcDate);
 
         // If no Init or curr quantities, set to default 1
         if (Form1.textBox14.Text.CompareTo("") == 0)
@@ -284,7 +326,7 @@ public class PurchasedLotTab : Tab
         if (isNewPurchase)
         {
             newItem.set_PurchaseID(purcID);
-            isNewPurchase = false;
+            
         } else
         {
             newItem.set_PurchaseID(tabController.getCurrItem().get_PurchaseID());
@@ -292,9 +334,18 @@ public class PurchasedLotTab : Tab
 
         Util.clearTBox(itemTBoxes);
         Util.clearTBox(shippingTBoxes);
-        DatabaseConnector.insertItem(newItem);
-
+        int itemID = -1;
+        DatabaseConnector.insertItem(newItem, out itemID);
+        newItem.set_ITEM_ID(itemID);
+        string attrib = "item.PurchaseID";
+        string type = tabController.colDataTypes[attrib];
+        string query = QueryBuilder.buildUpdateQuery(newItem, attrib, type, purcID.ToString());
+        DatabaseConnector.runStatement(query);
+        //TODO: Can the following line be removed since tabController.setCurrItem(newItem) is called and shoeuld update the currItem with modified purc date?
+        newItem.set_PurchaseID(purcID);
+        tabController.setCurrItem(newItem);
         updateItemView(tabController.getCurrItem());
+        isNewPurchase = false;
     }
 
     // Clear out old information
@@ -303,9 +354,9 @@ public class PurchasedLotTab : Tab
     public void newPurchase()
     {
         Form1.listBox2.Items.Clear();
-        editMode();
         isNewPurchase = true;
-        addItem();
+        editMode();
+        //addItem();
 
     }
 }

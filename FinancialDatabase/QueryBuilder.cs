@@ -100,7 +100,8 @@ namespace FinancialDatabase
 
         public static string buildPurchaseQuery(ResultItem item)
         {
-            string query = "SELECT item.ITEM_ID, item.Name FROM item WHERE item.PurchaseID = " + item.get_PurchaseID() + ";";
+            string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE item.PurchaseID = " + item.get_PurchaseID() + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
+            //string query = "SELECT item.ITEM_ID, item.Name FROM item WHERE item.PurchaseID = " + item.get_PurchaseID() + ";";
             return query;
         }
 
@@ -111,7 +112,7 @@ namespace FinancialDatabase
 
         public static string buildInsertPurchaseQuery(int purcPrice, string purcNotes, Date d)
         {
-            return "INSRET INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", " + purcNotes + ", " + formatAttribute(d.toDateString(), "date") + ");";
+            return "INSERT INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", \"" + purcNotes + "\", " + formatAttribute(d.toDateString(), "date") + ");";
         }
         
         private static string formatAttribute(string attrib, string type)

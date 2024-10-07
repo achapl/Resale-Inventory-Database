@@ -237,10 +237,11 @@ public class ItemViewTab : Tab
                             continue;
                         }
 
+                        //TODO: Why is this not happening all in DatabaesConnector?
                         query = QueryBuilder.buildShipInfoInsertQuery(tabController.getCurrItem(), weightLbs, weightOz, l, w, h);
 
-                        int lastrowid = -1;
-                        string output = DatabaseConnector.runStatement(query, ref lastrowid);
+                        int lastrowid;
+                        string output = DatabaseConnector.runStatement(query, out lastrowid);
 
                         string attrib = "item.ShippingID";
                         string type = tabController.colDataTypes[attrib];

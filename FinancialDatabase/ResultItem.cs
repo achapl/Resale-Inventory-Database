@@ -849,6 +849,7 @@ public class ResultItem : IEquatable<ResultItem>
     {
         this.Date_Purchased = new Date(year, month, day);
     }
+    public void set_Date_Purchased(Date date) => this.Date_Purchased = date;
     public void set_Date_Purchased(string date) => this.Date_Purchased = parseDate(date);
     public void set_Amount_purchase(double Amount_purchase) => this.Amount_purchase = Amount_purchase;
     public void set_Amount_purchase(string Amount_purchase)
@@ -882,6 +883,7 @@ public class ResultItem : IEquatable<ResultItem>
 
     // From sale table
     public void set_Date_Sold(int year, int month, int day) => this.Date_Sold = new Date(year, month, day);
+    public void set_Date_Sold(Date date) => this.Date_Sold = date;
     public void set_Date_Sold(string date) => this.Date_Sold = parseDate(date);
     public void set_Amount_sale(double Amount_sale) => this.Amount_sale = Amount_sale;
     public void set_Amount_sale(string Amount_sale)
