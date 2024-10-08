@@ -47,6 +47,7 @@
             comboBox1 = new ComboBox();
             menuStrip1 = new MenuStrip();
             ItemTab = new TabPage();
+            button12 = new Button();
             label43 = new Label();
             button5 = new Button();
             label40 = new Label();
@@ -339,6 +340,7 @@
             // 
             // ItemTab
             // 
+            ItemTab.Controls.Add(button12);
             ItemTab.Controls.Add(label43);
             ItemTab.Controls.Add(button5);
             ItemTab.Controls.Add(label40);
@@ -382,6 +384,16 @@
             ItemTab.TabIndex = 1;
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
+            // 
+            // button12
+            // 
+            button12.Location = new Point(382, 18);
+            button12.Name = "button12";
+            button12.Size = new Size(117, 27);
+            button12.TabIndex = 57;
+            button12.Text = "Delete Item";
+            button12.UseVisualStyleBackColor = true;
+            button12.Click += button12_Click;
             // 
             // label43
             // 
@@ -1379,6 +1391,7 @@
         public Label label49;
         public Button button10;
         public Button button11;
+        private Button button12;
     }
 }
 

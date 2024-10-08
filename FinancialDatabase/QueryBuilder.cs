@@ -101,7 +101,6 @@ namespace FinancialDatabase
         public static string buildPurchaseQuery(ResultItem item)
         {
             string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE item.PurchaseID = " + item.get_PurchaseID() + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
-            //string query = "SELECT item.ITEM_ID, item.Name FROM item WHERE item.PurchaseID = " + item.get_PurchaseID() + ";";
             return query;
         }
 
@@ -311,6 +310,21 @@ namespace FinancialDatabase
         {
             return "INSERT INTO sale (Date_Sold, Amount_sale, ItemID_sale) VALUES (" + formatAttribute(sale.get_Date_Sold().toDateString(), "date") + ", " + sale.get_Amount_sale().ToString() + ", " + sale.get_ItemID_sale().ToString() + ");";
         }
-    
+
+        public static string buildDeletePurchaseQuery(ResultItem item)
+        {
+            int purcID = item.get_PurchaseID();
+            return "DELETE FROM purchase WHERE purchase.PURCHASE_ID = " + purcID + ";";
+        }
+
+        public static string buildDelAllSalesQuery(ResultItem item)
+        {
+            return "DELETE FROM sale WHERE sale.Item_ID_sale = " + item.get_ITEM_ID() + ";";
+        }
+
+        public static string buildDelItemQuery(ResultItem item)
+        {
+            return "DELETE FROM item WHERE ITEM_ID = " + item.get_ITEM_ID() + ";";
+        }
     }
 }

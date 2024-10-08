@@ -13,6 +13,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Reflection.Metadata.Ecma335;
 using Date = Util.Date;
+using System.Runtime.CompilerServices;
 
 
 
@@ -366,5 +367,48 @@ public static class DatabaseConnector
         return results;
     }
 
+    internal static void deleteItem(ResultItem item)
+    {
+        if (item is null) { return; }
+        if (item.hasPurchaseEntry()) {
+            if (isLastItemInPurchase(item))
+            {
+                
+                string attrib = "item.PurchaseID";
+                string updateQuery = QueryBuilder.buildUpdateQuery(item, "item.PurchaseID", "int unsigned", "0");
 
+                // May not be necessary since auto-cascade on delete on database may be a feature
+                //runStatement(updateQuery);
+                deletePurchase(item);
+            }
+        }
+        if (item.hasShippingEntry())
+        {
+            // TODO: Make this a function deleteShipInfo for DatabaseConnector
+            string shippingDelQuery = QueryBuilder.buildDelShipInfoQuery(item);
+            runStatement(shippingDelQuery);
+        }
+        deleteSales(item);
+        string delItemQuery = QueryBuilder.buildDelItemQuery(item);
+        runStatement(delItemQuery);
+    }
+
+    private static void deleteSales(ResultItem item)
+    {
+        string query = QueryBuilder.buildDelAllSalesQuery(item);
+        runStatement(query);
+    }
+
+    private static void deletePurchase(ResultItem item)
+    {
+        string query = QueryBuilder.buildDeletePurchaseQuery(item);
+        runStatement(query);
+    }
+
+    private static bool isLastItemInPurchase(ResultItem item)
+    {
+        // TODO: make this a function for databaseconnector
+        // RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item)) part
+        return (RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item)).Count() == 1);   
+    }
 }

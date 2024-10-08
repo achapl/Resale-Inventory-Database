@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using static FinancialDatabase.Form1;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using TextBox = System.Windows.Forms.TextBox;
 
@@ -22,10 +23,10 @@ namespace FinancialDatabase
 {
 
     public partial class Form1 : Form
-    {        
+    {
         TabController tabControl;
 
-        
+
 
         // Used when tabs are required to work in harmony and
         // send information between each other
@@ -75,7 +76,7 @@ namespace FinancialDatabase
                 searchTab = new SearchTab(this, Form1);
                 saleTab = new SaleTab(this, Form1);
             }
-            
+
             public ResultItem getCurrItem()
             {
                 if (currItem != null)
@@ -91,20 +92,20 @@ namespace FinancialDatabase
             }
             public ResultItem getCurrentPurchaseItemsAt(int index) => currentPurchaseItems[index];
             public List<ResultItem> getCurrentPurchaseItems() => currentPurchaseItems;
-            public List<ResultItem> getCurrentItems()         => currentItems;
-            public List<Sale> getCurrentItemSales()           => currentItemSales;
-            
-            public void setCurrentPurchaseItems(List<ResultItem> newPurcItems)  => this.currentPurchaseItems = newPurcItems;
-            public void setCurrentItems(List<ResultItem> newItems)              => this.currentItems = newItems;
-            public void setCurrentItemSales(List<Sale> newSales)                => this.currentItemSales = newSales;
+            public List<ResultItem> getCurrentItems() => currentItems;
+            public List<Sale> getCurrentItemSales() => currentItemSales;
+
+            public void setCurrentPurchaseItems(List<ResultItem> newPurcItems) => this.currentPurchaseItems = newPurcItems;
+            public void setCurrentItems(List<ResultItem> newItems) => this.currentItems = newItems;
+            public void setCurrentItemSales(List<Sale> newSales) => this.currentItemSales = newSales;
 
             public void addCurrentPurchaseItems(ResultItem newPurcItems) => currentPurchaseItems.Add(newPurcItems);
-            public void addCurrentItems(ResultItem newItems)             => currentItems.Add(newItems);
-            public void addCurrentItemSales(Sale newSales)               => currentItemSales.Add(newSales);
+            public void addCurrentItems(ResultItem newItems) => currentItems.Add(newItems);
+            public void addCurrentItemSales(Sale newSales) => currentItemSales.Add(newSales);
 
             public void clearCurrentPurchaseItems() => currentPurchaseItems.Clear();
-            public void clearCurrentItems()         => currentItems.Clear();
-            public void clearCurrentItemSales()     => currentItemSales.Clear();
+            public void clearCurrentItems() => currentItems.Clear();
+            public void clearCurrentItemSales() => currentItemSales.Clear();
 
             public Sale getCurrSale() => currSale;
 
@@ -178,13 +179,19 @@ namespace FinancialDatabase
             }
 
 
-            
-            // Update the curr item given its itemID
-            public void setCurrItem(int item_id)
+
+            // Update the curr item given its position in the search results
+            public void setCurrItem(int index)
             {
-                ResultItem newItem = DatabaseConnector.getItem(item_id);
+                if (index > Form1.listBox1.Items.Count)
+                {
+                    throw new Exception("Index of the search results to set the new currItem to in Form1.TabController setCurrItem() is greater than the number of items in the search result");
+                }
+                ResultItem indexItem = getCurrentItemsAt(index);
+
+                ResultItem newItem = DatabaseConnector.getItem(indexItem.get_ITEM_ID());
                 setCurrItem(newItem);
-                
+
             }
 
             public void setCurrItem(ResultItem newItem)
@@ -200,10 +207,10 @@ namespace FinancialDatabase
                 {
                     throw new Exception("Form1.TabController.setCurrItem,"
                                       + "Result item ID: " + newItem.get_ITEM_ID().ToString() + ", "
-                                      +           "Name: " + newItem.get_Name()               + ", "
+                                      + "Name: " + newItem.get_Name() + ", "
                                       + "Not found!");
                 }
-                
+
                 if (newItem == null)
                 {
                     throw new Exception("Item Not Found: Form1.TabControl.setCurrItem()");
@@ -389,6 +396,26 @@ namespace FinancialDatabase
                 Form1.tabControl1.SelectTab(3);
                 currSale = null;
             }
+
+
+            public void deleteItemFromDtb()
+            {
+                
+                itemViewTab.deleteItem();
+                currItem = null;
+                currentItems.Clear();
+                currentItemSales.Clear();
+                currentPurchaseItems.Clear();
+
+                purchasedLotTab.clearCurrItem();
+                itemViewTab.clearCurrItem();
+                saleTab.clearCurrItem();
+                searchTab.clearItems();
+
+                Form1.tabControl1.SelectTab(searchTabNum);
+                searchTab.search();
+
+            }
         }
 
 
@@ -422,9 +449,8 @@ namespace FinancialDatabase
         // Search listbox double click
         private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            int index = this.listBox1.IndexFromPoint(e.Location); // listBox1.SelectedIndex???
-            ResultItem indexItem = tabControl.getCurrentItemsAt(index);
-            tabControl.setCurrItem(indexItem);
+            int currIndex = this.listBox1.IndexFromPoint(e.Location); // listBox1.SelectedIndex???
+            tabControl.setCurrItem(currIndex);
             tabControl1.SelectTab(tabControl.itemViewTabNum);
 
         }
@@ -533,6 +559,12 @@ namespace FinancialDatabase
         private void button11_Click(object sender, EventArgs e)
         {
             tabControl.saleTDelete();
+        }
+
+        // Item View Delete Item Button
+        private void button12_Click(object sender, EventArgs e)
+        {
+            tabControl.deleteItemFromDtb();
         }
     }
 }

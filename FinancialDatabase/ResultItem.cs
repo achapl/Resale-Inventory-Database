@@ -439,6 +439,7 @@ public class ResultItem : IEquatable<ResultItem>
         return this.PurchaseID != Util.DEFAULT_INT;
     }
 
+    // TODO: Delete this and all sale-entry related items?
     public bool hasSaleEntry()
     {
         return this.SaleID != Util.DEFAULT_INT;

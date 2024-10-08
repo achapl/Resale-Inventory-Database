@@ -311,7 +311,7 @@ public class Util
 
         public Date(string s)
         {
-            if (s.CompareTo("") == 0) { this = new Date(); }
+            if (s.CompareTo("") == 0) { this = new Date(); return; }
 
             // Assumed to be format "datetime.date(yyyy, mm, dd)"
             if (s.Length > 14 && s.Substring(0, 14).CompareTo("datetime.date(") == 0)
@@ -370,7 +370,7 @@ public class Util
             // Cannot have DateTime(0,0,0), set to min DateTime 
             if (year == 0 && month == 0 && day == 0)
             {
-                return new DateTime(2000, 1, 1);
+                return new DateTime(2020, 1, 1);
             }
 
             return new DateTime(year, month, day);

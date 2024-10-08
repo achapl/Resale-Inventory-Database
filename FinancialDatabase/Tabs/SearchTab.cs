@@ -124,4 +124,7 @@ public class SearchTab
         }
     }
 
+    public void clearItems() {
+        Form1.listBox1.Items.Clear();
+    }
 }

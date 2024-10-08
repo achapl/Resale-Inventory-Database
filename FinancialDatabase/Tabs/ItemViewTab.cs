@@ -355,5 +355,26 @@ public class ItemViewTab : Tab
         }
         updateUserInputDefaultText();
     }
-    
+
+    public bool deleteItem()
+    {
+        if (tabController.getCurrItem() is null) { return false; }
+
+        // Warn user if it is the last item in the lot
+        // Deleting this item results in deletion of the lot purchase entry
+        if (tabController.currentPurchaseItems.Count == 1)
+        {
+            DialogResult result = MessageBox.Show(
+                            "This is the last item left in the purchased lot, are you sure you want to delete it? Doing so will delete the whole purchas.",
+                            "Warning",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning
+                            );
+            if (result == DialogResult.No) { return false; }
+        }
+
+        DatabaseConnector.deleteItem(tabController.getCurrItem());
+
+        return true;
+    }
 }
