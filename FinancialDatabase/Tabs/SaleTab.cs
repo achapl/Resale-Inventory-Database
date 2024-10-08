@@ -256,7 +256,7 @@ public class SaleTab : Tab
 
     }
 
-    public override void showItem(ResultItem item)
+    public override void showItemAttributes(ResultItem item)
     {
         Form1.label51.Text = ""; // Must be cleared manually as to not clear sale fields after showSale has been called (or visa versa from showSale's perspective)
         

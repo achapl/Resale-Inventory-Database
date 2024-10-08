@@ -127,8 +127,9 @@ public class PurchasedLotTab : Tab
 
     }
 
-    public override void showItem(ResultItem item)
+    public override void showItemAttributes(ResultItem item)
     {
+
         Util.clearLabelText(clearableAttribLables);
 
         if (item.hasPurchaseEntry())
@@ -140,6 +141,7 @@ public class PurchasedLotTab : Tab
             Form1.label44.Text = item.get_Date_Purchased().toDateString();
         }
         updateUserInputDefaultText();
+        
     }
 
     public void editUpdate()
@@ -190,7 +192,7 @@ public class PurchasedLotTab : Tab
                     string output = DatabaseConnector.runStatement(query);
                     if (output.CompareTo("ERROR") != 0)
                     {
-                        updateItemView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
+                        updatePurchasedLotView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
                         t.Clear();
                         t.BackColor = Color.White;
                     }
@@ -205,17 +207,17 @@ public class PurchasedLotTab : Tab
         }
         if (goodEdit)
         {
-            updateItemView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
-            showItem(tabController.getCurrItem());
+            updatePurchasedLotView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
+            showItemAttributes(tabController.getCurrItem());
             viewMode();
         }
     }
 
     // TODO: Delete or make part of TabController?
-    public void updateItemView(ResultItem item)
+    public void updatePurchasedLotView(ResultItem item)
     {
         if (item == null) { return; }
-        showItem(item);
+        showItemAttributes(item);
 
         Form1.listBox2.Items.Clear();
         tabController.clearCurrentPurchaseItems();
@@ -344,7 +346,7 @@ public class PurchasedLotTab : Tab
         //TODO: Can the following line be removed since tabController.setCurrItem(newItem) is called and shoeuld update the currItem with modified purc date?
         newItem.set_PurchaseID(purcID);
         tabController.setCurrItem(newItem);
-        updateItemView(tabController.getCurrItem());
+        updatePurchasedLotView(tabController.getCurrItem());
         isNewPurchase = false;
     }
 

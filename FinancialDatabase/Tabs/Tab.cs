@@ -236,7 +236,7 @@ public abstract class Tab
     }
 
 
-    abstract public void showItem(ResultItem item);
+    abstract public void showItemAttributes(ResultItem item);
 
     // Set curr item to null and clear all shown info about currItem
     public void clearCurrItem()

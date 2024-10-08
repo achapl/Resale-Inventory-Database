@@ -261,12 +261,12 @@ namespace FinancialDatabase
 
             private void setNewItemPurchasedLots(ResultItem newItem)
             {
-                purchasedLotTab.showItem(newItem);
+                purchasedLotTab.updatePurchasedLotView(newItem);
             }
 
             private void setNewItemItemView(ResultItem newItem)
             {
-                itemViewTab.showItem(newItem);
+                itemViewTab.showItemAttributes(newItem);
             }
 
             public void setNewItemSaleItem(ResultItem newItem)

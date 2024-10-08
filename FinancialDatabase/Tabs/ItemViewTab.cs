@@ -207,7 +207,7 @@ public class ItemViewTab : Tab
                 // Update the item in the view
                 if (output.CompareTo("ERROR") != 0)
                 {
-                    showItem(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
+                    showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
                     Util.clearTBox(t);
                 }
 
@@ -255,7 +255,7 @@ public class ItemViewTab : Tab
                             goodEdit = false;
                             Util.clearTBox(weightTBoxes);
                         }
-                        showItem(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
+                        showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
                     }
                     else
                     {
@@ -285,7 +285,7 @@ public class ItemViewTab : Tab
         // update the shown informationafter updating the
         // ResultItem copy of it
         tabController.updateCurrItem();
-        showItem(tabController.getCurrItem());
+        showItemAttributes(tabController.getCurrItem());
         viewMode();
     }
 
@@ -304,7 +304,7 @@ public class ItemViewTab : Tab
 
         if (output.CompareTo("ERROR") != 0)
         {
-            showItem(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
+            showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
         }
         flipEditMode();
     }
@@ -319,7 +319,7 @@ public class ItemViewTab : Tab
 
     }
 
-    public override void showItem(ResultItem item)
+    public override void showItemAttributes(ResultItem item)
     { 
         Util.clearLabelText(clearableAttribLables);
 
