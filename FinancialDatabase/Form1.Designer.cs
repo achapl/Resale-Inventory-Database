@@ -135,12 +135,17 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
+            dataGridView1 = new DataGridView();
+            pictureBox1 = new PictureBox();
+            Image = new DataGridViewImageColumn();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
             PurchaseTab.SuspendLayout();
             Sale.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)resultItemBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // manualQuery
@@ -340,6 +345,8 @@
             // 
             // ItemTab
             // 
+            ItemTab.Controls.Add(pictureBox1);
+            ItemTab.Controls.Add(dataGridView1);
             ItemTab.Controls.Add(button12);
             ItemTab.Controls.Add(label43);
             ItemTab.Controls.Add(button5);
@@ -1256,6 +1263,29 @@
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Image });
+            dataGridView1.Location = new Point(651, 120);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(240, 150);
+            dataGridView1.TabIndex = 58;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = Properties.Resources.s_l1600;
+            pictureBox1.Location = new Point(651, 18);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(189, 69);
+            pictureBox1.TabIndex = 59;
+            pictureBox1.TabStop = false;
+            // 
+            // Image
+            // 
+            Image.HeaderText = "Image";
+            Image.Name = "Image";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1277,6 +1307,8 @@
             Sale.ResumeLayout(false);
             Sale.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)resultItemBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
@@ -1392,6 +1424,9 @@
         public Button button10;
         public Button button11;
         private Button button12;
+        private PictureBox pictureBox1;
+        private DataGridView dataGridView1;
+        private DataGridViewImageColumn Image;
     }
 }
 

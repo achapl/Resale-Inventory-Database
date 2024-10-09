@@ -14,9 +14,7 @@ using System.Windows.Forms;
 using System.Reflection.Metadata.Ecma335;
 using Date = Util.Date;
 using System.Runtime.CompilerServices;
-
-
-
+using System.Drawing.Configuration;
 
 public static class DatabaseConnector
 {
@@ -410,5 +408,23 @@ public static class DatabaseConnector
         // TODO: make this a function for databaseconnector
         // RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item)) part
         return (RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item)).Count() == 1);   
+    }
+
+    public static List<Image> getImages(ResultItem newItem)
+    {
+
+        int lastrowid;
+        List<string> colNames = new List<string>(new string[] { "" });
+
+
+
+        string ret = runStatement("SELECT * FROM image", ref colNames, out lastrowid);
+        //List<string> rawImages = ret.Split()
+        byte[] ret2 = new byte[ret.Length];
+        for (int j = 0; j < ret.Length; j++) {
+            ret2[j] = (byte) ret[j];
+        }
+        Image i = Image.FromStream(new MemoryStream(ret2));
+        return null;
     }
 }

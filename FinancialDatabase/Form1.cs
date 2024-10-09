@@ -188,8 +188,9 @@ namespace FinancialDatabase
                     throw new Exception("Index of the search results to set the new currItem to in Form1.TabController setCurrItem() is greater than the number of items in the search result");
                 }
                 ResultItem indexItem = getCurrentItemsAt(index);
-
+                
                 ResultItem newItem = DatabaseConnector.getItem(indexItem.get_ITEM_ID());
+                List<Image> i = DatabaseConnector.getImages(newItem);
                 setCurrItem(newItem);
 
             }
@@ -400,8 +401,9 @@ namespace FinancialDatabase
 
             public void deleteItemFromDtb()
             {
-                
-                itemViewTab.deleteItem();
+
+                bool deletedItem = itemViewTab.deleteItem();
+                if (!deletedItem) { return; }
                 currItem = null;
                 currentItems.Clear();
                 currentItemSales.Clear();
