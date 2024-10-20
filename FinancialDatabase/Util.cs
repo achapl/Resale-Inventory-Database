@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 public class Util
@@ -9,6 +10,8 @@ public class Util
     public static double DEFAULT_DOUBLE = -1.0;
     public static string DEFAULT_STRING = null;
     public static Date DEFAULT_DATE = new Date(-1, -1, -1);
+    public static string imgStartToken = "'IMAGESTART***";
+    public static string imgEndToken   = "***IMAGEEND'";
     public Util()
 	{
 	}
@@ -155,7 +158,7 @@ public class Util
         }
         return s;
     }
-
+    
     // Split string inStr on commas, except the ones contained in strings inside of the string, encapsulated in quotes
     // ie: ('2521', 'name "of i\'tem', '43', 435, .etc) will be split into the list (strings represented w/o quotes for simplicity)
     //     { 2521,   name "of i\'tem,   43,  435, .etc }
@@ -183,28 +186,53 @@ public class Util
         {
             s = s.Substring(1, s.Length - 2);
         }
+
+
+        // Check for any raw images contained within the string
+        List<Tuple<int, int>> imgStartsAndEnds = new List<Tuple<int, int>>();
+        getImageStartEnds(s, out imgStartsAndEnds);
+
+
+        // Loop through the string to find top-level commas
         for (int i = 0; i < s.Length; i++)
         {
-            // If no quote char found yet, and current char is a quote char
-            if (onTopLevel && topLevelStartChars.Contains(s[i]))
+            char currChar = s[i];
+            char prevChar = '\0';
+            if (i > 0) prevChar = s[i - 1];
+            // Check for image attribute and handle seperately
+            bool contLargerLoop = false;
+            foreach (Tuple<int, int> pair in imgStartsAndEnds)
             {
-                endQuote = openAndCloseChars[s[i]];
+                if (i == pair.Item1)
+                {
+                    result.Add(s.Substring(i + imgStartToken.Length, pair.Item2 - i - imgStartToken.Length));
+                    i = pair.Item2 + imgEndToken.Length;
+                    lastTopLevelComma = i;
+                    contLargerLoop = true;
+                }
+            }
+            if (contLargerLoop) continue;
+
+
+            // If no quote char found yet, and current char is a quote char
+            if (onTopLevel && topLevelStartChars.Contains(currChar))
+            {
+                endQuote = openAndCloseChars[currChar];
                 onTopLevel = false;
                 continue;
             }
 
             // If another quote has been found underneath top level quote
-            if (!onTopLevel && s[i] == endQuote)
+            if (!onTopLevel && currChar == endQuote)
             {
                 // Edge case out-of-bounds check
-                if (i > 0 && s[i - 1] != escape)
+                if (i > 0 && prevChar != escape)
                 {
                     onTopLevel = true;
                 }
                 else if (i <= 0)
                 {
-                    Console.WriteLine("ERROR splitOnTopLevelCommas - current index <= 0, when it should be past zero for index: " + i);
-                    return new List<string>();
+                    throw new Exception("ERROR splitOnTopLevelCommas - current index <= 0, when it should be past zero for index: " + i);
                 }
                 // Else, inStr[i] - 1 must be escape char, skip continue to next char
                 else
@@ -215,7 +243,7 @@ public class Util
 
 
             // Top level comma to split on is found
-            if (onTopLevel && s[i] == ',')
+            if (onTopLevel && currChar == ',')
             {
                 splitToBeAdded = s.Substring(lastTopLevelComma, i - lastTopLevelComma);
                 splitToBeAdded = splitOnTopLevelCommas_StringCleanup(splitToBeAdded);
@@ -226,13 +254,27 @@ public class Util
 
         }
         // Add last element, (which doesn't have a comma after it)
-
-        splitToBeAdded = s.Substring(lastTopLevelComma);
-        splitToBeAdded = splitOnTopLevelCommas_StringCleanup(splitToBeAdded);
-        result.Add(splitToBeAdded);
+        if (lastTopLevelComma < s.Length - 1)
+        {
+            splitToBeAdded = s.Substring(lastTopLevelComma);
+            splitToBeAdded = splitOnTopLevelCommas_StringCleanup(splitToBeAdded);
+            result.Add(splitToBeAdded);
+        }
 
         return result;
 
+    }
+
+    public static int substringCount(string str, string substr)
+    {
+        int count = -1;
+        int index = 0;
+        while (index != -1)
+        {
+            index = str.IndexOf(substr, index++);
+            count++;
+        }
+        return count;
     }
 
     // Given a string, it will split it on the first character
@@ -257,6 +299,12 @@ public class Util
 
         List<string> result = new List<string>();
 
+
+        // Check for any raw images contained within the string
+        List<Tuple<int, int>> imgStartsAndEnds = new List<Tuple<int, int>>();
+        getImageStartEnds(inStr, out imgStartsAndEnds);
+
+
         // Splits on top level pairings.
         // ie: () (()) () ((()())) splits into  [(), (()), (), ((()()))]
         char[] trimChars = { left, right };
@@ -266,6 +314,19 @@ public class Util
         char c;
         for (int i = 0; i < inStr.Length; i++)
         {
+
+            // Check for image attribute and handle seperately
+            bool contLargerLoop = false;
+            foreach (Tuple<int, int> pair in imgStartsAndEnds)
+            {
+                if (i == pair.Item1)
+                {
+                    i = pair.Item2 + imgEndToken.Length - 1;
+                    contLargerLoop = true;
+                }
+            }
+            if (contLargerLoop) continue;
+
             c = inStr[i];
             if (c == left)
             {
@@ -295,6 +356,39 @@ public class Util
         }
 
         return result;
+    }
+
+    private static void getImageStartEnds(string inStr, out List<Tuple<int, int>> imgStartsAndEnds)
+    {
+        imgStartsAndEnds = new List<Tuple<int, int>>();
+        if (inStr == null || inStr.Length == 0) return;
+        int start = 0;
+        int end = 0;
+        int count = 0;
+        while (start < inStr.Length)
+        {
+            // 200 is arbitrarily large number.
+            // Images would only be searched for on a single item basis
+            // Should be <200 images per item
+            count++;
+            if (count > 200) { throw new Exception("Error: getImageStartEnds: Possible Infinite Loop"); }
+
+
+            // Find next start and end of an image
+            start = inStr.Substring(end).IndexOf(imgStartToken);
+            if (start == -1) break;
+
+            end = inStr.Substring(start).IndexOf(imgEndToken) + start;
+            if (end == -1) throw new Exception("ERROR: Util.getImageStartEnds: Could not find matching end token for image!");
+
+
+            // Add start and end, and return where the nearest commas will be
+            // assuming the tokene encompass the entire image string
+            imgStartsAndEnds.Add(new Tuple<int,int>(start,end));
+
+        }
+        
+
     }
 
     public struct Date

@@ -190,7 +190,9 @@ namespace FinancialDatabase
                 ResultItem indexItem = getCurrentItemsAt(index);
                 
                 ResultItem newItem = DatabaseConnector.getItem(indexItem.get_ITEM_ID());
+
                 List<Image> i = DatabaseConnector.getImages(newItem);
+
                 setCurrItem(newItem);
 
             }

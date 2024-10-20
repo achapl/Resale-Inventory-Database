@@ -32,7 +32,7 @@ public static class DatabaseConnector
         int lastrowid;
         List<string> colNames = new List<string>(new string[] { "" });
         string rawTablenames = runStatement(query, ref colNames, out lastrowid);
-        List<string> tableNames = new List<string>(rawTablenames.Substring(3, rawTablenames.Length - 7).Split("',), ('"));
+        List<string> tableNames = new List<string>(rawTablenames.Substring(3, rawTablenames.Length - 6).Split("'], ['"));
 
         return tableNames;
     }
@@ -156,9 +156,9 @@ public static class DatabaseConnector
         string retList;
 
         List<string> result = runPython(statement);
-        if (result[0].CompareTo("ERROR") == 0)
+        if (result[0].CompareTo("['ERROR']") == 0)
         {
-            Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
+            throw new Exception("ERROR: Invalid Statement/Query sent to database: " + statement + "\n" + "Python Exception: " + result[1]);
         }
         // Returns [0,1,2] -> result, colNames, cursor.lastrowid
         retList = result[0];
@@ -303,7 +303,7 @@ public static class DatabaseConnector
         }
         
         // Use Python
-        List<string> result = new List<string>(){ "","","" };
+        List<string> result2 = new List<string>(){ "","","" };
         using (Py.GIL())
         {
             // Modify path to work
@@ -319,13 +319,21 @@ public static class DatabaseConnector
             // ?? denotes alternative assignment to
             // result[n] if rawResult[n] is null
             string ErrMsg = "ERROR: NULL rawResult val in DatabaseConnector.cs";
-            result[0] = rawResult[0].ToString() ?? ErrMsg;
-            result[1] = rawResult[1].ToString() ?? ErrMsg;
-            result[2] = rawResult[2].ToString() ?? ErrMsg;
+            List<List<string>> result = new List<List<string>>();
+            for(int i = 0; i < rawResult[0].Length(); i++)
+            {
+                //for (int j = 0; j < rawResult[0,i].Length(); j++)
+                {
+                  //  result[i][j] = rawResult[0,i,j].ToString();
+                }
+            }
+            result2[0] = rawResult[0].ToString() ?? ErrMsg;
+            result2[1] = rawResult[1].ToString() ?? ErrMsg;
+            result2[2] = rawResult[2].ToString() ?? ErrMsg;
 
 
         }
-        return result;
+        return result2;
     }
 
     private static List<ResultItem> parseItemSearchResult(string rawResult, List<string> colNames)
@@ -334,7 +342,7 @@ public static class DatabaseConnector
         // raw result is now the format "(itemName, saleID, .etc)(item2Name, item2ID, .etc)"
         // Seperate whole string into list of multiple item strings, "[ (itemName, saleID, .etc), (item2Name, item2ID, .etc) ]"
         rawResult = rawResult.Trim('[', ']');
-        List<string> rawItems = Util.PairedCharTopLevelSplit(rawResult, '(');
+        List<string> rawItems = new List<string>(rawResult.Split("], ["));//Util.PairedCharTopLevelSplit(rawResult, '(');
 
         List<ResultItem> results = new List<ResultItem>();
         foreach(string rawItem in rawItems)
@@ -418,13 +426,160 @@ public static class DatabaseConnector
 
 
 
-        string ret = runStatement("SELECT * FROM image", ref colNames, out lastrowid);
-        //List<string> rawImages = ret.Split()
-        byte[] ret2 = new byte[ret.Length];
-        for (int j = 0; j < ret.Length; j++) {
-            ret2[j] = (byte) ret[j];
+        string rawResult = runStatement("SELECT * FROM image WHERE ItemID = " + newItem.get_ITEM_ID(), ref colNames, out lastrowid);
+
+
+        // No images returned from query
+        // TODO: Possibly select a default image
+        if (rawResult.CompareTo("[]") == 0) { return new List<Image>(); }
+
+        rawResult = rawResult.Substring(1, rawResult.Length - 2);
+        List<string> rawItems = Util.PairedCharTopLevelSplit(rawResult, '[');
+
+        List<Image> results = new List<Image>();
+        foreach (string rawItem in rawItems)
+        {
+            // Seperate each item into individual item attributes to make a ResultItem with it
+            List<string> imageAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
+            // Trim off "b'[byteArr]'"
+
+            byte[] ret2 = new byte[imageAttributes[1].Length];
+
+            imageAttributes[1] = imageAttributes[1].Trim(new char[] { '[', ']' });
+            
+            List<string> s = new List<string>(imageAttributes[1].Split(", "));
+            for (int j = 0; j < s.Count; j++)
+            {
+                string elem = s[j];
+                ret2[j] = (byte)Int32.Parse(elem);
+            }
+            /* byte[] ret3 = convertToBytes(ret2);
+            byte[] ret2A = new byte[10000];
+            byte[] ret3A = new byte[10000];
+            
+            for(int k = 0; k < 10000; k++)
+            {
+                ret2A[k] = ret2[k];
+                ret3A[k] = ret3[k];
+                
+            }*/
+            Image i = Image.FromStream(new MemoryStream(ret2));
+
+            results.Add(i);
         }
-        Image i = Image.FromStream(new MemoryStream(ret2));
-        return null;
+
+        
+        return results;
+    }
+
+    // Get rid of all '\x' ()
+    private static byte[] convertToBytes(byte[] bytesIN)
+    {
+        byte[] bytesOUT = new byte[bytesIN.Length];
+        int iOUT = 0;
+        int iIN = 0;
+        for (iIN = 0; iIN < bytesIN.Length; iIN++)
+        {
+            /*if ( (iIN == 0 &&
+                iIN < bytesIN.Length - 4 &&
+                bytesIN[iIN] == (byte)'\\' &&
+                bytesIN[iIN + 1] == (byte)'\\' &&
+                bytesIN[iIN + 2] == (byte)'\\' &&
+                bytesIN[iIN + 3] == (byte)'\\') 
+                ||
+                (iIN > 0 &&
+                iIN < bytesIN.Length - 4 &&
+                bytesIN[iIN - 1] != (byte)'\\' &&
+                bytesIN[iIN + 0] == (byte)'\\' &&
+                bytesIN[iIN + 1] == (byte)'\\' &&
+                bytesIN[iIN + 2] == (byte)'\\' &&
+                bytesIN[iIN + 3] == (byte)'\\'))
+            {
+                bytesOUT[iOUT] = (byte)'\\';
+                iOUT++;
+                iIN += 3;
+                continue;
+            }*/
+
+            if (iIN < bytesIN.Length - 1 &&
+                iIN > 0 &&
+                bytesIN[iIN - 1] != (byte)'\\' &&
+                bytesIN[iIN] == (byte)'\\' &&
+                bytesIN[iIN + 1] == (byte)'\\')
+            {
+                if (iIN > 0 && bytesIN[iIN - 1] != (byte)'\\')
+                    // Skip over '\\x'
+                    if (iIN < bytesIN.Length - 4 &&
+                        bytesIN[iIN + 2] == (byte)'x')
+                    {
+                        char firstDig = (char)Int32.Parse(bytesIN[iIN + 3].ToString());
+                        char secondDig = (char)Int32.Parse(bytesIN[iIN + 4].ToString());
+                        char[] combChars = { firstDig, secondDig };
+                        string total = "0x" + new string(combChars);
+                        int totalINT = Convert.ToInt32(total, 16);
+                        bytesOUT[iOUT] = (byte)totalINT;
+                        iIN += 4;
+                        iOUT++;
+                        continue;
+                    }
+
+                    // Change '\\r' to carriage return
+                    else if (bytesIN[iIN + 2] == (byte)'r')
+                    {
+                        bytesOUT[iOUT] = (byte)13;
+                    }
+
+                    else if (bytesIN[iIN + 2] == (byte)'n')
+                    {
+                        bytesOUT[iOUT] = (byte)10;
+                    }
+                    else
+                    {
+                        bytesOUT[iOUT] = bytesIN[iIN];
+                        iOUT++;
+                        continue;
+                    }
+                iIN += 2;
+            }
+            // Special case for first bytes of the  array
+            else if (
+                iIN == 0 &&
+                bytesIN[iIN] == (byte)'\\' &&
+                bytesIN[iIN + 1] == (byte)'\\')
+                {
+                    // Skip over '\\x'
+                    if (iIN < bytesIN.Length - 4 &&
+                        bytesIN[iIN + 2] == (byte)'x')
+                    {
+                        char firstDig = (char)Int32.Parse(bytesIN[iIN + 3].ToString());
+                        char secondDig = (char)Int32.Parse(bytesIN[iIN + 4].ToString());
+                        char[] combChars = { firstDig, secondDig };
+                        string total = "0x" + new string(combChars);
+                        int totalINT = Convert.ToInt32(total, 16);
+                        bytesOUT[iOUT] = (byte)totalINT;
+                        iIN += 4;
+                        iOUT++;
+                        continue;
+                    }
+
+                    // Change '\\r' to carriage return
+                    else if (bytesIN[iIN + 2] == (byte)'r')
+                    {
+                        bytesOUT[iOUT] = (byte)13;
+                    }
+
+                    else if (bytesIN[iIN + 2] == (byte)'n')
+                    {
+                        bytesOUT[iOUT] = (byte)10;
+                    }
+                iIN += 2;
+            }
+            else
+            {
+                bytesOUT[iOUT] = bytesIN[iIN];
+            }
+            iOUT++;
+        }
+        return bytesOUT;
     }
 }

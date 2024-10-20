@@ -47,6 +47,9 @@
             comboBox1 = new ComboBox();
             menuStrip1 = new MenuStrip();
             ItemTab = new TabPage();
+            pictureBox1 = new PictureBox();
+            dataGridView1 = new DataGridView();
+            Image = new DataGridViewImageColumn();
             button12 = new Button();
             label43 = new Label();
             button5 = new Button();
@@ -135,17 +138,14 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
-            dataGridView1 = new DataGridView();
-            pictureBox1 = new PictureBox();
-            Image = new DataGridViewImageColumn();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             PurchaseTab.SuspendLayout();
             Sale.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)resultItemBindingSource).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // manualQuery
@@ -391,6 +391,28 @@
             ItemTab.TabIndex = 1;
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Location = new Point(651, 18);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(443, 413);
+            pictureBox1.TabIndex = 59;
+            pictureBox1.TabStop = false;
+            // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Image });
+            dataGridView1.Location = new Point(530, 291);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(240, 150);
+            dataGridView1.TabIndex = 58;
+            // 
+            // Image
+            // 
+            Image.HeaderText = "Image";
+            Image.Name = "Image";
             // 
             // button12
             // 
@@ -1263,29 +1285,6 @@
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
-            // dataGridView1
-            // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Image });
-            dataGridView1.Location = new Point(651, 120);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(240, 150);
-            dataGridView1.TabIndex = 58;
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.Image = Properties.Resources.s_l1600;
-            pictureBox1.Location = new Point(651, 18);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(189, 69);
-            pictureBox1.TabIndex = 59;
-            pictureBox1.TabStop = false;
-            // 
-            // Image
-            // 
-            Image.HeaderText = "Image";
-            Image.Name = "Image";
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1302,13 +1301,13 @@
             SearchTab.PerformLayout();
             ItemTab.ResumeLayout(false);
             ItemTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             PurchaseTab.ResumeLayout(false);
             PurchaseTab.PerformLayout();
             Sale.ResumeLayout(false);
             Sale.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)resultItemBindingSource).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
 
