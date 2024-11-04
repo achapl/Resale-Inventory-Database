@@ -188,7 +188,7 @@ namespace FinancialDatabase
                     throw new Exception("Index of the search results to set the new currItem to in Form1.TabController setCurrItem() is greater than the number of items in the search result");
                 }
                 ResultItem indexItem = getCurrentItemsAt(index);
-                
+
                 ResultItem newItem = DatabaseConnector.getItem(indexItem.get_ITEM_ID());
 
                 List<Image> i = DatabaseConnector.getImages(newItem);
@@ -569,6 +569,16 @@ namespace FinancialDatabase
         private void button12_Click(object sender, EventArgs e)
         {
             tabControl.deleteItemFromDtb();
+        }
+
+
+        private void customControl11_Click(object sender, EventArgs e)
+        {
+            MouseEventArgs mea = (MouseEventArgs)e;
+            int currIndex = this.customControl11.getRowNum(mea.Y);
+            tabControl.setCurrItem(currIndex);
+            tabControl1.SelectTab(tabControl.itemViewTabNum);
+
         }
     }
 }

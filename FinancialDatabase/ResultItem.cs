@@ -43,6 +43,9 @@ public class ResultItem : IEquatable<ResultItem>
     int Weight;
     string Notes_shipping;
 
+    // From image table
+    List<Image> images;
+
     // Extra
     double totalSales;
 
@@ -94,6 +97,9 @@ public class ResultItem : IEquatable<ResultItem>
         Height          = Util.DEFAULT_INT;
         Weight          = Util.DEFAULT_INT;
         Notes_shipping  = Util.DEFAULT_STRING;
+
+        //From image table
+        images       = Util.DEFAULT_IMAGES;
         
         // Extra
         totalSales      = SaleTab.getTotalSales(this);
@@ -451,6 +457,12 @@ public class ResultItem : IEquatable<ResultItem>
     }
 
 
+    public bool hasImageEntry()
+    {
+        return this.images != Util.DEFAULT_IMAGES;
+    }
+
+
     // From item table
     public int get_ITEM_ID()
     {
@@ -751,6 +763,18 @@ public class ResultItem : IEquatable<ResultItem>
         }
     }
 
+    // From image table
+    public List<Image> get_Images() {
+        if (images == Util.DEFAULT_IMAGES || images == null)
+        {
+            return Util.DEFAULT_IMAGES;
+        }
+        else
+        {
+            return images;
+        }
+    }
+
     // Extra
     public double getTotalSales()
     {
@@ -964,6 +988,24 @@ public class ResultItem : IEquatable<ResultItem>
         }
     }
     public void set_Notes_shipping(string Notes_shipping) => this.Notes_shipping = Notes_shipping;
+
+    // From image table
+    public void clear_images() => this.images = Util.DEFAULT_IMAGES;
+    public void add_image(Image image) => this.images.Append(image);
+    public void add_images(List<Image> images)
+    {
+        if (images.Count > 0)
+        {
+            this.images.AddRange(images);
+        }
+    }
+    public void set_images(List<Image> images)
+    {
+        if (images.Count > 0)
+        {
+            this.images = images;
+        }
+    }
 
     // Extra
     public void set_totalSales(double totalSales)

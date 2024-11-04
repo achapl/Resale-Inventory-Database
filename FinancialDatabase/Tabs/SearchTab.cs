@@ -114,6 +114,7 @@ public class SearchTab
 
         List<ResultItem> result = runSearch(Q);
         string itemStr = "";
+        Form1.customControl11.clearItems();
         for (int i = 0; i < result.Count; i++)
         {
             itemStr = result[i].get_Name();
@@ -121,6 +122,8 @@ public class SearchTab
             if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
             Form1.listBox1.Items.Add(itemStr);
             tabController.currentItems.Add(result[i]);
+            Form1.customControl11.addRow(result[i].get_Images()[0], result[i].get_Name());
+            
         }
     }
 

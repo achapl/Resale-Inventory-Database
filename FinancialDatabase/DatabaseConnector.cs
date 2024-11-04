@@ -136,8 +136,20 @@ public static class DatabaseConnector
         string queryOutput = runStatement(query, ref colNames, out lastrowid);
 
         List<ResultItem> parsedItems = parseItemSearchResult(queryOutput, colNames);
+        parsedItems = getSearchImages(parsedItems);
+        /*TODO: Delete this if getSearchImages works faster
+         * foreach(ResultItem item in parsedItems)
+        {
+            item.set_images(getImages(item));
+
+        }*/
 
         return parsedItems;
+    }
+
+    private static List<ResultItem> getSearchImages(List<ResultItem> parsedItems)
+    {
+        throw new NotImplementedException();
     }
 
     public static List<Sale> RunSaleSearchQuery(string query)
@@ -342,6 +354,12 @@ public static class DatabaseConnector
         // raw result is now the format "(itemName, saleID, .etc)(item2Name, item2ID, .etc)"
         // Seperate whole string into list of multiple item strings, "[ (itemName, saleID, .etc), (item2Name, item2ID, .etc) ]"
         rawResult = rawResult.Trim('[', ']');
+
+        if (rawResult.CompareTo("") == 0)
+        {
+            return new List<ResultItem>();
+        }
+
         List<string> rawItems = new List<string>(rawResult.Split("], ["));//Util.PairedCharTopLevelSplit(rawResult, '(');
 
         List<ResultItem> results = new List<ResultItem>();
@@ -431,7 +449,7 @@ public static class DatabaseConnector
 
         // No images returned from query
         // TODO: Possibly select a default image
-        if (rawResult.CompareTo("[]") == 0) { return new List<Image>(); }
+        if (rawResult.CompareTo("[]") == 0) { return Util.DEFAULT_IMAGES; }
 
         rawResult = rawResult.Substring(1, rawResult.Length - 2);
         List<string> rawItems = Util.PairedCharTopLevelSplit(rawResult, '[');
@@ -453,16 +471,6 @@ public static class DatabaseConnector
                 string elem = s[j];
                 ret2[j] = (byte)Int32.Parse(elem);
             }
-            /* byte[] ret3 = convertToBytes(ret2);
-            byte[] ret2A = new byte[10000];
-            byte[] ret3A = new byte[10000];
-            
-            for(int k = 0; k < 10000; k++)
-            {
-                ret2A[k] = ret2[k];
-                ret3A[k] = ret3[k];
-                
-            }*/
             Image i = Image.FromStream(new MemoryStream(ret2));
 
             results.Add(i);

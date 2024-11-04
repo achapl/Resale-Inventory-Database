@@ -4,7 +4,6 @@ import sys
 
 errorCount = 0
 
-f = open("C:/Users/Owner/Desktop/debug.txt", 'a')
 
 
 def convertImageData(result, colNames):
@@ -51,12 +50,12 @@ def runQuery(query):
 
 
 	except Exception as e:
+		cursor.close()
+		cnx.close()
 		global errorCount
 		errorCount += 1
 		print("!!!ERROR!!! " + str(e), file=sys.stderr)
 		print(query, file=sys.stderr)
 		print("", file=sys.stdout)
-		f.close()
 		return ["ERROR"], [e], [-1]
-	f.close()
 	return result, colNames, cursor.lastrowid

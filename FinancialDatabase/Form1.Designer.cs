@@ -34,6 +34,7 @@
             textBox1 = new TextBox();
             tabControl1 = new TabControl();
             SearchTab = new TabPage();
+            customControl11 = new CustomControl1();
             checkBox5 = new CheckBox();
             checkBox3 = new CheckBox();
             checkBox2 = new CheckBox();
@@ -48,8 +49,6 @@
             menuStrip1 = new MenuStrip();
             ItemTab = new TabPage();
             pictureBox1 = new PictureBox();
-            dataGridView1 = new DataGridView();
-            Image = new DataGridViewImageColumn();
             button12 = new Button();
             label43 = new Label();
             button5 = new Button();
@@ -142,7 +141,6 @@
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             PurchaseTab.SuspendLayout();
             Sale.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)resultItemBindingSource).BeginInit();
@@ -194,6 +192,7 @@
             // 
             // SearchTab
             // 
+            SearchTab.Controls.Add(customControl11);
             SearchTab.Controls.Add(checkBox5);
             SearchTab.Controls.Add(checkBox3);
             SearchTab.Controls.Add(listBox1);
@@ -217,6 +216,17 @@
             SearchTab.TabIndex = 0;
             SearchTab.Text = "Search";
             SearchTab.UseVisualStyleBackColor = true;
+            // 
+            // customControl11
+            // 
+            customControl11.AutoScroll = true;
+            customControl11.AutoScrollMinSize = new Size(191, 180);
+            customControl11.Location = new Point(191, 207);
+            customControl11.Name = "customControl11";
+            customControl11.Size = new Size(293, 198);
+            customControl11.TabIndex = 18;
+            customControl11.Text = "customControl11";
+            customControl11.Click += customControl11_Click;
             // 
             // checkBox5
             // 
@@ -346,7 +356,6 @@
             // ItemTab
             // 
             ItemTab.Controls.Add(pictureBox1);
-            ItemTab.Controls.Add(dataGridView1);
             ItemTab.Controls.Add(button12);
             ItemTab.Controls.Add(label43);
             ItemTab.Controls.Add(button5);
@@ -399,20 +408,6 @@
             pictureBox1.Size = new Size(443, 413);
             pictureBox1.TabIndex = 59;
             pictureBox1.TabStop = false;
-            // 
-            // dataGridView1
-            // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Image });
-            dataGridView1.Location = new Point(530, 291);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(240, 150);
-            dataGridView1.TabIndex = 58;
-            // 
-            // Image
-            // 
-            Image.HeaderText = "Image";
-            Image.Name = "Image";
             // 
             // button12
             // 
@@ -1302,7 +1297,6 @@
             ItemTab.ResumeLayout(false);
             ItemTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             PurchaseTab.ResumeLayout(false);
             PurchaseTab.PerformLayout();
             Sale.ResumeLayout(false);
@@ -1422,10 +1416,9 @@
         public Label label49;
         public Button button10;
         public Button button11;
-        private Button button12;
-        private PictureBox pictureBox1;
-        private DataGridView dataGridView1;
-        private DataGridViewImageColumn Image;
+        public Button button12;
+        public PictureBox pictureBox1;
+        public CustomControl1 customControl11;
     }
 }
 
