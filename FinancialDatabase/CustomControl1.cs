@@ -86,6 +86,8 @@ namespace FinancialDatabase
         internal int getRowNum(int y)
         {
             double height = this.rowHeight + this.rowPadding;
+            int scrollAmount = this.VerticalScroll.Value;
+            y += scrollAmount;
             return (int) Math.Ceiling((double)y / height) - 1; 
         }
 

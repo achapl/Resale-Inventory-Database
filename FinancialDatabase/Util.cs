@@ -10,8 +10,8 @@ public class Util
     public static double DEFAULT_DOUBLE = -1.0;
     public static string DEFAULT_STRING = null;
     public static Date DEFAULT_DATE = new Date(-1, -1, -1);
-    public static Image DEFAULT_IMAGE = null;
-    public static List<Image> DEFAULT_IMAGES = new List<Image>() { Image.FromFile(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Resources\NoImage.png") };
+    public static Image DEFAULT_IMAGE = Image.FromFile(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Resources\NoImage.png");
+    public static List<Image> DEFAULT_IMAGES = new List<Image>() { DEFAULT_IMAGE };
     public static string imgStartToken = "'IMAGESTART***";
     public static string imgEndToken   = "***IMAGEEND'";
     public Util()

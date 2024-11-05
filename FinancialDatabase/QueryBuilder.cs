@@ -326,5 +326,25 @@ namespace FinancialDatabase
         {
             return "DELETE FROM item WHERE ITEM_ID = " + item.get_ITEM_ID() + ";";
         }
+
+        public static string buildThumbnailsSearchQuery(List<ResultItem> parsedItems)
+        {
+            if (parsedItems == null || parsedItems.Count == 0) { throw new Exception("ERROR: QuyeryBuilder.buildThumbnailsSearchQuery(): Null or Empty list passed into it"); }
+
+            string query = "SELECT image.ItemID, thumbnail.thumbnail FROM image JOIN thumbnail ON image.thumbnailID = thumbnail.ThumbnailID WHERE image.ItemID IN (";
+            query += parsedItems[0].get_ITEM_ID().ToString();
+
+            if (parsedItems.Count > 1)
+            {
+                foreach (ResultItem item in parsedItems[1..])
+                {
+                    query += ", " + item.get_ITEM_ID().ToString();
+                }
+            }
+
+            query += ") ORDER BY image.ItemID;";
+            return query;
+
+        }
     }
 }

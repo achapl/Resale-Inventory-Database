@@ -7,11 +7,20 @@ errorCount = 0
 
 
 def convertImageData(result, colNames):
-	if "image" in colNames:
+	if ("image" in colNames) or ("thumbnail" in colNames):
+		index = 0
+		if "image" in colNames:
 			index = colNames.index("image")
-			for row in result:
-				row2 = [x for x in row[index]]
-				row[index] = row2
+		elif "thumbnail" in colNames:
+			index = colNames.index("thumbnail")
+
+		for row in result:
+			row2 = [x for x in row[index]]
+			row[index] = row2
+	
+		for row in result:
+			row2 = [x for x in row[index]]
+			row[index] = row2
 	return result
 
 def runQuery(query):

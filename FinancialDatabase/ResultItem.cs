@@ -991,7 +991,16 @@ public class ResultItem : IEquatable<ResultItem>
 
     // From image table
     public void clear_images() => this.images = Util.DEFAULT_IMAGES;
-    public void add_image(Image image) => this.images.Append(image);
+    public void add_image(Image image) 
+    {
+        if (images == null)
+        {
+            set_images(new List<Image>() { image });
+        } else
+        {
+            this.images.Append(image);
+        }
+    }
     public void add_images(List<Image> images)
     {
         if (images.Count > 0)

@@ -137,19 +137,64 @@ public static class DatabaseConnector
 
         List<ResultItem> parsedItems = parseItemSearchResult(queryOutput, colNames);
         parsedItems = getSearchImages(parsedItems);
-        /*TODO: Delete this if getSearchImages works faster
-         * foreach(ResultItem item in parsedItems)
-        {
-            item.set_images(getImages(item));
-
-        }*/
 
         return parsedItems;
     }
 
     private static List<ResultItem> getSearchImages(List<ResultItem> parsedItems)
     {
-        throw new NotImplementedException();
+        if (parsedItems.Count == 0)
+        {
+            return new List<ResultItem>();
+        }
+
+
+        string query = QueryBuilder.buildThumbnailsSearchQuery(parsedItems);
+        string rawResult = runStatement(query);
+
+        rawResult = rawResult.Substring(1, rawResult.Length - 2);
+        List<string> rawItems = Util.PairedCharTopLevelSplit(rawResult, '[');
+
+        Dictionary<int, Image> results = new Dictionary<int, Image>();
+        foreach (string rawItem in rawItems)
+        {
+            // Seperate each item into individual item attributes to make a ResultItem with it
+            List<string> imageAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
+
+            int itemID = Int32.Parse(imageAttributes[0]);
+
+            byte[] imageRawBytes = new byte[imageAttributes[1].Length];
+
+            imageAttributes[1] = imageAttributes[1].Trim(new char[] { '[', ']' });
+
+            List<string> s = new List<string>(imageAttributes[1].Split(", "));
+            for (int j = 0; j < s.Count; j++)
+            {
+                string elem = s[j];
+                imageRawBytes[j] = (byte)Int32.Parse(elem);
+            }
+            Image i = Image.FromStream(new MemoryStream(imageRawBytes));
+
+            if (!results.ContainsKey(itemID))
+            {
+                results.Add(itemID, i);
+            }
+        }
+
+        Image thumbnail;
+        foreach (ResultItem item in parsedItems)
+        {
+            if (results.TryGetValue(item.get_ITEM_ID(), out thumbnail))
+            {
+                item.add_image(thumbnail);
+            } else
+            {
+                item.add_image(Util.DEFAULT_IMAGE);
+            }
+            
+        }
+
+        return parsedItems;
     }
 
     public static List<Sale> RunSaleSearchQuery(string query)
@@ -157,6 +202,12 @@ public static class DatabaseConnector
         int lastrowid;
         List<string> colNames = new List<string>(new string[] { "" });
         string queryOutput = runStatement(query, ref colNames, out lastrowid);
+
+        // No sales found, return empty list
+        if (queryOutput.CompareTo("[]") == 0)
+        {
+            return new List<Sale>();
+        }
 
         List<Sale> parsedItems = parseSaleSearchResult(queryOutput, colNames);
 
@@ -199,7 +250,7 @@ public static class DatabaseConnector
         string retList;
 
         List<string> result = runPython(statement);
-        if (result[0].CompareTo("ERROR") == 0)
+        if (result[0].CompareTo("['ERROR']") == 0)
         {
             Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
         }
@@ -214,7 +265,7 @@ public static class DatabaseConnector
         string retList;
 
         List<string> result = runPython(statement);
-        if (result[0].CompareTo("ERROR") == 0)
+        if (result[0].CompareTo("['ERROR']") == 0)
         {
             Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
         }
@@ -348,19 +399,44 @@ public static class DatabaseConnector
         return result2;
     }
 
+
+    // raw result is now the format "[(itemName, itemID, .etc)(item2Name, item2ID, .etc)]"
+    // Seperate whole string into list of multiple item strings, "List<string>{ "(itemName, itemID, .etc)", "(item2Name, item2ID, .etc)" }"
+    private static List<string> parseMySqlResultIntoItems(string rawResult)
+    {
+        if (rawResult.CompareTo("") == 0)
+        {
+            return new List<String>();
+        }
+
+        // Note format changes to square brackets if any attribute **contains parenthesis**
+        // Example: [[itemName, Date(1/1/11), .etc], [item2Name, Date(1/1/11), .etc]]
+        rawResult = Util.myTrim(rawResult, new string[] { "[", "]" });
+
+        List<string> rawItems = new List<string>();
+
+        // Split the rawResult into rawItems based on whether mysql sends each returned row encapsulated in '[]' or '()'
+        // Which is based on whether there exist parenthesises inside of an attribute or not (see above)
+        if (rawResult.Length > 0 && rawResult[0] == '[')
+        {
+            rawItems = Util.PairedCharTopLevelSplit(rawResult, '[');
+        }
+        else if (rawResult.Length > 0 && rawResult[0] == '(')
+        {
+            rawItems = Util.PairedCharTopLevelSplit(rawResult, '(');
+        }
+        else
+        {
+            throw new Exception("Error: Unexpected character for when parsing individual search results: " + rawResult[0]);
+        }
+        return rawItems;
+    }
+
+
     private static List<ResultItem> parseItemSearchResult(string rawResult, List<string> colNames)
     {
 
-        // raw result is now the format "(itemName, saleID, .etc)(item2Name, item2ID, .etc)"
-        // Seperate whole string into list of multiple item strings, "[ (itemName, saleID, .etc), (item2Name, item2ID, .etc) ]"
-        rawResult = rawResult.Trim('[', ']');
-
-        if (rawResult.CompareTo("") == 0)
-        {
-            return new List<ResultItem>();
-        }
-
-        List<string> rawItems = new List<string>(rawResult.Split("], ["));//Util.PairedCharTopLevelSplit(rawResult, '(');
+        List<string> rawItems = parseMySqlResultIntoItems(rawResult);
 
         List<ResultItem> results = new List<ResultItem>();
         foreach(string rawItem in rawItems)
@@ -375,10 +451,7 @@ public static class DatabaseConnector
 
     private static List<Sale> parseSaleSearchResult(string rawResult, List<string> colNames)
     {
-        // raw result is now the format "(saleAmount, saleID, .etc)(sale2Amount, sale2ID, .etc)"
-        // Seperate whole string into list of multiple sale strings, "[ (saleAmount, saleID, .etc), (sale2Amount, sale2ID, .etc) ]"
-        rawResult = rawResult.Trim('[', ']');
-        List<string> rawItems = Util.PairedCharTopLevelSplit(rawResult, '(');
+        List<string> rawItems = parseMySqlResultIntoItems(rawResult);
 
         List<Sale> results = new List<Sale>();
         foreach (string rawItem in rawItems)
