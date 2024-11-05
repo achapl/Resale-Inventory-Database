@@ -57,6 +57,7 @@ namespace FinancialDatabase
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
+            pe.Graphics.Clear(this.BackColor);
             pe.Graphics.TranslateTransform(this.AutoScrollPosition.X, this.AutoScrollPosition.Y);
             pe.Graphics.DrawRectangle(new Pen(this.BackColor), new Rectangle(this.Location, this.Size));
 
@@ -80,7 +81,7 @@ namespace FinancialDatabase
             if (maxRows * (rowHeight + rowPadding) > this.AutoScrollMinSize.Height) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Height, maxRows * (rowHeight + rowPadding)); }
             if (maxRows * (rowHeight + rowPadding) < this.AutoScrollMinSize.Height + (rowHeight + rowPadding)) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Height, (maxRows+1) * (rowHeight + rowPadding)); }
             pe.Graphics.DrawImage(r.i, new Point(0,rowNum*(rowHeight + rowPadding)));
-            pe.Graphics.DrawString(r.name, this.Font, new SolidBrush(Color.Black), new PointF(maxImgWidth + imageTextPadding, rowNum * (rowHeight + rowPadding) + rowHeight / 2 - this.FontHeight / 2));
+            pe.Graphics.DrawString(r.name, this.Font, new SolidBrush(Color.Black), new PointF(maxImgWidth + imageTextPadding, rowNum * (rowHeight + rowPadding) + rowHeight / 2 - this.FontHeight));
         }
 
         internal int getRowNum(int y)
@@ -99,8 +100,12 @@ namespace FinancialDatabase
         public void clearItems()
         {
             this.rowList.Clear();
-            this.Update();
 
+        }
+
+        public void updatePaint()
+        {
+            InvokePaint(this, new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle));
         }
     }
 }

@@ -292,6 +292,7 @@ namespace FinancialDatabase
             public void search()
             {
                 searchTab.search();
+                Form1.customControl11.updatePaint();
             }
 
             public void getItemViewUpdate()

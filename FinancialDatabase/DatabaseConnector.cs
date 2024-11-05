@@ -404,7 +404,7 @@ public static class DatabaseConnector
     // Seperate whole string into list of multiple item strings, "List<string>{ "(itemName, itemID, .etc)", "(item2Name, item2ID, .etc)" }"
     private static List<string> parseMySqlResultIntoItems(string rawResult)
     {
-        if (rawResult.CompareTo("") == 0)
+        if (rawResult.CompareTo("[]") == 0)
         {
             return new List<String>();
         }
