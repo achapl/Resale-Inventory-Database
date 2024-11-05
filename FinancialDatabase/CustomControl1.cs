@@ -91,7 +91,12 @@ namespace FinancialDatabase
             return (int) Math.Ceiling((double)y / height) - 1; 
         }
 
-        internal void clearItems()
+        public int countItems()
+        {
+            return this.rowList.Count();
+        }
+
+        public void clearItems()
         {
             this.rowList.Clear();
             this.Update();

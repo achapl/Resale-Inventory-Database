@@ -167,13 +167,13 @@ namespace FinancialDatabase
 
             private void clearItems()
             {
-                Form1.listBox1.Items.Clear();
+                Form1.customControl11.clearItems();
                 currentItems.Clear();
             }
 
             public void addItem(ResultItem newItem)
             {
-                Form1.listBox1.Items.Add(newItem.get_Name());
+                Form1.customControl11.addRow(newItem.get_Images()[0], newItem.get_Name());
                 currentItems.Add(newItem);
                 // TODO: CHECK IF newItem already in list
             }
@@ -183,7 +183,7 @@ namespace FinancialDatabase
             // Update the curr item given its position in the search results
             public void setCurrItem(int index)
             {
-                if (index > Form1.listBox1.Items.Count)
+                if (index > Form1.customControl11.countItems())
                 {
                     throw new Exception("Index of the search results to set the new currItem to in Form1.TabController setCurrItem() is greater than the number of items in the search result");
                 }
@@ -447,16 +447,6 @@ namespace FinancialDatabase
         private void button2_Click(object sender, EventArgs e)
         {
             tabControl.search();
-        }
-
-
-        // Search listbox double click
-        private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            int currIndex = this.listBox1.IndexFromPoint(e.Location); // listBox1.SelectedIndex???
-            tabControl.setCurrItem(currIndex);
-            tabControl1.SelectTab(tabControl.itemViewTabNum);
-
         }
 
         // Purchased Lot listbox double click

@@ -30,7 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             manualQuery = new Button();
-            listBox1 = new ListBox();
             textBox1 = new TextBox();
             tabControl1 = new TabControl();
             SearchTab = new TabPage();
@@ -157,17 +156,6 @@
             manualQuery.UseVisualStyleBackColor = true;
             manualQuery.Click += button1_Click;
             // 
-            // listBox1
-            // 
-            listBox1.FormattingEnabled = true;
-            listBox1.ItemHeight = 15;
-            listBox1.Location = new Point(538, 42);
-            listBox1.Margin = new Padding(4, 3, 4, 3);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(564, 409);
-            listBox1.TabIndex = 2;
-            listBox1.MouseDoubleClick += listBox1_MouseDoubleClick;
-            // 
             // textBox1
             // 
             textBox1.Location = new Point(7, 432);
@@ -195,7 +183,6 @@
             SearchTab.Controls.Add(customControl11);
             SearchTab.Controls.Add(checkBox5);
             SearchTab.Controls.Add(checkBox3);
-            SearchTab.Controls.Add(listBox1);
             SearchTab.Controls.Add(checkBox2);
             SearchTab.Controls.Add(checkBox1);
             SearchTab.Controls.Add(label2);
@@ -221,9 +208,9 @@
             // 
             customControl11.AutoScroll = true;
             customControl11.AutoScrollMinSize = new Size(191, 180);
-            customControl11.Location = new Point(191, 207);
+            customControl11.Location = new Point(538, 49);
             customControl11.Name = "customControl11";
-            customControl11.Size = new Size(293, 198);
+            customControl11.Size = new Size(566, 406);
             customControl11.TabIndex = 18;
             customControl11.Text = "customControl11";
             customControl11.Click += customControl11_Click;
@@ -1310,7 +1297,6 @@
 
         #endregion
         public System.Windows.Forms.Button manualQuery;
-        public System.Windows.Forms.ListBox listBox1;
         public System.Windows.Forms.TextBox textBox1;
         public System.Windows.Forms.TabControl tabControl1;
         public System.Windows.Forms.TabPage SearchTab;

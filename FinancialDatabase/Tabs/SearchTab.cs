@@ -88,7 +88,7 @@ public class SearchTab
     public void search()
     {
 
-        Form1.listBox1.Items.Clear();
+        Form1.customControl11.clearItems();
         tabController.currentItems.Clear();
         List<string> searchTerms = new List<string>(Form1.searchBox.Text.Split(' '));
         DateTime startDateRaw = Form1.dateTimePicker1.Value;
@@ -120,14 +120,13 @@ public class SearchTab
             itemStr = result[i].get_Name();
             if (priceCol) { itemStr = result[i].get_Amount_purchase() + ", " + itemStr; }
             if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
-            Form1.listBox1.Items.Add(itemStr);
+            Form1.customControl11.addRow(result[i].get_Images()[0], itemStr);
             tabController.currentItems.Add(result[i]);
-            Form1.customControl11.addRow(result[i].get_Images()[0], result[i].get_Name());
             
         }
     }
 
     public void clearItems() {
-        Form1.listBox1.Items.Clear();
+        Form1.customControl11.clearItems();
     }
 }
