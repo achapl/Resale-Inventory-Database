@@ -270,6 +270,7 @@ namespace FinancialDatabase
             private void setNewItemItemView(ResultItem newItem)
             {
                 itemViewTab.showItemAttributes(newItem);
+                itemViewTab.showItemPictures(newItem);
             }
 
             public void setNewItemSaleItem(ResultItem newItem)

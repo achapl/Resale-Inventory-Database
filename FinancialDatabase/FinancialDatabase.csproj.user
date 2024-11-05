@@ -4,6 +4,9 @@
     <Compile Update="CustomControl1.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="CustomControl2.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

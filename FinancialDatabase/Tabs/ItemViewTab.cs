@@ -377,4 +377,9 @@ public class ItemViewTab : Tab
 
         return true;
     }
+
+    public void showItemPictures(ResultItem newItem)
+    {
+        Form1.customControl21.setImages(newItem.get_Images());
+    }
 }

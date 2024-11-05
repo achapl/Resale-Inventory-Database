@@ -47,7 +47,7 @@
             comboBox1 = new ComboBox();
             menuStrip1 = new MenuStrip();
             ItemTab = new TabPage();
-            pictureBox1 = new PictureBox();
+            customControl21 = new CustomControl2();
             button12 = new Button();
             label43 = new Label();
             button5 = new Button();
@@ -139,7 +139,6 @@
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             PurchaseTab.SuspendLayout();
             Sale.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)resultItemBindingSource).BeginInit();
@@ -342,7 +341,7 @@
             // 
             // ItemTab
             // 
-            ItemTab.Controls.Add(pictureBox1);
+            ItemTab.Controls.Add(customControl21);
             ItemTab.Controls.Add(button12);
             ItemTab.Controls.Add(label43);
             ItemTab.Controls.Add(button5);
@@ -388,13 +387,13 @@
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
             // 
-            // pictureBox1
+            // customControl21
             // 
-            pictureBox1.Location = new Point(651, 18);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(443, 413);
-            pictureBox1.TabIndex = 59;
-            pictureBox1.TabStop = false;
+            customControl21.Location = new Point(581, 49);
+            customControl21.Name = "customControl21";
+            customControl21.Size = new Size(507, 388);
+            customControl21.TabIndex = 58;
+            customControl21.Text = "customControl21";
             // 
             // button12
             // 
@@ -1283,7 +1282,6 @@
             SearchTab.PerformLayout();
             ItemTab.ResumeLayout(false);
             ItemTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             PurchaseTab.ResumeLayout(false);
             PurchaseTab.PerformLayout();
             Sale.ResumeLayout(false);
@@ -1403,8 +1401,8 @@
         public Button button10;
         public Button button11;
         public Button button12;
-        public PictureBox pictureBox1;
         public CustomControl1 customControl11;
+        public CustomControl2 customControl21;
     }
 }
 
