@@ -47,6 +47,7 @@
             comboBox1 = new ComboBox();
             menuStrip1 = new MenuStrip();
             ItemTab = new TabPage();
+            customControl31 = new CustomControl3();
             customControl21 = new CustomControl2();
             button12 = new Button();
             label43 = new Label();
@@ -341,6 +342,7 @@
             // 
             // ItemTab
             // 
+            ItemTab.Controls.Add(customControl31);
             ItemTab.Controls.Add(customControl21);
             ItemTab.Controls.Add(button12);
             ItemTab.Controls.Add(label43);
@@ -387,13 +389,22 @@
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
             // 
+            // customControl31
+            // 
+            customControl31.Location = new Point(505, 44);
+            customControl31.Name = "customControl31";
+            customControl31.Size = new Size(400, 393);
+            customControl31.TabIndex = 59;
+            customControl31.Text = "customControl31";
+            // 
             // customControl21
             // 
-            customControl21.Location = new Point(581, 49);
+            customControl21.Location = new Point(924, 44);
             customControl21.Name = "customControl21";
-            customControl21.Size = new Size(507, 388);
+            customControl21.Size = new Size(164, 393);
             customControl21.TabIndex = 58;
             customControl21.Text = "customControl21";
+            customControl21.Click += customControl21_Click;
             // 
             // button12
             // 
@@ -1403,6 +1414,7 @@
         public Button button12;
         public CustomControl1 customControl11;
         public CustomControl2 customControl21;
+        public CustomControl3 customControl31;
     }
 }
 

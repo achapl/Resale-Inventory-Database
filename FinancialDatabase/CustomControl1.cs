@@ -78,8 +78,8 @@ namespace FinancialDatabase
         protected void drawRow(PaintEventArgs pe, row r, int rowNum)
         {
             int maxRows = this.rowList.Count();
-            if (maxRows * (rowHeight + rowPadding) > this.AutoScrollMinSize.Height) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Height, maxRows * (rowHeight + rowPadding)); }
-            if (maxRows * (rowHeight + rowPadding) < this.AutoScrollMinSize.Height + (rowHeight + rowPadding)) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Height, (maxRows+1) * (rowHeight + rowPadding)); }
+            if (maxRows * (rowHeight + rowPadding) > this.AutoScrollMinSize.Height) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, maxRows * (rowHeight + rowPadding)); }
+            if (maxRows * (rowHeight + rowPadding) < this.AutoScrollMinSize.Height + (rowHeight + rowPadding)) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, (maxRows+1) * (rowHeight + rowPadding)); }
             pe.Graphics.DrawImage(r.i, new Point(0,rowNum*(rowHeight + rowPadding)));
             pe.Graphics.DrawString(r.name, this.Font, new SolidBrush(Color.Black), new PointF(maxImgWidth + imageTextPadding, rowNum * (rowHeight + rowPadding) + rowHeight / 2 - this.FontHeight));
         }

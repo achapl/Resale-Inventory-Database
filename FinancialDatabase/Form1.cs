@@ -190,9 +190,7 @@ namespace FinancialDatabase
                 ResultItem indexItem = getCurrentItemsAt(index);
 
                 ResultItem newItem = DatabaseConnector.getItem(indexItem.get_ITEM_ID());
-
-                List<Image> i = DatabaseConnector.getImages(newItem);
-
+                newItem.set_images(DatabaseConnector.getImages(newItem));
                 setCurrItem(newItem);
 
             }
@@ -422,6 +420,11 @@ namespace FinancialDatabase
                 searchTab.search();
 
             }
+
+            internal void setMainImage(int currIndex)
+            {
+                itemViewTab.setMainImage(currIndex);
+            }
         }
 
 
@@ -571,6 +574,13 @@ namespace FinancialDatabase
             tabControl.setCurrItem(currIndex);
             tabControl1.SelectTab(tabControl.itemViewTabNum);
 
+        }
+
+        private void customControl21_Click(object sender, EventArgs e)
+        {
+            MouseEventArgs mea = (MouseEventArgs)e;
+            int currIndex = this.customControl21.getRowNum(mea.Y);
+            tabControl.setMainImage(currIndex);
         }
     }
 }

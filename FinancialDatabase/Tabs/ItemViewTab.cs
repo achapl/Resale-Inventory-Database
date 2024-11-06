@@ -381,5 +381,14 @@ public class ItemViewTab : Tab
     public void showItemPictures(ResultItem newItem)
     {
         Form1.customControl21.setImages(newItem.get_Images());
+        if (newItem.get_Images().Count > 0)
+        {
+            Form1.customControl31.setImage(newItem.get_Images()[0]);
+        }
+    }
+
+    internal void setMainImage(int currIndex)
+    {
+        Form1.customControl31.setImage(Form1.customControl21.getImage(currIndex));
     }
 }

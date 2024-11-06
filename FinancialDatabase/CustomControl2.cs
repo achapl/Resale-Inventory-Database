@@ -16,44 +16,39 @@ namespace FinancialDatabase
     {
         List<Image> imageList;
 
-        int mainImageIndex;
 
         int auxImageHeight;
         int auxImageWidth;
         int auxImagePadding;
         double auxImageAspectRatio;
-        int mainImageHeight;
-        int mainImageWidth;
-        double mainImageAspectRatio;
-
-        int auxAndMainImagePadding;
+        
 
         public CustomControl2()
         {
             InitializeComponent();
 
-            mainImageIndex = 0;
+            this.AutoScrollMinSize = this.Size;
 
-            auxImageHeight = 100;
-            auxImageWidth = 100;
-            auxImagePadding = 10;
-            auxImageAspectRatio = (double)auxImageHeight / (double)auxImageWidth;
+            auxImagePadding = 5;
             
-            mainImageHeight = 100;
-            mainImageWidth = 100;
-            mainImageAspectRatio = (double)mainImageHeight / (double)mainImageWidth;
 
-            auxAndMainImagePadding = 20;
+            
 
         }
 
         protected override void OnPaint(PaintEventArgs pe)
         {
+            auxImageHeight = this.Size.Width; // Not a typo. auxImage max dimensions should be a square that fits in the width of the component
+            auxImageWidth = this.Size.Width;
+            auxImageAspectRatio = (double)auxImageHeight / (double)auxImageWidth;
+
             pe.Graphics.Clear(this.BackColor);
+            pe.Graphics.TranslateTransform(this.AutoScrollPosition.X, this.AutoScrollPosition.Y);
+            
             base.OnPaint(pe);
 
             drawAuxImages(pe);
-            drawMainImage(pe);
+            
 
         }
 
@@ -61,28 +56,17 @@ namespace FinancialDatabase
         {
             int i = 0;
             if (imageList == null) { return; }
+            int vertOffset = 0;
             foreach (Image image in imageList)
             {
-                int vertOffset = i * (auxImageHeight + auxImagePadding);
+                vertOffset = i++ * (auxImageHeight + auxImagePadding);
                 drawImage(pe, image, getAuxImageSize(image), vertOffset, 0);
             }
+            if (vertOffset + auxImageHeight > this.AutoScrollMinSize.Height) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, vertOffset + auxImageHeight); }
+            if (vertOffset + auxImageHeight < this.AutoScrollMinSize.Height + auxImageHeight) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, vertOffset + auxImageHeight + auxImageHeight); }
         }
 
-        private void drawMainImage(PaintEventArgs pe)
-        {
-            if (imageList == null || imageList.Count == 0 || mainImageIndex == -1)
-            {
-                return;
-            }
-
-            if (mainImageIndex > imageList.Count - 1)
-            {
-                throw new Exception("mainImageIndex points to an image that does not exist in the imageList");
-            }
-
-            Image mainImage = imageList[mainImageIndex];
-            drawImage(pe, mainImage, getMainImageSize(mainImage), VerticalScroll.Value, auxImageWidth + auxAndMainImagePadding);
-        }
+        
 
         private Size getNewSize(Image image, Size maxSize)
         {
@@ -123,39 +107,18 @@ namespace FinancialDatabase
             // Set W to auxImageWidth, and use aspect ratio to det. height
             if (aspectRatio > auxImageAspectRatio)
             {
-                newSize = new Size(auxImageWidth, (int) Math.Round((double) w/aspectRatio,0));
+                newSize = new Size(auxImageWidth, (int) Math.Round((double) auxImageWidth/aspectRatio,0));
             }
             // image W <= H relative to aspect ratio
             // Set H to auxImageWidth, and use aspect ratio to det. with
             else
             {
-                newSize = new Size((int)Math.Round((double) h / aspectRatio, 0), auxImageHeight);
+                newSize = new Size((int)Math.Round((double) auxImageHeight / aspectRatio, 0), auxImageHeight);
             }
             return newSize;
         }
 
-        public Size getMainImageSize(Image image)
-        {
-            int w = image.Size.Width;
-            int h = image.Size.Height;
-            double aspectRatio = (double)w / (double)h;
-
-            Size newSize;
-
-            // image W > H relative to aspect ratio
-            // Set W to mainImageWidth, and use aspect ratio to det. height
-            if (aspectRatio > mainImageAspectRatio)
-            {
-                newSize = new Size(mainImageWidth, (int)Math.Round((double)w / aspectRatio, 0));
-            }
-            // image W <= H relative to aspect ratio
-            // Set H to mainImageWidth, and use aspect ratio to det. with
-            else
-            {
-                newSize = new Size((int)Math.Round((double)h / aspectRatio, 0), mainImageHeight);
-            }
-            return newSize;
-        }
+        
 
         private void drawImage(PaintEventArgs pe, Image image, Size imageSize, int vertOffset, int horizOffset)
         {
@@ -178,18 +141,14 @@ namespace FinancialDatabase
         {
             if (imageList != null)
                 imageList.Clear();
-            mainImageIndex = -1;
             updatePaint();
         }
 
-        public void setImage(int index)
-        {
-            mainImageIndex = index;
-            updatePaint();
-        }
+        
 
         public void setImages(List<Image> images)
         {
+            if (images == null || images.Count == 0) { return; }
             clearImages();
             this.imageList = images;
             updatePaint();
@@ -198,6 +157,21 @@ namespace FinancialDatabase
         public void updatePaint()
         {
             InvokePaint(this, new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle));
+        }
+
+        internal int getRowNum(int y)
+        {
+            double height = this.auxImageHeight + this.auxImagePadding;
+            int scrollAmount = this.VerticalScroll.Value;
+            y += scrollAmount;
+            return (int)Math.Ceiling((double)y / height) - 1;
+        }
+
+        internal Image getImage(int currIndex)
+        {
+            if (currIndex < 0) { return Util.DEFAULT_IMAGE; }
+            if (currIndex > imageList.Count) { throw new Exception("ERROR: Trying to access image that is outside of bounds of imageList"); }
+            return imageList[currIndex];
         }
     }
 }
