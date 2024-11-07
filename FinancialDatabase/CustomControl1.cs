@@ -89,7 +89,11 @@ namespace FinancialDatabase
             double height = this.rowHeight + this.rowPadding;
             int scrollAmount = this.VerticalScroll.Value;
             y += scrollAmount;
-            return (int) Math.Ceiling((double)y / height) - 1; 
+
+            int rowNumClicked = (int)Math.Ceiling((double)y / height) - 1;
+            int rowNum = Math.Min(rowNumClicked, rowList.Count - 1);
+
+            return rowNum;
         }
 
         public int countItems()

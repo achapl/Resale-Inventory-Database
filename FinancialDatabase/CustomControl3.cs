@@ -63,7 +63,7 @@ namespace FinancialDatabase
             // Set H to mainImageWidth, and use aspect ratio to det. with
             else
             {
-                newSize = new Size((int)Math.Round((double)mainImageHeight / aspectRatio, 0), mainImageHeight);
+                newSize = new Size((int)Math.Round((double)mainImageHeight * aspectRatio, 0), mainImageHeight);
             }
             return newSize;
         }

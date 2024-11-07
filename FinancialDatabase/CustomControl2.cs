@@ -107,13 +107,13 @@ namespace FinancialDatabase
             // Set W to auxImageWidth, and use aspect ratio to det. height
             if (aspectRatio > auxImageAspectRatio)
             {
-                newSize = new Size(auxImageWidth, (int) Math.Round((double) auxImageWidth/aspectRatio,0));
+                newSize = new Size(auxImageWidth, (int) Math.Round((double) auxImageWidth / aspectRatio, 0));
             }
             // image W <= H relative to aspect ratio
             // Set H to auxImageWidth, and use aspect ratio to det. with
             else
             {
-                newSize = new Size((int)Math.Round((double) auxImageHeight / aspectRatio, 0), auxImageHeight);
+                newSize = new Size((int)Math.Round((double) auxImageHeight * aspectRatio, 0), auxImageHeight);
             }
             return newSize;
         }
@@ -164,7 +164,11 @@ namespace FinancialDatabase
             double height = this.auxImageHeight + this.auxImagePadding;
             int scrollAmount = this.VerticalScroll.Value;
             y += scrollAmount;
-            return (int)Math.Ceiling((double)y / height) - 1;
+
+            int rowNumClicked = (int)Math.Ceiling((double)y / height) - 1;
+            int rowNum = Math.Min(rowNumClicked, imageList.Count - 1);
+
+            return rowNum;
         }
 
         internal Image getImage(int currIndex)
