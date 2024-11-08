@@ -34,7 +34,6 @@ def runQuery(query):
 	colNames = None
 	try:
 		result0 = cursor.execute(query)
-		
 		result0 = list(cursor.fetchall())
 		result = []
 		for row in result0:
@@ -52,7 +51,8 @@ def runQuery(query):
 			numCols = len(colNames)
 		numItems = cursor.rowcount
 
-		result = convertImageData(result, colNames)
+		if colNames is not None:
+			result = convertImageData(result, colNames)
 
 		cursor.close()
 		cnx.close()

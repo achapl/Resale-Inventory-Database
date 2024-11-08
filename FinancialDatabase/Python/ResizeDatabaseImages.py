@@ -15,7 +15,7 @@ f = None
 # Get all image and image IDs, where there is no thumbnail ID
 
 def getImagesAndData():
-    imagesAndData, colNames, lastColID = runQuery("SELECT IMAGE_ID, image FROM image WHERE thumbnailID IS NULL")
+    imagesAndData, colNames, lastColID = runQuery("SELECT IMAGE_ID, image FROM image WHERE thumbnailID IS NULL OR thumbnailID = 0")
     return imagesAndData
 
 # Convert bytearray to image
@@ -40,19 +40,18 @@ def saveImage(image, imagePath):
 
 # Insert new image into database / Get result ID
 def insertImage(imagePath):
-    #a, b, lastRowID = runQuery("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + imagePath + "'));")
-    #return lastRowID
-    f.write("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + imagePath + "'));\n")
+    a, b, lastRowID = runQuery("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + imagePath + "'));")
+    return lastRowID
+    #f.write("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + imagePath + "'));\n")
     
 
 
 # Update old image ID to reflect new thumbnail ID
 
 def updateID(imageID, thumbnailID):
-    #runQuery("UPDATE image SET thumbnailID = last_insert_id() WHERE IMAGE_ID = " + str(imageID))
-    f.write("UPDATE image SET thumbnailID = last_insert_id() WHERE IMAGE_ID = " + str(imageID) + ";\n")
-   
-runQuery("SELECT LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\0.JPEG');")
+    runQuery("UPDATE image SET thumbnailID = " + str(thumbnailID) + " WHERE IMAGE_ID = " + str(imageID))
+    #f.write("UPDATE image SET thumbnailID = last_insert_id() WHERE IMAGE_ID = " + str(imageID) + ";\n")
+
 #runQuery("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\0.JPEG'));")
 
 
@@ -60,6 +59,9 @@ try:
     f = open("C:/users/owner/Desktop/InsertThumbnails.sql",'x')
 except:
     f = open("C:/users/owner/Desktop/InsertThumbnails.sql",'w')
+
+runQuery("DELETE FROM thumbnail")
+
 imagesAndData = getImagesAndData()
 
 count = 0
@@ -74,8 +76,7 @@ for row in imagesAndData:
     imagePath = getImagePath(count, image)
     saveImage(image, imagePath)
 
-    #thumbnailID = insertImage(imagePath)
-    thumbnailID = -1
+    thumbnailID = insertImage(imagePath)
     insertImage(imagePath)
     updateID(imageID, thumbnailID)
 

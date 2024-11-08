@@ -393,15 +393,15 @@
             // 
             customControl31.Location = new Point(505, 44);
             customControl31.Name = "customControl31";
-            customControl31.Size = new Size(400, 393);
+            customControl31.Size = new Size(451, 393);
             customControl31.TabIndex = 59;
             customControl31.Text = "customControl31";
             // 
             // customControl21
             // 
-            customControl21.Location = new Point(924, 44);
+            customControl21.Location = new Point(962, 44);
             customControl21.Name = "customControl21";
-            customControl21.Size = new Size(164, 393);
+            customControl21.Size = new Size(126, 393);
             customControl21.TabIndex = 58;
             customControl21.Text = "customControl21";
             customControl21.Click += customControl21_Click;

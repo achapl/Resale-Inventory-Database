@@ -70,6 +70,7 @@ def getItemID(shipNum:int):
         return -1
     return int(shipNum[0][0])
 
+
 runQuery("DELETE FROM image")
 
 for root, dirs, files in os.walk(imageDir):
@@ -94,9 +95,6 @@ for [shipNum, folder] in getFolderNumbersMap():
     itemID = getItemID(shipNum)
     if itemID != -1:
         for pic in pics:
-            pass
-            f.write("INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + imageDir + pic + "'), " + str(itemID) +");\n")    
+            runQuery("INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + imageDir + pic + "'), " + str(itemID) +");\n")    
 
 f.close()
-
-runQuery("INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + imageDir + "20200208_091433.jpg" + "'), " + str(24848) + ");\n")
