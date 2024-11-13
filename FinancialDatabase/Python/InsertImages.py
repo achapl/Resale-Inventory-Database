@@ -6,7 +6,7 @@ import os
 import time
 import shutil
 
-parentDir = "C:\\Users\\Owner\\Desktop\\Selling\\"
+parentDir = "C:\\Users\\Owner\\Desktop\\InsertImagesTest\\"
 parentDirSingleSlash = parentDir.replace('\\\\','\\')
 
 imageDir = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/"
@@ -60,7 +60,7 @@ def getFolderContents(folder):
 def copyFolderContents (folder:str): 
     files = getFolderContents(folder)
     for file in files:
-        filePath = parentDirSingleSlash + folder + "\\\\" + file
+        filePath = parentDirSingleSlash + folder + "\\" + file
         destPath = imageDir + file
         shutil.copyfile(filePath, destPath)
 
@@ -81,20 +81,20 @@ for root, dirs, files in os.walk(imageDir):
     for d in dirs:
         shutil.rmtree(os.path.join(root, d))
 
-#for [shipNum, folder] in getFolderNumbersMap():
-#    pics = getFolderContents(folder)
-#    copyFolderContents(folder) f
+for [shipNum, folder] in getFolderNumbersMap():
+    pics = getFolderContents(folder)
+    copyFolderContents(folder)
 f = None
 try:
     f = open("C:/users/owner/Desktop/InsertImages.sql",'x')
 except:
     f = open("C:/users/owner/Desktop/InsertImages.sql",'w')
-
+runQuery("SHOW VARIABLES")
 for [shipNum, folder] in getFolderNumbersMap():
     pics = getFolderContents(folder)
     itemID = getItemID(shipNum)
     if itemID != -1:
         for pic in pics:
-            runQuery("INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + imageDir + pic + "'), " + str(itemID) +");\n")    
+            runQuery("INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + imageDir + pic + "'), " + str(itemID) +");")    
 
 f.close()

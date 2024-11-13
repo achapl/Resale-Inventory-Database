@@ -15,6 +15,8 @@ using System.Reflection.Metadata.Ecma335;
 using Date = Util.Date;
 using System.Runtime.CompilerServices;
 using System.Drawing.Configuration;
+using System.Security.Principal;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 public static class DatabaseConnector
 {
@@ -24,7 +26,7 @@ public static class DatabaseConnector
     const string START_COL_MARKER = "Column Names:"; // Marker to the Start of Column Names
     const string END_COL_MARKER = "END OF COLUMN NAMES"; // Marker to the End of Column Names
     const string EOS = "EOS";     // end-of-stream
-
+    static Size maxDims = new Size(300, 300);
     public static List<string> getTableNames()
     {
 
@@ -349,6 +351,91 @@ public static class DatabaseConnector
     }
 
 
+    private static bool isImage(string fileName)
+    {
+        try
+        {
+            Image.FromFile(fileName);
+            return true;
+        }
+        catch { return false; }
+    }
+
+    private static Size getImageSize(Image image)
+    {
+        int w = image.Size.Width;
+        int h = image.Size.Height;
+        double aspectRatio = (double)w / (double)h;
+        double maxDimsAspectRatio = (double)maxDims.Height / (double)maxDims.Width;
+
+        Size newSize;
+
+        // image W > H relative to aspect ratio
+        // Set W to auxImageWidth, and use aspect ratio to det. height
+        if (aspectRatio > maxDimsAspectRatio)
+        {
+            newSize = new Size(maxDims.Width, (int)Math.Round((double)maxDims.Width / aspectRatio, 0));
+        }
+        // image W <= H relative to aspect ratio
+        // Set H to auxImageWidth, and use aspect ratio to det. with
+        else
+        {
+            newSize = new Size((int)Math.Round((double)maxDims.Height * aspectRatio, 0), maxDims.Height);
+        }
+        return newSize;
+    }
+
+    public static string insertImage(String filePath, int itemID)
+    {
+        if (!isImage(filePath)) { return null; }
+
+        string fileExt = Path.GetExtension(filePath);
+        string fileName = Path.GetFileName(filePath);
+        string fileNameNoExt = Path.GetFileNameWithoutExtension(fileName);
+        string imageDest = "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\";
+
+        // Copy file to where MySQL can read it
+        string copiedFile = imageDest + fileName;
+        
+        if (File.Exists(copiedFile))
+        {
+            File.Delete(copiedFile);
+        }
+        File.Copy(filePath, copiedFile);
+
+        copiedFile = copiedFile.Replace("\\","\\\\");
+
+        // Insert into database
+        int imageID;
+        string userID = WindowsIdentity.GetCurrent().Name;
+
+        string query = "INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + copiedFile + "'), " + itemID + ");";
+        
+        runStatement(query, out imageID);
+
+        // Resize the image for a thumbnail
+        Image origImage = Image.FromFile(filePath);
+        Bitmap resizedImage = new Bitmap(origImage, getImageSize(origImage));
+        string resizedImFileDest = imageDest + fileNameNoExt + "_RESIZED" + fileExt;
+        if (File.Exists(resizedImFileDest))
+        {
+            File.Delete(resizedImFileDest);
+        }
+        resizedImage.Save(resizedImFileDest);
+        resizedImFileDest = resizedImFileDest.Replace("\\", "\\\\");
+
+        // Insert resized image into database
+        int thumbnailID;
+        runStatement("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + resizedImFileDest + "'));", out thumbnailID);
+        runStatement("UPDATE image SET thumbnailID = " + thumbnailID + " WHERE IMAGE_ID = " + imageID);
+
+        // Clean up
+        File.Delete(copiedFile);
+        File.Delete(resizedImFileDest);
+        return null;
+    }
+
+
     // Given a search query, turn it into a string query and run it
     public static List<ResultItem> RunSearchQuery(SearchQuery Q)
     {
@@ -366,9 +453,12 @@ public static class DatabaseConnector
         }
         
         // Use Python
-        List<string> result2 = new List<string>(){ "","","" };
+        List<string> result2 = new List<string>(){ "","",""};
+        
         using (Py.GIL())
         {
+            
+
             // Modify path to work
             dynamic os = Py.Import("os");
             dynamic sys = Py.Import("sys");
@@ -377,12 +467,13 @@ public static class DatabaseConnector
             // Start Dtb Connector
             dynamic Connector = Py.Import("Connection.DtbConnAndQuery");
             PyObject[] rawResult = Connector.runQuery(query);
-
             // Convert Python Objects to normal C# strings
             // ?? denotes alternative assignment to
             // result[n] if rawResult[n] is null
-            string ErrMsg = "ERROR: NULL rawResult val in DatabaseConnector.cs";
+            string ErrMsg = "ERROR: NULL rawResult val in DatabaseConnector.cs:runPython()";
             List<List<string>> result = new List<List<string>>();
+
+            //TODO: DELETE
             for(int i = 0; i < rawResult[0].Length(); i++)
             {
                 //for (int j = 0; j < rawResult[0,i].Length(); j++)

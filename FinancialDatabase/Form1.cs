@@ -75,6 +75,7 @@ namespace FinancialDatabase
                 itemViewTab = new ItemViewTab(this, Form1);
                 searchTab = new SearchTab(this, Form1);
                 saleTab = new SaleTab(this, Form1);
+
             }
 
             public ResultItem getCurrItem()
@@ -109,19 +110,26 @@ namespace FinancialDatabase
 
             public Sale getCurrSale() => currSale;
 
+            // Update the under-hood reference to the object in the database
             public void updateCurrItem()
             {
                 updateItem(currItem);
             }
 
+            // Update the under-hood reference to the object in the database
             public void updateItem(ResultItem item)
             {
                 if (purchasedLotTab.isNewPurchase) { return; }
-
+                // TODO: Can click on an item from purchase lot that is not contained in the searched currentItems.
+                // Should this function just return or does it have  another reason to have been called in such a case?
+                // It's called by TabController.setCurrentItem() for this case.
+                // Also, it should be rethought, the idea that all the items from the search should have an object associated with them
+                // FINAL ANSWER: ONLY THE CURRENT ITEM SHOULD HAVE AN ITEM ASSOCIATED WITH IT
                 int index = currentItems.IndexOf(item);
                 if (index == -1)
                 {
-                    throw new Exception("Item Not Found: Form1.TabController.updateItem()");
+                    return;
+                    //throw new Exception("Item Not Found: Form1.TabController.updateItem()");
                 }
                 currentItems[index] = DatabaseConnector.getItem(item.get_ITEM_ID());
             }
@@ -425,6 +433,24 @@ namespace FinancialDatabase
             {
                 itemViewTab.setMainImage(currIndex);
             }
+
+            public void insertImage()
+            {
+                if (Form1.tabControl1.SelectedIndex != itemViewTabNum ||
+                    this.currItem == null)
+                {
+                    return;
+                }
+                DialogResult isOkay = Form1.openFileDialog1.ShowDialog();
+                if (isOkay == DialogResult.OK)
+                {
+                    List<string> files = new List<string>(Form1.openFileDialog1.FileNames);
+                    foreach (string file in files)
+                    {
+                        DatabaseConnector.insertImage(file, currItem.get_ITEM_ID());
+                    }
+                }
+            }
         }
 
 
@@ -581,6 +607,16 @@ namespace FinancialDatabase
             MouseEventArgs mea = (MouseEventArgs)e;
             int currIndex = this.customControl21.getRowNum(mea.Y);
             tabControl.setMainImage(currIndex);
+        }
+
+
+        
+
+        // Add Image(s)
+        private void button13_Click(object sender, EventArgs e)
+        {
+            tabControl.insertImage();
+            tabControl.updateCurrItem();
         }
     }
 }

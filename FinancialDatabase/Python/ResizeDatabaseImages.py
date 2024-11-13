@@ -2,6 +2,7 @@
 # And insert those thumbnails into the images table in the database,
 # With the original image's thumbnailID pointing to the new smaller thumbnail version
 
+from asyncio.windows_events import NULL
 from Connection.DtbConnAndQuery import runQuery
 from PIL import Image
 import os
@@ -20,8 +21,10 @@ def getImagesAndData():
 
 # Convert bytearray to image
 def byteArrToImage(byteArr):
-    image = Image.open(io.BytesIO(byteArr))
-    
+    try:
+        image = Image.open(io.BytesIO(byteArr))
+    except:
+        return NULL
     return image
 
 # Resize Image
@@ -71,6 +74,8 @@ for row in imagesAndData:
     convertedIm = bytes(byteImage)
 
     image = byteArrToImage(convertedIm)
+    if image == NULL:
+        continue
     image = resizeImage(image)
     
     imagePath = getImagePath(count, image)

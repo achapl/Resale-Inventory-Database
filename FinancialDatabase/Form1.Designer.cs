@@ -47,6 +47,8 @@
             comboBox1 = new ComboBox();
             menuStrip1 = new MenuStrip();
             ItemTab = new TabPage();
+            button14 = new Button();
+            button13 = new Button();
             customControl31 = new CustomControl3();
             customControl21 = new CustomControl2();
             button12 = new Button();
@@ -137,6 +139,7 @@
             label38 = new Label();
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
+            openFileDialog1 = new OpenFileDialog();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -342,6 +345,8 @@
             // 
             // ItemTab
             // 
+            ItemTab.Controls.Add(button14);
+            ItemTab.Controls.Add(button13);
             ItemTab.Controls.Add(customControl31);
             ItemTab.Controls.Add(customControl21);
             ItemTab.Controls.Add(button12);
@@ -388,6 +393,25 @@
             ItemTab.TabIndex = 1;
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
+            // 
+            // button14
+            // 
+            button14.Location = new Point(156, 405);
+            button14.Name = "button14";
+            button14.Size = new Size(89, 23);
+            button14.TabIndex = 61;
+            button14.Text = "Delete Image";
+            button14.UseVisualStyleBackColor = true;
+            // 
+            // button13
+            // 
+            button13.Location = new Point(251, 405);
+            button13.Name = "button13";
+            button13.Size = new Size(93, 23);
+            button13.TabIndex = 60;
+            button13.Text = "Add Image(s)";
+            button13.UseVisualStyleBackColor = true;
+            button13.Click += button13_Click;
             // 
             // customControl31
             // 
@@ -1277,6 +1301,11 @@
             // 
             resultItemBindingSource.DataSource = typeof(ResultItem);
             // 
+            // openFileDialog1
+            // 
+            openFileDialog1.FileName = "openFileDialog1";
+            openFileDialog1.Multiselect = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1415,6 +1444,9 @@
         public CustomControl1 customControl11;
         public CustomControl2 customControl21;
         public CustomControl3 customControl31;
+        public Button button14;
+        public Button button13;
+        public OpenFileDialog openFileDialog1;
     }
 }
 
