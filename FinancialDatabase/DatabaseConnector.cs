@@ -17,6 +17,7 @@ using System.Runtime.CompilerServices;
 using System.Drawing.Configuration;
 using System.Security.Principal;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Drawing.Imaging;
 
 public static class DatabaseConnector
 {
@@ -43,7 +44,7 @@ public static class DatabaseConnector
     {
         string queryItem = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE ITEM_ID = " + itemID.ToString() + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
 
-        List<ResultItem> result = RunItemSearchQuery(queryItem);
+        List<ResultItem> result = RunItemSearchQuery(queryItem, true);
 
         // Error Checking
         if (result.Count > 1)
@@ -126,7 +127,7 @@ public static class DatabaseConnector
     }
 
     // General queries, done by manual string input
-    public static List<ResultItem> RunItemSearchQuery(string query)
+    public static List<ResultItem> RunItemSearchQuery(string query, bool getImages)
     {
         if (query.CompareTo("") == 0)
         {
@@ -138,8 +139,12 @@ public static class DatabaseConnector
         string queryOutput = runStatement(query, ref colNames, out lastrowid);
 
         List<ResultItem> parsedItems = parseItemSearchResult(queryOutput, colNames);
-        parsedItems = getSearchImages(parsedItems);
 
+        if (getImages)
+        {
+            parsedItems = getSearchImages(parsedItems);
+        }
+        
         return parsedItems;
     }
 
@@ -440,7 +445,7 @@ public static class DatabaseConnector
     public static List<ResultItem> RunSearchQuery(SearchQuery Q)
     {
         string query = QueryBuilder.buildSearchByNameQuery(Q);
-        return RunItemSearchQuery(query);
+        return RunItemSearchQuery(query, false);
     }
 
     private static List<string> runPython(string query)
@@ -597,7 +602,7 @@ public static class DatabaseConnector
     {
         // TODO: make this a function for databaseconnector
         // RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item)) part
-        return (RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item)).Count() == 1);   
+        return (RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item), false).Count() == 1);   
     }
 
     public static List<Image> getImages(ResultItem newItem)
@@ -612,30 +617,19 @@ public static class DatabaseConnector
 
 
         // No images returned from query
-        // TODO: Possibly select a default image
         if (rawResult.CompareTo("[]") == 0) { return Util.DEFAULT_IMAGES; }
-
+        
+        // Trim '[]' that surrounds the whole string
         rawResult = rawResult.Substring(1, rawResult.Length - 2);
-        List<string> rawItems = Util.PairedCharTopLevelSplit(rawResult, '[');
+        List<string> rawImageInfos = Util.PairedCharTopLevelSplit(rawResult, '[');
 
         List<Image> results = new List<Image>();
-        foreach (string rawItem in rawItems)
+        foreach (string rawImageInfo in rawImageInfos)
         {
             // Seperate each item into individual item attributes to make a ResultItem with it
-            List<string> imageAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
-            // Trim off "b'[byteArr]'"
-
-            byte[] ret2 = new byte[imageAttributes[1].Length];
-
-            imageAttributes[1] = imageAttributes[1].Trim(new char[] { '[', ']' });
-            
-            List<string> s = new List<string>(imageAttributes[1].Split(", "));
-            for (int j = 0; j < s.Count; j++)
-            {
-                string elem = s[j];
-                ret2[j] = (byte)Int32.Parse(elem);
-            }
-            Image i = Image.FromStream(new MemoryStream(ret2));
+            List<string> imageAttributes = new List<string>(Util.splitOnTopLevelCommas(rawImageInfo));
+            string rawImage = imageAttributes[1];
+            Image i = Util.rawImageStrToImage(rawImage);
 
             results.Add(i);
         }

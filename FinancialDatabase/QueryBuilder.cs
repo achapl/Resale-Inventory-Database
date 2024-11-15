@@ -48,7 +48,8 @@ namespace FinancialDatabase
         {
             string query;
             string stock = "";
-            string join = "";
+            string purchaseJoin = "";
+            string thumbnailJoin = "";
 
 
             List<string> columns = new List<string>();
@@ -57,6 +58,7 @@ namespace FinancialDatabase
             // Default, always include ITEM_ID and Name
             columns.Add("item.ITEM_ID");
             columns.Add("item.Name");
+            columns.Add("thumbnail.thumbnail");
 
             if (Q.getDateCol()) { columns.Add("purchase.Date_Purchased"); }
             if (Q.getPriceCol()) { columns.Add("purchase.Amount_purchase"); }
@@ -64,7 +66,9 @@ namespace FinancialDatabase
 
             string dateRange = "AND purchase.Date_Purchased > '" + Q.getStartDate() + "' AND purchase.Date_Purchased < '" + Q.getEndDate() + "'";
 
-            join = "JOIN purchase ON purchase.PURCHASE_ID = item.PurchaseID ";
+            purchaseJoin = "JOIN purchase ON purchase.PURCHASE_ID = item.PurchaseID ";
+
+            thumbnailJoin = "LEFT JOIN thumbnail ON thumbnail.ThumbnailID = item.ThumbnailID ";
 
             // If both are true, don't need to add to query since it's looking for all cases of the current quantity
             if (Q.getInStock() && !Q.getSoldOut())
@@ -92,8 +96,8 @@ namespace FinancialDatabase
             }
             else
             {
-                //query = "SELECT " + cols + " FROM item JOIN purchase ON item.ITEM_ID = purchase.ItemID WHERE name LIKE '%" + term + "%' AND purchase.Date_Purchased > '" + startDate + "' AND purchase.Date_Purchased < '" + endDate + "' " + stock + ";";
-                query = "SELECT " + cols + " FROM item " + join  + "WHERE item.name LIKE '%" + Q.getSingleTerm() + "%'" + stock + " " + dateRange + ";";
+                //query = "SELECT " + cols + " FROM item JOIN purchase OiN item.ITEM_ID = purchase.ItemID WHERE name LIKE '%" + term + "%' AND purchase.Date_Purchased > '" + startDate + "' AND purchase.Date_Purchased < '" + endDate + "' " + stock + ";";
+                query = "SELECT " + cols + " FROM item " + purchaseJoin + thumbnailJoin + "WHERE item.name LIKE '%" + Q.getSingleTerm() + "%'" + stock + " " + dateRange + ";";
             }
             return query;
         }

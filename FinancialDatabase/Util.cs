@@ -393,6 +393,22 @@ public class Util
 
     }
 
+    internal static Image rawImageStrToImage(string rawImage)
+    {
+        if (rawImage == null) { return Util.DEFAULT_IMAGE; }
+        byte[] ret2 = new byte[rawImage.Length];
+
+        rawImage = rawImage.Trim(new char[] { '[', ']' });
+
+        List<string> s = new List<string>(rawImage.Split(", "));
+        for (int j = 0; j < s.Count; j++)
+        {
+            string elem = s[j];
+            ret2[j] = (byte)Int32.Parse(elem);
+        }
+        return Image.FromStream(new MemoryStream(ret2));
+    }
+
     public struct Date
     {
 

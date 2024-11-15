@@ -82,13 +82,12 @@ namespace FinancialDatabase
             {
                 if (currItem != null)
                 {
-                    updateItem(currItem);
+                    updateCurrItem();
                 }
                 return currItem;
             }
             public ResultItem getCurrentItemsAt(int index)
             {
-                updateItem(currentItems[index]);
                 return currentItems[index];
             }
             public ResultItem getCurrentPurchaseItemsAt(int index) => currentPurchaseItems[index];
@@ -113,25 +112,7 @@ namespace FinancialDatabase
             // Update the under-hood reference to the object in the database
             public void updateCurrItem()
             {
-                updateItem(currItem);
-            }
-
-            // Update the under-hood reference to the object in the database
-            public void updateItem(ResultItem item)
-            {
-                if (purchasedLotTab.isNewPurchase) { return; }
-                // TODO: Can click on an item from purchase lot that is not contained in the searched currentItems.
-                // Should this function just return or does it have  another reason to have been called in such a case?
-                // It's called by TabController.setCurrentItem() for this case.
-                // Also, it should be rethought, the idea that all the items from the search should have an object associated with them
-                // FINAL ANSWER: ONLY THE CURRENT ITEM SHOULD HAVE AN ITEM ASSOCIATED WITH IT
-                int index = currentItems.IndexOf(item);
-                if (index == -1)
-                {
-                    return;
-                    //throw new Exception("Item Not Found: Form1.TabController.updateItem()");
-                }
-                currentItems[index] = DatabaseConnector.getItem(item.get_ITEM_ID());
+                currItem = DatabaseConnector.getItem(currItem.get_ITEM_ID());
             }
 
             public void UpdateCurrSaleWithUserInput()
@@ -162,7 +143,6 @@ namespace FinancialDatabase
 
             public ResultItem getItem(int index)
             {
-                updateItem(currentItems[index]);
                 return currentItems[index];
             }
 
@@ -225,10 +205,9 @@ namespace FinancialDatabase
                     throw new Exception("Item Not Found: Form1.TabControl.setCurrItem()");
                 }
 
-                updateItem(newItem);
-
                 this.currItem = newItem;
-
+                updateCurrItem();
+                
                 setNewItemItemView(newItem);
                 setNewItemPurchasedLots(newItem);
                 setNewItemSaleItem(newItem);
@@ -288,7 +267,7 @@ namespace FinancialDatabase
             {
                 clearItems();
 
-                List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(query);
+                List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(query, true);
 
                 foreach (ResultItem item in result)
                 {

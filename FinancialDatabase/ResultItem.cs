@@ -48,6 +48,7 @@ public class ResultItem : IEquatable<ResultItem>
 
     // Extra
     double totalSales;
+    private Image thumbnail;
 
 
 #pragma warning disable CS8618 // Util.DEFAULTs are set to non-null vals
@@ -144,7 +145,9 @@ public class ResultItem : IEquatable<ResultItem>
                 case "Notes_item":
                     set_Notes_item(itemAttribute);
                     break;
-
+                case "thumbnail":
+                    set_Thumbnail(itemAttribute);
+                    break;
                 // From purchase table
                 case "Date_Purchased":
                     set_Date_Purchased(itemAttribute);
@@ -198,9 +201,20 @@ public class ResultItem : IEquatable<ResultItem>
             }
         }
     }
-
-
-    
+    public void set_Thumbnail(Image image)
+    {
+        if (image == null)
+        {
+            this.thumbnail = Util.DEFAULT_IMAGE;
+            return;
+        } 
+        this.thumbnail = image;
+    }
+    public void set_Thumbnail(string itemAttribute)
+    {
+        Image i = Util.rawImageStrToImage(itemAttribute);
+        this.thumbnail = i;
+    }
 
     public void getAttrib(string attrib, ref string ret)
     {
@@ -560,6 +574,12 @@ public class ResultItem : IEquatable<ResultItem>
             return Notes_item;
         }
     }
+    public Image get_Thumbnail()
+    {
+        if (this.thumbnail == null) { set_Thumbnail(Util.DEFAULT_IMAGE); } 
+        return this.thumbnail;
+    }
+
 
     // From purchase table
     public Date get_Date_Purchased()
