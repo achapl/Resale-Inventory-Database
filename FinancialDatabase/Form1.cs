@@ -156,13 +156,13 @@ namespace FinancialDatabase
 
             private void clearItems()
             {
-                Form1.customControl11.clearItems();
+                Form1.itemSearchView.clearItems();
                 currentItems.Clear();
             }
 
             public void addItem(ResultItem newItem)
             {
-                Form1.customControl11.addRow(newItem.get_Images()[0].image, newItem.get_Name());
+                Form1.itemSearchView.addRow(newItem.get_Images()[0].image, newItem.get_Name());
                 currentItems.Add(newItem);
                 // TODO: CHECK IF newItem already in list
             }
@@ -172,7 +172,7 @@ namespace FinancialDatabase
             // Update the curr item given its position in the search results
             public void setCurrItem(int index)
             {
-                if (index > Form1.customControl11.countItems())
+                if (index > Form1.itemSearchView.countItems())
                 {
                     throw new Exception("Index of the search results to set the new currItem to in Form1.TabController setCurrItem() is greater than the number of items in the search result");
                 }
@@ -212,7 +212,7 @@ namespace FinancialDatabase
                 setNewItemItemView(newItem);
                 setNewItemPurchasedLots(newItem);
                 setNewItemSaleItem(newItem);
-                Form1.tabControl1.SelectTab(itemViewTabNum);
+                Form1.tabCollection.SelectTab(itemViewTabNum);
             }
 
             public void setCurrSale(int index)
@@ -279,7 +279,7 @@ namespace FinancialDatabase
             public void search()
             {
                 searchTab.search();
-                Form1.customControl11.updatePaint();
+                Form1.itemSearchView.updatePaint();
             }
 
             public void getItemViewUpdate()
@@ -384,7 +384,7 @@ namespace FinancialDatabase
                 setCurrItem(currItem);
                 saleTab.clearAttribs();
                 saleTab.viewMode();
-                Form1.tabControl1.SelectTab(3);
+                Form1.tabCollection.SelectTab(3);
                 currSale = null;
             }
 
@@ -404,7 +404,7 @@ namespace FinancialDatabase
                 saleTab.clearCurrItem();
                 searchTab.clearItems();
 
-                Form1.tabControl1.SelectTab(searchTabNum);
+                Form1.tabCollection.SelectTab(searchTabNum);
                 searchTab.search();
 
             }
@@ -416,7 +416,7 @@ namespace FinancialDatabase
 
             public void insertImage()
             {
-                if (Form1.tabControl1.SelectedIndex != itemViewTabNum ||
+                if (Form1.tabCollection.SelectedIndex != itemViewTabNum ||
                     this.currItem == null)
                 {
                     return;
@@ -435,7 +435,7 @@ namespace FinancialDatabase
             public void setThumbnail()
             {
                 int currImageID = itemViewTab.getCurrImageID();
-                
+
                 // Check defualt val. Do nothing
                 if (currImageID == -1 || currImageID == null)
                 {
@@ -443,7 +443,7 @@ namespace FinancialDatabase
                 }
 
                 int newThumbnailID = DatabaseConnector.getImageThumbnailID(currImageID);
-                DatabaseConnector.runStatement("UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + currItem.get_ITEM_ID() +";");
+                DatabaseConnector.runStatement("UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + currItem.get_ITEM_ID() + ";");
             }
         }
 
@@ -465,7 +465,7 @@ namespace FinancialDatabase
         // ItemViewTab Update button
         private void button1_Click(object sender, EventArgs e)
         {
-            tabControl.runManualQuery(textBox1.Text);
+            tabControl.runManualQuery(manualQueryTBox.Text);
         }
 
         // Search Button in Search Tab
@@ -477,7 +477,7 @@ namespace FinancialDatabase
         // Purchased Lot listbox double click
         private void listBox2_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            int index = this.listBox2.IndexFromPoint(e.Location);
+            int index = this.PurchaseListBox.IndexFromPoint(e.Location);
             ResultItem item = tabControl.getCurrentPurchaseItemsAt(index);
             tabControl.setCurrItem(item);
         }
@@ -557,9 +557,9 @@ namespace FinancialDatabase
         // SaleTab select sale
         private void listBox3_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            int index = this.listBox3.IndexFromPoint(e.Location);
+            int index = this.saleListBox.IndexFromPoint(e.Location);
             tabControl.setCurrSale(index);
-            tabControl1.SelectTab(tabControl.saleTabNum);
+            tabCollection.SelectTab(tabControl.saleTabNum);
         }
 
         // SaleTab Update button
@@ -590,16 +590,16 @@ namespace FinancialDatabase
         private void customControl11_Click(object sender, EventArgs e)
         {
             MouseEventArgs mea = (MouseEventArgs)e;
-            int currIndex = this.customControl11.getRowNum(mea.Y);
+            int currIndex = this.itemSearchView.getRowNum(mea.Y);
             tabControl.setCurrItem(currIndex);
-            tabControl1.SelectTab(tabControl.itemViewTabNum);
+            tabCollection.SelectTab(tabControl.itemViewTabNum);
 
         }
 
         private void customControl21_Click(object sender, EventArgs e)
         {
             MouseEventArgs mea = (MouseEventArgs)e;
-            int currIndex = this.customControl21.getRowNum(mea.Y);
+            int currIndex = this.allPictureViewer.getRowNum(mea.Y);
             tabControl.setMainImage(currIndex);
         }
 
@@ -617,6 +617,11 @@ namespace FinancialDatabase
         private void button15_Click(object sender, EventArgs e)
         {
             tabControl.setThumbnail();
+        }
+
+        private void label37_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -15,8 +15,8 @@ public class PurchasedLotTab : Tab
 	{
         this.tabController = tabController;
         isNewPurchase = false;
-        updateButton = Form1.button7;
-        editButton   = Form1.button6;
+        updateButton = Form1.UpdatePurcButton;
+        editButton   = Form1.EditPurcButton;
         generateTBoxGroups();
         Util.clearLabelText(clearableAttribLables);
         showControlVisibility();
@@ -26,54 +26,54 @@ public class PurchasedLotTab : Tab
     {
         editingAttributeControls = new List<Control>()
         {
-            Form1.textBox20,
-            Form1.textBox21,
-            Form1.dateTimePicker4
+            Form1.PurcPurcPriceTextbox,
+            Form1.PurcPurcNotesTextbox,
+            Form1.PurcDatePicker
         };
 
         editingControls = new List<Control>()
         {
-            Form1.textBox20,
-            Form1.textBox21,
-            Form1.dateTimePicker4
+            Form1.PurcPurcPriceTextbox,
+            Form1.PurcPurcNotesTextbox,
+            Form1.PurcDatePicker
         };
 
         editableAttribLables = new List<Label>()
         {
-            Form1.label15,
-            Form1.label41,
-            Form1.label44
+            Form1.PurcPurcPriceLbl,
+            Form1.PurcPurcNotesLbl,
+            Form1.PurcPurcDateLbl
         };
 
         clearableAttribLables = new List<Label>()
         {
-            Form1.label15,
-            Form1.label41,
-            Form1.label44
+            Form1.PurcPurcPriceLbl,
+            Form1.PurcPurcNotesLbl,
+            Form1.PurcPurcDateLbl
         };
 
         itemTBoxes = new List<TextBox>()
         {
-            Form1.textBox2,
-            Form1.textBox14,
-            Form1.textBox11,
+            Form1.PurcNameTextbox,
+            Form1.PurcInitQtyTextbox,
+            Form1.PurcCurrQtyTextbox,
 
         };
 
         shippingTBoxes = new List<TextBox>()
         {
-            Form1.textBox15,
-            Form1.textBox16,
-            Form1.textBox17,
-            Form1.textBox18,
-            Form1.textBox19
+            Form1.PurcLengthTextbox,
+            Form1.PurcWidthTextbox,
+            Form1.PurcHeightTextbox,
+            Form1.PurcWeightLbsTextbox,
+            Form1.PurcWeightOzTextbox
 
         };
 
         newPurchaseGroupControls = new List<Control>()
         {
-            Form1.textBox20,
-            Form1.dateTimePicker4
+            Form1.PurcPurcPriceTextbox,
+            Form1.PurcDatePicker
         };
 
         foreach (Control c in itemTBoxes)
@@ -94,26 +94,26 @@ public class PurchasedLotTab : Tab
 
         controlBoxAttrib = new Dictionary<Control, string>
         {
-            { Form1.dateTimePicker4,  "purchase.Date_Purchased" },
-            { Form1.textBox20,        "purchase.Amount_purchase" },
-            { Form1.textBox21,        "purchase.Notes_purchase" }
+            { Form1.PurcDatePicker,  "purchase.Date_Purchased" },
+            { Form1.PurcPurcPriceTextbox,        "purchase.Amount_purchase" },
+            { Form1.PurcPurcNotesTextbox,        "purchase.Notes_purchase" }
         };
     }
 
     public void update(ResultItem item)
 	{
-        Form1.listBox2.Items.Clear();
+        Form1.PurchaseListBox.Items.Clear();
 		tabController.clearCurrentPurchaseItems();
         List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item), false);
 
 		foreach(ResultItem i in result)
 		{
-			Form1.listBox2.Items.Add(i.get_Name());
+			Form1.PurchaseListBox.Items.Add(i.get_Name());
             tabController.addCurrentPurchaseItems(i);
         }
 
-        Form1.label15.Text = item.get_Amount_purchase().ToString();
-        Form1.label41.Text = item.get_Notes_purchase();
+        Form1.PurcPurcPriceLbl.Text = item.get_Amount_purchase().ToString();
+        Form1.PurcPurcNotesLbl.Text = item.get_Notes_purchase();
 
 	}
 
@@ -135,10 +135,10 @@ public class PurchasedLotTab : Tab
         if (item.hasPurchaseEntry())
         {
             Date datePurc = item.get_Date_Purchased();
-            Form1.dateTimePicker4.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
-            Form1.label15.Text = checkDefault(item.get_Amount_purchase());
-            Form1.label41.Text = checkDefault(item.get_Notes_purchase());
-            Form1.label44.Text = item.get_Date_Purchased().toDateString();
+            Form1.PurcDatePicker.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
+            Form1.PurcPurcPriceLbl.Text = checkDefault(item.get_Amount_purchase());
+            Form1.PurcPurcNotesLbl.Text = checkDefault(item.get_Notes_purchase());
+            Form1.PurcPurcDateLbl.Text = item.get_Date_Purchased().toDateString();
         }
         updateUserInputDefaultText();
         
@@ -219,19 +219,19 @@ public class PurchasedLotTab : Tab
         if (item == null) { return; }
         showItemAttributes(item);
 
-        Form1.listBox2.Items.Clear();
+        Form1.PurchaseListBox.Items.Clear();
         tabController.clearCurrentPurchaseItems();
         // TODO: Make RunItemSearchQuery for ResultItem parameter
         List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item), false);
 
         foreach (ResultItem i in result)
         {
-            Form1.listBox2.Items.Add(i.get_Name());
+            Form1.PurchaseListBox.Items.Add(i.get_Name());
             tabController.addCurrentPurchaseItems(DatabaseConnector.getItem(i.get_ITEM_ID()));
         }
 
-        Form1.label15.Text = item.get_Amount_purchase().ToString();
-        Form1.label41.Text = item.get_Notes_purchase();
+        Form1.PurcPurcPriceLbl.Text = item.get_Amount_purchase().ToString();
+        Form1.PurcPurcNotesLbl.Text = item.get_Notes_purchase();
     }
 
     public bool allNewPurchaseBoxesFilled()
@@ -277,9 +277,9 @@ public class PurchasedLotTab : Tab
         
         if (isNewPurchase && allNewPurchaseBoxesFilled())
         { 
-            DateTime dt = Form1.dateTimePicker4.Value;
+            DateTime dt = Form1.PurcDatePicker.Value;
             purcDate = new (dt.Year, dt.Month, dt.Day);
-            purcID = DatabaseConnector.newPurchase(Int32.Parse(Form1.textBox20.Text),Form1.textBox21.Text, purcDate);
+            purcID = DatabaseConnector.newPurchase(Int32.Parse(Form1.PurcPurcPriceTextbox.Text),Form1.PurcPurcNotesTextbox.Text, purcDate);
 
         }
         // Incorrectly formed new purchase from user input, don't continue on
@@ -295,35 +295,35 @@ public class PurchasedLotTab : Tab
         }
         
         ResultItem newItem = new ResultItem();
-        newItem.set_Name(Form1.textBox2.Text);
+        newItem.set_Name(Form1.PurcNameTextbox.Text);
         newItem.set_Date_Purchased(purcDate);
 
         // If no Init or curr quantities, set to default 1
-        if (Form1.textBox14.Text.CompareTo("") == 0)
+        if (Form1.PurcInitQtyTextbox.Text.CompareTo("") == 0)
         {
             newItem.set_InitialQuantity(1);
         }
         else
         {
-            newItem.set_InitialQuantity(Form1.textBox14.Text);
+            newItem.set_InitialQuantity(Form1.PurcInitQtyTextbox.Text);
         }
 
-        if (Form1.textBox11.Text.CompareTo("") == 0)
+        if (Form1.PurcCurrQtyTextbox.Text.CompareTo("") == 0)
         {
             newItem.set_CurrentQuantity(1);
         }
         else
         {
-            newItem.set_CurrentQuantity(Form1.textBox11.Text);
+            newItem.set_CurrentQuantity(Form1.PurcCurrQtyTextbox.Text);
         }
 
         if (allNewShippingBoxesFilled())
         {
-            int ttlWeight = Int32.Parse(Form1.textBox18.Text) * 16 + Int32.Parse(Form1.textBox19.Text);
+            int ttlWeight = Int32.Parse(Form1.PurcWeightLbsTextbox.Text) * 16 + Int32.Parse(Form1.PurcWeightOzTextbox.Text);
             newItem.set_Weight(ttlWeight);
-            newItem.set_Length(Int32.Parse(Form1.textBox15.Text));
-            newItem.set_Width( Int32.Parse(Form1.textBox16.Text));
-            newItem.set_Height(Int32.Parse(Form1.textBox17.Text));
+            newItem.set_Length(Int32.Parse(Form1.PurcLengthTextbox.Text));
+            newItem.set_Width( Int32.Parse(Form1.PurcWidthTextbox.Text));
+            newItem.set_Height(Int32.Parse(Form1.PurcHeightTextbox.Text));
         }
         if (isNewPurchase)
         {
@@ -355,7 +355,7 @@ public class PurchasedLotTab : Tab
     // make a new purchase in the database and add it
     public void newPurchase()
     {
-        Form1.listBox2.Items.Clear();
+        Form1.PurchaseListBox.Items.Clear();
         isNewPurchase = true;
         editMode();
         //addItem();

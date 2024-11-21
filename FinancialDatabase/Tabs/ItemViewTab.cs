@@ -18,8 +18,8 @@ public class ItemViewTab : Tab
     public ItemViewTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
     {
         this.tabController = tabController;
-        updateButton = Form1.button1;
-        editButton   = Form1.button4;
+        updateButton = Form1.itemUpdateButton;
+        editButton   = Form1.itemEditButton;
         generateTBoxGroups();
         Util.clearLabelText(clearableAttribLables);
         showControlVisibility();
@@ -28,71 +28,71 @@ public class ItemViewTab : Tab
     protected override void generateTBoxGroups()
     {
         clearableAttribLables = new List<Label>() {
-            Form1.label40,
-            Form1.label17,
-            Form1.label18,
-            Form1.label19,
-            Form1.label20,
-            Form1.label21,
-            Form1.label22,
-            Form1.label23,
-            Form1.label24,
-            Form1.label25,
-            Form1.label26,
-            Form1.label43
+            Form1.itemNameLbl,
+            Form1.itemPurcPriceLbl,
+            Form1.itemSoldPriceLbl,
+            Form1.itemInitQtyLbl,
+            Form1.itemCurrQtyLbl,
+            Form1.itemItemNoLbl,
+            Form1.itemWeightLbsLbl,
+            Form1.itemWeightOzLbl,
+            Form1.itemLengthLbl,
+            Form1.itemWidthLbl,
+            Form1.itemHeightLbl,
+            Form1.itemDatePurcLbl
         };
         editableAttribLables = new List<Label>(){
-            Form1.label40,
-            Form1.label19,
-            Form1.label20,
-            Form1.label22,
-            Form1.label23,
-            Form1.label24,
-            Form1.label25,
-            Form1.label26,
+            Form1.itemNameLbl,
+            Form1.itemInitQtyLbl,
+            Form1.itemCurrQtyLbl,
+            Form1.itemWeightLbsLbl,
+            Form1.itemWeightOzLbl,
+            Form1.itemLengthLbl,
+            Form1.itemWidthLbl,
+            Form1.itemHeightLbl,
         };
 
         itemTBoxes = new List<TextBox>()
         {
             Form1.textBox3,
-            Form1.textBox4,
-            Form1.textBox5
+            Form1.itemInitQtyTxtbox,
+            Form1.itemCurrQtyTxtbox
         };
         weightTBoxes = new List<TextBox>()
         {
-            Form1.textBox6,
-            Form1.textBox7
+            Form1.itemWeightLbsTxtbox,
+            Form1.itemWeightOzTxtbox
         };
         shippingTBoxes = new List<TextBox>()
         {
-            Form1.textBox6,
-            Form1.textBox7,
-            Form1.textBox8,
-            Form1.textBox9,
-            Form1.textBox10
+            Form1.itemWeightLbsTxtbox,
+            Form1.itemWeightOzTxtbox,
+            Form1.itemLengthTxtbox,
+            Form1.itemWidthTxtbox,
+            Form1.itemHeightTxtbox
         };
         editingAttributeControls = new List<Control>(){
             Form1.textBox3,
-            Form1.textBox4,
-            Form1.textBox5,
-            Form1.textBox6,
-            Form1.textBox7,
-            Form1.textBox8,
-            Form1.textBox9,
-            Form1.textBox10
+            Form1.itemInitQtyTxtbox,
+            Form1.itemCurrQtyTxtbox,
+            Form1.itemWeightLbsTxtbox,
+            Form1.itemWeightOzTxtbox,
+            Form1.itemLengthTxtbox,
+            Form1.itemWidthTxtbox,
+            Form1.itemHeightTxtbox
 
         };
 
         editingControls = new List<Control>(){
             Form1.textBox3,
-            Form1.textBox4,
-            Form1.textBox5,
-            Form1.textBox6,
-            Form1.textBox7,
-            Form1.textBox8,
-            Form1.textBox9,
-            Form1.textBox10,
-            Form1.button5
+            Form1.itemInitQtyTxtbox,
+            Form1.itemCurrQtyTxtbox,
+            Form1.itemWeightLbsTxtbox,
+            Form1.itemWeightOzTxtbox,
+            Form1.itemLengthTxtbox,
+            Form1.itemWidthTxtbox,
+            Form1.itemHeightTxtbox,
+            Form1.deleteShipInfoButton
         };
 
         labelTextboxPairs = new Dictionary<Control, Label>();
@@ -108,13 +108,13 @@ public class ItemViewTab : Tab
 
         controlBoxAttrib = new Dictionary<Control, string>
         {{ Form1.textBox3,  "item.Name" },
-        { Form1.textBox4,  "item.InitialQuantity" },
-        { Form1.textBox5,  "item.CurrentQuantity" },
-        { Form1.textBox6,  "shipping.WeightLbs" },
-        { Form1.textBox7, "shipping.WeightOz" },
-        { Form1.textBox8, "shipping.Length" },
-        { Form1.textBox9, "shipping.Width" },
-        { Form1.textBox10, "shipping.Height" }};
+        { Form1.itemInitQtyTxtbox,  "item.InitialQuantity" },
+        { Form1.itemCurrQtyTxtbox,  "item.CurrentQuantity" },
+        { Form1.itemWeightLbsTxtbox,  "shipping.WeightLbs" },
+        { Form1.itemWeightOzTxtbox, "shipping.WeightOz" },
+        { Form1.itemLengthTxtbox, "shipping.Length" },
+        { Form1.itemWidthTxtbox, "shipping.Width" },
+        { Form1.itemHeightTxtbox, "shipping.Height" }};
     }
 
 
@@ -162,12 +162,12 @@ public class ItemViewTab : Tab
                     // Get info for weight
                     int lbs = 0;
                     int oz = 0;
-                    if (!Int32.TryParse(Form1.textBox6.Text, out lbs)
-                     || !Int32.TryParse(Form1.textBox7.Text, out oz))
+                    if (!Int32.TryParse(Form1.itemWeightLbsTxtbox.Text, out lbs)
+                     || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out oz))
                     {
                         goodEdit = false;
-                        Util.clearTBox(Form1.textBox6);
-                        Util.clearTBox(Form1.textBox7);
+                        Util.clearTBox(Form1.itemWeightLbsTxtbox);
+                        Util.clearTBox(Form1.itemWeightOzTxtbox);
                         continue;
                     }
                     int ttlWeight = lbs * 16 + oz;
@@ -179,8 +179,8 @@ public class ItemViewTab : Tab
                     output = DatabaseConnector.runStatement(query);
                     // These must be cleared manually since they are both used at the same time.
                     // Clearing one produces an error when the other textbox is then used to get the total weight
-                    Util.clearTBox(Form1.textBox6);
-                    Util.clearTBox(Form1.textBox7);
+                    Util.clearTBox(Form1.itemWeightLbsTxtbox);
+                    Util.clearTBox(Form1.itemWeightOzTxtbox);
                     skipElem = true;
 
                 }
@@ -225,11 +225,11 @@ public class ItemViewTab : Tab
                         int h = 0;
                         try
                         {
-                            weightLbs = Int32.Parse(Form1.textBox6.Text);
-                            weightOz = Int32.Parse(Form1.textBox7.Text);
-                            l = Int32.Parse(Form1.textBox8.Text);
-                            w = Int32.Parse(Form1.textBox9.Text);
-                            h = Int32.Parse(Form1.textBox10.Text);
+                            weightLbs = Int32.Parse(Form1.itemWeightLbsTxtbox.Text);
+                            weightOz = Int32.Parse(Form1.itemWeightOzTxtbox.Text);
+                            l = Int32.Parse(Form1.itemLengthTxtbox.Text);
+                            w = Int32.Parse(Form1.itemWidthTxtbox.Text);
+                            h = Int32.Parse(Form1.itemHeightTxtbox.Text);
                         }
                         catch
                         {
@@ -325,33 +325,33 @@ public class ItemViewTab : Tab
 
         if (item.hasItemEntry())
         {
-            Form1.label40.Text = checkDefault(item.get_Name());
-            Form1.label19.Text = checkDefault(item.get_InitialQuantity());
-            Form1.label20.Text = checkDefault(item.get_CurrentQuantity());
-            Form1.label21.Text = checkDefault(item.get_ITEM_ID());
-            Form1.label51.Text = checkDefault(item.get_Name());
+            Form1.itemNameLbl.Text = checkDefault(item.get_Name());
+            Form1.itemInitQtyLbl.Text = checkDefault(item.get_InitialQuantity());
+            Form1.itemCurrQtyLbl.Text = checkDefault(item.get_CurrentQuantity());
+            Form1.itemItemNoLbl.Text = checkDefault(item.get_ITEM_ID());
+            Form1.SaleNameLbl.Text = checkDefault(item.get_Name());
         }
 
         if (item.hasPurchaseEntry())
         {
             Date datePurc = item.get_Date_Purchased();
-            Form1.label43.Text = datePurc.toDateString();
-            Form1.label17.Text = checkDefault(item.get_Amount_purchase());
+            Form1.itemDatePurcLbl.Text = datePurc.toDateString();
+            Form1.itemPurcPriceLbl.Text = checkDefault(item.get_Amount_purchase());
         }
 
         if (item.hasSaleEntry())
         {
-            Form1.label18.Text = item.getTotalSales().ToString();
+            Form1.itemSoldPriceLbl.Text = item.getTotalSales().ToString();
         }
 
         if (item.hasShippingEntry())
         {
             List<int> WeightLbsOz = Util.ozToOzLbs(item.get_Weight());
-            Form1.label22.Text = checkDefault(WeightLbsOz[0]);
-            Form1.label23.Text = checkDefault(WeightLbsOz[1]);
-            Form1.label24.Text = checkDefault(item.get_Length());
-            Form1.label25.Text = checkDefault(item.get_Width());
-            Form1.label26.Text = checkDefault(item.get_Height());
+            Form1.itemWeightLbsLbl.Text = checkDefault(WeightLbsOz[0]);
+            Form1.itemWeightOzLbl.Text = checkDefault(WeightLbsOz[1]);
+            Form1.itemLengthLbl.Text = checkDefault(item.get_Length());
+            Form1.itemWidthLbl.Text = checkDefault(item.get_Width());
+            Form1.itemHeightLbl.Text = checkDefault(item.get_Height());
         }
         updateUserInputDefaultText();
     }
@@ -380,20 +380,20 @@ public class ItemViewTab : Tab
 
     public void showItemPictures(ResultItem newItem)
     {
-        Form1.customControl21.setImages(newItem.get_Images());
+        Form1.allPictureViewer.setImages(newItem.get_Images());
         if (newItem.get_Images().Count > 0)
         {
-            Form1.customControl31.setImage(newItem.get_Images()[0]);
+            Form1.mainPictureViewer.setImage(newItem.get_Images()[0]);
         }
     }
 
     public void setMainImage(int currIndex)
     {
-        Form1.customControl31.setImage(Form1.customControl21.getImage(currIndex));
+        Form1.mainPictureViewer.setImage(Form1.allPictureViewer.getImage(currIndex));
     }
 
     public int getCurrImageID()
     {
-        return Form1.customControl31.getCurrImageID();
+        return Form1.mainPictureViewer.getCurrImageID();
     }
 }

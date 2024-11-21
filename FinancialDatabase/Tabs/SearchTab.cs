@@ -88,18 +88,18 @@ public class SearchTab
     public void search()
     {
 
-        Form1.customControl11.clearItems();
+        Form1.itemSearchView.clearItems();
         tabController.currentItems.Clear();
         List<string> searchTerms = new List<string>(Form1.searchBox.Text.Split(' '));
-        DateTime startDateRaw = Form1.dateTimePicker1.Value;
-        DateTime endDateRaw = Form1.dateTimePicker2.Value;
-        bool inStock = Form1.checkBox1.Checked;
-        bool soldOut = Form1.checkBox2.Checked;
-        bool dateCol = Form1.checkBox3.Checked;
-        bool priceCol = Form1.checkBox5.Checked;
+        DateTime startDateRaw = Form1.boughtAfterDatePicker.Value;
+        DateTime endDateRaw = Form1.boughtBeforeDatePicker.Value;
+        bool inStock = Form1.inStockCheckBox.Checked;
+        bool soldOut = Form1.soldOutCheckBox.Checked;
+        bool dateCol = Form1.showDateCheckBox.Checked;
+        bool priceCol = Form1.showPurcPriceCheckBox.Checked;
 
-        Date startDate = new Date(Form1.dateTimePicker1);
-        Date endDate  = new Date(Form1.dateTimePicker2);
+        Date startDate = new Date(Form1.boughtAfterDatePicker);
+        Date endDate  = new Date(Form1.boughtBeforeDatePicker);
         //string startDate = startDateRaw.Year.ToString() + "-" + startDateRaw.Month.ToString() + "-" + startDateRaw.Day.ToString();
         //string endDate = endDateRaw.Year.ToString() + "-" + endDateRaw.Month.ToString() + "-" + endDateRaw.Day.ToString();
 
@@ -114,19 +114,19 @@ public class SearchTab
 
         List<ResultItem> result = runSearch(Q);
         string itemStr = "";
-        Form1.customControl11.clearItems();
+        Form1.itemSearchView.clearItems();
         for (int i = 0; i < result.Count; i++)
         {
             itemStr = result[i].get_Name();
             if (priceCol) { itemStr = result[i].get_Amount_purchase() + ", " + itemStr; }
             if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
-            Form1.customControl11.addRow(result[i].get_Thumbnail().image, itemStr);
+            Form1.itemSearchView.addRow(result[i].get_Thumbnail().image, itemStr);
             tabController.currentItems.Add(result[i]);
             
         }
     }
 
     public void clearItems() {
-        Form1.customControl11.clearItems();
+        Form1.itemSearchView.clearItems();
     }
 }
