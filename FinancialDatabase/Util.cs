@@ -10,8 +10,8 @@ public class Util
     public static double DEFAULT_DOUBLE = -1.0;
     public static string DEFAULT_STRING = null;
     public static Date DEFAULT_DATE = new Date(-1, -1, -1);
-    public static Image DEFAULT_IMAGE = Image.FromFile(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Resources\NoImage.png");
-    public static List<Image> DEFAULT_IMAGES = new List<Image>() { DEFAULT_IMAGE };
+    public static MyImage DEFAULT_IMAGE = new MyImage(Image.FromFile(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Resources\NoImage.png"), -1);
+    public static List<MyImage> DEFAULT_IMAGES = new List<MyImage>() {DEFAULT_IMAGE};
     public static string imgStartToken = "'IMAGESTART***";
     public static string imgEndToken   = "***IMAGEEND'";
     public Util()
@@ -393,9 +393,11 @@ public class Util
 
     }
 
-    internal static Image rawImageStrToImage(string rawImage)
+    // Note: Keep this method returning Image. It's only meant to
+    // interact with raw images themselves w/o regard to the ImageID
+    public static Image rawImageStrToImage(string rawImage)
     {
-        if (rawImage == null) { return Util.DEFAULT_IMAGE; }
+        if (rawImage == null) { return Util.DEFAULT_IMAGE.image; }
         byte[] ret2 = new byte[rawImage.Length];
 
         rawImage = rawImage.Trim(new char[] { '[', ']' });

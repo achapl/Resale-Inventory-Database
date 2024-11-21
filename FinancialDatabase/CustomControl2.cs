@@ -14,7 +14,7 @@ namespace FinancialDatabase
 {
     public partial class CustomControl2 : ScrollableControl
     {
-        List<Image> imageList;
+        List<MyImage> imageList;
 
 
         int auxImageHeight;
@@ -57,8 +57,9 @@ namespace FinancialDatabase
             int i = 0;
             if (imageList == null) { return; }
             int vertOffset = 0;
-            foreach (Image image in imageList)
+            foreach (MyImage pair in imageList)
             {
+                Image image = pair.image;
                 vertOffset = i++ * (auxImageHeight + auxImagePadding);
                 drawImage(pe, image, getAuxImageSize(image), vertOffset, 0);
             }
@@ -127,7 +128,7 @@ namespace FinancialDatabase
             pe.Graphics.DrawImage(resizedImage, new Point(horizOffset, vertOffset));
         }
 
-        public void addImage(Image image)
+        public void addImage(MyImage image)
         {
             if (!imageList.Contains(image))
             {
@@ -146,7 +147,7 @@ namespace FinancialDatabase
 
         
 
-        public void setImages(List<Image> images)
+        public void setImages(List<MyImage> images)
         {
             if (images == null || images.Count == 0) { return; }
             clearImages();
@@ -171,7 +172,7 @@ namespace FinancialDatabase
             return rowNum;
         }
 
-        internal Image getImage(int currIndex)
+        internal MyImage getImage(int currIndex)
         {
             if (currIndex < 0) { return Util.DEFAULT_IMAGE; }
             if (currIndex > imageList.Count) { throw new Exception("ERROR: Trying to access image that is outside of bounds of imageList"); }

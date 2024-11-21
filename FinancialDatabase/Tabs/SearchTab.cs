@@ -120,7 +120,7 @@ public class SearchTab
             itemStr = result[i].get_Name();
             if (priceCol) { itemStr = result[i].get_Amount_purchase() + ", " + itemStr; }
             if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
-            Form1.customControl11.addRow(result[i].get_Thumbnail(), itemStr);
+            Form1.customControl11.addRow(result[i].get_Thumbnail().image, itemStr);
             tabController.currentItems.Add(result[i]);
             
         }

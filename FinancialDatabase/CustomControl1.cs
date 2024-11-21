@@ -66,8 +66,7 @@ namespace FinancialDatabase
         }
 
         protected void drawRows(PaintEventArgs pe)
-        {
-            
+        { 
             int rowCount = 0;
             foreach (row row in rowList)
             {

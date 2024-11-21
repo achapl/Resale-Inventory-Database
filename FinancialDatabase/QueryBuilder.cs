@@ -335,7 +335,7 @@ namespace FinancialDatabase
         {
             if (parsedItems == null || parsedItems.Count == 0) { throw new Exception("ERROR: QuyeryBuilder.buildThumbnailsSearchQuery(): Null or Empty list passed into it"); }
 
-            string query = "SELECT image.ItemID, thumbnail.thumbnail FROM image JOIN thumbnail ON image.thumbnailID = thumbnail.ThumbnailID WHERE image.ItemID IN (";
+            string query = "SELECT image.ItemID, image.IMAGE_ID, thumbnail.thumbnail FROM image JOIN thumbnail ON image.thumbnailID = thumbnail.ThumbnailID WHERE image.ItemID IN (";
             query += parsedItems[0].get_ITEM_ID().ToString();
 
             if (parsedItems.Count > 1)

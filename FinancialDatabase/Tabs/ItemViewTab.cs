@@ -387,8 +387,13 @@ public class ItemViewTab : Tab
         }
     }
 
-    internal void setMainImage(int currIndex)
+    public void setMainImage(int currIndex)
     {
         Form1.customControl31.setImage(Form1.customControl21.getImage(currIndex));
+    }
+
+    public int getCurrImageID()
+    {
+        return Form1.customControl31.getCurrImageID();
     }
 }

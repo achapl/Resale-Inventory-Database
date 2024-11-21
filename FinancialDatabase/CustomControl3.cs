@@ -17,7 +17,7 @@ namespace FinancialDatabase
         int mainImageHeight;
         int mainImageWidth;
         double mainImageAspectRatio;
-        Image mainImage;
+        MyImage mainImage;
 
         public CustomControl3()
         {
@@ -42,13 +42,13 @@ namespace FinancialDatabase
                 return;
             }
 
-            drawImage(pe, mainImage, getMainImageSize(mainImage), 0, 0);
+            drawImage(pe, mainImage.image, getMainImageSize(mainImage), 0, 0);
         }
 
-        public Size getMainImageSize(Image image)
+        public Size getMainImageSize(MyImage image)
         {
-            int w = image.Size.Width;
-            int h = image.Size.Height;
+            int w = image.image.Size.Width;
+            int h = image.image.Size.Height;
             double aspectRatio = (double)w / (double)h;
 
             Size newSize;
@@ -80,7 +80,7 @@ namespace FinancialDatabase
             InvokePaint(this, new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle));
         }
 
-        public void setImage(Image image)
+        public void setImage(MyImage image)
         {
             this.mainImage = image;
             updatePaint();
@@ -92,7 +92,9 @@ namespace FinancialDatabase
             updatePaint();
         }
 
-        
-
+        public int getCurrImageID()
+        {
+            return mainImage.imageID; 
+        }
     }
 }

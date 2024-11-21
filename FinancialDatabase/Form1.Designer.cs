@@ -140,6 +140,7 @@
             listBox3 = new ListBox();
             resultItemBindingSource = new BindingSource(components);
             openFileDialog1 = new OpenFileDialog();
+            button15 = new Button();
             tabControl1.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -345,6 +346,7 @@
             // 
             // ItemTab
             // 
+            ItemTab.Controls.Add(button15);
             ItemTab.Controls.Add(button14);
             ItemTab.Controls.Add(button13);
             ItemTab.Controls.Add(customControl31);
@@ -1306,6 +1308,16 @@
             openFileDialog1.FileName = "openFileDialog1";
             openFileDialog1.Multiselect = true;
             // 
+            // button15
+            // 
+            button15.Location = new Point(350, 405);
+            button15.Name = "button15";
+            button15.Size = new Size(96, 23);
+            button15.TabIndex = 62;
+            button15.Text = "Set Thumbnail";
+            button15.UseVisualStyleBackColor = true;
+            button15.Click += button15_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -1447,6 +1459,7 @@
         public Button button14;
         public Button button13;
         public OpenFileDialog openFileDialog1;
+        private Button button15;
     }
 }
 

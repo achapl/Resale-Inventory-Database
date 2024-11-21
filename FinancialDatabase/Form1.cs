@@ -162,7 +162,7 @@ namespace FinancialDatabase
 
             public void addItem(ResultItem newItem)
             {
-                Form1.customControl11.addRow(newItem.get_Images()[0], newItem.get_Name());
+                Form1.customControl11.addRow(newItem.get_Images()[0].image, newItem.get_Name());
                 currentItems.Add(newItem);
                 // TODO: CHECK IF newItem already in list
             }
@@ -208,7 +208,7 @@ namespace FinancialDatabase
 
                 this.currItem = newItem;
                 updateCurrItem();
-                
+
                 setNewItemItemView(newItem);
                 setNewItemPurchasedLots(newItem);
                 setNewItemSaleItem(newItem);
@@ -431,6 +431,13 @@ namespace FinancialDatabase
                     }
                 }
             }
+
+            public void setThumbnail()
+            {
+                int currImageID = itemViewTab.getCurrImageID();
+                int newThumbnailID = DatabaseConnector.getImageThumbnailID(currImageID);
+                DatabaseConnector.runStatement("UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + currItem.get_ITEM_ID() +";");
+            }
         }
 
 
@@ -590,13 +597,19 @@ namespace FinancialDatabase
         }
 
 
-        
+
 
         // Add Image(s)
         private void button13_Click(object sender, EventArgs e)
         {
             tabControl.insertImage();
             tabControl.updateCurrItem();
+        }
+
+        // Set Thumbnail
+        private void button15_Click(object sender, EventArgs e)
+        {
+            tabControl.setThumbnail();
         }
     }
 }

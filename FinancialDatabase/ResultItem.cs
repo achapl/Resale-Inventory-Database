@@ -44,11 +44,11 @@ public class ResultItem : IEquatable<ResultItem>
     string Notes_shipping;
 
     // From image table
-    List<Image> images;
+    List<MyImage> images;
 
     // Extra
     double totalSales;
-    private Image thumbnail;
+    private MyImage thumbnail;
 
 
 #pragma warning disable CS8618 // Util.DEFAULTs are set to non-null vals
@@ -201,7 +201,7 @@ public class ResultItem : IEquatable<ResultItem>
             }
         }
     }
-    public void set_Thumbnail(Image image)
+    public void set_Thumbnail(MyImage image)
     {
         if (image == null)
         {
@@ -213,7 +213,7 @@ public class ResultItem : IEquatable<ResultItem>
     public void set_Thumbnail(string itemAttribute)
     {
         Image i = Util.rawImageStrToImage(itemAttribute);
-        this.thumbnail = i;
+        this.thumbnail = new MyImage(i,-1);
     }
 
     public void getAttrib(string attrib, ref string ret)
@@ -574,7 +574,7 @@ public class ResultItem : IEquatable<ResultItem>
             return Notes_item;
         }
     }
-    public Image get_Thumbnail()
+    public MyImage get_Thumbnail()
     {
         if (this.thumbnail == null) { set_Thumbnail(Util.DEFAULT_IMAGE); } 
         return this.thumbnail;
@@ -784,7 +784,7 @@ public class ResultItem : IEquatable<ResultItem>
     }
 
     // From image table
-    public List<Image> get_Images() {
+    public List<MyImage> get_Images() {
         if (images == Util.DEFAULT_IMAGES || images == null)
         {
             return Util.DEFAULT_IMAGES;
@@ -1011,24 +1011,24 @@ public class ResultItem : IEquatable<ResultItem>
 
     // From image table
     public void clear_images() => this.images = Util.DEFAULT_IMAGES;
-    public void add_image(Image image) 
+    public void add_image(MyImage image) 
     {
         if (images == null)
         {
-            set_images(new List<Image>() { image });
+            set_images(new List<MyImage>() { image });
         } else
         {
             this.images.Append(image);
         }
     }
-    public void add_images(List<Image> images)
+    public void add_images(List<MyImage> images)
     {
         if (images.Count > 0)
         {
             this.images.AddRange(images);
         }
     }
-    public void set_images(List<Image> images)
+    public void set_images(List<MyImage> images)
     {
         if (images.Count > 0)
         {

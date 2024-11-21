@@ -142,13 +142,13 @@ public static class DatabaseConnector
 
         if (getSearchImages)
         {
-            parsedItems = DatabaseConnector.getSearchImages(parsedItems);
+            parsedItems = DatabaseConnector.getSearchThumbnails(parsedItems);
         }
         
         return parsedItems;
     }
 
-    private static List<ResultItem> getSearchImages(List<ResultItem> parsedItems)
+    private static List<ResultItem> getSearchThumbnails(List<ResultItem> parsedItems)
     {
         if (parsedItems.Count == 0)
         {
@@ -162,43 +162,44 @@ public static class DatabaseConnector
         rawResult = rawResult.Substring(1, rawResult.Length - 2);
         List<string> rawItems = Util.PairedCharTopLevelSplit(rawResult, '[');
 
-        Dictionary<int, Image> results = new Dictionary<int, Image>();
+        Dictionary<int, MyImage> results = new Dictionary<int, MyImage>();
         foreach (string rawItem in rawItems)
         {
-            // Seperate each item into individual item attributes to make a ResultItem with it
+            // Seperate each image item into individual image attributes to make a myImage with it
             List<string> imageAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
 
             int itemID = Int32.Parse(imageAttributes[0]);
 
-            byte[] imageRawBytes = new byte[imageAttributes[1].Length];
+            int imageID = Int32.Parse(imageAttributes[1]);
 
-            imageAttributes[1] = imageAttributes[1].Trim(new char[] { '[', ']' });
+            byte[] imageRawBytes = new byte[imageAttributes[2].Length];
 
-            List<string> s = new List<string>(imageAttributes[1].Split(", "));
+            imageAttributes[2] = imageAttributes[2].Trim(new char[] { '[', ']' });
+
+            List<string> s = new List<string>(imageAttributes[2].Split(", "));
             for (int j = 0; j < s.Count; j++)
             {
                 string elem = s[j];
                 imageRawBytes[j] = (byte)Int32.Parse(elem);
             }
-            Image i = Image.FromStream(new MemoryStream(imageRawBytes));
-
+            MyImage i = new MyImage(Image.FromStream(new MemoryStream(imageRawBytes)),-1);
             if (!results.ContainsKey(itemID))
             {
                 results.Add(itemID, i);
             }
         }
 
-        Image thumbnail;
+        MyImage thumbnail;
         foreach (ResultItem item in parsedItems)
         {
             if (results.TryGetValue(item.get_ITEM_ID(), out thumbnail))
             {
-                item.add_image(thumbnail);
-            } else
-            {
-                item.add_image(Util.DEFAULT_IMAGE);
+                item.set_Thumbnail(thumbnail);
             }
-            
+            else
+            {
+                item.set_Thumbnail(Util.DEFAULT_IMAGE);
+            }
         }
 
         return parsedItems;
@@ -605,7 +606,7 @@ public static class DatabaseConnector
         return (RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item), false).Count() == 1);   
     }
 
-    public static List<Image> getImages(ResultItem newItem)
+    public static List<MyImage> getImages(ResultItem newItem)
     {
 
         int lastrowid;
@@ -623,13 +624,14 @@ public static class DatabaseConnector
         rawResult = rawResult.Substring(1, rawResult.Length - 2);
         List<string> rawImageInfos = Util.PairedCharTopLevelSplit(rawResult, '[');
 
-        List<Image> results = new List<Image>();
+        List<MyImage> results = [];
         foreach (string rawImageInfo in rawImageInfos)
         {
             // Seperate each item into individual item attributes to make a ResultItem with it
-            List<string> imageAttributes = new List<string>(Util.splitOnTopLevelCommas(rawImageInfo));
+            List<string> imageAttributes = new(Util.splitOnTopLevelCommas(rawImageInfo));
             string rawImage = imageAttributes[1];
-            Image i = Util.rawImageStrToImage(rawImage);
+            int imageID = Int32.Parse(imageAttributes[0]);
+            MyImage i = new(Util.rawImageStrToImage(rawImage), imageID);
 
             results.Add(i);
         }
@@ -747,5 +749,18 @@ public static class DatabaseConnector
             iOUT++;
         }
         return bytesOUT;
+    }
+
+    internal static int getImageThumbnailID(int currImageID)
+    {
+        string rawResult = runStatement("SELECT thumbnailID FROM image WHERE IMAGE_ID = " + currImageID + ";");
+
+        // Trim '[]' that surrounds the whole string
+        rawResult = rawResult.Substring(1, rawResult.Length - 2);
+        List<string> rawImageInfos = Util.PairedCharTopLevelSplit(rawResult, '[');
+
+        int thumbnailID = Int32.Parse(rawImageInfos[0]);
+
+        return thumbnailID;
     }
 }
