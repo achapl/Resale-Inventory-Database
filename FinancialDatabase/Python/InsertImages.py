@@ -31,6 +31,7 @@ def getFirstInstanceOfChar (char:chr,string:str) -> int:
         if string[0] == char:
            return 0
         else:
+            # End of string, could not find char
             if len(string) == 1:
                 return -9999
             else:
@@ -44,8 +45,9 @@ def  getDashPos (fileName : str):
 # Get the number associated with the folder name
 def  getFolderItemNum (fileName : str):
     dashPos = getDashPos(fileName)
-    if dashPos <=4:
-        return fileName[:dashPos - 1]
+    if dashPos <= 5 and dashPos >= 0:
+        ret = fileName[:dashPos - 1]
+        return ret
     else:
         return "DNE"
     
@@ -95,11 +97,9 @@ map2 = getFolderNumbersMap()
 for [shipNum, folder] in map2:
     pics = getFolderContents(folder)
     itemID = getItemID(shipNum)
+    print("ShipNum: " + str(shipNum) + "\n")
     if itemID != -1:
         for pic in pics:
             runQuery("INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + imageDir + pic + "'), " + str(itemID) +");")    
         imageToThumbnail(itemID)
-
-    print(str(runQuery("SELECT count(IMAGE_ID) FROM image;")) + "\n")
-
         
