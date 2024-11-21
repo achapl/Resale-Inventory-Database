@@ -21,13 +21,13 @@ public class ItemViewTab : Tab
         updateButton = Form1.itemUpdateButton;
         editButton   = Form1.itemEditButton;
         generateTBoxGroups();
-        Util.clearLabelText(clearableAttribLables);
+        Util.clearLabelText(attributeValueLabels);
         showControlVisibility();
     }
 
     protected override void generateTBoxGroups()
     {
-        clearableAttribLables = new List<Label>() {
+        attributeValueLabels = new List<Label>() {
             Form1.itemNameLbl,
             Form1.itemPurcPriceLbl,
             Form1.itemSoldPriceLbl,
@@ -41,7 +41,7 @@ public class ItemViewTab : Tab
             Form1.itemHeightLbl,
             Form1.itemDatePurcLbl
         };
-        editableAttribLables = new List<Label>(){
+        mutableAttribValueLabels = new List<Label>(){
             Form1.itemNameLbl,
             Form1.itemInitQtyLbl,
             Form1.itemCurrQtyLbl,
@@ -52,9 +52,9 @@ public class ItemViewTab : Tab
             Form1.itemHeightLbl,
         };
 
-        itemTBoxes = new List<TextBox>()
+        newItemTBoxes = new List<TextBox>()
         {
-            Form1.textBox3,
+            Form1.itemNameTxtbox,
             Form1.itemInitQtyTxtbox,
             Form1.itemCurrQtyTxtbox
         };
@@ -71,8 +71,8 @@ public class ItemViewTab : Tab
             Form1.itemWidthTxtbox,
             Form1.itemHeightTxtbox
         };
-        editingAttributeControls = new List<Control>(){
-            Form1.textBox3,
+        mutableAttribValueControls = new List<Control>(){
+            Form1.itemNameTxtbox,
             Form1.itemInitQtyTxtbox,
             Form1.itemCurrQtyTxtbox,
             Form1.itemWeightLbsTxtbox,
@@ -83,8 +83,8 @@ public class ItemViewTab : Tab
 
         };
 
-        editingControls = new List<Control>(){
-            Form1.textBox3,
+        hideableAttribValueControls = new List<Control>(){
+            Form1.itemNameTxtbox,
             Form1.itemInitQtyTxtbox,
             Form1.itemCurrQtyTxtbox,
             Form1.itemWeightLbsTxtbox,
@@ -98,16 +98,16 @@ public class ItemViewTab : Tab
         labelTextboxPairs = new Dictionary<Control, Label>();
 
         int i = 0;
-        foreach (Control c in editingAttributeControls)
+        foreach (Control c in mutableAttribValueControls)
         {
             if (c is not Button)
             {
-                labelTextboxPairs[c] = editableAttribLables[i++];
+                labelTextboxPairs[c] = mutableAttribValueLabels[i++];
             }
         }
 
-        controlBoxAttrib = new Dictionary<Control, string>
-        {{ Form1.textBox3,  "item.Name" },
+        controlAttrib = new Dictionary<Control, string>
+        {{ Form1.itemNameTxtbox,  "item.Name" },
         { Form1.itemInitQtyTxtbox,  "item.InitialQuantity" },
         { Form1.itemCurrQtyTxtbox,  "item.CurrentQuantity" },
         { Form1.itemWeightLbsTxtbox,  "shipping.WeightLbs" },
@@ -187,7 +187,7 @@ public class ItemViewTab : Tab
                 else
                 {
                     string attrib = t.Text;
-                    string type = tabController.colDataTypes[controlBoxAttrib[c]];
+                    string type = tabController.colDataTypes[controlAttrib[c]];
                     if (!Util.checkTypeOkay(attrib, type))
                     {
                         goodEdit = false;
@@ -196,10 +196,10 @@ public class ItemViewTab : Tab
                     switch (c)
                     {
                         case TextBox:
-                            query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlBoxAttrib[c], type, t.Text);
+                            query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlAttrib[c], type, t.Text);
                             break;
                         case DateTimePicker:
-                            query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlBoxAttrib[c], type, new Date(c));
+                            query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlAttrib[c], type, new Date(c));
                             break;
                     }
                     output = DatabaseConnector.runStatement(query);
@@ -269,7 +269,7 @@ public class ItemViewTab : Tab
                         break;
                     }
                 }
-                else if (itemTBoxes.Contains(t))
+                else if (newItemTBoxes.Contains(t))
                 {
                     goodEdit = false;
                     Console.WriteLine("ERROR: no item entry for CurrItem, This should not be possible");
@@ -321,7 +321,7 @@ public class ItemViewTab : Tab
 
     public override void showItemAttributes(ResultItem item)
     { 
-        Util.clearLabelText(clearableAttribLables);
+        Util.clearLabelText(attributeValueLabels);
 
         if (item.hasItemEntry())
         {

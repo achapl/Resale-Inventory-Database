@@ -12,7 +12,7 @@ public class SaleTab : Tab
         editButton = Form1.SaleEditSaleButton;
         updateButton = Form1.SaleUpdateButton;
         generateTBoxGroups();
-        Util.clearLabelText(clearableAttribLables);
+        Util.clearLabelText(attributeValueLabels);
         showControlVisibility();
     }
 
@@ -20,13 +20,13 @@ public class SaleTab : Tab
     {
         
 
-        editingAttributeControls = new List<Control>()
+        mutableAttribValueControls = new List<Control>()
         {
             Form1.SaleAmountTextbox,
             Form1.SaleDatePicker
         };
 
-        editingControls = new List<Control>()
+        hideableAttribValueControls = new List<Control>()
         {
             Form1.SaleAmountTextbox,
             Form1.SaleDatePicker,
@@ -34,19 +34,19 @@ public class SaleTab : Tab
             Form1.SaleDeleteSaleButton
         };
 
-        clearableAttribLables = new List<Label>()
+        attributeValueLabels = new List<Label>()
         {
             Form1.SaleNameLbl,
             Form1.SaleAmountLbl,
             Form1.SaleDateLbl
         };
 
-        itemTBoxes = new List<TextBox>()
+        newItemTBoxes = new List<TextBox>()
         {
             Form1.SaleNewSaleAmountTextbox
         };
 
-        editableAttribLables = new List<Label>()
+        mutableAttribValueLabels = new List<Label>()
         {
             Form1.SaleAmountLbl,
             Form1.SaleDateLbl
@@ -55,15 +55,15 @@ public class SaleTab : Tab
         labelTextboxPairs = new Dictionary<Control, Label>();
 
         int i = 0;
-        foreach (Control c in editingAttributeControls)
+        foreach (Control c in mutableAttribValueControls)
         {
             if (c is not Button)
             {
-                labelTextboxPairs[c] = editableAttribLables[i++];
+                labelTextboxPairs[c] = mutableAttribValueLabels[i++];
             }
         }
 
-        controlBoxAttrib = new Dictionary<Control, string>
+        controlAttrib = new Dictionary<Control, string>
         {
             { Form1.SaleDatePicker,  "sale.Date_Sold" },
             { Form1.SaleAmountTextbox,        "sale.Amount_sale" }
@@ -102,7 +102,7 @@ public class SaleTab : Tab
             string query = "";
             if (tableEntryExists(t))
             {
-                string type = tabController.colDataTypes[controlBoxAttrib[c]];
+                string type = tabController.colDataTypes[controlAttrib[c]];
                 if (c is TextBox)
                 // TODO: Tpye Check?
                 {
@@ -114,11 +114,11 @@ public class SaleTab : Tab
                         // TODO: Show an error message for incorrect attribute inputted!
                         continue;
                     }
-                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrSale(), controlBoxAttrib[c], type, t.Text);
+                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrSale(), controlAttrib[c], type, t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrSale(), controlBoxAttrib[c], type, new Date(c));
+                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrSale(), controlAttrib[c], type, new Date(c));
                 }
 
                 if (goodEdit)
@@ -151,7 +151,7 @@ public class SaleTab : Tab
             flipEditMode();
         }
 
-        Util.clearLabelText(clearableAttribLables);
+        Util.clearLabelText(attributeValueLabels);
     }
 
     override public void flipEditMode()
@@ -212,7 +212,7 @@ public class SaleTab : Tab
         newItem.set_Date_Sold(new Date(Form1.SaleNewSaleDatePicker));
         newItem.set_ItemID_sale(getCurrItem().get_ITEM_ID());
 
-        Util.clearTBox(itemTBoxes);
+        Util.clearTBox(newItemTBoxes);
         DatabaseConnector.insertSale(newItem);
         updateSaleViewListBox(getCurrItem());
     }
@@ -244,8 +244,8 @@ public class SaleTab : Tab
     
     public void clearAttribs()
     {
-        Util.clearLabelText(clearableAttribLables);
-        Util.clearTBox(itemTBoxes);
+        Util.clearLabelText(attributeValueLabels);
+        Util.clearTBox(newItemTBoxes);
         Form1.PurcDatePicker.Value = DateTime.Now;
     }
 

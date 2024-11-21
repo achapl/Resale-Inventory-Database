@@ -7,16 +7,16 @@ public abstract class Tab
 
 
     public bool inEditingState;
-    protected List<Control> editingAttributeControls;
-    protected List<Label> editableAttribLables;
-    protected List<Control> editingControls;
-    private List<Control> saleControls;
+    protected List<Control> mutableAttribValueControls;
+    protected List<Label> mutableAttribValueLabels;
+    protected List<Control> hideableAttribValueControls;
+    private List<Control> saleControls; // TODO: This should be able to be changed into mutableAttribValueControls, double check this
 
     protected List<TextBox> shippingTBoxes;
-    protected List<TextBox> itemTBoxes;
+    protected List<TextBox> newItemTBoxes;
     protected Dictionary<Control, Label> labelTextboxPairs;
-    public    Dictionary<Control, string> controlBoxAttrib;
-    protected List<Label> clearableAttribLables;
+    public    Dictionary<Control, string> controlAttrib;
+    protected List<Label> attributeValueLabels;
     
 
     protected List<Control> allClearableControl;
@@ -53,7 +53,7 @@ public abstract class Tab
             Form1.SaleAmountLbl,
             Form1.SaleNameLbl,
             Form1.SaleDateLbl,
-            Form1.textBox3,
+            Form1.itemNameTxtbox,
             Form1.itemInitQtyTxtbox,
             Form1.itemCurrQtyTxtbox,
             Form1.itemWeightLbsTxtbox,
@@ -89,7 +89,7 @@ public abstract class Tab
     {
         
         List<Control> returnList = new List<Control>();
-        foreach (Control control in editingAttributeControls)
+        foreach (Control control in mutableAttribValueControls)
         {
             string itemValue = "";
             string saleValue = "";
@@ -100,7 +100,7 @@ public abstract class Tab
             switch (control)
             {
                 case TextBox:
-                    string attrib = controlBoxAttrib[control];
+                    string attrib = controlAttrib[control];
                     
                     // Determine which table (sale/item) the Textbox belongs to to compare it with the propor attribute
                     if (saleControls.Contains(control as TextBox))
@@ -205,13 +205,13 @@ public abstract class Tab
         editButton.Text = inEditingState ? "View" : "Edit";
         updateButton.Visible = inEditingState;
 
-        foreach (Label field in editableAttribLables)
+        foreach (Label field in mutableAttribValueLabels)
         {
             field.Visible = !inEditingState;
         }
 
 
-        foreach (Control field in editingControls)
+        foreach (Control field in hideableAttribValueControls)
         {
             field.Visible = inEditingState;
         }
@@ -219,7 +219,7 @@ public abstract class Tab
 
     public void updateUserInputDefaultText()
     {
-        foreach (Control field in editingControls)
+        foreach (Control field in hideableAttribValueControls)
         {
             if (field is TextBox)
             {
@@ -260,11 +260,11 @@ public abstract class Tab
 
     protected bool tableEntryExists(TextBox t)
     {
-        if (controlBoxAttrib.ContainsKey(t))
+        if (controlAttrib.ContainsKey(t))
         {
             string ret = "";
             // Check if the attribute associated with the textbox is a default value in the curr item
-            tabController.getCurrItem().getAttribAsStr(controlBoxAttrib[t], ref ret);
+            tabController.getCurrItem().getAttribAsStr(controlAttrib[t], ref ret);
             if (ret.CompareTo(Util.DEFAULT_INT.ToString()) == 0 ||
                 ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
                 ret is null ||

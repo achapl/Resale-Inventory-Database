@@ -291,13 +291,13 @@ namespace FinancialDatabase
             {
 
                 string attrib = "";
-                if (itemViewTab.controlBoxAttrib.ContainsKey(textBox))
+                if (itemViewTab.controlAttrib.ContainsKey(textBox))
                 {
-                    attrib = itemViewTab.controlBoxAttrib[textBox];
+                    attrib = itemViewTab.controlAttrib[textBox];
                 }
-                else if (purchasedLotTab.controlBoxAttrib.ContainsKey(textBox))
+                else if (purchasedLotTab.controlAttrib.ContainsKey(textBox))
                 {
-                    attrib = purchasedLotTab.controlBoxAttrib[textBox];
+                    attrib = purchasedLotTab.controlAttrib[textBox];
                 }
                 else
                 {

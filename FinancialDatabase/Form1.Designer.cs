@@ -68,7 +68,7 @@
             itemInitQtyLbl = new Label();
             itemSoldPriceLbl = new Label();
             itemPurcPriceLbl = new Label();
-            textBox3 = new TextBox();
+            itemNameTxtbox = new TextBox();
             itemTagHeightLbl = new Label();
             itemTagWidthLbl = new Label();
             itemTagLengthLbl = new Label();
@@ -367,7 +367,7 @@
             ItemTab.Controls.Add(itemInitQtyLbl);
             ItemTab.Controls.Add(itemSoldPriceLbl);
             ItemTab.Controls.Add(itemPurcPriceLbl);
-            ItemTab.Controls.Add(textBox3);
+            ItemTab.Controls.Add(itemNameTxtbox);
             ItemTab.Controls.Add(itemTagHeightLbl);
             ItemTab.Controls.Add(itemTagWidthLbl);
             ItemTab.Controls.Add(itemTagLengthLbl);
@@ -601,14 +601,14 @@
             itemPurcPriceLbl.TabIndex = 27;
             itemPurcPriceLbl.Text = "label17";
             // 
-            // textBox3
+            // itemNameTxtbox
             // 
-            textBox3.Location = new Point(120, 49);
-            textBox3.Margin = new Padding(4, 3, 4, 3);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(309, 23);
-            textBox3.TabIndex = 14;
-            textBox3.Leave += TextBoxAttribute_Leave;
+            itemNameTxtbox.Location = new Point(120, 49);
+            itemNameTxtbox.Margin = new Padding(4, 3, 4, 3);
+            itemNameTxtbox.Name = "itemNameTxtbox";
+            itemNameTxtbox.Size = new Size(309, 23);
+            itemNameTxtbox.TabIndex = 14;
+            itemNameTxtbox.Leave += TextBoxAttribute_Leave;
             // 
             // itemTagHeightLbl
             // 
@@ -1375,7 +1375,7 @@
         public System.Windows.Forms.Label itemTagHeightLbl;
         public System.Windows.Forms.Label itemTagWidthLbl;
         public System.Windows.Forms.Label itemTagLengthLbl;
-        public System.Windows.Forms.TextBox textBox3;
+        public System.Windows.Forms.TextBox itemNameTxtbox;
         public System.Windows.Forms.Label itemWidthLbl;
         public System.Windows.Forms.Label itemLengthLbl;
         public System.Windows.Forms.Label itemWeightOzLbl;

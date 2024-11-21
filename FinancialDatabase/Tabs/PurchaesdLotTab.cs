@@ -18,41 +18,41 @@ public class PurchasedLotTab : Tab
         updateButton = Form1.UpdatePurcButton;
         editButton   = Form1.EditPurcButton;
         generateTBoxGroups();
-        Util.clearLabelText(clearableAttribLables);
+        Util.clearLabelText(attributeValueLabels);
         showControlVisibility();
     }
 
     protected override void generateTBoxGroups()
     {
-        editingAttributeControls = new List<Control>()
+        mutableAttribValueControls = new List<Control>()
         {
             Form1.PurcPurcPriceTextbox,
             Form1.PurcPurcNotesTextbox,
             Form1.PurcDatePicker
         };
 
-        editingControls = new List<Control>()
+        hideableAttribValueControls = new List<Control>()
         {
             Form1.PurcPurcPriceTextbox,
             Form1.PurcPurcNotesTextbox,
             Form1.PurcDatePicker
         };
 
-        editableAttribLables = new List<Label>()
+        mutableAttribValueLabels = new List<Label>()
         {
             Form1.PurcPurcPriceLbl,
             Form1.PurcPurcNotesLbl,
             Form1.PurcPurcDateLbl
         };
 
-        clearableAttribLables = new List<Label>()
+        attributeValueLabels = new List<Label>()
         {
             Form1.PurcPurcPriceLbl,
             Form1.PurcPurcNotesLbl,
             Form1.PurcPurcDateLbl
         };
 
-        itemTBoxes = new List<TextBox>()
+        newItemTBoxes = new List<TextBox>()
         {
             Form1.PurcNameTextbox,
             Form1.PurcInitQtyTextbox,
@@ -76,7 +76,7 @@ public class PurchasedLotTab : Tab
             Form1.PurcDatePicker
         };
 
-        foreach (Control c in itemTBoxes)
+        foreach (Control c in newItemTBoxes)
         {
             newPurchaseGroupControls.Add(c);
         }
@@ -84,15 +84,15 @@ public class PurchasedLotTab : Tab
         labelTextboxPairs = new Dictionary<Control, Label>();
 
         int i = 0;
-        foreach (Control c in editingAttributeControls)
+        foreach (Control c in mutableAttribValueControls)
         {
             if (c is not Button)
             {
-                labelTextboxPairs[c] = editableAttribLables[i++];
+                labelTextboxPairs[c] = mutableAttribValueLabels[i++];
             }
         }
 
-        controlBoxAttrib = new Dictionary<Control, string>
+        controlAttrib = new Dictionary<Control, string>
         {
             { Form1.PurcDatePicker,  "purchase.Date_Purchased" },
             { Form1.PurcPurcPriceTextbox,        "purchase.Amount_purchase" },
@@ -130,7 +130,7 @@ public class PurchasedLotTab : Tab
     public override void showItemAttributes(ResultItem item)
     {
 
-        Util.clearLabelText(clearableAttribLables);
+        Util.clearLabelText(attributeValueLabels);
 
         if (item.hasPurchaseEntry())
         {
@@ -169,7 +169,7 @@ public class PurchasedLotTab : Tab
             string query = "";
             if (tableEntryExists(t))
             {
-                string type = tabController.colDataTypes[controlBoxAttrib[c]];
+                string type = tabController.colDataTypes[controlAttrib[c]];
                 if (c is TextBox)
                 {
                     
@@ -179,11 +179,11 @@ public class PurchasedLotTab : Tab
                         goodEdit = false;
                         continue;
                     }
-                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlBoxAttrib[c], type, t.Text);
+                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlAttrib[c], type, t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlBoxAttrib[c], type, new Date(c));
+                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlAttrib[c], type, new Date(c));
                 }
 
                 if (goodEdit)
@@ -334,7 +334,7 @@ public class PurchasedLotTab : Tab
             newItem.set_PurchaseID(tabController.getCurrItem().get_PurchaseID());
         }
 
-        Util.clearTBox(itemTBoxes);
+        Util.clearTBox(newItemTBoxes);
         Util.clearTBox(shippingTBoxes);
         int itemID = -1;
         DatabaseConnector.insertItem(newItem, out itemID);
