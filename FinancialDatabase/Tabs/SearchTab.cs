@@ -39,7 +39,7 @@ public class SearchTab
         // (max one hit per search term)
         List<ItemHitPair> itemsAndHits = new List<ItemHitPair>();
 
-
+        // Note: Defualt search, "", is accounted for in this loop, still searches for all items
         foreach (string searchTerm in Q.getSearchTerms())
         {
             Q.setSingleSearchTerm(searchTerm);

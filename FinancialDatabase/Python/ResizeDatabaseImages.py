@@ -3,6 +3,7 @@
 # With the original image's thumbnailID pointing to the new smaller thumbnail version
 
 from asyncio.windows_events import NULL
+from re import M
 from Connection.DtbConnAndQuery import runQuery
 from PIL import Image
 import os
@@ -30,14 +31,16 @@ def byteArrToImage(byteArr):
 # Resize Image
 
 def resizeImage(image):
+    if type(image) == type(1):
+        pass
     image.thumbnail(maxDims)
     return image
 
-# Save Image
 
 def getImagePath(name, image):
     return imageDir + str(name) + "." + image.format
 
+# Save the image
 def saveImage(image, imagePath):
     image.save(imagePath)
 
@@ -45,25 +48,64 @@ def saveImage(image, imagePath):
 def insertImage(imagePath):
     a, b, lastRowID = runQuery("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + imagePath + "'));")
     return lastRowID
-    #f.write("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + imagePath + "'));\n")
     
 
 
 # Update old image ID to reflect new thumbnail ID
 
 def updateID(imageID, thumbnailID):
-    runQuery("UPDATE image SET thumbnailID = " + str(thumbnailID) + " WHERE IMAGE_ID = " + str(imageID))
-    #f.write("UPDATE image SET thumbnailID = last_insert_id() WHERE IMAGE_ID = " + str(imageID) + ";\n")
-
-#runQuery("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\0.JPEG'));")
+    query = "UPDATE image SET thumbnailID = " + str(thumbnailID) + " WHERE IMAGE_ID = " + str(imageID) + ";" 
+    runQuery(query)
 
 
-try:
-    f = open("C:/users/owner/Desktop/InsertThumbnails.sql",'x')
-except:
-    f = open("C:/users/owner/Desktop/InsertThumbnails.sql",'w')
+def imageIDToThumbnail(imageID):
+    image = byteArrToImage(convertedIm)
 
-runQuery("DELETE FROM thumbnail")
+
+def imageToThumbnail(itemID):
+    # Modify next line to get 
+    imagesAndData, colNames, lastColID = runQuery("SELECT IMAGE_ID, image FROM image WHERE ItemID = " + str(itemID) + ";")
+    hasThumbnail = False
+    count = 0
+    for [imageID, byteImage] in imagesAndData:
+        convertedIm = bytes(byteImage)
+        imageUnresized = byteArrToImage(convertedIm)
+        image = resizeImage(imageUnresized)
+    
+        imagePath = getImagePath(count, image)
+        count += 1
+        saveImage(image, imagePath)
+
+        thumbnailID = insertImage(imagePath)
+        insertImage(imagePath)
+        updateID(imageID, thumbnailID)
+
+        # Only give the thumbnail as the first image in the series
+        if hasThumbnail == True:
+            continue
+        
+
+        result,_,_  = runQuery("SELECT thumbnailID FROM item WHERE ITEM_ID = " + str(itemID) + ";")
+        # Only 1 should be returned since itemID is unique. More than that would be an error
+        if len(result) > 1:
+            print("ERROR: Multiple Returns for single ITEM_ID: " + str(itemID))
+            exit
+
+        if len(result) == 0:
+            print("ERROR: No Item Returned for ITEM_ID: " + str(itemID))
+            exit
+
+        oldThumbnailID = result[0][0]
+
+        if oldThumbnailID is None:
+            runQuery("UPDATE item SET thumbnailID = " + str(thumbnailID) + " WHERE ITEM_ID = " + str(itemID) + ";")
+
+        hasThumbnail = True
+
+
+
+
+"""runQuery("DELETE FROM thumbnail")
 
 imagesAndData = getImagesAndData()
 
@@ -76,14 +118,7 @@ for row in imagesAndData:
     image = byteArrToImage(convertedIm)
     if image == NULL:
         continue
-    image = resizeImage(image)
-    
-    imagePath = getImagePath(count, image)
-    saveImage(image, imagePath)
-
-    thumbnailID = insertImage(imagePath)
-    insertImage(imagePath)
-    updateID(imageID, thumbnailID)
+    imageToThumbnail(image, imageID) 
 
     count += 1
-    
+    """

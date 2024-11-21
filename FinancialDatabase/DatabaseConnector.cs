@@ -127,7 +127,7 @@ public static class DatabaseConnector
     }
 
     // General queries, done by manual string input
-    public static List<ResultItem> RunItemSearchQuery(string query, bool getImages)
+    public static List<ResultItem> RunItemSearchQuery(string query, bool getSearchImages)
     {
         if (query.CompareTo("") == 0)
         {
@@ -140,9 +140,9 @@ public static class DatabaseConnector
 
         List<ResultItem> parsedItems = parseItemSearchResult(queryOutput, colNames);
 
-        if (getImages)
+        if (getSearchImages)
         {
-            parsedItems = getSearchImages(parsedItems);
+            parsedItems = DatabaseConnector.getSearchImages(parsedItems);
         }
         
         return parsedItems;

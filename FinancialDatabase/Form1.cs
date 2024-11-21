@@ -88,6 +88,7 @@ namespace FinancialDatabase
             }
             public ResultItem getCurrentItemsAt(int index)
             {
+                if (index == -1) { return null; }
                 return currentItems[index];
             }
             public ResultItem getCurrentPurchaseItemsAt(int index) => currentPurchaseItems[index];

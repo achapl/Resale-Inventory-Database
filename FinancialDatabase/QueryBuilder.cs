@@ -9,7 +9,7 @@ namespace FinancialDatabase
 {
 	public static class QueryBuilder
 	{
-        public const string DEFAULTQUERY = "SELECT * FROM item;";
+        public const string DEFAULTQUERY = "SELECT item.ITEM_ID, item.Name, thumbnail.thumbnail FROM item LEFT JOIN thumbnail ON thumbnail.ThumbnailID = item.ThumbnailID;";
 
         public static string defaultQuery()
         {
@@ -92,7 +92,7 @@ namespace FinancialDatabase
             // NOTE: '^' is a special defined escape character removed in the python script so CMD doesn't assume '>' means pipe command
             if (Q.getSingleTerm().CompareTo("") == 0)
             {
-                query = "SELECT * FROM item;";
+                query = defaultQuery(); 
             }
             else
             {

@@ -1,12 +1,16 @@
 
 #TODO: Delete if script is still working. from asyncio.windows_events import NULL
 #from tkinter import INSERT
+from signal import raise_signal
+from PIL import Image
 from Connection.DtbConnAndQuery import runQuery
+from ResizeDatabaseImages import imageToThumbnail
 import os
 import time
 import shutil
 
-parentDir = "C:\\Users\\Owner\\Desktop\\InsertImagesTest\\"
+#parentDir = "C:\\Users\\Owner\\Desktop\\InsertImagesTest\\"
+parentDir = "C:\\Users\\Owner\\Desktop\\Selling"
 parentDirSingleSlash = parentDir.replace('\\\\','\\')
 
 imageDir = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/"
@@ -65,14 +69,16 @@ def copyFolderContents (folder:str):
         shutil.copyfile(filePath, destPath)
 
 def getItemID(shipNum:int):
-    shipNum = runQuery("SELECT ITEM_ID FROM item WHERE Notes_item LIKE '%" + str(shipNum) + "%';")[0]
+    shipNum = runQuery("SELECT ITEM_ID FROM item WHERE (Notes_item LIKE '%Orig Shipping Info Number: " + str(shipNum) + ",%' OR Notes_item LIKE '%Orig Shipping Info Number: " + str(shipNum) + "');")[0]
     if len(shipNum) != 1:
         return -1
     return int(shipNum[0][0])
 
-
+runQuery("UPDATE item SET thumbnailID = NULL;")
 runQuery("DELETE FROM image")
+runQuery("DELETE FROM thumbnail")
 
+# Clear the mySQL upload directory
 for root, dirs, files in os.walk(imageDir):
     if root == imageDir:
         continue
@@ -80,21 +86,20 @@ for root, dirs, files in os.walk(imageDir):
         os.unlink(os.path.join(root, f))
     for d in dirs:
         shutil.rmtree(os.path.join(root, d))
-
-for [shipNum, folder] in getFolderNumbersMap():
+map1 = getFolderNumbersMap()
+for [shipNum, folder] in map1:
     pics = getFolderContents(folder)
     copyFolderContents(folder)
-f = None
-try:
-    f = open("C:/users/owner/Desktop/InsertImages.sql",'x')
-except:
-    f = open("C:/users/owner/Desktop/InsertImages.sql",'w')
-runQuery("SHOW VARIABLES")
-for [shipNum, folder] in getFolderNumbersMap():
+
+map2 = getFolderNumbersMap()
+for [shipNum, folder] in map2:
     pics = getFolderContents(folder)
     itemID = getItemID(shipNum)
     if itemID != -1:
         for pic in pics:
             runQuery("INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + imageDir + pic + "'), " + str(itemID) +");")    
+        imageToThumbnail(itemID)
 
-f.close()
+    print(str(runQuery("SELECT count(IMAGE_ID) FROM image;")) + "\n")
+
+        
