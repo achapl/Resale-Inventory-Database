@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Compile Update="CustomControl1.cs">
+    <Compile Update="ItemSearchViewer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="CustomControl2.cs">
+    <Compile Update="AllPictureViewer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="CustomControl3.cs">
+    <Compile Update="MainPictureViewer.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Form1.cs">

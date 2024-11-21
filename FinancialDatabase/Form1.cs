@@ -463,19 +463,19 @@ namespace FinancialDatabase
 
 
         // ItemViewTab Update button
-        private void button1_Click(object sender, EventArgs e)
+        private void manualQueryButton_Click(object sender, EventArgs e)
         {
             tabControl.runManualQuery(manualQueryTBox.Text);
         }
 
         // Search Button in Search Tab
-        private void button2_Click(object sender, EventArgs e)
+        private void searchButton_Click(object sender, EventArgs e)
         {
             tabControl.search();
         }
 
         // Purchased Lot listbox double click
-        private void listBox2_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void purcListBox_DoubleClick(object sender, MouseEventArgs e)
         {
             int index = this.PurchaseListBox.IndexFromPoint(e.Location);
             ResultItem item = tabControl.getCurrentPurchaseItemsAt(index);
@@ -492,7 +492,7 @@ namespace FinancialDatabase
         }
 
         // Item Tab Update Item
-        private void button1_Click_1(object sender, EventArgs e)
+        private void itemUpdateButton_Click(object sender, EventArgs e)
         {
             tabControl.getItemViewUpdate();
         }
@@ -513,49 +513,49 @@ namespace FinancialDatabase
         }
 
         // ItemView View/Edit Button
-        private void button4_Click(object sender, EventArgs e)
+        private void itemEditButton_Click(object sender, EventArgs e)
         {
             tabControl.flipIVEditMode();
         }
 
         // ItemView Delete Shipping Info
-        private void button5_Click(object sender, EventArgs e)
+        private void deleteShipInfoButton_Click(object sender, EventArgs e)
         {
             tabControl.IVdeleteShippingInfo();
         }
 
         // PurchasedLot View/Edit Button
-        private void button6_Click(object sender, EventArgs e)
+        private void editPurcButton_Click(object sender, EventArgs e)
         {
             tabControl.PLflipEditMode();
         }
 
         // PurchasedLot update item
-        private void button7_Click(object sender, EventArgs e)
+        private void updatePurcButton_Click(object sender, EventArgs e)
         {
             tabControl.getPurchasedLotUpdate();
         }
 
         // Add sale to purchase
-        private void button2_Click_1(object sender, EventArgs e)
+        private void addItemButton_Click(object sender, EventArgs e)
         {
             tabControl.PLaddItem();
         }
 
         // New Purchase
-        private void button3_Click(object sender, EventArgs e)
+        private void newPurcButton_Click(object sender, EventArgs e)
         {
             tabControl.PLnewPurchase();
         }
 
         // SaleTab View/Edit button
-        private void button9_Click(object sender, EventArgs e)
+        private void saleEditSaleButton_Click(object sender, EventArgs e)
         {
             tabControl.saleTflipEditMode();
         }
 
         // SaleTab select sale
-        private void listBox3_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void saleListBox_DoubleClick(object sender, MouseEventArgs e)
         {
             int index = this.saleListBox.IndexFromPoint(e.Location);
             tabControl.setCurrSale(index);
@@ -563,31 +563,31 @@ namespace FinancialDatabase
         }
 
         // SaleTab Update button
-        private void button10_Click(object sender, EventArgs e)
+        private void saleUpdateButton_Click(object sender, EventArgs e)
         {
             tabControl.UpdateCurrSaleWithUserInput();
         }
 
         // SaleTab Add Sale
-        private void button8_Click(object sender, EventArgs e)
+        private void addSaleButton_Click(object sender, EventArgs e)
         {
             tabControl.saleTaddSale();
         }
 
         // SaleTab Delete Button
-        private void button11_Click(object sender, EventArgs e)
+        private void saleDeleteButton_Click(object sender, EventArgs e)
         {
             tabControl.saleTDelete();
         }
 
         // Item View Delete Item Button
-        private void button12_Click(object sender, EventArgs e)
+        private void deleteItemButton_Click(object sender, EventArgs e)
         {
             tabControl.deleteItemFromDtb();
         }
 
-
-        private void customControl11_Click(object sender, EventArgs e)
+        // Item View Click Search Result
+        private void itemSearchView_Click(object sender, EventArgs e)
         {
             MouseEventArgs mea = (MouseEventArgs)e;
             int currIndex = this.itemSearchView.getRowNum(mea.Y);
@@ -596,7 +596,8 @@ namespace FinancialDatabase
 
         }
 
-        private void customControl21_Click(object sender, EventArgs e)
+        // Select Image To View
+        private void allPictureViewer_Click(object sender, EventArgs e)
         {
             MouseEventArgs mea = (MouseEventArgs)e;
             int currIndex = this.allPictureViewer.getRowNum(mea.Y);
@@ -607,21 +608,16 @@ namespace FinancialDatabase
 
 
         // Add Image(s)
-        private void button13_Click(object sender, EventArgs e)
+        private void addImageButton_Click(object sender, EventArgs e)
         {
             tabControl.insertImage();
             tabControl.updateCurrItem();
         }
 
         // Set Thumbnail
-        private void button15_Click(object sender, EventArgs e)
+        private void setThumbnailButton_Click(object sender, EventArgs e)
         {
             tabControl.setThumbnail();
-        }
-
-        private void label37_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

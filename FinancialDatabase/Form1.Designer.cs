@@ -33,7 +33,7 @@
             manualQueryTBox = new TextBox();
             tabCollection = new TabControl();
             SearchTab = new TabPage();
-            itemSearchView = new CustomControl1();
+            itemSearchView = new ItemSearchViewer();
             showPurcPriceCheckBox = new CheckBox();
             showDateCheckBox = new CheckBox();
             soldOutCheckBox = new CheckBox();
@@ -50,8 +50,8 @@
             setThumbnailButton = new Button();
             deleteImageButton = new Button();
             AddImageButton = new Button();
-            mainPictureViewer = new CustomControl3();
-            allPictureViewer = new CustomControl2();
+            mainPictureViewer = new MainPictureViewer();
+            allPictureViewer = new AllPictureViewer();
             deleteItemButton = new Button();
             itemDatePurcLbl = new Label();
             deleteShipInfoButton = new Button();
@@ -158,7 +158,7 @@
             manualQuery.TabIndex = 1;
             manualQuery.Text = "Manual Query";
             manualQuery.UseVisualStyleBackColor = true;
-            manualQuery.Click += button1_Click;
+            manualQuery.Click += manualQueryButton_Click;
             // 
             // manualQueryTBox
             // 
@@ -217,7 +217,7 @@
             itemSearchView.Size = new Size(566, 406);
             itemSearchView.TabIndex = 18;
             itemSearchView.Text = "customControl11";
-            itemSearchView.Click += customControl11_Click;
+            itemSearchView.Click += itemSearchView_Click;
             // 
             // showPurcPriceCheckBox
             // 
@@ -313,7 +313,7 @@
             searchButton.TabIndex = 8;
             searchButton.Text = "Search";
             searchButton.UseVisualStyleBackColor = true;
-            searchButton.Click += button2_Click;
+            searchButton.Click += searchButton_Click;
             // 
             // searchBox
             // 
@@ -404,7 +404,7 @@
             setThumbnailButton.TabIndex = 62;
             setThumbnailButton.Text = "Set Thumbnail";
             setThumbnailButton.UseVisualStyleBackColor = true;
-            setThumbnailButton.Click += button15_Click;
+            setThumbnailButton.Click += setThumbnailButton_Click;
             // 
             // deleteImageButton
             // 
@@ -423,7 +423,7 @@
             AddImageButton.TabIndex = 60;
             AddImageButton.Text = "Add Image(s)";
             AddImageButton.UseVisualStyleBackColor = true;
-            AddImageButton.Click += button13_Click;
+            AddImageButton.Click += addImageButton_Click;
             // 
             // mainPictureViewer
             // 
@@ -440,7 +440,7 @@
             allPictureViewer.Size = new Size(126, 393);
             allPictureViewer.TabIndex = 58;
             allPictureViewer.Text = "customControl21";
-            allPictureViewer.Click += customControl21_Click;
+            allPictureViewer.Click += allPictureViewer_Click;
             // 
             // deleteItemButton
             // 
@@ -450,7 +450,7 @@
             deleteItemButton.TabIndex = 57;
             deleteItemButton.Text = "Delete Item";
             deleteItemButton.UseVisualStyleBackColor = true;
-            deleteItemButton.Click += button12_Click;
+            deleteItemButton.Click += deleteItemButton_Click;
             // 
             // itemDatePurcLbl
             // 
@@ -469,7 +469,7 @@
             deleteShipInfoButton.TabIndex = 55;
             deleteShipInfoButton.Text = "Delete Shipping Info";
             deleteShipInfoButton.UseVisualStyleBackColor = true;
-            deleteShipInfoButton.Click += button5_Click;
+            deleteShipInfoButton.Click += deleteShipInfoButton_Click;
             // 
             // itemNameLbl
             // 
@@ -488,7 +488,7 @@
             itemEditButton.TabIndex = 53;
             itemEditButton.Text = "Edit";
             itemEditButton.UseVisualStyleBackColor = true;
-            itemEditButton.Click += button4_Click;
+            itemEditButton.Click += itemEditButton_Click;
             // 
             // itemUpdateButton
             // 
@@ -499,7 +499,7 @@
             itemUpdateButton.TabIndex = 37;
             itemUpdateButton.Text = "Update";
             itemUpdateButton.UseVisualStyleBackColor = true;
-            itemUpdateButton.Click += button1_Click_1;
+            itemUpdateButton.Click += itemUpdateButton_Click;
             // 
             // itemHeightLbl
             // 
@@ -863,7 +863,7 @@
             UpdatePurcButton.TabIndex = 28;
             UpdatePurcButton.Text = "Update";
             UpdatePurcButton.UseVisualStyleBackColor = true;
-            UpdatePurcButton.Click += button7_Click;
+            UpdatePurcButton.Click += updatePurcButton_Click;
             // 
             // PurcPurcNotesLbl
             // 
@@ -891,7 +891,7 @@
             EditPurcButton.TabIndex = 25;
             EditPurcButton.Text = "Edit";
             EditPurcButton.UseVisualStyleBackColor = true;
-            EditPurcButton.Click += button6_Click;
+            EditPurcButton.Click += editPurcButton_Click;
             // 
             // NewPurcButton
             // 
@@ -902,7 +902,7 @@
             NewPurcButton.TabIndex = 24;
             NewPurcButton.Text = "New Purchase";
             NewPurcButton.UseVisualStyleBackColor = true;
-            NewPurcButton.Click += button3_Click;
+            NewPurcButton.Click += newPurcButton_Click;
             // 
             // PurcPurcNotesTextbox
             // 
@@ -1103,7 +1103,7 @@
             addItemButton.TabIndex = 2;
             addItemButton.Text = "Add Item";
             addItemButton.UseVisualStyleBackColor = true;
-            addItemButton.Click += button2_Click_1;
+            addItemButton.Click += addItemButton_Click;
             // 
             // PurcTagPurcPriceLbl
             // 
@@ -1124,7 +1124,7 @@
             PurchaseListBox.Name = "PurchaseListBox";
             PurchaseListBox.Size = new Size(468, 319);
             PurchaseListBox.TabIndex = 0;
-            PurchaseListBox.MouseDoubleClick += listBox2_MouseDoubleClick;
+            PurchaseListBox.MouseDoubleClick += purcListBox_DoubleClick;
             // 
             // Sale
             // 
@@ -1161,7 +1161,7 @@
             SaleDeleteSaleButton.TabIndex = 31;
             SaleDeleteSaleButton.Text = "Delete";
             SaleDeleteSaleButton.UseVisualStyleBackColor = true;
-            SaleDeleteSaleButton.Click += button11_Click;
+            SaleDeleteSaleButton.Click += saleDeleteButton_Click;
             // 
             // SaleUpdateButton
             // 
@@ -1171,7 +1171,7 @@
             SaleUpdateButton.TabIndex = 30;
             SaleUpdateButton.Text = "Update";
             SaleUpdateButton.UseVisualStyleBackColor = true;
-            SaleUpdateButton.Click += button10_Click;
+            SaleUpdateButton.Click += saleUpdateButton_Click;
             // 
             // SaleDateLbl
             // 
@@ -1190,7 +1190,7 @@
             SaleEditSaleButton.TabIndex = 28;
             SaleEditSaleButton.Text = "Edit";
             SaleEditSaleButton.UseVisualStyleBackColor = true;
-            SaleEditSaleButton.Click += button9_Click;
+            SaleEditSaleButton.Click += saleEditSaleButton_Click;
             // 
             // SaleTagNameLbl
             // 
@@ -1278,7 +1278,7 @@
             AddSaleButton.TabIndex = 14;
             AddSaleButton.Text = "Add Sale";
             AddSaleButton.UseVisualStyleBackColor = true;
-            AddSaleButton.Click += button8_Click;
+            AddSaleButton.Click += addSaleButton_Click;
             // 
             // SaleAmountTextbox
             // 
@@ -1307,7 +1307,7 @@
             saleListBox.Name = "saleListBox";
             saleListBox.Size = new Size(527, 304);
             saleListBox.TabIndex = 0;
-            saleListBox.MouseDoubleClick += listBox3_MouseDoubleClick;
+            saleListBox.MouseDoubleClick += saleListBox_DoubleClick;
             // 
             // resultItemBindingSource
             // 
@@ -1453,9 +1453,9 @@
         public Button SaleUpdateButton;
         public Button SaleDeleteSaleButton;
         public Button deleteItemButton;
-        public CustomControl1 itemSearchView;
-        public CustomControl2 allPictureViewer;
-        public CustomControl3 mainPictureViewer;
+        public ItemSearchViewer itemSearchView;
+        public AllPictureViewer allPictureViewer;
+        public MainPictureViewer mainPictureViewer;
         public Button deleteImageButton;
         public Button AddImageButton;
         public OpenFileDialog openFileDialog1;
