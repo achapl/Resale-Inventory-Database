@@ -179,7 +179,7 @@ namespace FinancialDatabase
                 ResultItem indexItem = getCurrentItemsAt(index);
 
                 ResultItem newItem = DatabaseConnector.getItem(indexItem.get_ITEM_ID());
-                newItem.set_images(DatabaseConnector.getImages(newItem));
+                newItem.set_images(DatabaseConnector.getAllImages(newItem));
                 setCurrItem(newItem);
 
             }
@@ -268,7 +268,7 @@ namespace FinancialDatabase
             {
                 clearItems();
 
-                List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(query, true);
+                List<ResultItem> result = DatabaseConnector.getItems(query, true);
 
                 foreach (ResultItem item in result)
                 {

@@ -18,6 +18,13 @@ public class Util
 	{
 	}
 
+    public static List<string> mySplit(string str, string delim)
+    {
+        string[] arrOfStrings = str.Split(delim);
+        List<string> listOfStrings = new List<string>(arrOfStrings);
+        return listOfStrings;
+    }
+
     public static string datetoString(List<int> d)
     {
         return "\\\"" + d[0] + "-" + d[1] + "-" + d[2] + "\\\"";

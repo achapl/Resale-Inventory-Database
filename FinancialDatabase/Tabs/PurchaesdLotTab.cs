@@ -104,7 +104,7 @@ public class PurchasedLotTab : Tab
 	{
         Form1.PurchaseListBox.Items.Clear();
 		tabController.clearCurrentPurchaseItems();
-        List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item), false);
+        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.buildPurchaseQuery(item), false);
 
 		foreach(ResultItem i in result)
 		{
@@ -221,8 +221,8 @@ public class PurchasedLotTab : Tab
 
         Form1.PurchaseListBox.Items.Clear();
         tabController.clearCurrentPurchaseItems();
-        // TODO: Make RunItemSearchQuery for ResultItem parameter
-        List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item), false);
+        // TODO: Make getItems for ResultItem parameter
+        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.buildPurchaseQuery(item), false);
 
         foreach (ResultItem i in result)
         {

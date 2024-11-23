@@ -74,7 +74,7 @@ public class SaleTab : Tab
 	{
         Form1.PurchaseListBox.Items.Clear();
         tabController.clearCurrentPurchaseItems();
-        List<ResultItem> result = DatabaseConnector.RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item), false);
+        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.buildPurchaseQuery(item), false);
 
 		foreach(ResultItem i in result)
 		{

@@ -18,6 +18,7 @@ using System.Drawing.Configuration;
 using System.Security.Principal;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Drawing.Imaging;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public static class DatabaseConnector
 {
@@ -28,171 +29,356 @@ public static class DatabaseConnector
     const string END_COL_MARKER = "END OF COLUMN NAMES"; // Marker to the End of Column Names
     const string EOS = "EOS";     // end-of-stream
     static Size maxDims = new Size(300, 300);
-    public static List<string> getTableNames()
-    {
 
-        string query = "SHOW TABLES";
-        int lastrowid;
+
+    // Takes raw string outputs of querying the database
+    // and parses them into usable objects
+    private static class dtbParser
+    {
+        // raw result from a search query is given from the result of the query in the format
+        //
+        //                    "[(itemName, itemID, .etc)(item2Name, item2ID, .etc)]"
+        //
+        // Seperates whole string into list of multiple item strings,
+        //
+        //       List<string>{ "(itemName, itemID, .etc)", "(item2Name, item2ID, .etc)" }
+        public static List<string> parseItems(string rawResult)
+        {
+            if (rawResult.CompareTo("[]") == 0)
+            {
+                return new List<string>();
+            }
+
+            // Note format changes to square brackets if any attribute **contains parenthesis**
+            // Example: [[itemName, Date(1/1/11), .etc], [item2Name, Date(1/1/11), .etc]]
+            rawResult = Util.myTrim(rawResult, new string[] { "[", "]" });
+
+            List<string> rawItems = new List<string>();
+
+            // Split the rawResult into rawThumbnails based on whether mysql sends each returned row encapsulated in '[]' or '()'
+            // Which is based on whether there exist parenthesises inside of an attribute or not (see above)
+            if (rawResult.Length > 0 && rawResult[0] == '[')
+            {
+                rawItems = Util.PairedCharTopLevelSplit(rawResult, '[');
+            }
+            else if (rawResult.Length > 0 && rawResult[0] == '(')
+            {
+                rawItems = Util.PairedCharTopLevelSplit(rawResult, '(');
+            }
+            else
+            {
+                throw new Exception("Error: Unexpected character for when parsing individual search results: " + rawResult[0]);
+            }
+            return rawItems;
+        }
+
+        // raw result from a search query is given from the result of the query in the format "[(itemName, itemID, .etc)(item2Name, item2ID, .etc)]"
+        // Seperates them all and creates ResultItem objects from each of them. Returns these as a list
+        public static List<ResultItem> parseItems(string rawResult, List<string> colNames)
+        {
+
+            List<string> rawItems = parseItems(rawResult);
+
+            List<ResultItem> results = new List<ResultItem>();
+            foreach (string rawItem in rawItems)
+            {
+                // Seperate each item into individual item attributes to make a ResultItem with it
+                List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
+                results.Add(new ResultItem(itemAttributes, colNames));
+            }
+
+            return results;
+        }
+
+        // raw result from a sale query is given from the result of the query in the format "[(salePrice, itemID, .etc)(salePrice2, item2ID, .etc)]"
+        // Seperates them all and creates Sale objects from each of them. Returns these as a list
+        public static List<Sale> parseRawSales(string rawResult, List<string> colNames)
+        {
+            List<string> rawItems = parseItems(rawResult);
+
+            List<Sale> results = new List<Sale>();
+            foreach (string rawItem in rawItems)
+            {
+                // Seperate each item into individual item attributes to make a ResultItem with it
+                List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
+                results.Add(new Sale(itemAttributes, colNames));
+            }
+
+            return results;
+        }
+    }
+
+    private static List<string> getTableNames()
+    {
+        // Init vals
         List<string> colNames = new List<string>(new string[] { "" });
-        string rawTablenames = runStatement(query, ref colNames, out lastrowid);
-        List<string> tableNames = new List<string>(rawTablenames.Substring(3, rawTablenames.Length - 6).Split("'], ['"));
+        string query = "SHOW TABLES";
+        
+        
+        // Run query to get table names
+        string rawTablenames = runStatement(query, ref colNames);
+
+        // Return them as individual strings
+        List<string> tableNames = Util.mySplit(rawTablenames[3..^3], "'], ['");
 
         return tableNames;
     }
 
+
+    // Gets the names of a table's columns
+    // And for each column, and list of attributes as strings
+    private static List<List<string>> getColumnsInfo(string tableName)
+    {
+        // Init vals
+        string query = QueryBuilder.getColumnNames(tableName);
+        string rawOutput = runStatement(query);
+        List<List<string>> infoForEachCol = new List<List<string>>();
+
+
+        // colInfo will be List of strings like:
+        //      { "['col1', 'type1', ...]",  "['col2', 'type2', ...]" }
+        List<string> colInfos = Util.mySplit(rawOutput[3..^3], "'], ['");
+
+        // Seperate each colInfo into attributes, and compile them for return
+        // attribsForCol will be like:
+        // { "col1", "type1", ... } for each element in colInfo
+        foreach (string colInfo in colInfos)
+        {
+            List<string> attribsForCol = Util.mySplit(colInfo, "', '");
+            // Append table name to start
+            attribsForCol.Insert(0, tableName);
+            infoForEachCol.Add(attribsForCol);
+        }
+
+        return infoForEachCol;
+    }
+
+
+    // Get a table that covers all column-info for each column for each table
+    // Returns something such as:
+    // { { {'item',     'ITEM_ID',     'int unsigned', ...},
+    //     {'item',     'PurcID_item', 'int unsigned', ...} },
+    //   { {'purchace', 'PURCHACE_ID', 'int unsigned', ...},
+    //     {'purchace', 'purcAmount',  'int unsigned', ...} } }
+    private static List<List<List<string>>> getColsInfoAllTables()
+    {
+        List<List<List<string>>> colInfoAllTables = new List<List<List<string>>>();
+
+        List<string> tableNames = getTableNames();
+        foreach (string tableName in tableNames)
+        {
+            List<List<string>> colInfos = getColumnsInfo(tableName);
+            colInfoAllTables.Add(colInfos);
+        }
+
+
+        return colInfoAllTables;
+    }
+    
+
+    // Gets a ResultItem from the database given the item's itemID
     public static ResultItem getItem(int itemID)
     {
-        string queryItem = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE ITEM_ID = " + itemID.ToString() + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
+        string query = QueryBuilder.completeItemIDSearchQuery(itemID);
 
-        List<ResultItem> result = RunItemSearchQuery(queryItem, true);
+        List<ResultItem> result = getItems(query, true);
 
         // Error Checking
         if (result.Count > 1)
         {
-            Console.WriteLine("Error: >1 Items Found for saleID: " + itemID.ToString());
+            string error = "Error: >1 Items Found for itemID: " + itemID + "\n";
             for (int i = 0; i < result.Count; i++)
             {
-                Console.WriteLine(result[i].ToString());
+                error += result[i].ToString() + "\n";
             }
-            return null;
+            throw new Exception(error);
         }
         else if (result.Count() == 0)
         {
-            Console.WriteLine("Error: No Items Found for ItemID: " + itemID.ToString());
+            throw new Exception("Error: Item Not Found for itemID: " + itemID);
         }
 
+        // Only option left, a single item was found (Count will not be negative)
         ResultItem item = result[0];
         return item;
     }
 
+
+    // Gets a Sale from the database given the sale's saleID
     public static Sale getSale(int saleID)
     {
-        string querySale = "SELECT * FROM sale WHERE SALE_ID = " + saleID.ToString() + ";";
-
+        string querySale = QueryBuilder.GetSaleByID(saleID);
         List<Sale> result = RunSaleSearchQuery(querySale);
+
 
         // Error Checking
         if (result.Count > 1)
         {
-            Console.WriteLine("Error: >1 Sales Found for SALE_ID: " + saleID.ToString());
+            string error = "Error: >1 Sale Found for saleID: " + saleID + "\n";
             for (int i = 0; i < result.Count; i++)
             {
-                Console.WriteLine(result[i].ToString());
+                error += result[i].ToString() + "\n";
             }
-            return null;
+            throw new Exception(error);
         }
         else if (result.Count() == 0)
         {
-            Console.WriteLine("Error: No Items Found for SALE_ID: " + saleID.ToString());
+            throw new Exception("Error: Sale Not Found for saleID: " + saleID);
         }
 
+        // Only option left, a single sale was found (Count will not be negative)
         Sale sale = result[0];
         return sale;
     }
 
+
+    // Get the types of each column from all tables form the database
+    // Returns dictionary of the format <key,value>
+    //      <columnName, sqlType>
+    // where columnName is of the format
+    //      tableName.columnName
+    // ex:  colDataTypes[ITEM_ID] = 'item.int unsigned' 
     public static Dictionary<string, string> getColDataTypes()
     {
-
-        List<string> tableNames = getTableNames();
-
+        // Init vals
         Dictionary<string, string> colDataTypes = new Dictionary<string, string>();
-        string query;
-        List<string> output;
-        foreach (string tableName in tableNames)
+        List<List<List<string>>> colsInfoALlTables = getColsInfoAllTables();
+        string tableName;
+        string colName;
+        string type;
+
+
+        // Aggregate each entry in colInfo into colDataTypes like:
+        // colDataTypes[ITEM_ID] = 'item.int unsigned'
+        foreach (List<List<string>> tableCols in colsInfoALlTables)
         {
-            query = "SHOW COLUMNS FROM " + tableName + ";";
-
-            int lastrowid;
-            List<string> colNames = new List<string>(new string[] { "" });
-            string rawOutput = runStatement(query, ref colNames, out lastrowid);
-            output = new List<string>(rawOutput.Substring(3, rawOutput.Length - 7).Split("'), ('"));
-
-
-            //removeColumnNames(ref output);
-            string[] startAndEnd = { "('", "',)" };
-            foreach (string colAndType in output)
+            foreach (List<string> colInfo in tableCols)
             {
-                List<string> typesForCol = new List<string>(colAndType.Split(new string[] { "', '" }, StringSplitOptions.None));
-                string colName = tableName + "." + typesForCol[0];
-                string type = typesForCol[1];
+                tableName = colInfo[0];
+                colName = tableName + "." + colInfo[1];
+                type = colInfo[2];
+
+                // Test if column name already entered
+                string throwaway;
+                if (colDataTypes.TryGetValue(colName, out throwaway))
+                {
+                    throw new Exception("Error: Duplicate column name: " + colName);
+                }
+                
                 colDataTypes[colName] = type;
             }
         }
 
-        //Hardcoded types for special cases
+
+        //Hardcoded types for special cases that can't be found in database
         colDataTypes["shipping.WeightLbs"] = "int unsigned";
         colDataTypes["shipping.WeightOz"] = "int unsigned";
 
         return colDataTypes;
     }
 
-    // General queries, done by manual string input
-    public static List<ResultItem> RunItemSearchQuery(string query, bool getSearchImages)
+
+    // General search queries, done by manual string input
+    // Returns a list of the items found by the query
+    // Can opt with includeThumbnails to attach thumbnails with ResultItems
+    public static List<ResultItem> getItems(string query, bool includeThumbnails)
     {
+        // Empty case
         if (query.CompareTo("") == 0)
         {
             query = QueryBuilder.defaultQuery();
         }
 
-        int lastrowid;
+        // Get raw items
         List<string> colNames = new List<string>(new string[] { "" });
-        string queryOutput = runStatement(query, ref colNames, out lastrowid);
+        string queryOutput = runStatement(query, ref colNames);
 
-        List<ResultItem> parsedItems = parseItemSearchResult(queryOutput, colNames);
+        // Parse raw items
+        List<ResultItem> parsedItems = dtbParser.parseItems(queryOutput, colNames);
 
-        if (getSearchImages)
+        // Attach thumbnails
+        if (includeThumbnails)
         {
-            parsedItems = DatabaseConnector.getSearchThumbnails(parsedItems);
+            parsedItems = DatabaseConnector.attachThumbnails(parsedItems);
         }
         
         return parsedItems;
     }
 
-    private static List<ResultItem> getSearchThumbnails(List<ResultItem> parsedItems)
+
+    // Get a mapping of itemID's and their corresponding thumbnails
+    private static Dictionary<int, MyImage> getThumbnails(List<ResultItem> items)
     {
-        if (parsedItems.Count == 0)
+        // Empty case
+        if (items.Count == 0)
+        {
+            return new Dictionary<int, MyImage>();
+        }        
+
+        // Get raw thumbnail data from database
+        string query = QueryBuilder.thumbnailQuery(items);
+        string rawResult = runStatement(query);
+
+        // Parse raw data into individual raw thumbnails
+        rawResult = rawResult.Substring(1, rawResult.Length - 2);
+        List<string> rawThumbnails = Util.PairedCharTopLevelSplit(rawResult, '[');
+
+        Dictionary<int, MyImage> results = new Dictionary<int, MyImage>();
+        List<string> thumbnailAttribs;
+        List<string> imageStrBytes;
+        MyImage thumbnail;
+        byte[] imageBytes;
+        int imageID;
+        int itemID;
+        // 
+        foreach (string rawThumbnail in rawThumbnails)
+        {
+            // Seperate each image item into individual image attributes
+            thumbnailAttribs = new List<string>(Util.splitOnTopLevelCommas(rawThumbnail));
+
+            itemID  = Int32.Parse(thumbnailAttribs[0]);
+            imageID = Int32.Parse(thumbnailAttribs[1]);
+            imageBytes = new byte[thumbnailAttribs[2].Length];
+
+            // Get list of the individual bytes, each as a string
+            imageStrBytes = new List<string>(thumbnailAttribs[2].Trim(new char[] { '[', ']' }).Split(", "));
+
+            // Convert strings to bytes
+            for (int j = 0; j < imageStrBytes.Count; j++)
+            {
+                imageBytes[j] = (byte)Int32.Parse(imageStrBytes[j]);
+            }
+            // Make an image from the list of bytes
+            thumbnail = new MyImage(Image.FromStream(new MemoryStream(imageBytes)), -1);
+
+            if (!results.ContainsKey(itemID))
+            {
+                results.Add(itemID, thumbnail);
+            }
+        }
+        return results;
+    }
+
+    // Given a list of ResultItems without a thumbnail,
+    // it will return the list with all items having a thumbnail
+    // Default thumbnail is provided for those without one
+    private static List<ResultItem> attachThumbnails(List<ResultItem> items)
+    {
+        // Empty case
+        if (items.Count == 0)
         {
             return new List<ResultItem>();
         }
 
-
-        string query = QueryBuilder.buildThumbnailsSearchQuery(parsedItems);
-        string rawResult = runStatement(query);
-
-        rawResult = rawResult.Substring(1, rawResult.Length - 2);
-        List<string> rawItems = Util.PairedCharTopLevelSplit(rawResult, '[');
-
-        Dictionary<int, MyImage> results = new Dictionary<int, MyImage>();
-        foreach (string rawItem in rawItems)
-        {
-            // Seperate each image item into individual image attributes to make a myImage with it
-            List<string> imageAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
-
-            int itemID = Int32.Parse(imageAttributes[0]);
-
-            int imageID = Int32.Parse(imageAttributes[1]);
-
-            byte[] imageRawBytes = new byte[imageAttributes[2].Length];
-
-            imageAttributes[2] = imageAttributes[2].Trim(new char[] { '[', ']' });
-
-            List<string> s = new List<string>(imageAttributes[2].Split(", "));
-            for (int j = 0; j < s.Count; j++)
-            {
-                string elem = s[j];
-                imageRawBytes[j] = (byte)Int32.Parse(elem);
-            }
-            MyImage i = new MyImage(Image.FromStream(new MemoryStream(imageRawBytes)),-1);
-            if (!results.ContainsKey(itemID))
-            {
-                results.Add(itemID, i);
-            }
-        }
-
+        // Init vals
         MyImage thumbnail;
-        foreach (ResultItem item in parsedItems)
+
+        Dictionary<int, MyImage> thumbnails = getThumbnails(items);
+        
+        // Attach each thumbnail to the respective ResultItem
+        foreach (ResultItem item in items)
         {
-            if (results.TryGetValue(item.get_ITEM_ID(), out thumbnail))
+            if (thumbnails.TryGetValue(item.get_ITEM_ID(), out thumbnail))
             {
                 item.set_Thumbnail(thumbnail);
             }
@@ -202,14 +388,15 @@ public static class DatabaseConnector
             }
         }
 
-        return parsedItems;
+        return items;
     }
 
+
+    // Get a list of Sale objects given the search query
     public static List<Sale> RunSaleSearchQuery(string query)
     {
-        int lastrowid;
         List<string> colNames = new List<string>(new string[] { "" });
-        string queryOutput = runStatement(query, ref colNames, out lastrowid);
+        string queryOutput = runStatement(query, ref colNames);
 
         // No sales found, return empty list
         if (queryOutput.CompareTo("[]") == 0)
@@ -217,11 +404,13 @@ public static class DatabaseConnector
             return new List<Sale>();
         }
 
-        List<Sale> parsedItems = parseSaleSearchResult(queryOutput, colNames);
+        List<Sale> parsedItems = dtbParser.parseRawSales(queryOutput, colNames);
 
         return parsedItems;
     }
 
+
+    // Run a given SQL statement with ability to return col names and lastrowid
     public static string runStatement(string statement, ref List<string> colNames, out int lastrowid)
     {
         string retList;
@@ -231,13 +420,15 @@ public static class DatabaseConnector
         {
             throw new Exception("ERROR: Invalid Statement/Query sent to database: " + statement + "\n" + "Python Exception: " + result[1]);
         }
-        // Returns [0,1,2] -> result, colNames, cursor.lastrowid
+        // Returns [0,1,2] -> result, colInfo, cursor.lastrowid
         retList = result[0];
-        colNames = new List<string>(result[1].Substring(2, result[1].Length - 4).Split("', '"));
+        colNames = Util.mySplit(result[1][2..^2], "', '");
         lastrowid = Int32.Parse(result[2]);
         return retList;
     }
 
+
+    // Run a given SQL statement with ability to return col names
     public static string runStatement(string statement, ref List<string> colNames)
     {
         string retList;
@@ -247,12 +438,14 @@ public static class DatabaseConnector
         {
             Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
         }
-        // Returns [0,1,2] -> result, colNames, cursor.lastrowid
+        // Returns [0,1,2] -> result, colInfo, cursor.lastrowid
         retList = result[0];
-        colNames = new List<string>(result[1].Substring(2, result[1].Length - 4).Split("', '"));
+        colNames = Util.mySplit(result[1][2..^2], "', '");
         return retList;
     }
 
+
+    // Run a given SQL statement with ability to return lastrowid
     public static string runStatement(string statement, out int lastrowid)
     {
         string retList;
@@ -262,12 +455,14 @@ public static class DatabaseConnector
         {
             Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
         }
-        // Returns [0,1,2] -> result, colNames, cursor.lastrowid
+        // Returns [0,1,2] -> result, colInfo, cursor.lastrowid
         retList = result[0];
         lastrowid = Int32.Parse(result[2]);
         return retList;
     }
 
+
+    // Run a given SQL statement
     public static string runStatement(string statement)
     {
         string retList;
@@ -277,56 +472,56 @@ public static class DatabaseConnector
         {
             Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
         }
-        // Returns [0,1,2] -> result, colNames, cursor.lastrowid
+        // Returns [0,1,2] -> result, colInfo, cursor.lastrowid
         retList = result[0];
         return retList;
     }
 
+
+    // Insert a new purchase into the database
+    // Note: This does not insert an item to go with it, just the purchase itself
+    // Return the purcID
     public static int newPurchase(int purcPrice, string notes, Date PurcDate)
     {
-
         string query = QueryBuilder.buildInsertPurchaseQuery(purcPrice, notes, PurcDate);
         int purcID;
         runStatement(query, out purcID);
         return purcID;
     }
 
+
+    // Insert a ResultItem into the database
+    // Returns colInfo of running the SQL statement
     public static string insertItem(ResultItem item)
     {
         int throwaway;
         return insertItem(item, out throwaway);
     }
+
+
+    // Insert a ResultItem into the database
+    // Returns colInfo of running the SQL statement
+    // Gives option of keeping the lastrowid
     public static string insertItem(ResultItem item, out int lastrowid)
     {
+        // Insert item into database
         string query = QueryBuilder.buildItemInsertQuery(item);
         lastrowid = -1;
         string output = runStatement(query, out lastrowid);
-        if (lastrowid == -1)
-        {
-            Console.WriteLine("ERROR, BAD INPUT INTO DATABASE: insertItem");
-            return null;
-        }
 
-        if (output.CompareTo("ERROR") == 0)
-        {
-            Console.WriteLine("ERROR insertItem");
-            return null;
-        }
-        int lastrowid2 = -1;
-        // If given item also has shipping info, insert that into the database too
+        int shippingID = -1;
+        // If given item also has shipping info,
+        // insert that into the database too
         if (item.get_Weight() != Util.DEFAULT_INT)
         {
+            // Insert shipping info
             item.set_ITEM_ID(lastrowid);
             query = QueryBuilder.buildShipInfoInsertQuery(item);
-            output = runStatement(query, out lastrowid2);
-            if (lastrowid2 == -1)
-            {
-                Console.WriteLine("ERROR IN INSERTING SHIPPING INFO");
-            }
+            output = runStatement(query, out shippingID);
 
+            // Update item entry to link to shipping info
             string attrib = "item.ShippingID";
-            string type = "int unsigned";
-            int shippingID = lastrowid2;
+            string type   = "int unsigned";
             query = QueryBuilder.buildUpdateQuery(item, attrib, type, shippingID.ToString());
 
             // Update the item table with the new shipping info
@@ -337,37 +532,30 @@ public static class DatabaseConnector
 
     }
 
+
+    // Returns colInfo of running the SQL statement
     public static string insertSale(Sale sale)
     {
         string query = QueryBuilder.buildSaleInsertQuery(sale);
-        int lastrowid;
-        string output = runStatement(query, out lastrowid);
-        if (lastrowid == -1)
-        {
-            Console.WriteLine("ERROR, BAD INPUT INTO DATABASE: insertSale");
-            return null;
-        }
-
-        if (output.CompareTo("ERROR") == 0)
-        {
-            Console.WriteLine("ERROR insertSale");
-            return null;
-        }
+        string output = runStatement(query);
         return output;
     }
 
 
-    private static bool isImage(string fileName)
+    private static bool isImage(string filePath)
     {
         try
         {
-            Image.FromFile(fileName);
+            Image.FromFile(filePath);
             return true;
         }
         catch { return false; }
     }
 
-    private static Size getImageSize(Image image)
+
+    // Return the size of a given Image when sized down to fit into
+    // thumbnail dimensions without changing the image's aspect ratio
+    private static Size getThumbnailSize(Image image)
     {
         int w = image.Size.Width;
         int h = image.Size.Height;
@@ -377,13 +565,13 @@ public static class DatabaseConnector
         Size newSize;
 
         // image W > H relative to aspect ratio
-        // Set W to auxImageWidth, and use aspect ratio to det. height
+        // Set W to maxDims.Width, and use aspect ratio to det. height
         if (aspectRatio > maxDimsAspectRatio)
         {
             newSize = new Size(maxDims.Width, (int)Math.Round((double)maxDims.Width / aspectRatio, 0));
         }
         // image W <= H relative to aspect ratio
-        // Set H to auxImageWidth, and use aspect ratio to det. with
+        // Set H to maxDims.Height, and use aspect ratio to det. width
         else
         {
             newSize = new Size((int)Math.Round((double)maxDims.Height * aspectRatio, 0), maxDims.Height);
@@ -391,25 +579,52 @@ public static class DatabaseConnector
         return newSize;
     }
 
-    public static string insertImage(String filePath, int itemID)
-    {
-        if (!isImage(filePath)) { return null; }
 
-        string fileExt = Path.GetExtension(filePath);
-        string fileName = Path.GetFileName(filePath);
+    private static void deleteExistingFile(string filePath)
+    {
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+    }
+
+
+    private static string copyImageToDtbFolder(string source)
+    {
+        string destination = "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\";
+        if (!isImage(source))
+        {
+            throw new Exception("Error: Source Path is not an image: " + source);
+        }
+
+        string fileExt = Path.GetExtension(source);
+        string fileName = Path.GetFileName(source);
         string fileNameNoExt = Path.GetFileNameWithoutExtension(fileName);
-        string imageDest = "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\";
+        
 
         // Copy file to where MySQL can read it
-        string copiedFile = imageDest + fileName;
-        
-        if (File.Exists(copiedFile))
-        {
-            File.Delete(copiedFile);
-        }
-        File.Copy(filePath, copiedFile);
+        string copiedFile = destination + fileName;
+        deleteExistingFile(copiedFile);
+        File.Copy(source, copiedFile);
 
-        copiedFile = copiedFile.Replace("\\","\\\\");
+        // Make copied file path able to be read elsewhere
+        copiedFile = copiedFile.Replace("\\", "\\\\");
+        return copiedFile;
+    }
+
+
+    private static void insertThumbnail(string thumbnailPath, int imageID)
+    {
+        int thumbnailID;
+        runStatement("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + thumbnailPath + "'));", out thumbnailID);
+        runStatement("UPDATE image SET thumbnailID = " + thumbnailID + " WHERE IMAGE_ID = " + imageID);
+    }
+
+
+    public static void insertImage(string filePath, int itemID)
+    {
+        // Copy file to database folder
+        string copiedFile = copyImageToDtbFolder(filePath);
 
         // Insert into database
         int imageID;
@@ -421,34 +636,39 @@ public static class DatabaseConnector
 
         // Resize the image for a thumbnail
         Image origImage = Image.FromFile(filePath);
-        Bitmap resizedImage = new Bitmap(origImage, getImageSize(origImage));
-        string resizedImFileDest = imageDest + fileNameNoExt + "_RESIZED" + fileExt;
-        if (File.Exists(resizedImFileDest))
-        {
-            File.Delete(resizedImFileDest);
-        }
+        Bitmap resizedImage = new Bitmap(origImage, getThumbnailSize(origImage));
+
+        // Get file path info
+        string destination = "C:\\ProgramData\\MySQL\\MySQL Server 8.0\\Uploads\\";
+        string fileExt = Path.GetExtension(filePath);
+        string fileName = Path.GetFileName(filePath);
+        string fileNameNoExt = Path.GetFileNameWithoutExtension(fileName);
+        string resizedImFileDest = destination + fileNameNoExt + "_RESIZED" + fileExt;
+
+        // Save resized image
+        deleteExistingFile(resizedImFileDest);
         resizedImage.Save(resizedImFileDest);
         resizedImFileDest = resizedImFileDest.Replace("\\", "\\\\");
 
         // Insert resized image into database
-        int thumbnailID;
-        runStatement("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + resizedImFileDest + "'));", out thumbnailID);
-        runStatement("UPDATE image SET thumbnailID = " + thumbnailID + " WHERE IMAGE_ID = " + imageID);
+        insertThumbnail(resizedImFileDest, imageID);
 
-        // Clean up
+        // Clean up copied files after uploading the image
         File.Delete(copiedFile);
         File.Delete(resizedImFileDest);
-        return null;
     }
 
 
-    // Given a search query, turn it into a string query and run it
     public static List<ResultItem> RunSearchQuery(SearchQuery Q)
     {
         string query = QueryBuilder.buildSearchByNameQuery(Q);
-        return RunItemSearchQuery(query, false);
+        return getItems(query, false);
     }
 
+
+    // Heart of the DatabaseConnector
+    // Talks to the python that actually interacts with the database.
+    // Gives python the query, and gets from python, the result of running the SQL query
     private static List<string> runPython(string query)
     {
         // Startup Python
@@ -463,8 +683,6 @@ public static class DatabaseConnector
         
         using (Py.GIL())
         {
-            
-
             // Modify path to work
             dynamic os = Py.Import("os");
             dynamic sys = Py.Import("sys");
@@ -473,20 +691,13 @@ public static class DatabaseConnector
             // Start Dtb Connector
             dynamic Connector = Py.Import("Connection.DtbConnAndQuery");
             PyObject[] rawResult = Connector.runQuery(query);
-            // Convert Python Objects to normal C# strings
-            // ?? denotes alternative assignment to
-            // result[n] if rawResult[n] is null
+            
             string ErrMsg = "ERROR: NULL rawResult val in DatabaseConnector.cs:runPython()";
             List<List<string>> result = new List<List<string>>();
 
-            //TODO: DELETE
-            for(int i = 0; i < rawResult[0].Length(); i++)
-            {
-                //for (int j = 0; j < rawResult[0,i].Length(); j++)
-                {
-                  //  result[i][j] = rawResult[0,i,j].ToString();
-                }
-            }
+            // Convert Python Objects to normal C# strings
+            // ?? denotes alternative assignment to
+            // result[n] if rawResult[n] is null
             result2[0] = rawResult[0].ToString() ?? ErrMsg;
             result2[1] = rawResult[1].ToString() ?? ErrMsg;
             result2[2] = rawResult[2].ToString() ?? ErrMsg;
@@ -497,73 +708,13 @@ public static class DatabaseConnector
     }
 
 
-    // raw result is now the format "[(itemName, itemID, .etc)(item2Name, item2ID, .etc)]"
-    // Seperate whole string into list of multiple item strings, "List<string>{ "(itemName, itemID, .etc)", "(item2Name, item2ID, .etc)" }"
-    private static List<string> parseMySqlResultIntoItems(string rawResult)
+    // Given a ResultItem, delete from the database
+    public static void deleteItem(ResultItem item)
     {
-        if (rawResult.CompareTo("[]") == 0)
-        {
-            return new List<String>();
-        }
-
-        // Note format changes to square brackets if any attribute **contains parenthesis**
-        // Example: [[itemName, Date(1/1/11), .etc], [item2Name, Date(1/1/11), .etc]]
-        rawResult = Util.myTrim(rawResult, new string[] { "[", "]" });
-
-        List<string> rawItems = new List<string>();
-
-        // Split the rawResult into rawItems based on whether mysql sends each returned row encapsulated in '[]' or '()'
-        // Which is based on whether there exist parenthesises inside of an attribute or not (see above)
-        if (rawResult.Length > 0 && rawResult[0] == '[')
-        {
-            rawItems = Util.PairedCharTopLevelSplit(rawResult, '[');
-        }
-        else if (rawResult.Length > 0 && rawResult[0] == '(')
-        {
-            rawItems = Util.PairedCharTopLevelSplit(rawResult, '(');
-        }
-        else
-        {
-            throw new Exception("Error: Unexpected character for when parsing individual search results: " + rawResult[0]);
-        }
-        return rawItems;
-    }
-
-
-    private static List<ResultItem> parseItemSearchResult(string rawResult, List<string> colNames)
-    {
-
-        List<string> rawItems = parseMySqlResultIntoItems(rawResult);
-
-        List<ResultItem> results = new List<ResultItem>();
-        foreach(string rawItem in rawItems)
-        {
-            // Seperate each item into individual item attributes to make a ResultItem with it
-            List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
-            results.Add(new ResultItem(itemAttributes, colNames));
-        }
-
-        return results;
-    }
-
-    private static List<Sale> parseSaleSearchResult(string rawResult, List<string> colNames)
-    {
-        List<string> rawItems = parseMySqlResultIntoItems(rawResult);
-
-        List<Sale> results = new List<Sale>();
-        foreach (string rawItem in rawItems)
-        {
-            // Seperate each item into individual item attributes to make a ResultItem with it
-            List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
-            results.Add(new Sale(itemAttributes, colNames));
-        }
-
-        return results;
-    }
-
-    internal static void deleteItem(ResultItem item)
-    {
+        // Empty case
         if (item is null) { return; }
+
+        // 
         if (item.hasPurchaseEntry()) {
             if (isLastItemInPurchase(item))
             {
@@ -571,7 +722,7 @@ public static class DatabaseConnector
                 string attrib = "item.PurchaseID";
                 string updateQuery = QueryBuilder.buildUpdateQuery(item, "item.PurchaseID", "int unsigned", "0");
 
-                // May not be necessary since auto-cascade on delete on database may be a feature
+                // TODO May not be necessary since auto-cascade on delete on database may be a feature
                 //runStatement(updateQuery);
                 deletePurchase(item);
             }
@@ -587,26 +738,33 @@ public static class DatabaseConnector
         runStatement(delItemQuery);
     }
 
+
+    // Given an item, delete its sales from the database
     private static void deleteSales(ResultItem item)
     {
         string query = QueryBuilder.buildDelAllSalesQuery(item);
         runStatement(query);
     }
 
+
+    // Given a item, delete its purchase object from the database
+    // TODO: Determine if auto-cascade deletes the corresponding item from the database
     private static void deletePurchase(ResultItem item)
     {
         string query = QueryBuilder.buildDeletePurchaseQuery(item);
         runStatement(query);
     }
 
+
+    // Checks if the given item is the only item from its corresponding purchase
     private static bool isLastItemInPurchase(ResultItem item)
     {
-        // TODO: make this a function for databaseconnector
-        // RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item)) part
-        return (RunItemSearchQuery(QueryBuilder.buildPurchaseQuery(item), false).Count() == 1);   
+        return (getItems(QueryBuilder.buildPurchaseQuery(item), false).Count() == 1);   
     }
 
-    public static List<MyImage> getImages(ResultItem newItem)
+
+    // Will get all the full images, not the thumbnails
+    public static List<MyImage> getAllImages(ResultItem newItem)
     {
 
         int lastrowid;
@@ -640,118 +798,9 @@ public static class DatabaseConnector
         return results;
     }
 
-    // Get rid of all '\x' ()
-    private static byte[] convertToBytes(byte[] bytesIN)
-    {
-        byte[] bytesOUT = new byte[bytesIN.Length];
-        int iOUT = 0;
-        int iIN = 0;
-        for (iIN = 0; iIN < bytesIN.Length; iIN++)
-        {
-            /*if ( (iIN == 0 &&
-                iIN < bytesIN.Length - 4 &&
-                bytesIN[iIN] == (byte)'\\' &&
-                bytesIN[iIN + 1] == (byte)'\\' &&
-                bytesIN[iIN + 2] == (byte)'\\' &&
-                bytesIN[iIN + 3] == (byte)'\\') 
-                ||
-                (iIN > 0 &&
-                iIN < bytesIN.Length - 4 &&
-                bytesIN[iIN - 1] != (byte)'\\' &&
-                bytesIN[iIN + 0] == (byte)'\\' &&
-                bytesIN[iIN + 1] == (byte)'\\' &&
-                bytesIN[iIN + 2] == (byte)'\\' &&
-                bytesIN[iIN + 3] == (byte)'\\'))
-            {
-                bytesOUT[iOUT] = (byte)'\\';
-                iOUT++;
-                iIN += 3;
-                continue;
-            }*/
-
-            if (iIN < bytesIN.Length - 1 &&
-                iIN > 0 &&
-                bytesIN[iIN - 1] != (byte)'\\' &&
-                bytesIN[iIN] == (byte)'\\' &&
-                bytesIN[iIN + 1] == (byte)'\\')
-            {
-                if (iIN > 0 && bytesIN[iIN - 1] != (byte)'\\')
-                    // Skip over '\\x'
-                    if (iIN < bytesIN.Length - 4 &&
-                        bytesIN[iIN + 2] == (byte)'x')
-                    {
-                        char firstDig = (char)Int32.Parse(bytesIN[iIN + 3].ToString());
-                        char secondDig = (char)Int32.Parse(bytesIN[iIN + 4].ToString());
-                        char[] combChars = { firstDig, secondDig };
-                        string total = "0x" + new string(combChars);
-                        int totalINT = Convert.ToInt32(total, 16);
-                        bytesOUT[iOUT] = (byte)totalINT;
-                        iIN += 4;
-                        iOUT++;
-                        continue;
-                    }
-
-                    // Change '\\r' to carriage return
-                    else if (bytesIN[iIN + 2] == (byte)'r')
-                    {
-                        bytesOUT[iOUT] = (byte)13;
-                    }
-
-                    else if (bytesIN[iIN + 2] == (byte)'n')
-                    {
-                        bytesOUT[iOUT] = (byte)10;
-                    }
-                    else
-                    {
-                        bytesOUT[iOUT] = bytesIN[iIN];
-                        iOUT++;
-                        continue;
-                    }
-                iIN += 2;
-            }
-            // Special case for first bytes of the  array
-            else if (
-                iIN == 0 &&
-                bytesIN[iIN] == (byte)'\\' &&
-                bytesIN[iIN + 1] == (byte)'\\')
-                {
-                    // Skip over '\\x'
-                    if (iIN < bytesIN.Length - 4 &&
-                        bytesIN[iIN + 2] == (byte)'x')
-                    {
-                        char firstDig = (char)Int32.Parse(bytesIN[iIN + 3].ToString());
-                        char secondDig = (char)Int32.Parse(bytesIN[iIN + 4].ToString());
-                        char[] combChars = { firstDig, secondDig };
-                        string total = "0x" + new string(combChars);
-                        int totalINT = Convert.ToInt32(total, 16);
-                        bytesOUT[iOUT] = (byte)totalINT;
-                        iIN += 4;
-                        iOUT++;
-                        continue;
-                    }
-
-                    // Change '\\r' to carriage return
-                    else if (bytesIN[iIN + 2] == (byte)'r')
-                    {
-                        bytesOUT[iOUT] = (byte)13;
-                    }
-
-                    else if (bytesIN[iIN + 2] == (byte)'n')
-                    {
-                        bytesOUT[iOUT] = (byte)10;
-                    }
-                iIN += 2;
-            }
-            else
-            {
-                bytesOUT[iOUT] = bytesIN[iIN];
-            }
-            iOUT++;
-        }
-        return bytesOUT;
-    }
-
-    internal static int getImageThumbnailID(int currImageID)
+    
+    // Given an imageID, get it's thumbnailID
+    public static int getImageThumbnailID(int currImageID)
     {
         string rawResult = runStatement("SELECT thumbnailID FROM image WHERE IMAGE_ID = " + currImageID + ";");
 

@@ -331,9 +331,9 @@ namespace FinancialDatabase
             return "DELETE FROM item WHERE ITEM_ID = " + item.get_ITEM_ID() + ";";
         }
 
-        public static string buildThumbnailsSearchQuery(List<ResultItem> parsedItems)
+        public static string thumbnailQuery(List<ResultItem> parsedItems)
         {
-            if (parsedItems == null || parsedItems.Count == 0) { throw new Exception("ERROR: QuyeryBuilder.buildThumbnailsSearchQuery(): Null or Empty list passed into it"); }
+            if (parsedItems == null || parsedItems.Count == 0) { throw new Exception("ERROR: QuyeryBuilder.thumbnailQuery(): Null or Empty list passed into it"); }
 
             string query = "SELECT image.ItemID, image.IMAGE_ID, thumbnail.thumbnail FROM image JOIN thumbnail ON image.thumbnailID = thumbnail.ThumbnailID WHERE image.ItemID IN (";
             query += parsedItems[0].get_ITEM_ID().ToString();
@@ -349,6 +349,23 @@ namespace FinancialDatabase
             query += ") ORDER BY image.ItemID;";
             return query;
 
+        }
+
+        internal static string completeItemIDSearchQuery(int itemID)
+        {
+            return "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE ITEM_ID = "
+                + itemID.ToString()
+                + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
+        }
+
+        internal static string getColumnNames(string tableName)
+        {
+            return "SHOW COLUMNS FROM " + tableName + ";";
+        }
+
+        internal static string GetSaleByID(int saleID)
+        {
+            return "SELECT * FROM sale WHERE SALE_ID = " + saleID.ToString() + ";";
         }
     }
 }
