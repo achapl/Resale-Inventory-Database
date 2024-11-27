@@ -132,11 +132,11 @@ public class ItemViewTab : Tab
 
     // Take user input, and use it to update the currItem
     // UpdateCurrItemWithUserInput
-    public void UpdateCurrItemWithUserInput()
+    public bool UpdateCurrItemWithUserInput()
     {
         // Triggers escape of edit mode into view mode if true. Will otherwise cause to stay in edit mode
         bool goodEdit = true;
-        if (tabController.getCurrItem() == null) { return; }
+        if (tabController.getCurrItem() == null) { return false; }
         List<Control> changedFields = getChangedFields();
 
         // Skip the current (what was previously the "next") element in the loop
@@ -172,14 +172,12 @@ public class ItemViewTab : Tab
                     }
                     int ttlWeight = lbs * 16 + oz;
 
-                    // Execute query
-
-                    DatabaseConnector.insertShipInfo
-
+                    // Update the database with new weight
                     string attrib = "shipping.Weight";
                     string type = tabController.colDataTypes[attrib];
-                    query = QueryBuilder.updateQuery(tabController.getCurrItem(), attrib, type, ttlWeight.ToString());
-                    output = DatabaseConnector.runStatement(query);
+                    
+                    DatabaseConnector.updateRow(getCurrItem(), attrib, type, ttlWeight.ToString());
+
                     // These must be cleared manually since they are both used at the same time.
                     // Clearing one produces an error when the other textbox is then used to get the total weight
                     Util.clearTBox(Form1.itemWeightLbsTxtbox);
@@ -189,30 +187,29 @@ public class ItemViewTab : Tab
                 }
                 else
                 {
-                    string attrib = t.Text;
+                    string newAttribVal = t.Text;
                     string type = tabController.colDataTypes[controlAttrib[c]];
-                    if (!Util.checkTypeOkay(attrib, type))
+                    if (!Util.checkTypeOkay(newAttribVal, type))
                     {
                         goodEdit = false;
                         continue;
                     }
+
+                    string attrib = controlAttrib[c];
                     switch (c)
                     {
+                        
                         case TextBox:
-                            query = QueryBuilder.updateQuery(tabController.getCurrItem(), controlAttrib[c], type, t.Text);
+                            DatabaseConnector.updateRow(getCurrItem(), attrib, type, t.Text);
                             break;
                         case DateTimePicker:
-                            query = QueryBuilder.updateQuery(tabController.getCurrItem(), controlAttrib[c], type, new Date(c));
+                            DatabaseConnector.updateRow(getCurrItem(), attrib, type, new Date(c));
                             break;
                     }
-                    output = DatabaseConnector.runStatement(query);
                 }
                 // Update the item in the view
-                if (output.CompareTo("ERROR") != 0)
-                {
-                    showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
-                    Util.clearTBox(t);
-                }
+                showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
+                Util.clearTBox(t);
 
             }
             else if (!tableEntryExists(t))
@@ -240,24 +237,9 @@ public class ItemViewTab : Tab
                             continue;
                         }
 
-                        //TODO: Why is this not happening all in DatabaesConnector?
-                        query = QueryBuilder.shipInfoInsertQuery(tabController.getCurrItem(), weightLbs, weightOz, l, w, h);
-
-                        int lastrowid;
-                        string output = DatabaseConnector.runStatement(query, out lastrowid);
-
-                        string attrib = "item.ShippingID";
-                        string type = tabController.colDataTypes[attrib];
-                        int shippingID = lastrowid;
-                        query = QueryBuilder.updateQuery(tabController.getCurrItem(), attrib, type, shippingID.ToString());
-
-                        // Update the item table with the new shipping info
-                        output = DatabaseConnector.runStatement(query);
-                        if (output.CompareTo("ERROR") != 0)
-                        {
-                            goodEdit = false;
-                            Util.clearTBox(weightTBoxes);
-                        }
+                        DatabaseConnector.insertShipInfo(getCurrItem(), weightLbs, weightOz,l, w, h, controlAttrib[c]);
+                        goodEdit = false;
+                        Util.clearTBox(weightTBoxes);
                         showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
                     }
                     else
@@ -275,13 +257,12 @@ public class ItemViewTab : Tab
                 else if (newItemTBoxes.Contains(t))
                 {
                     goodEdit = false;
-                    Console.WriteLine("ERROR: no item entry for CurrItem, This should not be possible");
-                    continue;
+                    throw new Exception("ERROR: no item entry for CurrItem, This should not be possible");
                 }
             }
         }
 
-        if (goodEdit) inEditingState = false;
+        //if (goodEdit) inEditingState = false;
 
         // It is correct to run showItem, updateCurrItem, and viewMode
         // from inside this function since you will always need to
@@ -290,6 +271,7 @@ public class ItemViewTab : Tab
         tabController.updateCurrItem();
         showItemAttributes(tabController.getCurrItem());
         viewMode();
+        return goodEdit;
     }
 
 
@@ -319,8 +301,11 @@ public class ItemViewTab : Tab
         {
             if (tabController.getCurrItem() == null) { return; }
             recordAttributeStates();
+            inEditingState = true;
+        } else
+        {
+            inEditingState = false;
         }
-        inEditingState = !inEditingState;
         
         showControlVisibility();
 

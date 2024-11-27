@@ -19,6 +19,7 @@ using System.Security.Principal;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Drawing.Imaging;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static FinancialDatabase.Form1;
 
 public static class DatabaseConnector
 {
@@ -811,5 +812,34 @@ public static class DatabaseConnector
         int thumbnailID = Int32.Parse(rawImageInfos[0]);
 
         return thumbnailID;
+    }
+
+    internal static string updateRow(ResultItem resultItem, string attrib, string type, string newVal)
+    {
+        string query = QueryBuilder.updateQuery(resultItem, attrib, type, newVal);
+        return DatabaseConnector.runStatement(query);
+    }
+    
+    internal static string updateRow(ResultItem resultItem, string attrib, string type, Date d)
+    {
+        string query = QueryBuilder.updateQuery(resultItem, attrib, type, d);
+        return DatabaseConnector.runStatement(query);
+    }
+
+    internal static void insertShipInfo(ResultItem resultItem, int weightLbs, int weightOz, int l, int w, int h, string weightType)
+    {
+        string query = QueryBuilder.shipInfoInsertQuery(resultItem, weightLbs, weightOz, l, w, h);
+
+        int lastrowid;
+        string output = DatabaseConnector.runStatement(query, out lastrowid);
+
+        string attrib = "item.ShippingID";
+        // TOOD: This is hardcoded, but dtbconnector doens't have access to tabController.controlAttributes
+        string type = "INT UNSIGNED";
+        int shippingID = lastrowid;
+        query = QueryBuilder.updateQuery(resultItem, attrib, type, shippingID.ToString());
+
+        // Update the item table with the new shipping info
+        output = DatabaseConnector.runStatement(query);
     }
 }
