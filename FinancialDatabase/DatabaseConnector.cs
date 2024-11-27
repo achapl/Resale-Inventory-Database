@@ -436,7 +436,7 @@ public static class DatabaseConnector
         List<string> result = runPython(statement);
         if (result[0].CompareTo("ERROR") == 0)
         {
-            Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
+            throw new Exception("ERROR: Invalid Statement/Query sent to database: " + statement);
         }
         // Returns [0,1,2] -> result, colInfo, cursor.lastrowid
         retList = result[0];
@@ -453,7 +453,7 @@ public static class DatabaseConnector
         List<string> result = runPython(statement);
         if (result[0].CompareTo("['ERROR']") == 0)
         {
-            Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
+            throw new Exception("ERROR: Invalid Statement/Query sent to database: " + statement);
         }
         // Returns [0,1,2] -> result, colInfo, cursor.lastrowid
         retList = result[0];
@@ -470,7 +470,7 @@ public static class DatabaseConnector
         List<string> result = runPython(statement);
         if (result[0].CompareTo("['ERROR']") == 0)
         {
-            Console.WriteLine("ERROR: Invalid Statement/Query sent to database: " + statement);
+            throw new Exception("ERROR: Invalid Statement/Query sent to database: " + statement);
         }
         // Returns [0,1,2] -> result, colInfo, cursor.lastrowid
         retList = result[0];

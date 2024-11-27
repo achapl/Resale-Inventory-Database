@@ -258,20 +258,26 @@ public abstract class Tab
         viewMode();
     }
 
+
+    // Check if a user-inputted control attribute corresponds to data
+    // for which there is an entry in the database
+    // Don't want to be updating data that doesn't exist
     protected bool tableEntryExists(TextBox t)
     {
-        if (controlAttrib.ContainsKey(t))
+        if (!controlAttrib.ContainsKey(t))
         {
-            string ret = "";
-            // Check if the attribute associated with the textbox is a default value in the curr item
-            tabController.getCurrItem().getAttribAsStr(controlAttrib[t], ref ret);
-            if (ret.CompareTo(Util.DEFAULT_INT.ToString()) == 0 ||
-                ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
-                ret is null ||
-                ret.CompareTo(Util.DEFAULT_DATE.ToString()) == 0)
-            {
-                return false;
-            }
+            return false;
+        }
+
+        string ret = "";
+        // Check if the attribute associated with the textbox is a default value in the curr item
+        tabController.getCurrItem().getAttribAsStr(controlAttrib[t], ref ret);
+        if (ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
+            ret.CompareTo(Util.DEFAULT_DATE.ToString()) == 0 ||
+            ret.CompareTo(Util.DEFAULT_INT.ToString()) == 0 ||
+            ret is null)
+        {
+            return false;
         }
         return true;
     }

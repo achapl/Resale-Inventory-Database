@@ -149,9 +149,9 @@ public class ItemViewTab : Tab
                 skipElem = false;
                 continue;
             }
-            if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); continue; }
+            if (c is null) { throw new Exception("ERROR: Control Object c is null, ItemViewTab.cs"); }
 
-            TextBox t = c as TextBox ?? new TextBox();// ?? denotes null assignment
+            TextBox t = c as TextBox;
 
             string query = "";
             if (tableEntryExists(t))
@@ -173,6 +173,9 @@ public class ItemViewTab : Tab
                     int ttlWeight = lbs * 16 + oz;
 
                     // Execute query
+
+                    DatabaseConnector.insertShipInfo
+
                     string attrib = "shipping.Weight";
                     string type = tabController.colDataTypes[attrib];
                     query = QueryBuilder.updateQuery(tabController.getCurrItem(), attrib, type, ttlWeight.ToString());
