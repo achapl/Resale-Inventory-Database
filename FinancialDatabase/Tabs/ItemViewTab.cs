@@ -107,14 +107,14 @@ public class ItemViewTab : Tab
         }
 
         controlAttrib = new Dictionary<Control, string>
-        {{ Form1.itemNameTxtbox,  "item.Name" },
+        {{ Form1.itemWeightLbsTxtbox,  "shipping.WeightLbs" },
         { Form1.itemInitQtyTxtbox,  "item.InitialQuantity" },
         { Form1.itemCurrQtyTxtbox,  "item.CurrentQuantity" },
-        { Form1.itemWeightLbsTxtbox,  "shipping.WeightLbs" },
         { Form1.itemWeightOzTxtbox, "shipping.WeightOz" },
+        { Form1.itemHeightTxtbox, "shipping.Height" },
         { Form1.itemLengthTxtbox, "shipping.Length" },
         { Form1.itemWidthTxtbox, "shipping.Width" },
-        { Form1.itemHeightTxtbox, "shipping.Height" }};
+        { Form1.itemNameTxtbox,  "item.Name" }};
     }
 
 
@@ -175,7 +175,7 @@ public class ItemViewTab : Tab
                     // Execute query
                     string attrib = "shipping.Weight";
                     string type = tabController.colDataTypes[attrib];
-                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), attrib, type, ttlWeight.ToString());
+                    query = QueryBuilder.updateQuery(tabController.getCurrItem(), attrib, type, ttlWeight.ToString());
                     output = DatabaseConnector.runStatement(query);
                     // These must be cleared manually since they are both used at the same time.
                     // Clearing one produces an error when the other textbox is then used to get the total weight
@@ -196,10 +196,10 @@ public class ItemViewTab : Tab
                     switch (c)
                     {
                         case TextBox:
-                            query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlAttrib[c], type, t.Text);
+                            query = QueryBuilder.updateQuery(tabController.getCurrItem(), controlAttrib[c], type, t.Text);
                             break;
                         case DateTimePicker:
-                            query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlAttrib[c], type, new Date(c));
+                            query = QueryBuilder.updateQuery(tabController.getCurrItem(), controlAttrib[c], type, new Date(c));
                             break;
                     }
                     output = DatabaseConnector.runStatement(query);
@@ -238,7 +238,7 @@ public class ItemViewTab : Tab
                         }
 
                         //TODO: Why is this not happening all in DatabaesConnector?
-                        query = QueryBuilder.buildShipInfoInsertQuery(tabController.getCurrItem(), weightLbs, weightOz, l, w, h);
+                        query = QueryBuilder.shipInfoInsertQuery(tabController.getCurrItem(), weightLbs, weightOz, l, w, h);
 
                         int lastrowid;
                         string output = DatabaseConnector.runStatement(query, out lastrowid);
@@ -246,7 +246,7 @@ public class ItemViewTab : Tab
                         string attrib = "item.ShippingID";
                         string type = tabController.colDataTypes[attrib];
                         int shippingID = lastrowid;
-                        query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), attrib, type, shippingID.ToString());
+                        query = QueryBuilder.updateQuery(tabController.getCurrItem(), attrib, type, shippingID.ToString());
 
                         // Update the item table with the new shipping info
                         output = DatabaseConnector.runStatement(query);
@@ -293,13 +293,13 @@ public class ItemViewTab : Tab
     public void deleteShippingInfo()
     {
         // Delete shipping info entry
-        string query = QueryBuilder.buildDelShipInfoQuery(tabController.getCurrItem());
+        string query = QueryBuilder.deleteShipInfoQuery(tabController.getCurrItem());
         string output = DatabaseConnector.runStatement(query);
 
         // Remove foreign key reference to shipping info from item table
         string attrib = "item.ShippingID";
         string type = tabController.colDataTypes[attrib];
-        query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), attrib, type, null);
+        query = QueryBuilder.updateQuery(tabController.getCurrItem(), attrib, type, null);
         output = DatabaseConnector.runStatement(query);
 
         if (output.CompareTo("ERROR") != 0)
@@ -312,9 +312,13 @@ public class ItemViewTab : Tab
     override public void flipEditMode()
     {
         // Don't go into edit mode if there is no item to edit
-        if (!inEditingState && tabController.getCurrItem() == null) { return; }
-
+        if (!inEditingState)
+        {
+            if (tabController.getCurrItem() == null) { return; }
+            recordAttributeStates();
+        }
         inEditingState = !inEditingState;
+        
         showControlVisibility();
 
     }

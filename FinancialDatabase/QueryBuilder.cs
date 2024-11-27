@@ -13,20 +13,23 @@ namespace FinancialDatabase
 
         public static string defaultQuery()
         {
-            return formatQuery(DEFAULTQUERY);
+            return placeEscChars(DEFAULTQUERY);
         }
 
-        // Insert escape characters
-        private static string formatQuery(string query)
+
+        //TODO: Remove function? It's only referenced once.
+        private static string placeEscChars(string query)
         {
             string escapeChar = "^";
             // Add '^' before special characters ('*', '<', '>', .etc), 
 
-
-            StringBuilder sb = new StringBuilder(query, 1024);
+            int maxQueryLen = 1024;
+            StringBuilder sb = new StringBuilder(query, maxQueryLen);
             int count = 0;
-            // Note: for edge case, special char at start of string, copy swithc inside for loop, and modify it outside for case i=0
-            for (int i = 1; i < query.Length; i++)
+            // Note: for edge case, special char at start of string, copy switch
+            // inside for loop, and modify it outside for case i=0
+            // TODO: Changed to i=0 during refactoring with no changes. Keep it his way?
+            for (int i = 0; i < query.Length; i++)
             {
                 switch (query[i])
                 {
@@ -44,7 +47,7 @@ namespace FinancialDatabase
             return sb.ToString();
         }
 
-        public static string buildSearchByNameQuery(SearchQuery Q)
+        public static string searchByNameQuery(SearchQuery Q)
         {
             string query;
             string stock = "";
@@ -96,28 +99,29 @@ namespace FinancialDatabase
             }
             else
             {
-                //query = "SELECT " + cols + " FROM item JOIN purchase OiN item.ITEM_ID = purchase.ItemID WHERE name LIKE '%" + term + "%' AND purchase.Date_Purchased > '" + startDate + "' AND purchase.Date_Purchased < '" + endDate + "' " + stock + ";";
                 query = "SELECT " + cols + " FROM item " + purchaseJoin + thumbnailJoin + "WHERE item.name LIKE '%" + Q.getSingleTerm() + "%'" + stock + " " + dateRange + ";";
             }
             return query;
         }
 
-        public static string buildPurchaseQuery(ResultItem item)
+        public static string purchaseQuery(ResultItem item)
         {
             string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE item.PurchaseID = " + item.get_PurchaseID() + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
             return query;
         }
 
-        public static string buildSaleQuery(ResultItem item)
+        public static string saleQuery(ResultItem item)
         {
             return "SELECT * FROM sale WHERE ItemID_sale = " + item.get_ITEM_ID().ToString() + ";";
         }
 
-        public static string buildInsertPurchaseQuery(int purcPrice, string purcNotes, Date d)
+        public static string insertPurchaseQuery(int purcPrice, string purcNotes, Date d)
         {
             return "INSERT INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", \"" + purcNotes + "\", " + formatAttribute(d.toDateString(), "date") + ");";
         }
         
+        
+        // Correct the formatting for sending different datatypes in a string query 
         private static string formatAttribute(string attrib, string type)
         {
 
@@ -139,12 +143,12 @@ namespace FinancialDatabase
             }
         }
 
-        public static string buildShipInfoInsertQuery(ResultItem item) {
+        public static string shipInfoInsertQuery(ResultItem item) {
             List<int> weight = Util.ozToOzLbs(item.get_Weight());
-            return buildShipInfoInsertQuery(item, weight[0], weight[1], item.get_Length(), item.get_Width(), item.get_Height());
+            return shipInfoInsertQuery(item, weight[0], weight[1], item.get_Length(), item.get_Width(), item.get_Height());
         }
 
-        public static string buildShipInfoInsertQuery(ResultItem currItem, int weightLbs, int weightOz, int l, int w, int h)
+        public static string shipInfoInsertQuery(ResultItem currItem, int weightLbs, int weightOz, int l, int w, int h)
         {
             if (l <= 0 ||  w <= 0 || h <= 0 || weightOz < 0 || weightLbs < 0 || (weightOz == 0 && weightLbs == 0))
             {
@@ -155,7 +159,7 @@ namespace FinancialDatabase
             return "INSERT INTO shipping (Length, Width, Height, Weight, ItemID_shipping) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + currItem.get_ITEM_ID() + ")";
         }
 
-        public static string buildDelShipInfoQuery(ResultItem item)
+        public static string deleteShipInfoQuery(ResultItem item)
         {
             if (item.get_ShippingID() == Util.DEFAULT_INT)
             {
@@ -167,12 +171,12 @@ namespace FinancialDatabase
             return "DELETE FROM shipping WHERE SHIPPING_ID = " + shipID + ";";
         }
 
-        public static string buildDelSaleQuery(Sale sale)
+        public static string deleteSaleQuery(Sale sale)
         {
             return "DELETE FROM sale WHERE SALE_ID = " + sale.get_SALE_ID().ToString() + ";";
         }
 
-        public static string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, Date updateDate)
+        public static string updateQuery(ResultItem currItem, string controlAttribute, string type, Date updateDate)
         {
             if (!Util.checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
 
@@ -208,7 +212,7 @@ namespace FinancialDatabase
             return query;
         }
 
-        public static string buildUpdateQuery(ResultItem currItem, string controlAttribute, string type, string updateText)
+        public static string updateQuery(ResultItem currItem, string controlAttribute, string type, string updateText)
         {
 
             if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
@@ -248,12 +252,12 @@ namespace FinancialDatabase
             return query;
         }
     
-        public static string buildUpdateQuery(Sale sale, string controlAttribute, string type, string updateText)
+        public static string updateQuery(Sale sale, string controlAttribute, string type, string updateText)
         {
 
             if (sale is null)
             {
-                throw new Exception("Sale was null, QueryBuilder.buildUpdateQuery()");
+                throw new Exception("Sale was null, QueryBuilder.updateQuery()");
             }
 
             if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
@@ -280,7 +284,7 @@ namespace FinancialDatabase
             return query;
         }
 
-        public static string buildUpdateQuery(Sale sale, string controlAttribute, string type, Date updateDate)
+        public static string updateQuery(Sale sale, string controlAttribute, string type, Date updateDate)
         {
             if (!Util.checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
 
@@ -305,28 +309,28 @@ namespace FinancialDatabase
             return query;
         }
 
-        public static string buildItemInsertQuery(ResultItem item)
+        public static string itemInsertQuery(ResultItem item)
         {
             return "INSERT INTO item (Name, InitialQuantity, CurrentQuantity, PurchaseID) VALUES (" + "\"" + item.get_Name() + "\"" + ", " + item.get_InitialQuantity() + ", " + item.get_CurrentQuantity() + ", " + item.get_PurchaseID() + ");";
         }
 
-        public static string buildSaleInsertQuery(Sale sale)
+        public static string saleInsertQuery(Sale sale)
         {
             return "INSERT INTO sale (Date_Sold, Amount_sale, ItemID_sale) VALUES (" + formatAttribute(sale.get_Date_Sold().toDateString(), "date") + ", " + sale.get_Amount_sale().ToString() + ", " + sale.get_ItemID_sale().ToString() + ");";
         }
 
-        public static string buildDeletePurchaseQuery(ResultItem item)
+        public static string deletePurchaseQuery(ResultItem item)
         {
             int purcID = item.get_PurchaseID();
             return "DELETE FROM purchase WHERE purchase.PURCHASE_ID = " + purcID + ";";
         }
 
-        public static string buildDelAllSalesQuery(ResultItem item)
+        public static string deleteAllSalesQuery(ResultItem item)
         {
             return "DELETE FROM sale WHERE sale.Item_ID_sale = " + item.get_ITEM_ID() + ";";
         }
 
-        public static string buildDelItemQuery(ResultItem item)
+        public static string deleteItemQuery(ResultItem item)
         {
             return "DELETE FROM item WHERE ITEM_ID = " + item.get_ITEM_ID() + ";";
         }
@@ -363,7 +367,7 @@ namespace FinancialDatabase
             return "SHOW COLUMNS FROM " + tableName + ";";
         }
 
-        internal static string GetSaleByID(int saleID)
+        internal static string getSaleByID(int saleID)
         {
             return "SELECT * FROM sale WHERE SALE_ID = " + saleID.ToString() + ";";
         }

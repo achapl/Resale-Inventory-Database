@@ -207,7 +207,7 @@ public static class DatabaseConnector
     // Gets a Sale from the database given the sale's saleID
     public static Sale getSale(int saleID)
     {
-        string querySale = QueryBuilder.GetSaleByID(saleID);
+        string querySale = QueryBuilder.getSaleByID(saleID);
         List<Sale> result = RunSaleSearchQuery(querySale);
 
 
@@ -483,7 +483,7 @@ public static class DatabaseConnector
     // Return the purcID
     public static int newPurchase(int purcPrice, string notes, Date PurcDate)
     {
-        string query = QueryBuilder.buildInsertPurchaseQuery(purcPrice, notes, PurcDate);
+        string query = QueryBuilder.insertPurchaseQuery(purcPrice, notes, PurcDate);
         int purcID;
         runStatement(query, out purcID);
         return purcID;
@@ -505,7 +505,7 @@ public static class DatabaseConnector
     public static string insertItem(ResultItem item, out int lastrowid)
     {
         // Insert item into database
-        string query = QueryBuilder.buildItemInsertQuery(item);
+        string query = QueryBuilder.itemInsertQuery(item);
         lastrowid = -1;
         string output = runStatement(query, out lastrowid);
 
@@ -516,13 +516,13 @@ public static class DatabaseConnector
         {
             // Insert shipping info
             item.set_ITEM_ID(lastrowid);
-            query = QueryBuilder.buildShipInfoInsertQuery(item);
+            query = QueryBuilder.shipInfoInsertQuery(item);
             output = runStatement(query, out shippingID);
 
             // Update item entry to link to shipping info
             string attrib = "item.ShippingID";
             string type   = "int unsigned";
-            query = QueryBuilder.buildUpdateQuery(item, attrib, type, shippingID.ToString());
+            query = QueryBuilder.updateQuery(item, attrib, type, shippingID.ToString());
 
             // Update the item table with the new shipping info
             output = runStatement(query);
@@ -536,7 +536,7 @@ public static class DatabaseConnector
     // Returns colInfo of running the SQL statement
     public static string insertSale(Sale sale)
     {
-        string query = QueryBuilder.buildSaleInsertQuery(sale);
+        string query = QueryBuilder.saleInsertQuery(sale);
         string output = runStatement(query);
         return output;
     }
@@ -661,7 +661,7 @@ public static class DatabaseConnector
 
     public static List<ResultItem> RunSearchQuery(SearchQuery Q)
     {
-        string query = QueryBuilder.buildSearchByNameQuery(Q);
+        string query = QueryBuilder.searchByNameQuery(Q);
         return getItems(query, false);
     }
 
@@ -720,7 +720,7 @@ public static class DatabaseConnector
             {
                 
                 string attrib = "item.PurchaseID";
-                string updateQuery = QueryBuilder.buildUpdateQuery(item, "item.PurchaseID", "int unsigned", "0");
+                string updateQuery = QueryBuilder.updateQuery(item, "item.PurchaseID", "int unsigned", "0");
 
                 // TODO May not be necessary since auto-cascade on delete on database may be a feature
                 //runStatement(updateQuery);
@@ -730,11 +730,11 @@ public static class DatabaseConnector
         if (item.hasShippingEntry())
         {
             // TODO: Make this a function deleteShipInfo for DatabaseConnector
-            string shippingDelQuery = QueryBuilder.buildDelShipInfoQuery(item);
+            string shippingDelQuery = QueryBuilder.deleteShipInfoQuery(item);
             runStatement(shippingDelQuery);
         }
         deleteSales(item);
-        string delItemQuery = QueryBuilder.buildDelItemQuery(item);
+        string delItemQuery = QueryBuilder.deleteItemQuery(item);
         runStatement(delItemQuery);
     }
 
@@ -742,7 +742,7 @@ public static class DatabaseConnector
     // Given an item, delete its sales from the database
     private static void deleteSales(ResultItem item)
     {
-        string query = QueryBuilder.buildDelAllSalesQuery(item);
+        string query = QueryBuilder.deleteAllSalesQuery(item);
         runStatement(query);
     }
 
@@ -751,7 +751,7 @@ public static class DatabaseConnector
     // TODO: Determine if auto-cascade deletes the corresponding item from the database
     private static void deletePurchase(ResultItem item)
     {
-        string query = QueryBuilder.buildDeletePurchaseQuery(item);
+        string query = QueryBuilder.deletePurchaseQuery(item);
         runStatement(query);
     }
 
@@ -759,7 +759,7 @@ public static class DatabaseConnector
     // Checks if the given item is the only item from its corresponding purchase
     private static bool isLastItemInPurchase(ResultItem item)
     {
-        return (getItems(QueryBuilder.buildPurchaseQuery(item), false).Count() == 1);   
+        return (getItems(QueryBuilder.purchaseQuery(item), false).Count() == 1);   
     }
 
 

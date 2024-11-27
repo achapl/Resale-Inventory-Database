@@ -1,5 +1,6 @@
 ﻿using FinancialDatabase;
 using System;
+using System.Windows.Forms;
 using Date = Util.Date;
 
 public abstract class Tab
@@ -17,7 +18,9 @@ public abstract class Tab
     protected Dictionary<Control, Label> labelTextboxPairs;
     public    Dictionary<Control, string> controlAttrib;
     protected List<Label> attributeValueLabels;
-    
+
+
+    protected List<Control> controlBackup;
 
     protected List<Control> allClearableControl;
 
@@ -85,86 +88,54 @@ public abstract class Tab
     public ResultItem getCurrItem() => tabController.getCurrItem();
 
 
+    // Returns only the textboxes and such that the user has changed while editing
     protected List<Control> getChangedFields()
     {
-        
-        List<Control> returnList = new List<Control>();
-        foreach (Control control in mutableAttribValueControls)
+        List<Control> changedFields = new List<Control>();
+
+        for(int i = 0; i < mutableAttribValueControls.Count; i++)
         {
-            string itemValue = "";
-            string saleValue = "";
-            string userValue = "";
+            Control pastState = controlBackup[i];
+            Control currState = mutableAttribValueControls[i];
 
-            bool hasMatch = false;
-
-            switch (control)
+            switch (pastState)
             {
                 case TextBox:
-                    string attrib = controlAttrib[control];
-                    
-                    // Determine which table (sale/item) the Textbox belongs to to compare it with the propor attribute
-                    if (saleControls.Contains(control as TextBox))
+                    if (pastState.Text.CompareTo(currState.Text) != 0)
                     {
-                        tabController.getCurrSale().getAttribAsStr(attrib, ref saleValue);
+                        changedFields.Add(currState);
                     }
-                    else
-                    {
-                        // If there is no item to compare it against, compare it to empty string, which is what textbox is by default when there is no currItem
-                        if (getCurrItem() is null)
-                        {
-                            itemValue = "";
-                        }
-                        else
-                        {
-                            getCurrItem().getAttribAsStr(attrib, ref itemValue);
-                        }
-                    }
-                    userValue = control.Text;
-                    hasMatch = true;
                     break;
                 case DateTimePicker:
-                    // If there is no item to compare it against, compare it to "empty" date
-                    if (getCurrItem() is null)
+                    Util.Date oldDate = new Util.Date(pastState as DateTimePicker);
+                    Util.Date newDate = new Util.Date(currState as DateTimePicker);
+                    if (!oldDate.Equals(newDate))
                     {
-                        itemValue = new Date(0,0,0).toDateString();
+                        changedFields.Add(currState);
                     }
-                    else
-                    {
-                        itemValue = getCurrItem().get_Date_Purchased_str();
-                    }
-                    
-                    userValue = new Date(control).toDateString();
-                    hasMatch = true;
                     break;
-            
-            }
-
-            // Must check if hasMatch, so that matching default vals when there is no match does not incorrectly add the control to the return list
-            if (hasMatch)
-            {
-                if (userValue.CompareTo(itemValue) != 0)
-                {
-                    returnList.Add(control);
-                }
             }
         }
-
-        return returnList;
-
+        return changedFields;
     }
 
+
     // Check if a value is a defualt value
-    protected string checkDefault(int    val)
+    protected string checkDefault(int val)
     {
         if (val == Util.DEFAULT_INT) { return ""; }
         else { return val.ToString(); }
     }
+    
+    
     // Check if a value is a defualt value
     protected string checkDefault(double val)
     {
         if (val == -1) { return ""; }
         else { return val.ToString(); }
     }
+    
+    
     // Redundant, but exists for sake of extensibility
     protected string checkDefault(string val)
     {
@@ -193,10 +164,39 @@ public abstract class Tab
     {
         if (!inEditingState)
         {
+            recordAttributeStates();
             flipEditMode();
         }
     }
 
+
+    // Get a record before editing values of the mutable attributes
+    // This way you can see which ones have been changed
+    protected void recordAttributeStates()
+    {
+        if (controlBackup == null)
+        {
+            controlBackup = new List<Control>();
+        }
+        controlBackup.Clear();
+        foreach (Control c in mutableAttribValueControls)
+        {
+            switch (c)
+            {
+                case TextBox:
+                    TextBox tBoxRecord = new TextBox();
+                    tBoxRecord.Text = c.Text;
+                    controlBackup.Add(tBoxRecord);
+                    break;
+                case DateTimePicker:
+                    DateTimePicker dt = c as DateTimePicker;
+                    DateTimePicker dtPickerRecord = new DateTimePicker();
+                    dtPickerRecord.Value = dt.Value;
+                    controlBackup.Add(dtPickerRecord);
+                    break;
+            }
+        }
+    }
 
     abstract public void flipEditMode();
 

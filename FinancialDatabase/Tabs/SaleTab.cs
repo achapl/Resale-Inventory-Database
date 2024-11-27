@@ -74,7 +74,7 @@ public class SaleTab : Tab
 	{
         Form1.PurchaseListBox.Items.Clear();
         tabController.clearCurrentPurchaseItems();
-        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.buildPurchaseQuery(item), false);
+        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.purchaseQuery(item), false);
 
 		foreach(ResultItem i in result)
 		{
@@ -114,11 +114,11 @@ public class SaleTab : Tab
                         // TODO: Show an error message for incorrect attribute inputted!
                         continue;
                     }
-                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrSale(), controlAttrib[c], type, t.Text);
+                    query = QueryBuilder.updateQuery(tabController.getCurrSale(), controlAttrib[c], type, t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrSale(), controlAttrib[c], type, new Date(c));
+                    query = QueryBuilder.updateQuery(tabController.getCurrSale(), controlAttrib[c], type, new Date(c));
                 }
 
                 if (goodEdit)
@@ -183,7 +183,7 @@ public class SaleTab : Tab
 
     public static List<Sale> getSales(ResultItem item)
     {
-        return DatabaseConnector.RunSaleSearchQuery(QueryBuilder.buildSaleQuery(item));
+        return DatabaseConnector.RunSaleSearchQuery(QueryBuilder.saleQuery(item));
     }
 
     public static double getTotalSales(ResultItem item)

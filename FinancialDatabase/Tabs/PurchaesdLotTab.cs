@@ -104,7 +104,7 @@ public class PurchasedLotTab : Tab
 	{
         Form1.PurchaseListBox.Items.Clear();
 		tabController.clearCurrentPurchaseItems();
-        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.buildPurchaseQuery(item), false);
+        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.purchaseQuery(item), false);
 
 		foreach(ResultItem i in result)
 		{
@@ -179,11 +179,11 @@ public class PurchasedLotTab : Tab
                         goodEdit = false;
                         continue;
                     }
-                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlAttrib[c], type, t.Text);
+                    query = QueryBuilder.updateQuery(tabController.getCurrItem(), controlAttrib[c], type, t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    query = QueryBuilder.buildUpdateQuery(tabController.getCurrItem(), controlAttrib[c], type, new Date(c));
+                    query = QueryBuilder.updateQuery(tabController.getCurrItem(), controlAttrib[c], type, new Date(c));
                 }
 
                 if (goodEdit)
@@ -222,7 +222,7 @@ public class PurchasedLotTab : Tab
         Form1.PurchaseListBox.Items.Clear();
         tabController.clearCurrentPurchaseItems();
         // TODO: Make getItems for ResultItem parameter
-        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.buildPurchaseQuery(item), false);
+        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.purchaseQuery(item), false);
 
         foreach (ResultItem i in result)
         {
@@ -341,7 +341,7 @@ public class PurchasedLotTab : Tab
         newItem.set_ITEM_ID(itemID);
         string attrib = "item.PurchaseID";
         string type = tabController.colDataTypes[attrib];
-        string query = QueryBuilder.buildUpdateQuery(newItem, attrib, type, purcID.ToString());
+        string query = QueryBuilder.updateQuery(newItem, attrib, type, purcID.ToString());
         DatabaseConnector.runStatement(query);
         //TODO: Can the following line be removed since tabController.setCurrItem(newItem) is called and shoeuld update the currItem with modified purc date?
         newItem.set_PurchaseID(purcID);

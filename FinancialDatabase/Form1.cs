@@ -371,7 +371,7 @@ namespace FinancialDatabase
 
             public void saleTDelete()
             {
-                string query = QueryBuilder.buildDelSaleQuery(currSale);
+                string query = QueryBuilder.deleteSaleQuery(currSale);
                 string output = "";
                 output = DatabaseConnector.runStatement(query);
                 if (output.CompareTo("ERROR") == 0)
