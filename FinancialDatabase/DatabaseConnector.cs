@@ -757,6 +757,12 @@ public static class DatabaseConnector
     }
 
 
+    public static void deleteShipInfo(ResultItem item)
+    {
+        string query = QueryBuilder.deleteShipInfoQuery(item);
+        runStatement(query);
+    }
+
     // Checks if the given item is the only item from its corresponding purchase
     private static bool isLastItemInPurchase(ResultItem item)
     {

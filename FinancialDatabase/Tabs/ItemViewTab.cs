@@ -132,6 +132,7 @@ public class ItemViewTab : Tab
         return true;
     }
 
+
     // Take user input, and use it to update the currItem
     // UpdateCurrItemWithUserInput
     public bool UpdateCurrItemWithUserInput()
@@ -210,6 +211,7 @@ public class ItemViewTab : Tab
         return goodEdit;
     }
 
+
     private string getUserInputVal(Control c)
     {
         switch (c)
@@ -221,9 +223,10 @@ public class ItemViewTab : Tab
                 return new Date(c).toDateString();
                 break;
             default:
-                throw new Exception("Error: Unknown Control Type");
+                throw new Exception("Error: Unaccounted for Control Type");
         }
     }
+
 
     private bool getUserInputWeight(out int ttlWeight)
     {
@@ -241,6 +244,7 @@ public class ItemViewTab : Tab
 
         return true;
     }
+
 
     private void makeShippingEntry()
     {
@@ -288,7 +292,6 @@ public class ItemViewTab : Tab
     }
 
 
-    
     // Get the mySQL type of the shipping information.
     // All shipping info should have the same mySQL type
     private string getShippingInfoType()
@@ -328,17 +331,16 @@ public class ItemViewTab : Tab
         return type;
     }
 
+
     public void deleteShippingInfo()
     {
         // Delete shipping info entry
-        string query = QueryBuilder.deleteShipInfoQuery(tabController.getCurrItem());
-        string output = DatabaseConnector.runStatement(query);
+        DatabaseConnector.deleteShipInfo(tabController.getCurrItem());
 
         // Remove foreign key reference to shipping info from item table
         string attrib = "item.ShippingID";
         string type = tabController.colDataTypes[attrib];
-        query = QueryBuilder.updateQuery(tabController.getCurrItem(), attrib, type, null);
-        output = DatabaseConnector.runStatement(query);
+        string output = DatabaseConnector.updateRow(tabController.getCurrItem(), attrib, type, null);
 
         if (output.CompareTo("ERROR") != 0)
         {
@@ -347,9 +349,10 @@ public class ItemViewTab : Tab
         flipEditMode();
     }
 
+
     override public void flipEditMode()
     {
-        // Don'userInputTextbox go into edit mode if there is no item to edit
+        // Don't go into edit mode if there is no item to edit
         if (!inEditingState)
         {
             if (tabController.getCurrItem() == null) { return; }
