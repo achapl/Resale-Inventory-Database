@@ -118,11 +118,13 @@ public class ItemViewTab : Tab
     }
 
 
+    // Checks that all shipping boxes are filled, and are integers
     public bool allShippingBoxesFilled()
     {
         foreach (Control c in shippingTBoxes)
         {
-            if (c.Text.CompareTo("") == 0)
+            if (c.Text.CompareTo("") == 0 ||
+                !Int32.TryParse(c.Text, out int _))
             {
                 return false;
             }
@@ -134,146 +136,197 @@ public class ItemViewTab : Tab
     // UpdateCurrItemWithUserInput
     public bool UpdateCurrItemWithUserInput()
     {
-        // Triggers escape of edit mode into view mode if true. Will otherwise cause to stay in edit mode
         bool goodEdit = true;
         if (tabController.getCurrItem() == null) { return false; }
         List<Control> changedFields = getChangedFields();
 
-        // Skip the current (what was previously the "next") element in the loop
-        // Used for skipping ounces after it is cleared from being "used" in conjugation with lbs textbox
-        bool skipElem = false;
-        foreach (Control c in changedFields)
+        foreach (Control userInputContainer in changedFields)
         {
-            if (skipElem)
-            {
-                skipElem = false;
-                continue;
-            }
-            if (c is null) { throw new Exception("ERROR: Control Object c is null, ItemViewTab.cs"); }
+            if (userInputContainer is null) { throw new Exception("ERROR: Control Object userInputContainer is null, ItemViewTab.cs"); }
 
-            TextBox t = c as TextBox;
-
-            string query = "";
-            if (tableEntryExists(t))
+            TextBox userInputTextbox = userInputContainer as TextBox;
+            if (tableEntryExists(userInputTextbox))
             {
                 string output = "";
-                if (weightTBoxes.Contains(t))
+                if (userInputTextbox == Form1.itemWeightLbsTxtbox)
                 {
-                    // Get info for weight
-                    int lbs = 0;
-                    int oz = 0;
-                    if (!Int32.TryParse(Form1.itemWeightLbsTxtbox.Text, out lbs)
-                     || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out oz))
-                    {
-                        goodEdit = false;
-                        Util.clearTBox(Form1.itemWeightLbsTxtbox);
-                        Util.clearTBox(Form1.itemWeightOzTxtbox);
-                        continue;
-                    }
-                    int ttlWeight = lbs * 16 + oz;
-
+                    int ttlWeight;
+                    bool success = getUserInputWeight(out ttlWeight);
+                    
                     // Update the database with new weight
                     string attrib = "shipping.Weight";
                     string type = tabController.colDataTypes[attrib];
-                    
                     DatabaseConnector.updateRow(getCurrItem(), attrib, type, ttlWeight.ToString());
 
                     // These must be cleared manually since they are both used at the same time.
                     // Clearing one produces an error when the other textbox is then used to get the total weight
                     Util.clearTBox(Form1.itemWeightLbsTxtbox);
                     Util.clearTBox(Form1.itemWeightOzTxtbox);
-                    skipElem = true;
 
                 }
                 else
                 {
-                    string newAttribVal = t.Text;
-                    string type = tabController.colDataTypes[controlAttrib[c]];
+                    string newAttribVal = userInputTextbox.Text;
+                    string type = tabController.colDataTypes[controlAttrib[userInputContainer]];
                     if (!Util.checkTypeOkay(newAttribVal, type))
                     {
                         goodEdit = false;
                         continue;
                     }
 
-                    string attrib = controlAttrib[c];
-                    switch (c)
-                    {
-                        
-                        case TextBox:
-                            DatabaseConnector.updateRow(getCurrItem(), attrib, type, t.Text);
-                            break;
-                        case DateTimePicker:
-                            DatabaseConnector.updateRow(getCurrItem(), attrib, type, new Date(c));
-                            break;
-                    }
+                    string attrib = controlAttrib[userInputContainer];
+                    string newVal = getUserInputVal(userInputContainer);
+
+                    DatabaseConnector.updateRow(getCurrItem(), attrib, type, newVal);
                 }
                 // Update the item in the view
                 showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
-                Util.clearTBox(t);
+                Util.clearTBox(userInputTextbox);
 
             }
-            else if (!tableEntryExists(t))
+            else
             {
-                if (shippingTBoxes.Contains(t))
+                if (shippingTBoxes.Contains(userInputTextbox))
                 {
-                    if (allShippingBoxesFilled())
-                    {
-                        int weightLbs = 0;
-                        int weightOz = 0;
-                        int l = 0;
-                        int w = 0;
-                        int h = 0;
-                        try
-                        {
-                            weightLbs = Int32.Parse(Form1.itemWeightLbsTxtbox.Text);
-                            weightOz = Int32.Parse(Form1.itemWeightOzTxtbox.Text);
-                            l = Int32.Parse(Form1.itemLengthTxtbox.Text);
-                            w = Int32.Parse(Form1.itemWidthTxtbox.Text);
-                            h = Int32.Parse(Form1.itemHeightTxtbox.Text);
-                        }
-                        catch
-                        {
-                            goodEdit = false;
-                            continue;
-                        }
-
-                        DatabaseConnector.insertShipInfo(getCurrItem(), weightLbs, weightOz,l, w, h, controlAttrib[c]);
-                        goodEdit = false;
-                        Util.clearTBox(weightTBoxes);
-                        showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
-                    }
-                    else
-                    {
-                        MessageBox.Show(
-                            "To Add Shipping Info, all fields must be filled (Lbs, Oz, L, W, H)",
-                            "Error",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
-                            );
-                        goodEdit = false;
-                        break;
-                    }
+                    makeShippingEntry();
                 }
-                else if (newItemTBoxes.Contains(t))
+                else if (newItemTBoxes.Contains(userInputTextbox))
                 {
-                    goodEdit = false;
+                    // For there to be an item in the ItemTab, it must have an
+                    // entry in the item table which requires at minimum
+                    // the attributes of the newItemTBoxes
                     throw new Exception("ERROR: no item entry for CurrItem, This should not be possible");
                 }
             }
+            
         }
-
-        //if (goodEdit) inEditingState = false;
 
         // It is correct to run showItem, updateCurrItem, and viewMode
         // from inside this function since you will always need to
-        // update the shown informationafter updating the
+        // update the shown information after updating the
         // ResultItem copy of it
         tabController.updateCurrItem();
         showItemAttributes(tabController.getCurrItem());
-        viewMode();
         return goodEdit;
     }
 
+    private string getUserInputVal(Control c)
+    {
+        switch (c)
+        {
+            case TextBox:
+                return (c as TextBox).Text;
+                break;
+            case DateTimePicker:
+                return new Date(c).toDateString();
+                break;
+            default:
+                throw new Exception("Error: Unknown Control Type");
+        }
+    }
+
+    private bool getUserInputWeight(out int ttlWeight)
+    {
+        int lbs = 0;
+        int oz = 0;
+        if (!Int32.TryParse(Form1.itemWeightLbsTxtbox.Text, out lbs)
+         || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out oz))
+        {
+            Util.clearTBox(Form1.itemWeightLbsTxtbox);
+            Util.clearTBox(Form1.itemWeightOzTxtbox);
+            ttlWeight = -1;
+            return false;
+        }
+        ttlWeight = lbs * 16 + oz;
+
+        return true;
+    }
+
+    private void makeShippingEntry()
+    {
+        if (allShippingBoxesFilled())
+        {
+            int weightLbs = 0;
+            int weightOz = 0;
+            int l = 0;
+            int w = 0;
+            int h = 0;
+            try
+            {
+                weightLbs = Int32.Parse(Form1.itemWeightLbsTxtbox.Text);
+                weightOz = Int32.Parse(Form1.itemWeightOzTxtbox.Text);
+                l = Int32.Parse(Form1.itemLengthTxtbox.Text);
+                w = Int32.Parse(Form1.itemWidthTxtbox.Text);
+                h = Int32.Parse(Form1.itemHeightTxtbox.Text);
+            }
+            catch
+            {
+                MessageBox.Show(
+                    "To Add Shipping Info, all fields must be filled with integers",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                    );
+                }
+
+            string type = getShippingInfoType(); 
+            DatabaseConnector.insertShipInfo(getCurrItem(), weightLbs, weightOz, l, w, h, type);
+            Util.clearTBox(weightTBoxes);
+            showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
+        }
+        else
+        {
+            MessageBox.Show(
+                "To Add Shipping Info, all fields must be filled (Lbs, Oz, L, W, H)",
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+                );
+        }
+
+        
+    }
+
+
+    
+    // Get the mySQL type of the shipping information.
+    // All shipping info should have the same mySQL type
+    private string getShippingInfoType()
+    {
+        if (shippingTBoxes == null || shippingTBoxes[0] == null)
+        {
+            throw new Exception("Error: There are no shipping textboxes initialized!");
+        }
+        string attrib = controlAttrib[shippingTBoxes[0]];
+        string type = tabController.colDataTypes[attrib];
+        
+        // Double check that all shipping info attributes are the same
+        // Should all be integers, but if that ever changes to something like double,
+        // all shipping info elements should have the same type.
+        foreach (Control tBox in shippingTBoxes)
+        {
+            string otherAttrib = "";
+            string otherType = "";
+
+            if (!controlAttrib.TryGetValue(tBox, out otherAttrib))
+            {
+                throw new Exception("Error: No mySQL attrib entry exists for a shipping information textbox");
+            }
+            
+            if (!tabController.colDataTypes.TryGetValue(otherAttrib, out otherType))
+            {
+                throw new Exception("Error: No mySQL type entry exists for a shipping information attribute");
+            }
+
+            if (type.CompareTo(otherType) != 0)
+            {
+                throw new Exception("Error: Not all shipping information types are the same!");
+            }
+        }
+
+
+        return type;
+    }
 
     public void deleteShippingInfo()
     {
@@ -296,7 +349,7 @@ public class ItemViewTab : Tab
 
     override public void flipEditMode()
     {
-        // Don't go into edit mode if there is no item to edit
+        // Don'userInputTextbox go into edit mode if there is no item to edit
         if (!inEditingState)
         {
             if (tabController.getCurrItem() == null) { return; }

@@ -284,7 +284,8 @@ namespace FinancialDatabase
 
             public void getItemViewUpdate()
             {
-                itemViewTab.UpdateCurrItemWithUserInput();
+                bool success  = itemViewTab.UpdateCurrItemWithUserInput();
+                if  (success) { itemViewTab.viewMode(); }
             }
 
             public void greyTextBox(TextBox textBox)
