@@ -365,7 +365,12 @@ namespace FinancialDatabase
 
             public void getPurchasedLotUpdate()
             {
-                purchasedLotTab.editUpdate();
+                bool success = purchasedLotTab.editUpdate();
+
+                if (success)
+                {
+                    purchasedLotTab.viewMode();
+                }
             }
 
 

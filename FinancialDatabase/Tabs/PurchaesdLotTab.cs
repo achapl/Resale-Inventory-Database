@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using FinancialDatabase;
+﻿using FinancialDatabase;
 using Date = Util.Date;
 
 public class PurchasedLotTab : Tab
@@ -21,6 +18,7 @@ public class PurchasedLotTab : Tab
         Util.clearLabelText(attributeValueLabels);
         showControlVisibility();
     }
+
 
     protected override void generateTBoxGroups()
     {
@@ -100,6 +98,8 @@ public class PurchasedLotTab : Tab
         };
     }
 
+
+    // Todo: Delete?
     public void update(ResultItem item)
 	{
         Form1.PurchaseListBox.Items.Clear();
@@ -117,6 +117,7 @@ public class PurchasedLotTab : Tab
 
 	}
 
+
     override public void flipEditMode()
     {
         // Don't go into edit mode if there is no item to edit
@@ -126,6 +127,7 @@ public class PurchasedLotTab : Tab
         showControlVisibility();
 
     }
+
 
     public override void showItemAttributes(ResultItem item)
     {
@@ -144,74 +146,62 @@ public class PurchasedLotTab : Tab
         
     }
 
-    public void editUpdate()
-    {
 
+    // Update purchase button is clicked
+    public bool editUpdate()
+    {
+        // Check if adding a new purchase
+        // or editing existing one
         if (isNewPurchase)
         {
             addItem();
-            return;
+            return true;
         }
+        // Null check
         else if (tabController.getCurrItem() is null)
         {
-            return;
+            return false;
         }
 
         List<Control> changedFields = getChangedFields();
 
-        bool goodEdit = true;
         foreach (Control c in changedFields)
         {
-            if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); continue; }
-
-            TextBox t = c as TextBox ?? new TextBox();// ?? denotes null assignment
+            if (c is null) { throw new Exception("ERROR: Control Object c is null, ItemViewTab.cs"); }
 
             string query = "";
-            if (tableEntryExists(t))
+            
+            if (tableEntryExists(c))
             {
                 string type = tabController.colDataTypes[controlAttrib[c]];
                 if (c is TextBox)
                 {
-                    
-                    string attrib = t.Text;
+                    TextBox userInputTBox = c as TextBox;
+                    string attrib = userInputTBox.Text;
                     if (!Util.checkTypeOkay(attrib, type))
                     {
-                        goodEdit = false;
-                        continue;
+                        return false;
                     }
-                    query = QueryBuilder.updateQuery(tabController.getCurrItem(), controlAttrib[c], type, t.Text);
+                    DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], type, userInputTBox.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    query = QueryBuilder.updateQuery(tabController.getCurrItem(), controlAttrib[c], type, new Date(c));
-                }
-
-                if (goodEdit)
-                {
-                    // Update the item table with the new shipping info
-                    string output = DatabaseConnector.runStatement(query);
-                    if (output.CompareTo("ERROR") != 0)
-                    {
-                        updatePurchasedLotView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
-                        t.Clear();
-                        t.BackColor = Color.White;
-                    }
+                    DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], type, new Date(c));
                 }
             }
-            else if (!tableEntryExists(t))
+            else if (!tableEntryExists(c))
             {
                 Console.WriteLine("ERROR: no purchase entry for CurrItem, This should not be possible");
                 continue;
             }
 
         }
-        if (goodEdit)
-        {
-            updatePurchasedLotView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
-            showItemAttributes(tabController.getCurrItem());
-            viewMode();
-        }
+
+        updatePurchasedLotView(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
+        showItemAttributes(tabController.getCurrItem());
+        return true;
     }
+
 
     // TODO: Delete or make part of TabController?
     public void updatePurchasedLotView(ResultItem item)
@@ -221,7 +211,6 @@ public class PurchasedLotTab : Tab
 
         Form1.PurchaseListBox.Items.Clear();
         tabController.clearCurrentPurchaseItems();
-        // TODO: Make getItems for ResultItem parameter
         List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.purchaseQuery(item), false);
 
         foreach (ResultItem i in result)
@@ -263,6 +252,7 @@ public class PurchasedLotTab : Tab
         return true;
     }
 
+
     public void addItem()
     {
         int purcID = -1;
@@ -270,16 +260,13 @@ public class PurchasedLotTab : Tab
         if (tabController.getCurrItem() is not null)
         {
             purcDate = tabController.getCurrItem().get_Date_Purchased();
-        } else
-        {
-            purcDate = new Date();
         }
         
         if (isNewPurchase && allNewPurchaseBoxesFilled())
         { 
             DateTime dt = Form1.PurcDatePicker.Value;
             purcDate = new (dt.Year, dt.Month, dt.Day);
-            purcID = DatabaseConnector.newPurchase(Int32.Parse(Form1.PurcPurcPriceTextbox.Text),Form1.PurcPurcNotesTextbox.Text, purcDate);
+            purcID = DatabaseConnector.newPurchase(Int32.Parse(Form1.PurcPurcPriceTextbox.Text), Form1.PurcPurcNotesTextbox.Text, purcDate);
 
         }
         // Incorrectly formed new purchase from user input, don't continue on
@@ -293,46 +280,9 @@ public class PurchasedLotTab : Tab
                             );
             return;
         }
+        ResultItem newItem = getNewItemFromUserInput(purcID);
+        // Make the new initial item given by the user to go along with the purchase
         
-        ResultItem newItem = new ResultItem();
-        newItem.set_Name(Form1.PurcNameTextbox.Text);
-        newItem.set_Date_Purchased(purcDate);
-
-        // If no Init or curr quantities, set to default 1
-        if (Form1.PurcInitQtyTextbox.Text.CompareTo("") == 0)
-        {
-            newItem.set_InitialQuantity(1);
-        }
-        else
-        {
-            newItem.set_InitialQuantity(Form1.PurcInitQtyTextbox.Text);
-        }
-
-        if (Form1.PurcCurrQtyTextbox.Text.CompareTo("") == 0)
-        {
-            newItem.set_CurrentQuantity(1);
-        }
-        else
-        {
-            newItem.set_CurrentQuantity(Form1.PurcCurrQtyTextbox.Text);
-        }
-
-        if (allNewShippingBoxesFilled())
-        {
-            int ttlWeight = Int32.Parse(Form1.PurcWeightLbsTextbox.Text) * 16 + Int32.Parse(Form1.PurcWeightOzTextbox.Text);
-            newItem.set_Weight(ttlWeight);
-            newItem.set_Length(Int32.Parse(Form1.PurcLengthTextbox.Text));
-            newItem.set_Width( Int32.Parse(Form1.PurcWidthTextbox.Text));
-            newItem.set_Height(Int32.Parse(Form1.PurcHeightTextbox.Text));
-        }
-        if (isNewPurchase)
-        {
-            newItem.set_PurchaseID(purcID);
-            
-        } else
-        {
-            newItem.set_PurchaseID(tabController.getCurrItem().get_PurchaseID());
-        }
 
         Util.clearTBox(newItemTBoxes);
         Util.clearTBox(shippingTBoxes);
@@ -343,11 +293,52 @@ public class PurchasedLotTab : Tab
         string type = tabController.colDataTypes[attrib];
         string query = QueryBuilder.updateQuery(newItem, attrib, type, purcID.ToString());
         DatabaseConnector.runStatement(query);
-        //TODO: Can the following line be removed since tabController.setCurrItem(newItem) is called and shoeuld update the currItem with modified purc date?
+        //TODO: Can the following line be removed since tabController.setCurrItem(newItem) is called and should update the currItem with modified purc date?
         newItem.set_PurchaseID(purcID);
         tabController.setCurrItem(newItem);
         updatePurchasedLotView(tabController.getCurrItem());
         isNewPurchase = false;
+    }
+
+    private ResultItem getNewItemFromUserInput(int purcID)
+    {
+        ResultItem newItem = new ResultItem();
+
+        newItem.set_Name(Form1.PurcNameTextbox.Text);
+
+        // Set date
+        DateTime dt = Form1.PurcDatePicker.Value;
+        Date purcDate = new(dt.Year, dt.Month, dt.Day);
+        newItem.set_Date_Purchased(purcDate);
+
+        // If no Init or curr quantities, set to default 1
+        string initQty = "1";
+        if (Form1.PurcInitQtyTextbox.Text.CompareTo("") != 0)
+        {
+            initQty = Form1.PurcInitQtyTextbox.Text;
+        }
+        newItem.set_InitialQuantity(initQty);
+
+        string currQty = "1";
+        if (Form1.PurcCurrQtyTextbox.Text.CompareTo("") != 0)
+        {
+            currQty = Form1.PurcCurrQtyTextbox.Text;
+        }
+        newItem.set_CurrentQuantity(currQty);
+        
+        // Add user-inputted shipping info
+        if (allNewShippingBoxesFilled())
+        {
+            int ttlWeight = Int32.Parse(Form1.PurcWeightLbsTextbox.Text) * 16 + Int32.Parse(Form1.PurcWeightOzTextbox.Text);
+            newItem.set_Weight(ttlWeight);
+            newItem.set_Length(Int32.Parse(Form1.PurcLengthTextbox.Text));
+            newItem.set_Width(Int32.Parse(Form1.PurcWidthTextbox.Text));
+            newItem.set_Height(Int32.Parse(Form1.PurcHeightTextbox.Text));
+        }
+
+        newItem.set_PurchaseID(purcID);
+
+        return newItem;
     }
 
     // Clear out old information

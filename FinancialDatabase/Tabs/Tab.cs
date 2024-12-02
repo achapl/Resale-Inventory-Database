@@ -103,6 +103,17 @@ public abstract class Tab
                 case TextBox:
                     if (pastState.Text.CompareTo(currState.Text) != 0)
                     {
+                        // Special case for weight, only add 1 of the 2 user inputs
+                        // Since both vals need to be considered at the same time
+                        // The one user input will be caught and both will be considered
+                        if (currState == Form1.itemWeightLbsTxtbox ||
+                            currState == Form1.itemWeightOzTxtbox &&
+                            !changedFields.Contains(Form1.itemWeightLbsTxtbox)) // Don't add it twice
+                        {
+                            changedFields.Add(Form1.itemWeightLbsTxtbox);
+                        }
+
+
                         changedFields.Add(currState);
                     }
                     break;
@@ -258,20 +269,19 @@ public abstract class Tab
         viewMode();
     }
 
-
     // Check if a user-inputted control attribute corresponds to data
     // for which there is an entry in the database
     // Don't want to be updating data that doesn't exist
-    protected bool tableEntryExists(TextBox t)
+    protected bool tableEntryExists(Control c)
     {
-        if (!controlAttrib.ContainsKey(t))
+        if (!controlAttrib.ContainsKey(c))
         {
             return false;
         }
 
         string ret = "";
         // Check if the attribute associated with the textbox is a default value in the curr item
-        tabController.getCurrItem().getAttribAsStr(controlAttrib[t], ref ret);
+        tabController.getCurrItem().getAttribAsStr(controlAttrib[c], ref ret);
         if (ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
             ret.CompareTo(Util.DEFAULT_DATE.ToString()) == 0 ||
             ret.CompareTo(Util.DEFAULT_INT.ToString()) == 0 ||

@@ -74,19 +74,34 @@ public class Util
         }
     }
 
+    public static void clearTBox(List<Control> t)
+    {
+        TextBox tb;
+        foreach (Control c in t)
+        {
+            if (c is not TextBox) { continue; }
+            tb = c as TextBox;
+            tb.Text = "";
+            tb.BackColor = Color.White;
+        } 
+    }
+
     public static void clearTBox(List<TextBox> t)
     {
         foreach (TextBox tb in t)
         {
             tb.Text = "";
             tb.BackColor = Color.White;
-        } 
+        }
     }
 
-    public static void clearTBox(TextBox t)
+    public static void clearTBox(Control c)
     {
-        t.Text = "";
-        t.BackColor = Color.White;
+        if (c is not TextBox) { return; }
+
+        TextBox tb = c as TextBox;
+        tb.Text = "";
+        tb.BackColor = Color.White;
     }
 
     public static List<int> ozToOzLbs(int ozs)
