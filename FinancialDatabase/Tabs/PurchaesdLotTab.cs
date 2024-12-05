@@ -146,9 +146,18 @@ public class PurchasedLotTab : Tab
         
     }
 
+    public void updateFromUserInput()
+    {
+        bool success = getUserInputUpdate();
+
+        if (success)
+        {
+            viewMode();
+        }
+    }
 
     // Update purchase button is clicked
-    public bool editUpdate()
+    public bool getUserInputUpdate()
     {
         // Check if adding a new purchase
         // or editing existing one
@@ -191,8 +200,7 @@ public class PurchasedLotTab : Tab
             }
             else if (!tableEntryExists(c))
             {
-                Console.WriteLine("ERROR: no purchase entry for CurrItem, This should not be possible");
-                continue;
+                throw new Exception("ERROR: no purchase entry for CurrItem, This should not be possible");
             }
 
         }

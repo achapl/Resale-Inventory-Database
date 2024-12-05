@@ -133,6 +133,16 @@ public class ItemViewTab : Tab
     }
 
 
+    public void updateFromUserInput()
+    {
+        bool success = UpdateCurrItemWithUserInput();
+        if (success)
+        {
+            viewMode();
+        }
+    }
+
+
     // Take user input, and use it to update the currItem
     // UpdateCurrItemWithUserInput
     public bool UpdateCurrItemWithUserInput()

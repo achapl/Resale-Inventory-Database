@@ -5,7 +5,8 @@ using Date = Util.Date;
 
 public class SaleTab : Tab
 {
-
+    Sale currSale;
+    List<Sale> currItemSales;
     public SaleTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
 	{
         this.tabController = tabController;
@@ -87,9 +88,40 @@ public class SaleTab : Tab
 
 	}
 
-    public void editUpdate()
+    public void updateFromUserInput()
     {
-        if (tabController.getCurrItem() == null) { return; }
+        bool success = getUserInputUpdate();
+        if (success)
+        {
+            updateSaleViewListBox(getCurrItem());
+            updateSale(getCurrSale());
+            currSale = currItemSales[currItemSales.IndexOf(currSale)];
+
+            showSale(getCurrSale());
+            viewMode();
+        }
+        
+    }
+
+    public Sale getCurrSale()
+    {
+        return this.currSale;
+    }
+
+    public void updateSale(Sale s)
+    {
+        int index = currItemSales.IndexOf(s);
+        if (index == -1)
+        {
+            throw new Exception("Sale Not Found: Form1.TabController.updateSale()");
+        }
+
+        currItemSales[index] = DatabaseConnector.getSale(s.get_SALE_ID());
+    }
+
+    public bool getUserInputUpdate() {
+
+        if (tabController.getCurrItem() == null) { return false; }
         List<Control> changedFields = getChangedFields();
 
         bool goodEdit = true;
@@ -114,11 +146,11 @@ public class SaleTab : Tab
                         // TODO: Show an error message for incorrect attribute inputted!
                         continue;
                     }
-                    query = QueryBuilder.updateQuery(tabController.getCurrSale(), controlAttrib[c], type, t.Text);
+                    query = QueryBuilder.updateQuery(currSale, controlAttrib[c], type, t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    query = QueryBuilder.updateQuery(tabController.getCurrSale(), controlAttrib[c], type, new Date(c));
+                    query = QueryBuilder.updateQuery(currSale, controlAttrib[c], type, new Date(c));
                 }
 
                 if (goodEdit)
@@ -138,11 +170,13 @@ public class SaleTab : Tab
             }
             else if (!tableEntryExists(t))
             {
-                Console.WriteLine("ERROR: no purchase entry for CurrItem, This should not be possible");
-                continue;
+                throw new Exception("ERROR: no purchase entry for CurrItem, This should not be possible");
             }
         }
+        return true;
     }
+
+
 
     private void clearCurrSale()
     {
@@ -167,10 +201,8 @@ public class SaleTab : Tab
 
     public void updateSaleViewListBox(ResultItem item)
     {
-        
-
         Form1.saleListBox.Items.Clear();
-        tabController.clearCurrentItemSales();
+        clearCurrItemSales();
 
         List<Sale> sales = getSales(item);
 
@@ -180,6 +212,7 @@ public class SaleTab : Tab
             tabController.addCurrentItemSales(s);
         }
     }
+
 
     public static List<Sale> getSales(ResultItem item)
     {
@@ -196,6 +229,13 @@ public class SaleTab : Tab
         }
         return totalSales;
     }
+
+
+    public void addSale(Sale sale)
+    {
+        currItemSales.Add(sale);
+    }
+
 
     public void addSale()
     {
@@ -263,5 +303,78 @@ public class SaleTab : Tab
         if (item.hasItemEntry()){
             Form1.SaleNameLbl.Text = item.get_Name();
         }
+    }
+
+
+    internal Sale getCurrItemSales(int index)
+    {
+        return this.currItemSales[index];
+    }
+
+
+    internal List<Sale> getCurrItemSales()
+    {
+        return this.currItemSales;
+    }
+
+
+    internal void setCurrSale(int index)
+    {
+        // Check bad mouse click
+        if (index == -1) { return; }
+        int sale_id = currItemSales[index].get_SALE_ID();
+
+        Sale sale = DatabaseConnector.getSale(sale_id);
+        setCurrSale(sale);
+    }
+
+
+    internal void setCurrSale(Sale s)
+    {
+        if (!currItemSales.Contains(s))
+        {
+            throw new Exception("Form1.TabController.setCurrSale,"
+                              + "Sale item ID: " + s.get_ItemID_sale().ToString() + ", "
+                              + "Sale sale ID: " + s.get_SALE_ID().ToString() + ", "
+                              + "Not found!");
+        }
+
+        if (s == null)
+        {
+            throw new Exception("Sale Not Found: Form1.TabControl.setCurrSale()");
+        }
+
+        currSale = s;
+
+        showSale(s);
+        updateUserInputDefaultText();
+        viewMode();
+    }
+
+    internal bool deleteCurrSale()
+    {
+        string query = QueryBuilder.deleteSaleQuery(currSale);
+        string output = "";
+        output = DatabaseConnector.runStatement(query);
+        if (output.CompareTo("ERROR") == 0)
+        {
+            return false;
+        }
+
+        
+        clearAttribs();
+        viewMode();
+        currSale = null;
+        return true;
+    }
+
+    internal void clearCurrItemSales()
+    {
+        currItemSales.Clear();
+    }
+
+    internal void setCurrSales(List<Sale> newSales)
+    {
+        currItemSales = newSales;
     }
 }
