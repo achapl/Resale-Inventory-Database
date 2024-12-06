@@ -74,13 +74,13 @@ public class SaleTab : Tab
     public void update(ResultItem item)
 	{
         Form1.PurchaseListBox.Items.Clear();
-        tabController.clearCurrentPurchaseItems();
+        tabController.clearCurrPurcItems();
         List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.purchaseQuery(item), false);
 
 		foreach(ResultItem i in result)
 		{
 			Form1.PurchaseListBox.Items.Add(i.get_Name() + i.get_Amount_sale);
-            tabController.addCurrentPurchaseItems(i);
+            tabController.addCurrPurcItems(i);
         }
 
         Form1.PurcPurcPriceLbl.Text = item.get_Amount_purchase().ToString();

@@ -125,7 +125,7 @@ public class SearchTab
             if (priceCol) { itemStr = result[i].get_Amount_purchase() + ", " + itemStr; }
             if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
             Form1.itemSearchView.addRow(result[i].get_Thumbnail().image, itemStr);
-            tabController.addCurrentItems(result[i]);
+            tabController.addCurrItems(result[i]);
             
         }
     }
@@ -134,7 +134,7 @@ public class SearchTab
         Form1.itemSearchView.clearItems();
     }
 
-    internal List<ResultItem> getCurrentItems()
+    internal List<ResultItem> getCurrItems()
     {
         return currentItems;
     }
@@ -144,12 +144,12 @@ public class SearchTab
         currentItems.Clear();
     }
 
-    internal void addCurrentItems(ResultItem newItem)
+    internal void addCurrItems(ResultItem newItem)
     {
         currentItems.Add(newItem);
     }
 
-    internal void addCurrentItems(List<ResultItem> newItems)
+    internal void addCurrItems(List<ResultItem> newItems)
     {
         currentItems.AddRange(newItems);
     }

@@ -100,8 +100,8 @@ public class PurchasedLotTab : Tab
     }
 
 
-    public List<ResultItem> getCurrPurchaseItems() => currentPurchaseItems;
-    public void addCurrPurchaseItem(ResultItem newItem)
+    public List<ResultItem> getCurrPurcItems() => currentPurchaseItems;
+    public void addCurrPurcItem(ResultItem newItem)
     {
         currentPurchaseItems.Add(newItem);
     }
@@ -111,7 +111,7 @@ public class PurchasedLotTab : Tab
         currentPurchaseItems.AddRange(newPurchaseItems);
     }
 
-    public void clearCurrPurchaseItems()
+    public void clearCurrPurcItems()
     {
         currentPurchaseItems.Clear();
     }
@@ -119,13 +119,13 @@ public class PurchasedLotTab : Tab
     public void update(ResultItem item)
 	{
         Form1.PurchaseListBox.Items.Clear();
-		tabController.clearCurrentPurchaseItems();
+		tabController.clearCurrPurcItems();
         List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.purchaseQuery(item), false);
 
 		foreach(ResultItem i in result)
 		{
 			Form1.PurchaseListBox.Items.Add(i.get_Name());
-            tabController.addCurrentPurchaseItems(i);
+            tabController.addCurrPurcItems(i);
         }
 
         Form1.PurcPurcPriceLbl.Text = item.get_Amount_purchase().ToString();
@@ -234,13 +234,13 @@ public class PurchasedLotTab : Tab
         showItemAttributes(item);
 
         Form1.PurchaseListBox.Items.Clear();
-        tabController.clearCurrentPurchaseItems();
+        tabController.clearCurrPurcItems();
         List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.purchaseQuery(item), false);
 
         foreach (ResultItem i in result)
         {
             Form1.PurchaseListBox.Items.Add(i.get_Name());
-            tabController.addCurrentPurchaseItems(DatabaseConnector.getItem(i.get_ITEM_ID()));
+            tabController.addCurrPurcItems(DatabaseConnector.getItem(i.get_ITEM_ID()));
         }
 
         Form1.PurcPurcPriceLbl.Text = item.get_Amount_purchase().ToString();
@@ -373,11 +373,11 @@ public class PurchasedLotTab : Tab
         Form1.PurchaseListBox.Items.Clear();
         isNewPurchase = true;
         editMode();
-        //addItem();
+        //addSearchResultItem();
 
     }
 
-    internal ResultItem getCurrPurchaseItemsAt(int index)
+    internal ResultItem getCurrPurcItemsAt(int index)
     {
         return currentPurchaseItems[index];
     }

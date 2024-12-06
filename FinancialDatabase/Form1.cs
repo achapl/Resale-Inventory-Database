@@ -70,35 +70,38 @@ namespace FinancialDatabase
 
             }
 
-            public ResultItem getCurrItem()
-            {
-                return itemViewTab.getCurrItem();
-            }
-            public ResultItem getCurrentItemsAt(int index)
-            {
-                return itemViewTab.getCurrItemsAt(index);
-            }
-            public ResultItem getCurrentPurchaseItemsAt(int index) => purchasedLotTab.getCurrPurchaseItemsAt(index);
-            public List<ResultItem> getCurrentPurchaseItems() => purchasedLotTab.getCurrPurchaseItems();
-            public List<Sale> getCurrentItemSales() => saleTab.getCurrItemSales();
-            public Sale getCurrSale() => saleTab.getCurrSale();
-
-            public void setCurrentPurchaseItems(List<ResultItem> newPurcItems) => purchasedLotTab.setCurrPurcItems(newPurcItems);
+            // currItem
+            public void setItemViewCurrItem(ResultItem newItem) => itemViewTab.setCurrItem(newItem);
+            public ResultItem getCurrItem() => itemViewTab.getCurrItem();
             
-            public void setCurrentItemSales(List<Sale> newSales) => saleTab.setCurrSales(newSales);
 
-            public void addCurrentPurchaseItems(ResultItem newPurcItem) => purchasedLotTab.addCurrPurchaseItem(newPurcItem);
-            
-            public void addCurrentItemSales(Sale newSales) => saleTab.addSale(newSales);
-
-            public void clearCurrentPurchaseItems() => purchasedLotTab.clearCurrPurchaseItems();
-
+            // currItems
+            public void setCurrItems(List<ResultItem> newItems) => searchTab.addCurrItems(newItems);
+            public ResultItem getCurrItemsAt(int index) => itemViewTab.getCurrItemsAt(index);
+            public void addCurrItems(ResultItem newItem) => searchTab.addCurrItems(newItem);
+            public List<ResultItem> getCurrItems() => searchTab.getCurrItems();
             public void clearCurrItems() => searchTab.clearCurrItems();
 
-            public void addCurrentItems(ResultItem newItem) => searchTab.addCurrentItems(newItem);
-            public void setCurrentItems(List<ResultItem> newItems) => searchTab.addCurrentItems(newItems);
-            public List<ResultItem> getCurrItems() => searchTab.getCurrentItems();
 
+            // currPurcItems
+            public void setCurrPurcItems(List<ResultItem> newPurcItems) => purchasedLotTab.setCurrPurcItems(newPurcItems);
+            public void addCurrPurcItems(ResultItem newPurcItem) => purchasedLotTab.addCurrPurcItem(newPurcItem);
+            public ResultItem getCurrPurcItemsAt(int index) => purchasedLotTab.getCurrPurcItemsAt(index);
+            public List<ResultItem> getCurrPurcItems() => purchasedLotTab.getCurrPurcItems();
+            public void clearCurrPurcItems() => purchasedLotTab.clearCurrPurcItems();
+            
+            
+            // currSale
+            public Sale getCurrSale() => saleTab.getCurrSale();
+
+
+            // currSales
+            public void setCurrentItemSales(List<Sale> newSales) => saleTab.setCurrSales(newSales);
+            public void addCurrentItemSales(Sale newSales) => saleTab.addSale(newSales);
+            public Sale getCurrSaleAt(int index) => saleTab.getCurrItemSales(index);
+            public List<Sale> getCurrentItemSales() => saleTab.getCurrItemSales();
+            public void setCurrSale(int index) => saleTab.setCurrSale(index);
+            public void setCurrSale(Sale s) => saleTab.setCurrSale(s);
 
 
 
@@ -106,31 +109,36 @@ namespace FinancialDatabase
             {
                 saleTab.updateFromUserInput();
             }
-
-
-            public ResultItem getItemAt(int index)
-            {
-                return getCurrItems()[index];
-            }
-
-            public Sale getCurrSaleAt(int index)
-            {
-                return saleTab.getCurrItemSales(index);
-            }
-
             
 
-            private void clearItems()
+            // Update the program (the model of the database) with a new resultItem, not just the backend variable currItem
+            public void setCurrItem(ResultItem newItem)
+            {
+                setItemViewCurrItem(newItem);
+
+                if (purchasedLotTab.isNewPurchase)
+                {
+                    addSearchResultItem(newItem);
+                }
+
+                setNewItemItemView(newItem);
+                setNewItemPurchasedLots(newItem);
+                setNewItemSaleItem(newItem);
+                Form1.tabCollection.SelectTab(itemViewTabNum);
+            }
+
+
+            private void clearSearchItems()
             {
                 Form1.itemSearchView.clearItems();
                 clearCurrItems();
             }
 
 
-            public void addItem(ResultItem newItem)
+            public void addSearchResultItem(ResultItem newItem)
             {
                 Form1.itemSearchView.addRow(newItem.get_Images()[0].image, newItem.get_Name());
-                addCurrentItems(newItem);
+                addCurrItems(newItem);
                 // TODO: CHECK IF newItem already in list
             }
 
@@ -143,7 +151,7 @@ namespace FinancialDatabase
                 {
                     throw new Exception("Index of the search results to set the new currItem to in Form1.TabController setCurrItem() is greater than the number of items in the search result");
                 }
-                ResultItem indexItem = getCurrentItemsAt(index);
+                ResultItem indexItem = getCurrItemsAt(index);
 
                 ResultItem newItem = DatabaseConnector.getItem(indexItem.get_ITEM_ID());
                 newItem.set_images(DatabaseConnector.getAllImages(newItem));
@@ -151,31 +159,6 @@ namespace FinancialDatabase
 
             }
 
-            public void setCurrItem(ResultItem newItem)
-            {
-                itemViewTab.setCurrItem(newItem);
-
-                if (purchasedLotTab.isNewPurchase)
-                {
-                    clearCurrItems();
-                    addItem(newItem);
-                }
-
-                setNewItemItemView(newItem);
-                setNewItemPurchasedLots(newItem);
-                setNewItemSaleItem(newItem);
-                Form1.tabCollection.SelectTab(itemViewTabNum);
-            }
-
-            public void setCurrSale(int index)
-            {
-                saleTab.setCurrSale(index);
-            }
-
-            public void setCurrSale(Sale s)
-            {
-                saleTab.setCurrSale(s);
-            }
 
 
             private void setNewItemPurchasedLots(ResultItem newItem)
@@ -196,13 +179,13 @@ namespace FinancialDatabase
 
             public void runManualQuery(string query)
             {
-                clearItems();
+                clearSearchItems();
 
                 List<ResultItem> result = DatabaseConnector.getItems(query, true);
 
                 foreach (ResultItem item in result)
                 {
-                    addItem(item);
+                    addSearchResultItem(item);
                 }
             }
 
@@ -316,7 +299,7 @@ namespace FinancialDatabase
                 itemViewTab.setCurrItem(null);
                 clearCurrItems();
                 saleTab.clearCurrItemSales();
-                clearCurrentPurchaseItems();
+                clearCurrPurcItems();
 
                 purchasedLotTab.clearCurrItemControls();
                 itemViewTab.clearCurrItemControls();
@@ -379,6 +362,7 @@ namespace FinancialDatabase
             tabControl = new TabController(this);
         }
 
+
         private void Form1_Load(object sender, EventArgs e)
         {
             // Make default selection "Item"
@@ -392,19 +376,22 @@ namespace FinancialDatabase
             tabControl.runManualQuery(manualQueryTBox.Text);
         }
 
+
         // Search Button in Search Tab
         private void searchButton_Click(object sender, EventArgs e)
         {
             tabControl.search();
         }
 
+
         // Purchased Lot listbox double click
         private void purcListBox_DoubleClick(object sender, MouseEventArgs e)
         {
             int index = this.PurchaseListBox.IndexFromPoint(e.Location);
-            ResultItem item = tabControl.getCurrentPurchaseItemsAt(index);
+            ResultItem item = tabControl.getCurrPurcItemsAt(index);
             tabControl.setCurrItem(item);
         }
+
 
         // Enter key pressed for search
         private void searchBox_KeyDown(object sender, KeyEventArgs e)
@@ -415,11 +402,13 @@ namespace FinancialDatabase
             }
         }
 
+
         // Item Tab Update Item
         private void itemUpdateButton_Click(object sender, EventArgs e)
         {
             tabControl.itemViewUpdate();
         }
+
 
         // Change TextBox color if changed
         private void TextBoxAttribute_Leave(object sender, EventArgs e)
@@ -434,11 +423,13 @@ namespace FinancialDatabase
 
         }
 
+
         // ItemView View/Edit Button
         private void itemEditButton_Click(object sender, EventArgs e)
         {
             tabControl.flipIVEditMode();
         }
+
 
         // ItemView Delete Shipping Info
         private void deleteShipInfoButton_Click(object sender, EventArgs e)
@@ -446,11 +437,13 @@ namespace FinancialDatabase
             tabControl.IVdeleteShippingInfo();
         }
 
+
         // PurchasedLot View/Edit Button
         private void editPurcButton_Click(object sender, EventArgs e)
         {
             tabControl.PLflipEditMode();
         }
+
 
         // PurchasedLot update item
         private void updatePurcButton_Click(object sender, EventArgs e)
@@ -458,11 +451,13 @@ namespace FinancialDatabase
             tabControl.purchasedLotUpdate();
         }
 
+
         // Add sale to purchase
         private void addItemButton_Click(object sender, EventArgs e)
         {
             tabControl.PLaddItem();
         }
+
 
         // New Purchase
         private void newPurcButton_Click(object sender, EventArgs e)
@@ -470,11 +465,13 @@ namespace FinancialDatabase
             tabControl.PLnewPurchase();
         }
 
+
         // SaleTab View/Edit button
         private void saleEditSaleButton_Click(object sender, EventArgs e)
         {
             tabControl.saleTflipEditMode();
         }
+
 
         // SaleTab select sale
         private void saleListBox_DoubleClick(object sender, MouseEventArgs e)
@@ -484,17 +481,20 @@ namespace FinancialDatabase
             tabCollection.SelectTab(tabControl.saleTabNum);
         }
 
+
         // SaleTab Update button
         private void saleUpdateButton_Click(object sender, EventArgs e)
         {
             tabControl.saleTabUpdate();
         }
 
+
         // SaleTab Add Sale
         private void addSaleButton_Click(object sender, EventArgs e)
         {
             tabControl.saleTaddSale();
         }
+
 
         // SaleTab Delete Button
         private void saleDeleteButton_Click(object sender, EventArgs e)
@@ -508,6 +508,7 @@ namespace FinancialDatabase
             tabControl.deleteItemFromDtb();
         }
 
+
         // Item View Click Search Result
         private void itemSearchView_Click(object sender, EventArgs e)
         {
@@ -518,6 +519,7 @@ namespace FinancialDatabase
 
         }
 
+
         // Select Image To View
         private void allPictureViewer_Click(object sender, EventArgs e)
         {
@@ -527,14 +529,13 @@ namespace FinancialDatabase
         }
 
 
-
-
         // Add Image(s)
         private void addImageButton_Click(object sender, EventArgs e)
         {
             tabControl.insertImage();
             //tabControl.updateCurrItem();
         }
+
 
         // Set Thumbnail
         private void setThumbnailButton_Click(object sender, EventArgs e)
