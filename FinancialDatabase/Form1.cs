@@ -40,7 +40,7 @@ namespace FinancialDatabase
 
             // Data
             public Dictionary<string, string> colDataTypes;
-            public List<ResultItem> currentPurchaseItems;
+            
             
 
 
@@ -52,16 +52,16 @@ namespace FinancialDatabase
 
 
             // TODO: Make CONST
-            public int searchTabNum = 0;
-            public int itemViewTabNum = 1;
-            public int purcLotTabNum = 2;
-            public int saleTabNum = 3;
+            public int searchTabNum     = 0;
+            public int itemViewTabNum  = 1;
+            public int purcLotTabNum  = 2;
+            public int saleTabNum    = 3;
 
             public TabController(Form1 Form1)
             {
                 this.Form1 = Form1;
                 colDataTypes = DatabaseConnector.getColDataTypes();
-                currentPurchaseItems = new List<ResultItem>();
+                
 
                 purchasedLotTab = new PurchasedLotTab(this, Form1);
                 itemViewTab = new ItemViewTab(this, Form1);
@@ -78,20 +78,20 @@ namespace FinancialDatabase
             {
                 return itemViewTab.getCurrItemsAt(index);
             }
-            public ResultItem getCurrentPurchaseItemsAt(int index) => currentPurchaseItems[index];
-            public List<ResultItem> getCurrentPurchaseItems() => currentPurchaseItems;
+            public ResultItem getCurrentPurchaseItemsAt(int index) => purchasedLotTab.getCurrPurchaseItemsAt(index);
+            public List<ResultItem> getCurrentPurchaseItems() => purchasedLotTab.getCurrPurchaseItems();
             public List<Sale> getCurrentItemSales() => saleTab.getCurrItemSales();
             public Sale getCurrSale() => saleTab.getCurrSale();
 
-            public void setCurrentPurchaseItems(List<ResultItem> newPurcItems) => this.currentPurchaseItems = newPurcItems;
+            public void setCurrentPurchaseItems(List<ResultItem> newPurcItems) => purchasedLotTab.setCurrPurcItems(newPurcItems);
             
             public void setCurrentItemSales(List<Sale> newSales) => saleTab.setCurrSales(newSales);
 
-            public void addCurrentPurchaseItems(ResultItem newPurcItems) => currentPurchaseItems.Add(newPurcItems);
+            public void addCurrentPurchaseItems(ResultItem newPurcItem) => purchasedLotTab.addCurrPurchaseItem(newPurcItem);
             
             public void addCurrentItemSales(Sale newSales) => saleTab.addSale(newSales);
 
-            public void clearCurrentPurchaseItems() => currentPurchaseItems.Clear();
+            public void clearCurrentPurchaseItems() => purchasedLotTab.clearCurrPurchaseItems();
 
             public void clearCurrItems() => searchTab.clearCurrItems();
 
@@ -165,7 +165,6 @@ namespace FinancialDatabase
                 setNewItemPurchasedLots(newItem);
                 setNewItemSaleItem(newItem);
                 Form1.tabCollection.SelectTab(itemViewTabNum);
-                // FINISH PORTING LINES FROM ITEMVIEWTAB.CS TO HERE OR KEEP IN IVT.CS. DECIDE WHERE RESPONSIBILITY GOES
             }
 
             public void setCurrSale(int index)
@@ -317,7 +316,7 @@ namespace FinancialDatabase
                 itemViewTab.setCurrItem(null);
                 clearCurrItems();
                 saleTab.clearCurrItemSales();
-                currentPurchaseItems.Clear();
+                clearCurrentPurchaseItems();
 
                 purchasedLotTab.clearCurrItemControls();
                 itemViewTab.clearCurrItemControls();
@@ -427,12 +426,10 @@ namespace FinancialDatabase
         {
             if (sender is null) return;
 
-#pragma warning disable CS8600 // Checked if sender is null
-
+            #pragma warning disable CS8600 // Checked if sender is null
             TextBox textBox = sender as TextBox;
 
-#pragma warning disable CS8604 // Checked if sender is null
-
+            #pragma warning disable CS8604 // Checked if sender is null
             tabControl.greyTextBox(textBox);
 
         }

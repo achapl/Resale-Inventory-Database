@@ -4,16 +4,17 @@ using Date = Util.Date;
 public class PurchasedLotTab : Tab
 {
 
-    public bool isNewPurchase;
-
     private List<Control> newPurchaseGroupControls;
+    public List<ResultItem> currentPurchaseItems;
+    public bool isNewPurchase;
 
     public PurchasedLotTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
 	{
-        this.tabController = tabController;
-        isNewPurchase = false;
+        currentPurchaseItems = new List<ResultItem>();
         updateButton = Form1.UpdatePurcButton;
         editButton   = Form1.EditPurcButton;
+        this.tabController = tabController;
+        isNewPurchase = false;
         generateTBoxGroups();
         Util.clearLabelText(attributeValueLabels);
         showControlVisibility();
@@ -99,6 +100,21 @@ public class PurchasedLotTab : Tab
     }
 
 
+    public List<ResultItem> getCurrPurchaseItems() => currentPurchaseItems;
+    public void addCurrPurchaseItem(ResultItem newItem)
+    {
+        currentPurchaseItems.Add(newItem);
+    }
+
+    public void addCurrPurchaseItems(List<ResultItem> newPurchaseItems)
+    {
+        currentPurchaseItems.AddRange(newPurchaseItems);
+    }
+
+    public void clearCurrPurchaseItems()
+    {
+        currentPurchaseItems.Clear();
+    }
     // Todo: Delete?
     public void update(ResultItem item)
 	{
@@ -359,5 +375,15 @@ public class PurchasedLotTab : Tab
         editMode();
         //addItem();
 
+    }
+
+    internal ResultItem getCurrPurchaseItemsAt(int index)
+    {
+        return currentPurchaseItems[index];
+    }
+
+    internal void setCurrPurcItems(List<ResultItem> newPurcItems)
+    {
+        currentPurchaseItems = newPurcItems;
     }
 }
