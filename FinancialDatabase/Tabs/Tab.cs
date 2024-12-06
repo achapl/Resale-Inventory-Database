@@ -6,7 +6,7 @@ using Date = Util.Date;
 public abstract class Tab
 {
 
-
+    
     public bool inEditingState;
     protected List<Control> mutableAttribValueControls;
     protected List<Label> mutableAttribValueLabels;
@@ -84,8 +84,7 @@ public abstract class Tab
         };
         saleControls = new List<Control> { Form1.SaleAmountTextbox };
     }
-
-    public ResultItem getCurrItem() => tabController.getCurrItem();
+    
 
 
     // Returns only the textboxes and such that the user has changed while editing
@@ -249,8 +248,8 @@ public abstract class Tab
 
     abstract public void showItemAttributes(ResultItem item);
 
-    // Set curr item to null and clear all shown info about currItem
-    public void clearCurrItem()
+    // Clear all shown info about currItem
+    public void clearCurrItemControls()
     {
         foreach (Control c in allClearableControl)
         {

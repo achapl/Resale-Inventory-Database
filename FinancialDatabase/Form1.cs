@@ -24,7 +24,7 @@ namespace FinancialDatabase
 
     public partial class Form1 : Form
     {
-        TabController tabControl;
+        public TabController tabControl;
 
 
 
@@ -41,8 +41,7 @@ namespace FinancialDatabase
             // Data
             public Dictionary<string, string> colDataTypes;
             public List<ResultItem> currentPurchaseItems;
-            public List<ResultItem> currentItems;
-            private ResultItem currItem;
+            public List<ResultItem> currentItems; // TODO: MOVE TO SearchTab
 
 
             // Tab references
@@ -61,11 +60,9 @@ namespace FinancialDatabase
             public TabController(Form1 Form1)
             {
                 this.Form1 = Form1;
-
+                currentItems = new List<ResultItem>();
                 colDataTypes = DatabaseConnector.getColDataTypes();
                 currentPurchaseItems = new List<ResultItem>();
-                currentItems = new List<ResultItem>();
-                currItem = null;
 
                 purchasedLotTab = new PurchasedLotTab(this, Form1);
                 itemViewTab = new ItemViewTab(this, Form1);
@@ -76,40 +73,35 @@ namespace FinancialDatabase
 
             public ResultItem getCurrItem()
             {
-                if (currItem != null)
-                {
-                    updateCurrItem();
-                }
-                return currItem;
+                return itemViewTab.getCurrItem();
             }
             public ResultItem getCurrentItemsAt(int index)
             {
-                if (index == -1) { return null; }
-                return currentItems[index];
+                return itemViewTab.getCurrItemsAt(index);
             }
             public ResultItem getCurrentPurchaseItemsAt(int index) => currentPurchaseItems[index];
             public List<ResultItem> getCurrentPurchaseItems() => currentPurchaseItems;
             public List<ResultItem> getCurrentItems() => currentItems;
             public List<Sale> getCurrentItemSales() => saleTab.getCurrItemSales();
+            public Sale getCurrSale() => saleTab.getCurrSale();
 
             public void setCurrentPurchaseItems(List<ResultItem> newPurcItems) => this.currentPurchaseItems = newPurcItems;
-            public void setCurrentItems(List<ResultItem> newItems) => this.currentItems = newItems;
+            
             public void setCurrentItemSales(List<Sale> newSales) => saleTab.setCurrSales(newSales);
 
             public void addCurrentPurchaseItems(ResultItem newPurcItems) => currentPurchaseItems.Add(newPurcItems);
-            public void addCurrentItems(ResultItem newItems) => currentItems.Add(newItems);
+            
             public void addCurrentItemSales(Sale newSales) => saleTab.addSale(newSales);
 
             public void clearCurrentPurchaseItems() => currentPurchaseItems.Clear();
+
             public void clearCurrentItems() => currentItems.Clear();
 
-            public Sale getCurrSale() => saleTab.getCurrSale();
+            public void addCurrentItems(ResultItem newItems) => currentItems.Add(newItems);
+            public void setCurrentItems(List<ResultItem> newItems) => this.currentItems = newItems;
+            public List<ResultItem> getCurrItems() => currentItems;
 
-            // Update the under-hood reference to the object in the database
-            public void updateCurrItem()
-            {
-                currItem = DatabaseConnector.getItem(currItem.get_ITEM_ID());
-            }
+
 
 
             public void saleTabUpdate()
@@ -128,13 +120,14 @@ namespace FinancialDatabase
                 return saleTab.getCurrItemSales(index);
             }
 
-            public List<Sale> getCurrSales() => saleTab.getCurrItemSales();
+            
 
             private void clearItems()
             {
                 Form1.itemSearchView.clearItems();
                 currentItems.Clear();
             }
+
 
             public void addItem(ResultItem newItem)
             {
@@ -162,33 +155,19 @@ namespace FinancialDatabase
 
             public void setCurrItem(ResultItem newItem)
             {
-                if (newItem == null) { return; }
+                itemViewTab.setCurrItem(newItem);
+
                 if (purchasedLotTab.isNewPurchase)
                 {
-                    currentItems.Clear();
-                    currentItems.Add(newItem);
+                    clearCurrentItems();
+                    addItem(newItem);
                 }
-                if (!currentItems.Contains(newItem) &&
-                    !currentPurchaseItems.Contains(newItem) && !purchasedLotTab.isNewPurchase)
-                {
-                    throw new Exception("Form1.TabController.setCurrItem,"
-                                      + "Result item ID: " + newItem.get_ITEM_ID().ToString() + ", "
-                                      + "Name: " + newItem.get_Name() + ", "
-                                      + "Not found!");
-                }
-
-                if (newItem == null)
-                {
-                    throw new Exception("Item Not Found: Form1.TabControl.setCurrItem()");
-                }
-
-                this.currItem = newItem;
-                updateCurrItem();
 
                 setNewItemItemView(newItem);
                 setNewItemPurchasedLots(newItem);
                 setNewItemSaleItem(newItem);
                 Form1.tabCollection.SelectTab(itemViewTabNum);
+                // FINISH PORTING LINES FROM ITEMVIEWTAB.CS TO HERE OR KEEP IN IVT.CS. DECIDE WHERE RESPONSIBILITY GOES
             }
 
             public void setCurrSale(int index)
@@ -268,7 +247,7 @@ namespace FinancialDatabase
                 }
 
                 string attribVal = "";
-                currItem.getAttribAsStr(attrib, ref attribVal);
+                itemViewTab.getCurrItem().getAttribAsStr(attrib, ref attribVal);
                 if (attribVal.CompareTo(textBox.Text) != 0)
                 {
                     textBox.BackColor = Color.LightGray;
@@ -297,23 +276,20 @@ namespace FinancialDatabase
 
             public void PLnewPurchase()
             {
-                currItem = null;
-                purchasedLotTab.newPurchase();
                 itemViewTab.clearCurrItem();
+                purchasedLotTab.newPurchase();
+                itemViewTab.clearCurrItemControls();
             }
 
             public void saleTflipEditMode()
             {
-                if (!saleTab.inEditingState && getCurrSale != null)
-                {
-                    saleTab.flipEditMode();
-                }
+                saleTab.flipEditMode();
             }
 
             public void saleTaddSale()
             {
                 saleTab.addSale();
-                setCurrItem(currItem);
+                itemViewTab.setCurrItem(itemViewTab.getCurrItem());
             }
 
             public void purchasedLotUpdate()
@@ -328,27 +304,26 @@ namespace FinancialDatabase
                 bool success = saleTab.deleteCurrSale();
                 if (success)
                 {
-                    saleTab.updateSaleViewListBox(currItem);
-                    updateCurrItem();
-                    setCurrItem(currItem);
-                    Form1.tabCollection.SelectTab(3);
+                    saleTab.updateSaleViewListBox(itemViewTab.getCurrItem());
+                    itemViewTab.updateCurrItem();
+                    itemViewTab.setCurrItem(itemViewTab.getCurrItem());
+                    Form1.tabCollection.SelectTab(saleTabNum);
                 }
             }
 
 
             public void deleteItemFromDtb()
             {
-
                 bool deletedItem = itemViewTab.deleteItem();
                 if (!deletedItem) { return; }
-                currItem = null;
+                itemViewTab.setCurrItem(null);
                 currentItems.Clear();
                 saleTab.clearCurrItemSales();
                 currentPurchaseItems.Clear();
 
-                purchasedLotTab.clearCurrItem();
-                itemViewTab.clearCurrItem();
-                saleTab.clearCurrItem();
+                purchasedLotTab.clearCurrItemControls();
+                itemViewTab.clearCurrItemControls();
+                saleTab.clearCurrItemControls();
                 searchTab.clearItems();
 
                 Form1.tabCollection.SelectTab(searchTabNum);
@@ -364,7 +339,7 @@ namespace FinancialDatabase
             public void insertImage()
             {
                 if (Form1.tabCollection.SelectedIndex != itemViewTabNum ||
-                    this.currItem == null)
+                    getCurrItem() == null)
                 {
                     return;
                 }
@@ -374,7 +349,7 @@ namespace FinancialDatabase
                     List<string> files = new List<string>(Form1.openFileDialog1.FileNames);
                     foreach (string file in files)
                     {
-                        DatabaseConnector.insertImage(file, currItem.get_ITEM_ID());
+                        DatabaseConnector.insertImage(file, itemViewTab.getCurrItem().get_ITEM_ID());
                     }
                 }
             }
@@ -390,7 +365,12 @@ namespace FinancialDatabase
                 }
 
                 int newThumbnailID = DatabaseConnector.getImageThumbnailID(currImageID);
-                DatabaseConnector.runStatement("UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + currItem.get_ITEM_ID() + ";");
+                DatabaseConnector.runStatement("UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + itemViewTab.getCurrItem().get_ITEM_ID() + ";");
+            }
+
+            internal bool isNewPurchase()
+            {
+                return purchasedLotTab.isNewPurchase;
             }
         }
 
@@ -558,7 +538,7 @@ namespace FinancialDatabase
         private void addImageButton_Click(object sender, EventArgs e)
         {
             tabControl.insertImage();
-            tabControl.updateCurrItem();
+            //tabControl.updateCurrItem();
         }
 
         // Set Thumbnail

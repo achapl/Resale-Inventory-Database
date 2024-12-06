@@ -93,7 +93,7 @@ public class SaleTab : Tab
         bool success = getUserInputUpdate();
         if (success)
         {
-            updateSaleViewListBox(getCurrItem());
+            updateSaleViewListBox(tabController.getCurrItem());
             updateSale(getCurrSale());
             currSale = currItemSales[currItemSales.IndexOf(currSale)];
 
@@ -191,7 +191,7 @@ public class SaleTab : Tab
     override public void flipEditMode()
     {
         // Don't go into edit mode if there is no item to edit
-        if (!inEditingState && tabController.getCurrItem() == null) { return; }
+        if (!inEditingState && getCurrSale() == null) { return; }
 
         inEditingState = !inEditingState;
         if (inEditingState) updateUserInputDefaultText();
@@ -250,11 +250,11 @@ public class SaleTab : Tab
         Sale newItem = new Sale();
         newItem.set_Amount_sale(Int32.Parse(Form1.SaleNewSaleAmountTextbox.Text));
         newItem.set_Date_Sold(new Date(Form1.SaleNewSaleDatePicker));
-        newItem.set_ItemID_sale(getCurrItem().get_ITEM_ID());
+        newItem.set_ItemID_sale(tabController.getCurrItem().get_ITEM_ID());
 
         Util.clearTBox(newItemTBoxes);
         DatabaseConnector.insertSale(newItem);
-        updateSaleViewListBox(getCurrItem());
+        updateSaleViewListBox(tabController.getCurrItem());
     }
 
 

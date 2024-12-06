@@ -15,15 +15,37 @@ using Button = System.Windows.Forms.Button;
 public class ItemViewTab : Tab
 {
     protected List<TextBox> weightTBoxes;
+
+    
+    private ResultItem currItem;
+
     public ItemViewTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
     {
         this.tabController = tabController;
+        currItem = null;
         updateButton = Form1.itemUpdateButton;
-        editButton   = Form1.itemEditButton;
+        editButton = Form1.itemEditButton;
         generateTBoxGroups();
         Util.clearLabelText(attributeValueLabels);
         showControlVisibility();
     }
+
+    
+    
+    internal ResultItem getCurrItemsAt(int index)
+    {
+        if (index == -1) { return null; }
+        return tabController.getCurrItems()[index];
+    }
+    public ResultItem getCurrItem()
+    {
+        if (currItem != null)
+        {
+            updateCurrItem();
+        }
+        return currItem;
+    }
+
 
     protected override void generateTBoxGroups()
     {
@@ -115,6 +137,13 @@ public class ItemViewTab : Tab
         { Form1.itemLengthTxtbox, "shipping.Length" },
         { Form1.itemWidthTxtbox, "shipping.Width" },
         { Form1.itemNameTxtbox,  "item.Name" }};
+    }
+
+
+    // Update the under-hood reference to the object in the database
+    public void updateCurrItem()
+    {
+        currItem = DatabaseConnector.getItem(currItem.get_ITEM_ID());
     }
 
 
@@ -216,8 +245,8 @@ public class ItemViewTab : Tab
         // from inside this function since you will always need to
         // update the shown information after updating the
         // ResultItem copy of it
-        tabController.updateCurrItem();
-        showItemAttributes(tabController.getCurrItem());
+        updateCurrItem();
+        showItemAttributes(getCurrItem());
         return goodEdit;
     }
 
@@ -453,5 +482,36 @@ public class ItemViewTab : Tab
     public int getCurrImageID()
     {
         return Form1.mainPictureViewer.getCurrImageID();
+    }
+
+    internal void setCurrItem(ResultItem newItem)
+    {
+       
+        //if (newItem == null) { return; }
+        
+        if (!tabController.currentItems.Contains(newItem) &&
+            !tabController.currentPurchaseItems.Contains(newItem) && !tabController.isNewPurchase())
+        {
+            throw new Exception("Error: ItemViewTab.setCurrItem,"
+                                + "Result item ID: " + newItem.get_ITEM_ID().ToString() + ", "
+                                + "Name: " + newItem.get_Name() + ", "
+                                + "Not found!");
+        }
+
+        if (newItem == null)
+        {
+            throw new Exception("Error: newItem is null for ItemViewTab.setCurrItem()");
+        }
+
+        this.currItem = newItem;
+        updateCurrItem();
+
+        
+        
+    }
+
+    internal void clearCurrItem()
+    {
+        currItem = null;
     }
 }
