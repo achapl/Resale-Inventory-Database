@@ -93,7 +93,7 @@ public class SaleTab : Tab
         bool success = getUserInputUpdate();
         if (success)
         {
-            updateSaleViewListBox(tabController.getCurrItem());
+            showItemSales(tabController.getCurrItem());
             updateSale(getCurrSale());
             currSale = currItemSales[currItemSales.IndexOf(currSale)];
 
@@ -199,7 +199,7 @@ public class SaleTab : Tab
 
     }
 
-    public void updateSaleViewListBox(ResultItem item)
+    public void showItemSales(ResultItem item)
     {
         Form1.saleListBox.Items.Clear();
         clearCurrItemSales();
@@ -254,7 +254,7 @@ public class SaleTab : Tab
 
         Util.clearTBox(newItemTBoxes);
         DatabaseConnector.insertSale(newItem);
-        updateSaleViewListBox(tabController.getCurrItem());
+        showItemSales(tabController.getCurrItem());
     }
 
 

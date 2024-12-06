@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            manualQuery = new Button();
-            manualQueryTBox = new TextBox();
             tabCollection = new TabControl();
             SearchTab = new TabPage();
             itemSearchView = new ItemSearchViewer();
@@ -149,25 +147,6 @@
             ((System.ComponentModel.ISupportInitialize)resultItemBindingSource).BeginInit();
             SuspendLayout();
             // 
-            // manualQuery
-            // 
-            manualQuery.Location = new Point(405, 428);
-            manualQuery.Margin = new Padding(4, 3, 4, 3);
-            manualQuery.Name = "manualQuery";
-            manualQuery.Size = new Size(110, 27);
-            manualQuery.TabIndex = 1;
-            manualQuery.Text = "Manual Query";
-            manualQuery.UseVisualStyleBackColor = true;
-            manualQuery.Click += manualQueryButton_Click;
-            // 
-            // manualQueryTBox
-            // 
-            manualQueryTBox.Location = new Point(7, 432);
-            manualQueryTBox.Margin = new Padding(4, 3, 4, 3);
-            manualQueryTBox.Name = "manualQueryTBox";
-            manualQueryTBox.Size = new Size(390, 23);
-            manualQueryTBox.TabIndex = 4;
-            // 
             // tabCollection
             // 
             tabCollection.Controls.Add(SearchTab);
@@ -196,8 +175,6 @@
             SearchTab.Controls.Add(searchButton);
             SearchTab.Controls.Add(searchBox);
             SearchTab.Controls.Add(comboBox1);
-            SearchTab.Controls.Add(manualQueryTBox);
-            SearchTab.Controls.Add(manualQuery);
             SearchTab.Controls.Add(comboBoxMenuStrip);
             SearchTab.Location = new Point(4, 24);
             SearchTab.Margin = new Padding(4, 3, 4, 3);
@@ -1342,12 +1319,7 @@
             ResumeLayout(false);
         }
 
-
-
-
         #endregion
-        public System.Windows.Forms.Button manualQuery;
-        public System.Windows.Forms.TextBox manualQueryTBox;
         public System.Windows.Forms.TabControl tabCollection;
         public System.Windows.Forms.TabPage SearchTab;
         public System.Windows.Forms.TabPage ItemTab;

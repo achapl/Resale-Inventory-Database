@@ -16,11 +16,11 @@ public class SearchTab
     Form1 Form1;
     Form1.TabController tabController;
 
-    public List<ResultItem> currentItems;
+    public List<ResultItem> searchItems;
 
     public SearchTab(Form1.TabController tabController, Form1 Form1)
     {
-        currentItems = new List<ResultItem>();
+        searchItems = new List<ResultItem>();
         this.tabController = tabController;
         this.Form1 = Form1;
     }
@@ -36,7 +36,7 @@ public class SearchTab
         itemsAndHits[index] = new ItemHitPair(itemsAndHits[index].Item1, itemsAndHits[index].Item2 + 1);
     }
 
-    // Given a list of search terms, run a search on each individual search term, and aggregate the results
+    // Given a list of search terms, run a separate search on each individual search term, and aggregate the results
     public List<ResultItem> runSearch(SearchQuery Q)
     {
         // List of ResultItems and how many times it has been found given all of the search terms individually
@@ -50,7 +50,7 @@ public class SearchTab
             List<ResultItem> result = DatabaseConnector.RunSearchQuery(Q);
 
             // Put the results from the search term into itemAndHitsPair
-            // If already in there, increase the hit cound for that term
+            // If already in there, increase the hit count for that term
             foreach (ResultItem item in result)
             {
                 if (!getItemList(itemsAndHits).Contains(item))
@@ -93,7 +93,7 @@ public class SearchTab
     {
 
         Form1.itemSearchView.clearItems();
-        tabController.clearCurrItems();
+        tabController.clearSearchItems();
         List<string> searchTerms = new List<string>(Form1.searchBox.Text.Split(' '));
         DateTime startDateRaw = Form1.boughtAfterDatePicker.Value;
         DateTime endDateRaw = Form1.boughtBeforeDatePicker.Value;
@@ -125,32 +125,32 @@ public class SearchTab
             if (priceCol) { itemStr = result[i].get_Amount_purchase() + ", " + itemStr; }
             if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
             Form1.itemSearchView.addRow(result[i].get_Thumbnail().image, itemStr);
-            tabController.addCurrItems(result[i]);
+            tabController.addSearchItems(result[i]);
             
         }
     }
 
-    public void clearItems() {
+    public void clearSearchItems() {
         Form1.itemSearchView.clearItems();
     }
 
-    internal List<ResultItem> getCurrItems()
+    internal List<ResultItem> getSearchItems()
     {
-        return currentItems;
+        return searchItems;
     }
 
-    internal void clearCurrItems()
+    internal void clearCurrItemsVar()
     {
-        currentItems.Clear();
+        searchItems.Clear();
     }
 
-    internal void addCurrItems(ResultItem newItem)
+    internal void addSearchItems(ResultItem newItem)
     {
-        currentItems.Add(newItem);
+        searchItems.Add(newItem);
     }
 
-    internal void addCurrItems(List<ResultItem> newItems)
+    internal void addSearchItems(List<ResultItem> newItems)
     {
-        currentItems.AddRange(newItems);
+        searchItems.AddRange(newItems);
     }
 }

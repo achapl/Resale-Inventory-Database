@@ -35,7 +35,7 @@ public class ItemViewTab : Tab
     internal ResultItem getCurrItemsAt(int index)
     {
         if (index == -1) { return null; }
-        return tabController.getCurrItems()[index];
+        return tabController.getSearchItems()[index];
     }
     public ResultItem getCurrItem()
     {
@@ -408,6 +408,7 @@ public class ItemViewTab : Tab
 
     public override void showItemAttributes(ResultItem item)
     { 
+
         Util.clearLabelText(attributeValueLabels);
 
         if (item.hasItemEntry())
@@ -440,6 +441,9 @@ public class ItemViewTab : Tab
             Form1.itemWidthLbl.Text = checkDefault(item.get_Width());
             Form1.itemHeightLbl.Text = checkDefault(item.get_Height());
         }
+
+        showItemPictures(item);
+
         updateUserInputDefaultText();
     }
 
@@ -449,7 +453,7 @@ public class ItemViewTab : Tab
 
         // Warn user if it is the last item in the lot
         // Deleting this item results in deletion of the lot purchase entry
-        if (tabController.currentPurchaseItems.Count == 1)
+        if (tabController.getCurrPurcItems().Count == 1)
         {
             DialogResult result = MessageBox.Show(
                             "This is the last item left in the purchased lot, are you sure you want to delete it? Doing so will delete the whole purchase.",
@@ -489,8 +493,8 @@ public class ItemViewTab : Tab
        
         //if (newItem == null) { return; }
         
-        if (!tabController.getCurrItems().Contains(newItem) &&
-            !tabController.currentPurchaseItems.Contains(newItem) && !tabController.isNewPurchase())
+        if (!tabController.getSearchItems().Contains(newItem) &&
+            !tabController.getCurrPurcItems().Contains(newItem) && !tabController.isNewPurchase())
         {
             throw new Exception("Error: ItemViewTab.setCurrItem,"
                                 + "Result item ID: " + newItem.get_ITEM_ID().ToString() + ", "

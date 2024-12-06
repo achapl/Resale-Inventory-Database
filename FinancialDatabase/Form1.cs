@@ -71,16 +71,20 @@ namespace FinancialDatabase
             }
 
             // currItem
-            public void setItemViewCurrItem(ResultItem newItem) => itemViewTab.setCurrItem(newItem);
+            public void setCurrItemVar(ResultItem newItem) => itemViewTab.setCurrItem(newItem);
             public ResultItem getCurrItem() => itemViewTab.getCurrItem();
             
 
-            // currItems
-            public void setCurrItems(List<ResultItem> newItems) => searchTab.addCurrItems(newItems);
-            public ResultItem getCurrItemsAt(int index) => itemViewTab.getCurrItemsAt(index);
-            public void addCurrItems(ResultItem newItem) => searchTab.addCurrItems(newItem);
-            public List<ResultItem> getCurrItems() => searchTab.getCurrItems();
-            public void clearCurrItems() => searchTab.clearCurrItems();
+            // searchItems
+            public void setSearchItems(List<ResultItem> newItems) => searchTab.addSearchItems(newItems);
+            public ResultItem getSearchItemsAt(int index) => itemViewTab.getCurrItemsAt(index);
+            public void addSearchItems(ResultItem newItem) => searchTab.addSearchItems(newItem);
+            public List<ResultItem> getSearchItems() => searchTab.getSearchItems();
+            public void clearSearchItems()
+            {
+                Form1.itemSearchView.clearItems();
+                searchTab.clearCurrItemsVar();
+            }
 
 
             // currPurcItems
@@ -114,34 +118,14 @@ namespace FinancialDatabase
             // Update the program (the model of the database) with a new resultItem, not just the backend variable currItem
             public void setCurrItem(ResultItem newItem)
             {
-                setItemViewCurrItem(newItem);
+                setCurrItemVar(newItem);
 
-                if (purchasedLotTab.isNewPurchase)
-                {
-                    addSearchResultItem(newItem);
-                }
+                itemViewTab.showItemAttributes(newItem);
+                purchasedLotTab.showItemsFromLot(newItem);
+                saleTab.showItemSales(newItem);
 
-                setNewItemItemView(newItem);
-                setNewItemPurchasedLots(newItem);
-                setNewItemSaleItem(newItem);
                 Form1.tabCollection.SelectTab(itemViewTabNum);
             }
-
-
-            private void clearSearchItems()
-            {
-                Form1.itemSearchView.clearItems();
-                clearCurrItems();
-            }
-
-
-            public void addSearchResultItem(ResultItem newItem)
-            {
-                Form1.itemSearchView.addRow(newItem.get_Images()[0].image, newItem.get_Name());
-                addCurrItems(newItem);
-                // TODO: CHECK IF newItem already in list
-            }
-
 
 
             // Update the curr item given its position in the search results
@@ -151,42 +135,12 @@ namespace FinancialDatabase
                 {
                     throw new Exception("Index of the search results to set the new currItem to in Form1.TabController setCurrItem() is greater than the number of items in the search result");
                 }
-                ResultItem indexItem = getCurrItemsAt(index);
+                ResultItem shellItem = getSearchItemsAt(index);
 
-                ResultItem newItem = DatabaseConnector.getItem(indexItem.get_ITEM_ID());
+                ResultItem newItem = DatabaseConnector.getItem(shellItem.get_ITEM_ID());
                 newItem.set_images(DatabaseConnector.getAllImages(newItem));
                 setCurrItem(newItem);
 
-            }
-
-
-
-            private void setNewItemPurchasedLots(ResultItem newItem)
-            {
-                purchasedLotTab.updatePurchasedLotView(newItem);
-            }
-
-            private void setNewItemItemView(ResultItem newItem)
-            {
-                itemViewTab.showItemAttributes(newItem);
-                itemViewTab.showItemPictures(newItem);
-            }
-
-            public void setNewItemSaleItem(ResultItem newItem)
-            {
-                saleTab.updateSaleViewListBox(newItem);
-            }
-
-            public void runManualQuery(string query)
-            {
-                clearSearchItems();
-
-                List<ResultItem> result = DatabaseConnector.getItems(query, true);
-
-                foreach (ResultItem item in result)
-                {
-                    addSearchResultItem(item);
-                }
             }
 
             public void search()
@@ -284,7 +238,7 @@ namespace FinancialDatabase
                 bool success = saleTab.deleteCurrSale();
                 if (success)
                 {
-                    saleTab.updateSaleViewListBox(itemViewTab.getCurrItem());
+                    saleTab.showItemSales(itemViewTab.getCurrItem());
                     itemViewTab.updateCurrItem();
                     itemViewTab.setCurrItem(itemViewTab.getCurrItem());
                     Form1.tabCollection.SelectTab(saleTabNum);
@@ -297,14 +251,14 @@ namespace FinancialDatabase
                 bool deletedItem = itemViewTab.deleteItem();
                 if (!deletedItem) { return; }
                 itemViewTab.setCurrItem(null);
-                clearCurrItems();
+                clearSearchItems();
                 saleTab.clearCurrItemSales();
                 clearCurrPurcItems();
 
                 purchasedLotTab.clearCurrItemControls();
                 itemViewTab.clearCurrItemControls();
                 saleTab.clearCurrItemControls();
-                searchTab.clearItems();
+                searchTab.clearSearchItems();
 
                 Form1.tabCollection.SelectTab(searchTabNum);
                 searchTab.search();
@@ -367,13 +321,6 @@ namespace FinancialDatabase
         {
             // Make default selection "Item"
             comboBox1.SelectedIndex = 0;
-        }
-
-
-        // ItemViewTab manual query button
-        private void manualQueryButton_Click(object sender, EventArgs e)
-        {
-            tabControl.runManualQuery(manualQueryTBox.Text);
         }
 
 
