@@ -15,8 +15,12 @@ public class SearchTab
 {
     Form1 Form1;
     Form1.TabController tabController;
+
+    public List<ResultItem> currentItems;
+
     public SearchTab(Form1.TabController tabController, Form1 Form1)
     {
+        currentItems = new List<ResultItem>();
         this.tabController = tabController;
         this.Form1 = Form1;
     }
@@ -89,7 +93,7 @@ public class SearchTab
     {
 
         Form1.itemSearchView.clearItems();
-        tabController.currentItems.Clear();
+        tabController.clearCurrItems();
         List<string> searchTerms = new List<string>(Form1.searchBox.Text.Split(' '));
         DateTime startDateRaw = Form1.boughtAfterDatePicker.Value;
         DateTime endDateRaw = Form1.boughtBeforeDatePicker.Value;
@@ -121,12 +125,32 @@ public class SearchTab
             if (priceCol) { itemStr = result[i].get_Amount_purchase() + ", " + itemStr; }
             if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
             Form1.itemSearchView.addRow(result[i].get_Thumbnail().image, itemStr);
-            tabController.currentItems.Add(result[i]);
+            tabController.addCurrentItems(result[i]);
             
         }
     }
 
     public void clearItems() {
         Form1.itemSearchView.clearItems();
+    }
+
+    internal List<ResultItem> getCurrentItems()
+    {
+        return currentItems;
+    }
+
+    internal void clearCurrItems()
+    {
+        currentItems.Clear();
+    }
+
+    internal void addCurrentItems(ResultItem newItem)
+    {
+        currentItems.Add(newItem);
+    }
+
+    internal void addCurrentItems(List<ResultItem> newItems)
+    {
+        currentItems.AddRange(newItems);
     }
 }

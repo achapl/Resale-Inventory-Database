@@ -41,7 +41,7 @@ namespace FinancialDatabase
             // Data
             public Dictionary<string, string> colDataTypes;
             public List<ResultItem> currentPurchaseItems;
-            public List<ResultItem> currentItems; // TODO: MOVE TO SearchTab
+            
 
 
             // Tab references
@@ -60,7 +60,6 @@ namespace FinancialDatabase
             public TabController(Form1 Form1)
             {
                 this.Form1 = Form1;
-                currentItems = new List<ResultItem>();
                 colDataTypes = DatabaseConnector.getColDataTypes();
                 currentPurchaseItems = new List<ResultItem>();
 
@@ -81,7 +80,6 @@ namespace FinancialDatabase
             }
             public ResultItem getCurrentPurchaseItemsAt(int index) => currentPurchaseItems[index];
             public List<ResultItem> getCurrentPurchaseItems() => currentPurchaseItems;
-            public List<ResultItem> getCurrentItems() => currentItems;
             public List<Sale> getCurrentItemSales() => saleTab.getCurrItemSales();
             public Sale getCurrSale() => saleTab.getCurrSale();
 
@@ -95,11 +93,11 @@ namespace FinancialDatabase
 
             public void clearCurrentPurchaseItems() => currentPurchaseItems.Clear();
 
-            public void clearCurrentItems() => currentItems.Clear();
+            public void clearCurrItems() => searchTab.clearCurrItems();
 
-            public void addCurrentItems(ResultItem newItems) => currentItems.Add(newItems);
-            public void setCurrentItems(List<ResultItem> newItems) => this.currentItems = newItems;
-            public List<ResultItem> getCurrItems() => currentItems;
+            public void addCurrentItems(ResultItem newItem) => searchTab.addCurrentItems(newItem);
+            public void setCurrentItems(List<ResultItem> newItems) => searchTab.addCurrentItems(newItems);
+            public List<ResultItem> getCurrItems() => searchTab.getCurrentItems();
 
 
 
@@ -110,9 +108,9 @@ namespace FinancialDatabase
             }
 
 
-            public ResultItem getItem(int index)
+            public ResultItem getItemAt(int index)
             {
-                return currentItems[index];
+                return getCurrItems()[index];
             }
 
             public Sale getCurrSaleAt(int index)
@@ -125,14 +123,14 @@ namespace FinancialDatabase
             private void clearItems()
             {
                 Form1.itemSearchView.clearItems();
-                currentItems.Clear();
+                clearCurrItems();
             }
 
 
             public void addItem(ResultItem newItem)
             {
                 Form1.itemSearchView.addRow(newItem.get_Images()[0].image, newItem.get_Name());
-                currentItems.Add(newItem);
+                addCurrentItems(newItem);
                 // TODO: CHECK IF newItem already in list
             }
 
@@ -159,7 +157,7 @@ namespace FinancialDatabase
 
                 if (purchasedLotTab.isNewPurchase)
                 {
-                    clearCurrentItems();
+                    clearCurrItems();
                     addItem(newItem);
                 }
 
@@ -317,7 +315,7 @@ namespace FinancialDatabase
                 bool deletedItem = itemViewTab.deleteItem();
                 if (!deletedItem) { return; }
                 itemViewTab.setCurrItem(null);
-                currentItems.Clear();
+                clearCurrItems();
                 saleTab.clearCurrItemSales();
                 currentPurchaseItems.Clear();
 

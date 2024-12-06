@@ -452,7 +452,7 @@ public class ItemViewTab : Tab
         if (tabController.currentPurchaseItems.Count == 1)
         {
             DialogResult result = MessageBox.Show(
-                            "This is the last item left in the purchased lot, are you sure you want to delete it? Doing so will delete the whole purchas.",
+                            "This is the last item left in the purchased lot, are you sure you want to delete it? Doing so will delete the whole purchase.",
                             "Warning",
                             MessageBoxButtons.YesNo,
                             MessageBoxIcon.Warning
@@ -489,7 +489,7 @@ public class ItemViewTab : Tab
        
         //if (newItem == null) { return; }
         
-        if (!tabController.currentItems.Contains(newItem) &&
+        if (!tabController.getCurrItems().Contains(newItem) &&
             !tabController.currentPurchaseItems.Contains(newItem) && !tabController.isNewPurchase())
         {
             throw new Exception("Error: ItemViewTab.setCurrItem,"
