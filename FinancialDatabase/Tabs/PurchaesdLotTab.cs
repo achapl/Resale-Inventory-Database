@@ -120,7 +120,7 @@ public class PurchasedLotTab : Tab
 	{
         Form1.PurchaseListBox.Items.Clear();
 		tabController.clearCurrPurcItems();
-        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.purchaseQuery(item), false);
+        List<ResultItem> result = DatabaseConnector.getItems(item, false);
 
 		foreach(ResultItem i in result)
 		{
@@ -235,7 +235,7 @@ public class PurchasedLotTab : Tab
 
         Form1.PurchaseListBox.Items.Clear();
         tabController.clearCurrPurcItems();
-        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.purchaseQuery(item), false);
+        List<ResultItem> result = DatabaseConnector.getPurchItems(item);
 
         foreach (ResultItem i in result)
         {
@@ -315,8 +315,7 @@ public class PurchasedLotTab : Tab
         newItem.set_ITEM_ID(itemID);
         string attrib = "item.PurchaseID";
         string type = tabController.colDataTypes[attrib];
-        string query = QueryBuilder.updateQuery(newItem, attrib, type, purcID.ToString());
-        DatabaseConnector.runStatement(query);
+        DatabaseConnector.updateRow(newItem, attrib, type, purcID.ToString());
         //TODO: Can the following line be removed since tabController.setCurrItem(newItem) is called and should update the currItem with modified purc date?
         newItem.set_PurchaseID(purcID);
         tabController.setCurrItem(newItem);

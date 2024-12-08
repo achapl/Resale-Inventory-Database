@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using FinancialDatabase;
 using Date = Util.Date;
 
@@ -76,7 +77,7 @@ public class SaleTab : Tab
 	{
         Form1.PurchaseListBox.Items.Clear();
         tabController.clearCurrPurcItems();
-        List<ResultItem> result = DatabaseConnector.getItems(QueryBuilder.purchaseQuery(item), false);
+        List<ResultItem> result = DatabaseConnector.getItems(item, false);
 
 		foreach(ResultItem i in result)
 		{
@@ -135,6 +136,7 @@ public class SaleTab : Tab
             string query = "";
             if (tableEntryExists(t))
             {
+                bool success = false;
                 string type = tabController.colDataTypes[controlAttrib[c]];
                 if (c is TextBox)
                 // TODO: Tpye Check?
@@ -147,18 +149,16 @@ public class SaleTab : Tab
                         // TODO: Show an error message for incorrect attribute inputted!
                         continue;
                     }
-                    query = QueryBuilder.updateQuery(currSale, controlAttrib[c], type, t.Text);
+                    success = DatabaseConnector.updateRow(currSale, controlAttrib[c], type, t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    query = QueryBuilder.updateQuery(currSale, controlAttrib[c], type, new Date(c));
+                    success = DatabaseConnector.updateRow(currSale, controlAttrib[c], type, new Date(c));
                 }
 
                 if (goodEdit)
                 {
-                    // Update the item table with the new shipping info
-                    string output = DatabaseConnector.runStatement(query);
-                    if (output.CompareTo("ERROR") != 0)
+                    if (success)
                     {
                         t.Clear();
                         t.BackColor = Color.White;
@@ -217,7 +217,7 @@ public class SaleTab : Tab
 
     public static List<Sale> getSales(ResultItem item)
     {
-        return DatabaseConnector.RunSaleSearchQuery(QueryBuilder.saleQuery(item));
+        return DatabaseConnector.RunSaleSearchQuery(item);
     }
 
     public static double getTotalSales(ResultItem item)
@@ -354,13 +354,9 @@ public class SaleTab : Tab
 
     public bool deleteCurrSale()
     {
-        string query = QueryBuilder.deleteSaleQuery(currSale);
-        string output = "";
-        output = DatabaseConnector.runStatement(query);
-        if (output.CompareTo("ERROR") == 0)
-        {
-            return false;
-        }
+        
+        bool success = DatabaseConnector.deleteSale(currSale);
+        if (!success) { return false; }
 
         
         clearAttribs();

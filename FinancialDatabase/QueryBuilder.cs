@@ -17,7 +17,6 @@ namespace FinancialDatabase
         }
 
 
-        //TODO: Remove function? It's only referenced once.
         private static string placeEscChars(string query)
         {
             string escapeChar = "^";
@@ -104,10 +103,15 @@ namespace FinancialDatabase
             return query;
         }
 
+        public static string purchaseQuery(int purcID)
+        {
+            string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE item.PurchaseID = " + purcID + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
+            return query;
+        }
+
         public static string purchaseQuery(ResultItem item)
         {
-            string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE item.PurchaseID = " + item.get_PurchaseID() + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
-            return query;
+            return purchaseQuery(item.get_PurchaseID());
         }
 
         public static string saleQuery(ResultItem item)

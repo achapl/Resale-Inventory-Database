@@ -106,7 +106,7 @@ public static class DatabaseConnector
     {
         string query = QueryBuilder.completeItemIDSearchQuery(itemID);
 
-        List<ResultItem> result = getItems(query, true);
+        List<ResultItem> result = getItems(itemID, true);
 
         // Error Checking
         if (result.Count > 1)
@@ -126,6 +126,12 @@ public static class DatabaseConnector
         // Only option left, a single item was found (Count will not be negative)
         ResultItem item = result[0];
         return item;
+    }
+
+    public static List<ResultItem> getPurchItems(ResultItem item)
+    {
+        string query = QueryBuilder.purchaseQuery(item);
+        return DatabaseConnector.getItems(query, false);
     }
 
 
@@ -202,11 +208,13 @@ public static class DatabaseConnector
         return colDataTypes;
     }
 
+    public static List<ResultItem> getItems(SearchQuery Q)
+    {
+        string query = QueryBuilder.searchByNameQuery(Q);
+        return getItems(query, true);
+    }
 
-    // General search queries, done by manual string input
-    // Returns a list of the items found by the query
-    // Can opt with includeThumbnails to attach thumbnails with ResultItems
-    public static List<ResultItem> getItems(string query, bool includeThumbnails)
+    private static List<ResultItem> getItems(string query, bool includeThumbnails)
     {
         // Empty case
         if (query.CompareTo("") == 0)
@@ -226,8 +234,22 @@ public static class DatabaseConnector
         {
             parsedItems = DatabaseConnector.attachThumbnails(parsedItems);
         }
-        
+
         return parsedItems;
+    }
+
+    // General search queries, done by manual string input
+    // Returns a list of the items found by the query
+    // Can opt with includeThumbnails to attach thumbnails with ResultItems
+    public static List<ResultItem> getItems(ResultItem item, bool includeThumbnails)
+    {
+        return getItems(item.get_ITEM_ID(), includeThumbnails);
+    }
+
+    public static List<ResultItem> getItems(int itemID, bool includeThumbnails)
+    {
+        string query = QueryBuilder.completeItemIDSearchQuery(itemID);
+        return getItems(query, includeThumbnails);
     }
 
 
@@ -318,8 +340,9 @@ public static class DatabaseConnector
 
 
     // Get a list of Sale objects given the search query
-    public static List<Sale> RunSaleSearchQuery(string query)
+    public static List<Sale> RunSaleSearchQuery(ResultItem item)
     {
+        string query = QueryBuilder.saleQuery(item);
         List<string> colNames = new List<string>(new string[] { "" });
         string queryOutput = runStatement(query, ref colNames);
 
@@ -584,13 +607,6 @@ public static class DatabaseConnector
     }
 
 
-    public static List<ResultItem> RunSearchQuery(SearchQuery Q)
-    {
-        string query = QueryBuilder.searchByNameQuery(Q);
-        return getItems(query, false);
-    }
-
-
     // Heart of the DatabaseConnector
     // Talks to the python that actually interacts with the database.
     // Gives python the query, and gets from python, the result of running the SQL query
@@ -744,16 +760,26 @@ public static class DatabaseConnector
         return thumbnailID;
     }
 
-    public static string updateRow(ResultItem resultItem, string attrib, string type, string newVal)
+    public static bool updateRow(ResultItem resultItem, string attrib, string type, string newVal)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, type, newVal);
-        return DatabaseConnector.runStatement(query);
+        return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
+    }
+
+    public static bool updateRow(Sale saleItem, string attrib, string type, string newVal) {
+        string query = QueryBuilder.updateQuery(saleItem, attrib, type, newVal);
+        return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
     }
     
-    public static string updateRow(ResultItem resultItem, string attrib, string type, Date d)
+    public static bool updateRow(Sale saleItem, string attrib, string type, Date d) {
+        string query = QueryBuilder.updateQuery(saleItem, attrib, type, d);
+        return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
+    }
+    
+    public static bool updateRow(ResultItem resultItem, string attrib, string type, Date d)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, type, d);
-        return DatabaseConnector.runStatement(query);
+        return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
     }
 
     public static void insertShipInfo(ResultItem resultItem, int weightLbs, int weightOz, int l, int w, int h, string weightType)
@@ -771,5 +797,12 @@ public static class DatabaseConnector
 
         // Update the item table with the new shipping info
         output = DatabaseConnector.runStatement(query);
+    }
+
+    public static bool deleteSale(Sale currSale)
+    {
+        string query = QueryBuilder.deleteSaleQuery(currSale);
+        string output = runStatement(query);
+        return output.CompareTo("ERROR") == 0;
     }
 }
