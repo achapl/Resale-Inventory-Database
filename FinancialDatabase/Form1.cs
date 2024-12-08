@@ -40,7 +40,7 @@ namespace FinancialDatabase
 
             // Data
             public Dictionary<string, string> colDataTypes;
-            
+            private Dictionary<Control, string> allControlAttribs;
             
 
 
@@ -67,6 +67,10 @@ namespace FinancialDatabase
                 itemViewTab = new ItemViewTab(this, Form1);
                 searchTab = new SearchTab(this, Form1);
                 saleTab = new SaleTab(this, Form1);
+
+                allControlAttribs = Util.combineDictionaries(purchasedLotTab.controlAttrib,
+                                                             itemViewTab.controlAttrib,
+                                                             saleTab.controlAttrib);
 
             }
 
@@ -143,49 +147,17 @@ namespace FinancialDatabase
 
             }
 
+
             public void search()
             {
                 searchTab.search();
                 Form1.itemSearchView.updatePaint();
             }
 
+
             public void itemViewUpdate()
             {
                 itemViewTab.updateFromUserInput();
-            }
-
-            public void greyTextBox(TextBox textBox)
-            {
-
-                string attrib = "";
-                if (itemViewTab.controlAttrib.ContainsKey(textBox))
-                {
-                    attrib = itemViewTab.controlAttrib[textBox];
-                }
-                else if (purchasedLotTab.controlAttrib.ContainsKey(textBox))
-                {
-                    attrib = purchasedLotTab.controlAttrib[textBox];
-                }
-                else
-                {
-                    return;
-                }
-
-                string type = colDataTypes[attrib];
-
-                // If not right type, return
-                if (!Util.checkTypeOkay(textBox.Text, type))
-                {
-                    textBox.Text = "";
-                    return;
-                }
-
-                string attribVal = "";
-                itemViewTab.getCurrItem().getAttribAsStr(attrib, ref attribVal);
-                if (attribVal.CompareTo(textBox.Text) != 0)
-                {
-                    textBox.BackColor = Color.LightGray;
-                }
             }
 
             public void flipIVEditMode()
@@ -290,21 +262,39 @@ namespace FinancialDatabase
 
             public void setThumbnail()
             {
-                int currImageID = itemViewTab.getCurrImageID();
-
-                // Check defualt val. Do nothing
-                if (currImageID == -1 || currImageID == null)
-                {
-                    return;
-                }
-
-                int newThumbnailID = DatabaseConnector.getImageThumbnailID(currImageID);
-                DatabaseConnector.runStatement("UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + itemViewTab.getCurrItem().get_ITEM_ID() + ";");
+                itemViewTab.setThumbnail();
             }
 
             internal bool isNewPurchase()
             {
                 return purchasedLotTab.isNewPurchase;
+            }
+
+            internal bool didTextboxChange(TextBox textBox)
+            {
+                string attrib = allControlAttribs[textBox];
+
+                string attribVal = "";
+                itemViewTab.getCurrItem().getAttribAsStr(attrib, ref attribVal);
+
+                if (attribVal.CompareTo(textBox.Text) != 0)
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            internal bool checkTypeOkay(TextBox textBox)
+            {
+                string attrib = allControlAttribs[textBox];
+                // If not right type, return
+                string type = colDataTypes[attrib];
+
+                if (Util.checkTypeOkay(textBox.Text, type))
+                {
+                    return true;
+                }
+                return false;
             }
         }
 
@@ -362,12 +352,18 @@ namespace FinancialDatabase
         {
             if (sender is null) return;
 
-            #pragma warning disable CS8600 // Checked if sender is null
             TextBox textBox = sender as TextBox;
 
-            #pragma warning disable CS8604 // Checked if sender is null
-            tabControl.greyTextBox(textBox);
+            // User entered wrong information type
+            if (!tabControl.checkTypeOkay(textBox))
+            {
+                textBox.Text = "";
+            }
 
+            if (tabControl.didTextboxChange(textBox))
+            {
+                textBox.BackColor = Color.LightGray;
+            }
         }
 
 

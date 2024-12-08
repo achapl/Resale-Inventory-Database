@@ -518,4 +518,18 @@ public class ItemViewTab : Tab
     {
         currItem = null;
     }
+
+    internal void setThumbnail()
+    {
+        int currImageID = getCurrImageID();
+
+        // Check defualt val. Do nothing
+        if (currImageID == -1 || currImageID == null)
+        {
+            return;
+        }
+
+        int newThumbnailID = DatabaseConnector.getImageThumbnailID(currImageID);
+        DatabaseConnector.runStatement("UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + getCurrItem().get_ITEM_ID() + ";");
+    }
 }

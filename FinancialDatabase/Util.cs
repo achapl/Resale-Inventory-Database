@@ -433,6 +433,31 @@ public class Util
         return Image.FromStream(new MemoryStream(ret2));
     }
 
+    public static Dictionary<Control, string> combineDictionaries(params Dictionary<Control, string>[] controlAttribs)
+    {
+        for (int i = 0; i < controlAttribs.Length-1; i++)
+        {
+            controlAttribs[0] = _combineDictionaries(controlAttribs[i], controlAttribs[i+1]);
+        }
+        return controlAttribs[0];
+    }
+
+    private static Dictionary<Control, string> _combineDictionaries(Dictionary<Control, string> controlAttrib1,
+                                                                   Dictionary<Control, string> controlAttrib2)
+    {
+        foreach (KeyValuePair<Control, string> kvp in controlAttrib2)
+        {
+            if (controlAttrib1.ContainsKey(kvp.Key))
+            {
+                throw new Exception("Error: Combining dictionaries with multiple equivalant keys");
+            }
+
+            controlAttrib1.Add(kvp.Key, kvp.Value);
+        }
+        return controlAttrib1;
+
+    }
+
     public struct Date
     {
 
