@@ -83,7 +83,7 @@ namespace FinancialDatabase
             pe.Graphics.DrawString(r.name, this.Font, new SolidBrush(Color.Black), new PointF(maxImgWidth + imageTextPadding, rowNum * (rowHeight + rowPadding) + rowHeight / 2 - this.FontHeight));
         }
 
-        internal int getRowNum(int y)
+        public int getRowNum(int y)
         {
             double height = this.rowHeight + this.rowPadding;
             int scrollAmount = this.VerticalScroll.Value;

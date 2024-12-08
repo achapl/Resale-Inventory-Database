@@ -744,19 +744,19 @@ public static class DatabaseConnector
         return thumbnailID;
     }
 
-    internal static string updateRow(ResultItem resultItem, string attrib, string type, string newVal)
+    public static string updateRow(ResultItem resultItem, string attrib, string type, string newVal)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, type, newVal);
         return DatabaseConnector.runStatement(query);
     }
     
-    internal static string updateRow(ResultItem resultItem, string attrib, string type, Date d)
+    public static string updateRow(ResultItem resultItem, string attrib, string type, Date d)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, type, d);
         return DatabaseConnector.runStatement(query);
     }
 
-    internal static void insertShipInfo(ResultItem resultItem, int weightLbs, int weightOz, int l, int w, int h, string weightType)
+    public static void insertShipInfo(ResultItem resultItem, int weightLbs, int weightOz, int l, int w, int h, string weightType)
     {
         string query = QueryBuilder.shipInfoInsertQuery(resultItem, weightLbs, weightOz, l, w, h);
 

@@ -377,12 +377,12 @@ public class PurchasedLotTab : Tab
 
     }
 
-    internal ResultItem getCurrPurcItemsAt(int index)
+    public ResultItem getCurrPurcItemsAt(int index)
     {
         return currentPurchaseItems[index];
     }
 
-    internal void setCurrPurcItems(List<ResultItem> newPurcItems)
+    public void setCurrPurcItems(List<ResultItem> newPurcItems)
     {
         currentPurchaseItems = newPurcItems;
     }

@@ -160,7 +160,7 @@ namespace FinancialDatabase
             InvokePaint(this, new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle));
         }
 
-        internal int getRowNum(int y)
+        public int getRowNum(int y)
         {
             double height = this.auxImageHeight + this.auxImagePadding;
             int scrollAmount = this.VerticalScroll.Value;
@@ -172,7 +172,7 @@ namespace FinancialDatabase
             return rowNum;
         }
 
-        internal MyImage getImage(int currIndex)
+        public MyImage getImage(int currIndex)
         {
             if (currIndex < 0) { return Util.DEFAULT_IMAGE; }
             if (currIndex > imageList.Count) { throw new Exception("ERROR: Trying to access image that is outside of bounds of imageList"); }

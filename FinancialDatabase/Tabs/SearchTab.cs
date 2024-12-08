@@ -134,22 +134,22 @@ public class SearchTab
         Form1.itemSearchView.clearItems();
     }
 
-    internal List<ResultItem> getSearchItems()
+    public List<ResultItem> getSearchItems()
     {
         return searchItems;
     }
 
-    internal void clearCurrItemsVar()
+    public void clearCurrItemsVar()
     {
         searchItems.Clear();
     }
 
-    internal void addSearchItems(ResultItem newItem)
+    public void addSearchItems(ResultItem newItem)
     {
         searchItems.Add(newItem);
     }
 
-    internal void addSearchItems(List<ResultItem> newItems)
+    public void addSearchItems(List<ResultItem> newItems)
     {
         searchItems.AddRange(newItems);
     }

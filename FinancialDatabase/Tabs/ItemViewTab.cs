@@ -32,7 +32,7 @@ public class ItemViewTab : Tab
 
     
     
-    internal ResultItem getCurrItemsAt(int index)
+    public ResultItem getCurrItemsAt(int index)
     {
         if (index == -1) { return null; }
         return tabController.getSearchItems()[index];
@@ -488,7 +488,7 @@ public class ItemViewTab : Tab
         return Form1.mainPictureViewer.getCurrImageID();
     }
 
-    internal void setCurrItem(ResultItem? newItem)
+    public void setCurrItem(ResultItem? newItem)
     {
        
         if (newItem == null) { currItem = null; }
@@ -511,12 +511,12 @@ public class ItemViewTab : Tab
         updateCurrItem();
     }
 
-    internal void clearCurrItem()
+    public void clearCurrItem()
     {
         currItem = null;
     }
 
-    internal void setThumbnail()
+    public void setThumbnail()
     {
         int currImageID = getCurrImageID();
 

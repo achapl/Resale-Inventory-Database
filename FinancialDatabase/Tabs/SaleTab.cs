@@ -307,19 +307,19 @@ public class SaleTab : Tab
     }
 
 
-    internal Sale getCurrItemSales(int index)
+    public Sale getCurrItemSales(int index)
     {
         return this.currItemSales[index];
     }
 
 
-    internal List<Sale> getCurrItemSales()
+    public List<Sale> getCurrItemSales()
     {
         return this.currItemSales;
     }
 
 
-    internal void setCurrSale(int index)
+    public void setCurrSale(int index)
     {
         // Check bad mouse click
         if (index == -1) { return; }
@@ -330,7 +330,7 @@ public class SaleTab : Tab
     }
 
 
-    internal void setCurrSale(Sale s)
+    public void setCurrSale(Sale s)
     {
         if (!currItemSales.Contains(s))
         {
@@ -352,7 +352,7 @@ public class SaleTab : Tab
         viewMode();
     }
 
-    internal bool deleteCurrSale()
+    public bool deleteCurrSale()
     {
         string query = QueryBuilder.deleteSaleQuery(currSale);
         string output = "";
@@ -368,13 +368,13 @@ public class SaleTab : Tab
         currSale = null;
         return true;
     }
-
-    internal void clearCurrItemSales()
+    
+    public void clearCurrItemSales()
     {
         currItemSales.Clear();
     }
 
-    internal void setCurrSales(List<Sale> newSales)
+    public void setCurrSales(List<Sale> newSales)
     {
         currItemSales = newSales;
     }

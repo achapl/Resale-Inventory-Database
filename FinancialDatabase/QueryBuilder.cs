@@ -355,19 +355,19 @@ namespace FinancialDatabase
 
         }
 
-        internal static string completeItemIDSearchQuery(int itemID)
+        public static string completeItemIDSearchQuery(int itemID)
         {
             return "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE ITEM_ID = "
                 + itemID.ToString()
                 + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
         }
 
-        internal static string getColumnNames(string tableName)
+        public static string getColumnNames(string tableName)
         {
             return "SHOW COLUMNS FROM " + tableName + ";";
         }
 
-        internal static string getSaleByID(int saleID)
+        public static string getSaleByID(int saleID)
         {
             return "SELECT * FROM sale WHERE SALE_ID = " + saleID.ToString() + ";";
         }
