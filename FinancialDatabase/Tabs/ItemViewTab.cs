@@ -379,9 +379,9 @@ public class ItemViewTab : Tab
         // Remove foreign key reference to shipping info from item table
         string attrib = "item.ShippingID";
         string type = tabController.colDataTypes[attrib];
-        string output = DatabaseConnector.updateRow(tabController.getCurrItem(), attrib, type, null);
+        bool success = DatabaseConnector.updateRow(tabController.getCurrItem(), attrib, type, null);
 
-        if (output.CompareTo("ERROR") != 0)
+        if (success)
         {
             showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
         }

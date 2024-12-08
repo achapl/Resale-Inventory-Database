@@ -217,7 +217,7 @@ public class SaleTab : Tab
 
     public static List<Sale> getSales(ResultItem item)
     {
-        return DatabaseConnector.RunSaleSearchQuery(item);
+        return DatabaseConnector.runSaleSearchQuery(item);
     }
 
     public static double getTotalSales(ResultItem item)

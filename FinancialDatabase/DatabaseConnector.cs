@@ -139,7 +139,7 @@ public static class DatabaseConnector
     public static Sale getSale(int saleID)
     {
         string querySale = QueryBuilder.getSaleByID(saleID);
-        List<Sale> result = RunSaleSearchQuery(querySale);
+        List<Sale> result = runSaleSearchQuery(querySale);
 
 
         // Error Checking
@@ -339,8 +339,25 @@ public static class DatabaseConnector
     }
 
 
+    private static List<Sale> runSaleSearchQuery(string query)
+    {
+        int lastrowid;
+        List<string> colNames = new List<string>(new string[] { "" });
+        string queryOutput = runStatement(query, ref colNames, out lastrowid);
+
+        // No sales found, return empty list
+        if (queryOutput.CompareTo("[]") == 0)
+        {
+            return new List<Sale>();
+        }
+
+        List<Sale> parsedItems = DtbParser.parseRawSales(queryOutput, colNames);
+
+        return parsedItems;
+    }
+
     // Get a list of Sale objects given the search query
-    public static List<Sale> RunSaleSearchQuery(ResultItem item)
+    public static List<Sale> runSaleSearchQuery(ResultItem item)
     {
         string query = QueryBuilder.saleQuery(item);
         List<string> colNames = new List<string>(new string[] { "" });
