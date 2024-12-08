@@ -350,8 +350,6 @@ namespace FinancialDatabase
         // Change TextBox color if changed
         private void TextBoxAttribute_Leave(object sender, EventArgs e)
         {
-            if (sender is null) return;
-
             TextBox textBox = sender as TextBox;
 
             // User entered wrong information type
