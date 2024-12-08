@@ -349,8 +349,9 @@ public class ResultItem : IEquatable<ResultItem>
         }
     }
 
-    public void getAttribAsStr(string attrib, ref string ret)
+    public void getAttribAsStr(string attrib, out string ret)
     {
+        ret = "";
         switch (attrib)
         {
             // From item table
@@ -448,6 +449,12 @@ public class ResultItem : IEquatable<ResultItem>
         }
     }
 
+    public string getAttribVal(string attrib)
+    {
+        string ret = "";
+        getAttribAsStr(attrib, out ret);
+        return ret;
+    }
 
     public bool hasItemEntry()
     {
@@ -1028,6 +1035,12 @@ public class ResultItem : IEquatable<ResultItem>
             this.images.AddRange(images);
         }
     }
+
+    public void set_images()
+    {
+        set_images(DatabaseConnector.getAllImages(this));
+    }
+
     public void set_images(List<MyImage> images)
     {
         if (images.Count > 0)

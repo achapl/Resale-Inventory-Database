@@ -219,7 +219,7 @@ public static class DatabaseConnector
         string queryOutput = runStatement(query, ref colNames);
 
         // Parse raw items
-        List<ResultItem> parsedItems = dtbParser.parseItems(queryOutput, colNames);
+        List<ResultItem> parsedItems = DtbParser.parseItems(queryOutput, colNames);
 
         // Attach thumbnails
         if (includeThumbnails)
@@ -329,7 +329,7 @@ public static class DatabaseConnector
             return new List<Sale>();
         }
 
-        List<Sale> parsedItems = dtbParser.parseRawSales(queryOutput, colNames);
+        List<Sale> parsedItems = DtbParser.parseRawSales(queryOutput, colNames);
 
         return parsedItems;
     }

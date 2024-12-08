@@ -17,7 +17,7 @@ public class ItemViewTab : Tab
     protected List<TextBox> weightTBoxes;
 
     
-    private ResultItem currItem;
+    private ResultItem? currItem;
 
     public ItemViewTab(TabController tabController, Form1 Form1) : base(Form1)
     {
@@ -488,10 +488,10 @@ public class ItemViewTab : Tab
         return Form1.mainPictureViewer.getCurrImageID();
     }
 
-    internal void setCurrItem(ResultItem newItem)
+    internal void setCurrItem(ResultItem? newItem)
     {
        
-        //if (newItem == null) { return; }
+        if (newItem == null) { currItem = null; }
         
         if (!tabController.getSearchItems().Contains(newItem) &&
             !tabController.getCurrPurcItems().Contains(newItem) && !tabController.isNewPurchase())
@@ -507,11 +507,8 @@ public class ItemViewTab : Tab
             throw new Exception("Error: newItem is null for ItemViewTab.setCurrItem()");
         }
 
-        this.currItem = newItem;
+        currItem = newItem;
         updateCurrItem();
-
-        
-        
     }
 
     internal void clearCurrItem()

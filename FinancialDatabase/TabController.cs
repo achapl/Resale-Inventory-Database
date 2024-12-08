@@ -115,9 +115,14 @@ namespace FinancialDatabase
             ResultItem shellItem = getSearchItemsAt(index);
 
             ResultItem newItem = DatabaseConnector.getItem(shellItem.get_ITEM_ID());
-            newItem.set_images(DatabaseConnector.getAllImages(newItem));
+            newItem.set_images();
             setCurrItem(newItem);
 
+        }
+
+        public void clearCurrSaleItems()
+        {
+            saleTab.clearCurrItemSales();
         }
 
 
@@ -185,35 +190,39 @@ namespace FinancialDatabase
             {
                 saleTab.showItemSales(itemViewTab.getCurrItem());
                 itemViewTab.updateCurrItem();
-                itemViewTab.setCurrItem(itemViewTab.getCurrItem());
                 Form1.tabCollection.SelectTab(saleTabNum);
             }
         }
 
 
-        public void deleteItemFromDtb()
+        private void clearAllNonSearchTabs()
         {
-            bool deletedItem = itemViewTab.deleteItem();
-            if (!deletedItem) { return; }
             itemViewTab.setCurrItem(null);
-            clearSearchItems();
-            saleTab.clearCurrItemSales();
+            clearCurrSaleItems();
             clearCurrPurcItems();
 
             purchasedLotTab.clearCurrItemControls();
             itemViewTab.clearCurrItemControls();
             saleTab.clearCurrItemControls();
-            searchTab.clearSearchItems();
-
-            Form1.tabCollection.SelectTab(searchTabNum);
-            searchTab.search();
-
+        
         }
 
-        internal void setMainImage(int currIndex)
+
+        public void deleteCurrItem()
+        {
+            bool deletedItem = itemViewTab.deleteItem();
+            if (!deletedItem) { return; }
+
+            clearAllNonSearchTabs();
+            Form1.tabCollection.SelectTab(searchTabNum);
+        }
+
+
+        public void setMainImage(int currIndex)
         {
             itemViewTab.setMainImage(currIndex);
         }
+
 
         public void insertImage()
         {
@@ -222,10 +231,10 @@ namespace FinancialDatabase
             {
                 return;
             }
-            DialogResult isOkay = Form1.openFileDialog1.ShowDialog();
-            if (isOkay == DialogResult.OK)
+            DialogResult success = Form1.showOpenFileDialog();
+            if (success == DialogResult.OK)
             {
-                List<string> files = new List<string>(Form1.openFileDialog1.FileNames);
+                List<string> files = Form1.getOpenFileDialogNames();
                 foreach (string file in files)
                 {
                     DatabaseConnector.insertImage(file, itemViewTab.getCurrItem().get_ITEM_ID());
@@ -233,22 +242,22 @@ namespace FinancialDatabase
             }
         }
 
+
         public void setThumbnail()
         {
             itemViewTab.setThumbnail();
         }
 
-        internal bool isNewPurchase()
+        public bool isNewPurchase()
         {
             return purchasedLotTab.isNewPurchase;
         }
 
-        internal bool didTextboxChange(TextBox textBox)
+        public bool didTextboxChange(TextBox textBox)
         {
             string attrib = allControlAttribs[textBox];
 
-            string attribVal = "";
-            itemViewTab.getCurrItem().getAttribAsStr(attrib, ref attribVal);
+            string attribVal = getCurrItem().getAttribVal(attrib);
 
             if (attribVal.CompareTo(textBox.Text) != 0)
             {
@@ -257,7 +266,7 @@ namespace FinancialDatabase
             return false;
         }
 
-        internal bool checkTypeOkay(TextBox textBox)
+        public bool checkTypeOkay(TextBox textBox)
         {
             string attrib = allControlAttribs[textBox];
             // If not right type, return

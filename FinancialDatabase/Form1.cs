@@ -174,7 +174,7 @@ namespace FinancialDatabase
         // Item View Delete Item Button
         private void deleteItemButton_Click(object sender, EventArgs e)
         {
-            tabControl.deleteItemFromDtb();
+            tabControl.deleteCurrItem();
         }
 
 
@@ -210,6 +210,16 @@ namespace FinancialDatabase
         private void setThumbnailButton_Click(object sender, EventArgs e)
         {
             tabControl.setThumbnail();
+        }
+
+        public DialogResult showOpenFileDialog()
+        {
+            return openFileDialog1.ShowDialog();
+        }
+
+        public List<string> getOpenFileDialogNames()
+        {
+            return new List<string>(openFileDialog1.FileNames);
         }
     }
 }
