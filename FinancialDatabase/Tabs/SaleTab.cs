@@ -7,8 +7,9 @@ public class SaleTab : Tab
 {
     Sale currSale;
     List<Sale> currItemSales;
-    public SaleTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
+    public SaleTab(TabController tabController, Form1 Form1) : base(Form1)
 	{
+        currItemSales = new List<Sale>();
         this.tabController = tabController;
         editButton = Form1.SaleEditSaleButton;
         updateButton = Form1.SaleUpdateButton;

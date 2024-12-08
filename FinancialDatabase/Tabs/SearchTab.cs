@@ -14,11 +14,11 @@ using Date = Util.Date;
 public class SearchTab
 {
     Form1 Form1;
-    Form1.TabController tabController;
+    TabController tabController;
 
     public List<ResultItem> searchItems;
 
-    public SearchTab(Form1.TabController tabController, Form1 Form1)
+    public SearchTab(TabController tabController, Form1 Form1)
     {
         searchItems = new List<ResultItem>();
         this.tabController = tabController;

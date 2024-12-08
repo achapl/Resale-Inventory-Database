@@ -8,7 +8,7 @@ public class PurchasedLotTab : Tab
     public List<ResultItem> currentPurchaseItems;
     public bool isNewPurchase;
 
-    public PurchasedLotTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
+    public PurchasedLotTab(TabController tabController, Form1 Form1) : base(Form1)
 	{
         currentPurchaseItems = new List<ResultItem>();
         updateButton = Form1.UpdatePurcButton;

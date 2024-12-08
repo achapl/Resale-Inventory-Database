@@ -19,7 +19,7 @@ public class ItemViewTab : Tab
     
     private ResultItem currItem;
 
-    public ItemViewTab(Form1.TabController tabController, Form1 Form1) : base(Form1)
+    public ItemViewTab(TabController tabController, Form1 Form1) : base(Form1)
     {
         this.tabController = tabController;
         currItem = null;

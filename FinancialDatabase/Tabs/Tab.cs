@@ -27,7 +27,7 @@ public abstract class Tab
     protected Button updateButton;
     protected Button editButton;
 
-    protected Form1.TabController tabController;
+    protected TabController tabController;
 
     protected Form1 Form1;
 
