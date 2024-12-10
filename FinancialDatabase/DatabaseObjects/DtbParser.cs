@@ -2,7 +2,7 @@
 
 // Takes raw string outputs of querying the database
 // and parses them into usable objects
-public static class dtbParser
+public static class DtbParser
 {
     // raw result from a search query is given from the result of the query in the format
     //
