@@ -422,9 +422,9 @@ public class ItemViewTab : Tab
 
         if (item.hasPurchaseEntry())
         {
-            Date datePurc = item.get_Date_Purchased();
+            Date datePurc = tabController.getCurrPurc().date;
             Form1.itemDatePurcLbl.Text = datePurc.toDateString();
-            Form1.itemPurcPriceLbl.Text = checkDefault(item.get_Amount_purchase());
+            Form1.itemPurcPriceLbl.Text = checkDefault(tabController.getCurrPurc().amount);
         }
 
         if (item.hasSaleEntry())

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinancialDatabase.DatabaseObjects;
+using System;
 namespace FinancialDatabase
 {
     public class TabController
@@ -64,6 +65,9 @@ namespace FinancialDatabase
         }
 
 
+        // currPurc
+        public Purchase getCurrPurc() => purchasedLotTab.getCurrPurc();
+
         // currPurcItems
         public void setCurrPurcItems(List<ResultItem> newPurcItems) => purchasedLotTab.setCurrPurcItems(newPurcItems);
         public void addCurrPurcItems(ResultItem newPurcItem) => purchasedLotTab.addCurrPurcItem(newPurcItem);
@@ -98,7 +102,7 @@ namespace FinancialDatabase
             setCurrItemVar(newItem);
 
             itemViewTab.showItemAttributes(newItem);
-            purchasedLotTab.showItemsFromLot(newItem);
+            purchasedLotTab.setCurrPurcAndShowItems(newItem);
             saleTab.showItemSales(newItem);
 
             Form1.tabCollection.SelectTab(itemViewTabNum);

@@ -149,11 +149,12 @@ public class PurchasedLotTab : Tab
 
         if (item.hasPurchaseEntry())
         {
-            Date datePurc = item.get_Date_Purchased();
+            Purchase currPurc = tabController.getCurrPurc();
+            Date datePurc = currPurc.date;
             Form1.PurcDatePicker.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
-            Form1.PurcPurcPriceLbl.Text = checkDefault(item.get_Amount_purchase());
-            Form1.PurcPurcNotesLbl.Text = checkDefault(item.get_Notes_purchase());
-            Form1.PurcPurcDateLbl.Text = item.get_Date_Purchased().toDateString();
+            Form1.PurcPurcPriceLbl.Text = checkDefault(currPurc.amount);
+            Form1.PurcPurcNotesLbl.Text = checkDefault(currPurc.notes_purchase);
+            Form1.PurcPurcDateLbl.Text = checkDefault(currPurc.date.toDateString());
         }
         updateUserInputDefaultText();
         
@@ -218,15 +219,18 @@ public class PurchasedLotTab : Tab
 
         }
 
-        showItemsFromLot(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
+        setCurrPurcAndShowItems(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
         showItemAttributes(tabController.getCurrItem());
         return true;
     }
 
 
-    public void showItemsFromLot(ResultItem item)
+    public void setCurrPurcAndShowItems(ResultItem item)
     {
         if (item == null) { return; }
+
+        currPurc = DatabaseConnector.getPurchase(item);
+
         showItemAttributes(item);
 
         Form1.PurchaseListBox.Items.Clear();
@@ -239,8 +243,8 @@ public class PurchasedLotTab : Tab
             addCurrPurcItem(DatabaseConnector.getItem(i.get_ITEM_ID()));
         }
 
-        Form1.PurcPurcPriceLbl.Text = item.get_Amount_purchase().ToString();
-        Form1.PurcPurcNotesLbl.Text = item.get_Notes_purchase();
+        Form1.PurcPurcPriceLbl.Text = currPurc.amount.ToString();
+        Form1.PurcPurcNotesLbl.Text = currPurc.notes_purchase;
     }
 
 
@@ -279,12 +283,12 @@ public class PurchasedLotTab : Tab
     // If there is no current purchase, create one from given user input
     public void addItemToPurc()
     {
-        int purcID = -1;
+        int purcID = currPurc.id;
         Date purcDate = new Date();
 
-        if (tabController.getCurrItem() is not null)
+        if (tabController.getCurrPurc() is not null)
         {
-            purcDate = tabController.getCurrItem().get_Date_Purchased();
+            purcDate = tabController.getCurrPurc().date;
         }
         
         if (isNewPurchase && allNewPurchaseBoxesFilled())
@@ -305,35 +309,30 @@ public class PurchasedLotTab : Tab
                             );
             return;
         }
-        ResultItem newItem = getNewItemFromUserInput(purcID);
-        // Make the new initial item given by the user to go along with the purchase
-        
 
+        // Make the new ResultItem given by the user to go into the current purchase
+        int itemID = -1;
+        ResultItem newItem = getNewItemFromUserInput();
+        DatabaseConnector.insertItem(newItem, out itemID);
+        newItem.set_PurchaseID(purcID);
+        newItem.set_ITEM_ID(itemID);
+
+        // Update database to reflect the current purchase's purchaseID
+        string type = tabController.colDataTypes["item.PurchaseID"];
+        DatabaseConnector.updateRow(newItem, "item.PurchaseID", type, purcID);
+
+        // Cleanup
         Util.clearTBox(newItemTBoxes);
         Util.clearTBox(shippingTBoxes);
-        int itemID = -1;
-        DatabaseConnector.insertItem(newItem, out itemID);
-        newItem.set_ITEM_ID(itemID);
-        string attrib = "item.PurchaseID";
-        string type = tabController.colDataTypes[attrib];
-        DatabaseConnector.updateRow(newItem, attrib, type, purcID.ToString());
-        //TODO: Can the following line be removed since tabController.setCurrItem(item) is called and should update the currItem with modified purc date?
-        newItem.set_PurchaseID(purcID);
-        tabController.setCurrItem(newItem);
-        showItemsFromLot(tabController.getCurrItem());
+        setCurrPurcAndShowItems(tabController.getCurrItem());
         isNewPurchase = false;
     }
 
-    private ResultItem getNewItemFromUserInput(int purcID)
+    private ResultItem getNewItemFromUserInput()
     {
         ResultItem newItem = new ResultItem();
 
         newItem.set_Name(Form1.PurcNameTextbox.Text);
-
-        // Set date
-        DateTime dt = Form1.PurcDatePicker.Value;
-        Date purcDate = new(dt.Year, dt.Month, dt.Day);
-        newItem.set_Date_Purchased(purcDate);
 
         // If no Init or curr quantities, set to default 1
         string initQty = "1";
@@ -359,8 +358,6 @@ public class PurchasedLotTab : Tab
             newItem.set_Width(Int32.Parse(Form1.PurcWidthTextbox.Text));
             newItem.set_Height(Int32.Parse(Form1.PurcHeightTextbox.Text));
         }
-
-        newItem.set_PurchaseID(purcID);
 
         return newItem;
     }

@@ -20,6 +20,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Drawing.Imaging;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static FinancialDatabase.Form1;
+using FinancialDatabase.DatabaseObjects;
 
 public static class DatabaseConnector
 {
@@ -343,7 +344,7 @@ public static class DatabaseConnector
     {
         int lastrowid;
         List<string> colNames = new List<string>(new string[] { "" });
-        string queryOutput = runStatement(query, ref colNames, out lastrowid);
+        string queryOutput = runStatement(query, ref colNames);
 
         // No sales found, return empty list
         if (queryOutput.CompareTo("[]") == 0)
@@ -376,6 +377,7 @@ public static class DatabaseConnector
 
 
     // Run a given SQL statement with ability to return col names and lastrowid
+    // TODO: Make ref out instead
     public static string runStatement(string statement, ref List<string> colNames, out int lastrowid)
     {
         string retList;
@@ -774,10 +776,21 @@ public static class DatabaseConnector
         return thumbnailID;
     }
 
+    // TODO: Get rid of type arg and replace it in the function with a getter to tabControl.colDataTypes[]
     public static bool updateRow(ResultItem resultItem, string attrib, string type, string newVal)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, type, newVal);
         return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
+    }
+    
+    public static bool updateRow(ResultItem resultItem, string attrib, string type, int newVal)
+    {
+        return updateRow(resultItem, attrib, type, newVal.ToString());
+    }
+
+    public static bool updateRow(ResultItem resultItem, string attrib, string type, double newVal)
+    {
+        return updateRow(resultItem, attrib, type, newVal.ToString());
     }
 
     public static bool updateRow(Sale saleItem, string attrib, string type, string newVal) {
@@ -818,5 +831,19 @@ public static class DatabaseConnector
         string query = QueryBuilder.deleteSaleQuery(currSale);
         string output = runStatement(query);
         return output.CompareTo("ERROR") == 0;
+    }
+
+    public static Purchase getPurchase(ResultItem item)
+    {
+        List<string> colNames = new List<string>();
+        string query = QueryBuilder.purchaseQueryByItemID(item.get_ITEM_ID());
+        string output = runStatement(query, ref colNames);
+        List<Purchase> purchases = DtbParser.parsePurchase(output, colNames);
+        if (purchases.Count != 1)
+        {
+            throw new Exception("ERROR: Multiple purchases found for a single item: " + item.get_ITEM_ID() + " " + item.get_Name());
+        }
+        return purchases[0];
+
     }
 }

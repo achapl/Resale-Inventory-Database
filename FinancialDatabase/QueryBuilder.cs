@@ -374,5 +374,10 @@ namespace FinancialDatabase
         {
             return "SELECT * FROM sale WHERE SALE_ID = " + saleID.ToString() + ";";
         }
+
+        public static string purchaseQueryByItemID(int itemID)
+        {
+            return "SELECT * FROM purchase JOIN item ON item.PurchaseID = purchase.PURCHASE_ID WHERE item.ITEM_ID = " + itemID + ";";
+        }
     }
 }

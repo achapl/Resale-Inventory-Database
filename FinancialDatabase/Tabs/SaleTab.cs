@@ -73,23 +73,6 @@ public class SaleTab : Tab
         };
     }
 
-    public void update(ResultItem item)
-	{
-        Form1.PurchaseListBox.Items.Clear();
-        tabController.clearCurrPurcItems();
-        List<ResultItem> result = DatabaseConnector.getItems(item, false);
-
-		foreach(ResultItem i in result)
-		{
-			Form1.PurchaseListBox.Items.Add(i.get_Name() + i.get_Amount_sale);
-            tabController.addCurrPurcItems(i);
-        }
-
-        Form1.PurcPurcPriceLbl.Text = item.get_Amount_purchase().ToString();
-        Form1.PurcPurcNotesLbl.Text = item.get_Notes_purchase();
-
-	}
-
     public void updateFromUserInput()
     {
         bool success = getUserInputUpdate();
@@ -141,7 +124,6 @@ public class SaleTab : Tab
                 if (c is TextBox)
                 // TODO: Tpye Check?
                 {
-                    
                     string attrib = t.Text;
                     if (!Util.checkTypeOkay(attrib, type))
                     {
@@ -176,7 +158,6 @@ public class SaleTab : Tab
         }
         return true;
     }
-
 
 
     private void clearCurrSale()
@@ -241,7 +222,7 @@ public class SaleTab : Tab
     public void addSale()
     {
         if (tabController.getCurrItem() == null) return;
-        // Must at least have name. Init and curr quantites are given a default val of 1
+
         if (Form1.SaleNewSaleAmountTextbox.Text == "")
         {
             return;
@@ -258,18 +239,6 @@ public class SaleTab : Tab
         showItemSales(tabController.getCurrItem());
     }
 
-
-    public bool allNewPurchaseBoxesFilled()
-    {
-        foreach (Control c in shippingTBoxes)
-        {
-            if (c.Text.CompareTo("") == 0)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
 
     public bool allNewShippingBoxesFilled()
     {

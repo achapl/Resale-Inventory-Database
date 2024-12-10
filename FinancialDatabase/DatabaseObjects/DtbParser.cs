@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinancialDatabase.DatabaseObjects;
+using System;
 
 // Takes raw string outputs of querying the database
 // and parses them into usable objects
@@ -71,6 +72,21 @@ public static class DtbParser
             // Seperate each item into individual item attributes to make a ResultItem with it
             List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
             results.Add(new Sale(itemAttributes, colNames));
+        }
+
+        return results;
+    }
+
+    public static List<Purchase> parsePurchase(string rawResult, List<string> colNames)
+    {
+        List<string> rawItems = parseItems(rawResult);
+
+        List<Purchase> results = new List<Purchase>();
+        foreach (string rawItem in rawItems)
+        {
+            // Seperate each item into individual item attributes to make a ResultItem with it
+            List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
+            results.Add(new Purchase(itemAttributes, colNames));
         }
 
         return results;
