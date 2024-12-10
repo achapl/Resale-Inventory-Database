@@ -196,7 +196,7 @@ public class ItemViewTab : Tab
                     // Update the database with new weight
                     string attrib = "shipping.Weight";
                     string type = tabController.colDataTypes[attrib];
-                    DatabaseConnector.updateRow(getCurrItem(), attrib, type, ttlWeight.ToString());
+                    DatabaseConnector.updateRow(getCurrItem(), attrib, ttlWeight.ToString());
 
                     // These must be cleared manually since they are both used at the same time.
                     // Clearing one produces an error when the other textbox is then used to get the total weight
@@ -217,7 +217,7 @@ public class ItemViewTab : Tab
                     string attrib = controlAttrib[userInputContainer];
                     string newVal = getUserInputVal(userInputContainer);
 
-                    DatabaseConnector.updateRow(getCurrItem(), attrib, type, newVal);
+                    DatabaseConnector.updateRow(getCurrItem(), attrib, newVal);
                 }
                 // Update the item in the view
                 showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
@@ -378,8 +378,7 @@ public class ItemViewTab : Tab
 
         // Remove foreign key reference to shipping info from item table
         string attrib = "item.ShippingID";
-        string type = tabController.colDataTypes[attrib];
-        bool success = DatabaseConnector.updateRow(tabController.getCurrItem(), attrib, type, null);
+        bool success = DatabaseConnector.updateRow(tabController.getCurrItem(), attrib, null);
 
         if (success)
         {
@@ -521,7 +520,7 @@ public class ItemViewTab : Tab
         int currImageID = getCurrImageID();
 
         // Check defualt val. Do nothing
-        if (currImageID == -1 || currImageID == null)
+        if (currImageID == Util.DEFAULT_INT)
         {
             return;
         }

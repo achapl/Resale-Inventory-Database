@@ -122,7 +122,7 @@ public class SaleTab : Tab
                 bool success = false;
                 string type = tabController.colDataTypes[controlAttrib[c]];
                 if (c is TextBox)
-                // TODO: Tpye Check?
+                // TODO: Type Check?
                 {
                     string attrib = t.Text;
                     if (!Util.checkTypeOkay(attrib, type))
@@ -131,11 +131,11 @@ public class SaleTab : Tab
                         // TODO: Show an error message for incorrect attribute inputted!
                         continue;
                     }
-                    success = DatabaseConnector.updateRow(currSale, controlAttrib[c], type, t.Text);
+                    success = DatabaseConnector.updateRow(currSale, controlAttrib[c], t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    success = DatabaseConnector.updateRow(currSale, controlAttrib[c], type, new Date(c));
+                    success = DatabaseConnector.updateRow(currSale, controlAttrib[c], new Date(c));
                 }
 
                 if (goodEdit)

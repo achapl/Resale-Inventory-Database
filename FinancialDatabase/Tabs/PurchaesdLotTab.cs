@@ -205,11 +205,11 @@ public class PurchasedLotTab : Tab
                     {
                         return false;
                     }
-                    DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], type, userInputTBox.Text);
+                    DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], userInputTBox.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], type, new Date(c));
+                    DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], new Date(c));
                 }
             }
             else if (!tableEntryExists(c))
@@ -318,8 +318,7 @@ public class PurchasedLotTab : Tab
         newItem.set_ITEM_ID(itemID);
 
         // Update database to reflect the current purchase's purchaseID
-        string type = tabController.colDataTypes["item.PurchaseID"];
-        DatabaseConnector.updateRow(newItem, "item.PurchaseID", type, purcID);
+        DatabaseConnector.updateRow(newItem, "item.PurchaseID", purcID);
 
         // Cleanup
         Util.clearTBox(newItemTBoxes);

@@ -31,6 +31,7 @@ public static class DatabaseConnector
     const string END_COL_MARKER = "END OF COLUMN NAMES"; // Marker to the End of Column Names
     const string EOS = "EOS";     // end-of-stream
     static Size maxDims = new Size(300, 300);
+    static Dictionary<string, string> colDataTypesLocal = null;
 
 
     
@@ -49,6 +50,8 @@ public static class DatabaseConnector
 
         return tableNames;
     }
+
+
 
 
     // Gets the names of a table's columns
@@ -205,7 +208,7 @@ public static class DatabaseConnector
         //Hardcoded types for special cases that can't be found in database
         colDataTypes["shipping.WeightLbs"] = "int unsigned";
         colDataTypes["shipping.WeightOz"] = "int unsigned";
-
+        colDataTypesLocal = colDataTypes;
         return colDataTypes;
     }
 
@@ -377,7 +380,6 @@ public static class DatabaseConnector
 
 
     // Run a given SQL statement with ability to return col names and lastrowid
-    // TODO: Make ref out instead
     public static string runStatement(string statement, out List<string> colNames, out int lastrowid)
     {
         string retList;
@@ -777,35 +779,35 @@ public static class DatabaseConnector
     }
 
     // TODO: Get rid of type arg and replace it in the function with a getter to tabControl.colDataTypes[]
-    public static bool updateRow(ResultItem resultItem, string attrib, string type, string newVal)
+    public static bool updateRow(ResultItem resultItem, string attrib, string newVal)
     {
-        string query = QueryBuilder.updateQuery(resultItem, attrib, type, newVal);
+        string query = QueryBuilder.updateQuery(resultItem, attrib, colDataTypesLocal[attrib], newVal);
         return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
     }
     
-    public static bool updateRow(ResultItem resultItem, string attrib, string type, int newVal)
+    public static bool updateRow(ResultItem resultItem, string attrib, int newVal)
     {
-        return updateRow(resultItem, attrib, type, newVal.ToString());
+        return updateRow(resultItem, attrib, newVal.ToString());
     }
 
-    public static bool updateRow(ResultItem resultItem, string attrib, string type, double newVal)
+    public static bool updateRow(ResultItem resultItem, string attrib, double newVal)
     {
-        return updateRow(resultItem, attrib, type, newVal.ToString());
+        return updateRow(resultItem, attrib, newVal.ToString());
     }
 
-    public static bool updateRow(Sale saleItem, string attrib, string type, string newVal) {
-        string query = QueryBuilder.updateQuery(saleItem, attrib, type, newVal);
+    public static bool updateRow(Sale saleItem, string attrib, string newVal) {
+        string query = QueryBuilder.updateQuery(saleItem, attrib, colDataTypesLocal[attrib], newVal);
         return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
     }
     
-    public static bool updateRow(Sale saleItem, string attrib, string type, Date d) {
-        string query = QueryBuilder.updateQuery(saleItem, attrib, type, d);
+    public static bool updateRow(Sale saleItem, string attrib, Date d) {
+        string query = QueryBuilder.updateQuery(saleItem, attrib, colDataTypesLocal[attrib], d);
         return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
     }
     
-    public static bool updateRow(ResultItem resultItem, string attrib, string type, Date d)
+    public static bool updateRow(ResultItem resultItem, string attrib, Date d)
     {
-        string query = QueryBuilder.updateQuery(resultItem, attrib, type, d);
+        string query = QueryBuilder.updateQuery(resultItem, attrib, colDataTypesLocal[attrib], d);
         return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
     }
 
