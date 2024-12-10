@@ -25,7 +25,6 @@ namespace FinancialDatabase
         SaleTab saleTab;
 
 
-        // TODO: Make CONST
         public int searchTabNum = 0;
         public int itemViewTabNum = 1;
         public int purcLotTabNum = 2;

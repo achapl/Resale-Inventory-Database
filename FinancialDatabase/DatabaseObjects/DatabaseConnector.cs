@@ -778,7 +778,6 @@ public static class DatabaseConnector
         return thumbnailID;
     }
 
-    // TODO: Get rid of type arg and replace it in the function with a getter to tabControl.colDataTypes[]
     public static bool updateRow(ResultItem resultItem, string attrib, string newVal)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, colDataTypesLocal[attrib], newVal);

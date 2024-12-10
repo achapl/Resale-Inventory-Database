@@ -114,7 +114,7 @@ public class SaleTab : Tab
         {
             if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); continue; }
 
-            TextBox t = c as TextBox ?? new TextBox();// ?? denotes null assignment
+            TextBox t = c as TextBox ?? new TextBox();
 
             string query = "";
             if (tableEntryExists(t))
@@ -122,14 +122,18 @@ public class SaleTab : Tab
                 bool success = false;
                 string type = tabController.colDataTypes[controlAttrib[c]];
                 if (c is TextBox)
-                // TODO: Type Check?
                 {
                     string attrib = t.Text;
                     if (!Util.checkTypeOkay(attrib, type))
                     {
                         goodEdit = false;
-                        // TODO: Show an error message for incorrect attribute inputted!
-                        continue;
+                        MessageBox.Show(
+                            "Wrong data type given",
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+                        return false;
                     }
                     success = DatabaseConnector.updateRow(currSale, controlAttrib[c], t.Text);
                 }

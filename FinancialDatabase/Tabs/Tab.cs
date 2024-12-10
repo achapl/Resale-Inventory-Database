@@ -11,7 +11,6 @@ public abstract class Tab
     protected List<Control> mutableAttribValueControls;
     protected List<Label> mutableAttribValueLabels;
     protected List<Control> hideableAttribValueControls;
-    private List<Control> saleControls; // TODO: This should be able to be changed into mutableAttribValueControls, double check this
 
     protected List<TextBox> shippingTBoxes;
     protected List<TextBox> newItemTBoxes;
@@ -82,7 +81,6 @@ public abstract class Tab
             Form1.PurchaseListBox,
             Form1.saleListBox
         };
-        saleControls = new List<Control> { Form1.SaleAmountTextbox };
     }
     
 
