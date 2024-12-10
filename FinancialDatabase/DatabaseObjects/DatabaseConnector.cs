@@ -669,31 +669,29 @@ public static class DatabaseConnector
     // Given a ResultItem, delete from the database
     public static void deleteItem(ResultItem item)
     {
-        // Empty case
         if (item is null) { return; }
 
-        // 
-        if (item.hasPurchaseEntry()) {
-            if (isLastItemInPurchase(item))
-            {
-                
-                string attrib = "item.PurchaseID";
-                string updateQuery = QueryBuilder.updateQuery(item, "item.PurchaseID", "int unsigned", "0");
+        if (item.hasShippingEntry())
+        {
+            deleteShipInfo(item);
+        }
+        
+        deleteSales(item);
+        
+        // Delete the item
+        string delItemQuery = QueryBuilder.deleteItemQuery(item);
+        runStatement(delItemQuery);
 
-                // TODO May not be necessary since auto-cascade on delete on database may be a feature
-                //runStatement(updateQuery);
+        // Delete the purchase associated with the item
+        // Must do this last because there is a many:1 relationship
+        // between items:purchase
+        if (item.hasPurchaseEntry())
+        {
+            if (isEmptyPurchase(item.get_PurchaseID()))
+            {
                 deletePurchase(item);
             }
         }
-        if (item.hasShippingEntry())
-        {
-            // TODO: Make this a function deleteShipInfo for DatabaseConnector
-            string shippingDelQuery = QueryBuilder.deleteShipInfoQuery(item);
-            runStatement(shippingDelQuery);
-        }
-        deleteSales(item);
-        string delItemQuery = QueryBuilder.deleteItemQuery(item);
-        runStatement(delItemQuery);
     }
 
 
@@ -706,7 +704,6 @@ public static class DatabaseConnector
 
 
     // Given a item, delete its purchase object from the database
-    // TODO: Determine if auto-cascade deletes the corresponding item from the database
     private static void deletePurchase(ResultItem item)
     {
         string query = QueryBuilder.deletePurchaseQuery(item);
@@ -720,10 +717,10 @@ public static class DatabaseConnector
         runStatement(query);
     }
 
-    // Checks if the given item is the only item from its corresponding purchase
-    private static bool isLastItemInPurchase(ResultItem item)
+    // Checks if the given purchase has no items associated with it
+    private static bool isEmptyPurchase(int purcID)
     {
-        return (getItems(QueryBuilder.purchaseQuery(item), false).Count() == 1);   
+        return (getItems(QueryBuilder.purchaseQuery(purcID), false).Count() == 0);   
     }
 
 
