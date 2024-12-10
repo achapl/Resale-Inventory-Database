@@ -37,12 +37,12 @@ public static class DatabaseConnector
     private static List<string> getTableNames()
     {
         // Init vals
-        List<string> colNames = new List<string>(new string[] { "" });
+        List<string> colNames;
         string query = "SHOW TABLES";
         
         
         // Run query to get table names
-        string rawTablenames = runStatement(query, ref colNames);
+        string rawTablenames = runStatement(query, out colNames);
 
         // Return them as individual strings
         List<string> tableNames = Util.mySplit(rawTablenames[3..^3], "'], ['");
@@ -224,8 +224,8 @@ public static class DatabaseConnector
         }
 
         // Get raw items
-        List<string> colNames = new List<string>(new string[] { "" });
-        string queryOutput = runStatement(query, ref colNames);
+        List<string> colNames;
+        string queryOutput = runStatement(query, out colNames);
 
         // Parse raw items
         List<ResultItem> parsedItems = DtbParser.parseItems(queryOutput, colNames);
@@ -343,8 +343,8 @@ public static class DatabaseConnector
     private static List<Sale> runSaleSearchQuery(string query)
     {
         int lastrowid;
-        List<string> colNames = new List<string>(new string[] { "" });
-        string queryOutput = runStatement(query, ref colNames);
+        List<string> colNames;
+        string queryOutput = runStatement(query, out colNames);
 
         // No sales found, return empty list
         if (queryOutput.CompareTo("[]") == 0)
@@ -361,8 +361,8 @@ public static class DatabaseConnector
     public static List<Sale> runSaleSearchQuery(ResultItem item)
     {
         string query = QueryBuilder.saleQuery(item);
-        List<string> colNames = new List<string>(new string[] { "" });
-        string queryOutput = runStatement(query, ref colNames);
+        List<string> colNames;
+        string queryOutput = runStatement(query, out colNames);
 
         // No sales found, return empty list
         if (queryOutput.CompareTo("[]") == 0)
@@ -378,7 +378,7 @@ public static class DatabaseConnector
 
     // Run a given SQL statement with ability to return col names and lastrowid
     // TODO: Make ref out instead
-    public static string runStatement(string statement, ref List<string> colNames, out int lastrowid)
+    public static string runStatement(string statement, out List<string> colNames, out int lastrowid)
     {
         string retList;
 
@@ -396,7 +396,7 @@ public static class DatabaseConnector
 
 
     // Run a given SQL statement with ability to return col names
-    public static string runStatement(string statement, ref List<string> colNames)
+    public static string runStatement(string statement, out List<string> colNames)
     {
         string retList;
 
@@ -731,11 +731,11 @@ public static class DatabaseConnector
     {
 
         int lastrowid;
-        List<string> colNames = new List<string>(new string[] { "" });
+        List<string> colNames;
 
 
 
-        string rawResult = runStatement("SELECT * FROM image WHERE ItemID = " + newItem.get_ITEM_ID(), ref colNames, out lastrowid);
+        string rawResult = runStatement("SELECT * FROM image WHERE ItemID = " + newItem.get_ITEM_ID(), out colNames, out lastrowid);
 
 
         // No images returned from query
@@ -835,9 +835,9 @@ public static class DatabaseConnector
 
     public static Purchase getPurchase(ResultItem item)
     {
-        List<string> colNames = new List<string>();
+        List<string> colNames;
         string query = QueryBuilder.purchaseQueryByItemID(item.get_ITEM_ID());
-        string output = runStatement(query, ref colNames);
+        string output = runStatement(query, out colNames);
         List<Purchase> purchases = DtbParser.parsePurchase(output, colNames);
         if (purchases.Count != 1)
         {
