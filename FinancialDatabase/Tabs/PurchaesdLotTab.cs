@@ -115,24 +115,6 @@ public class PurchasedLotTab : Tab
     {
         currentPurchaseItems.Clear();
     }
-    // Todo: Delete?
-    public void update(ResultItem item)
-	{
-        Form1.PurchaseListBox.Items.Clear();
-		tabController.clearCurrPurcItems();
-        List<ResultItem> result = DatabaseConnector.getItems(item, false);
-
-		foreach(ResultItem i in result)
-		{
-			Form1.PurchaseListBox.Items.Add(i.get_Name());
-            tabController.addCurrPurcItems(i);
-        }
-
-        Form1.PurcPurcPriceLbl.Text = item.get_Amount_purchase().ToString();
-        Form1.PurcPurcNotesLbl.Text = item.get_Notes_purchase();
-
-	}
-
 
     override public void flipEditMode()
     {

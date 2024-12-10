@@ -1,6 +1,3 @@
-
-#TODO: Delete if script is still working. from asyncio.windows_events import NULL
-#from tkinter import INSERT
 from signal import raise_signal
 from PIL import Image
 from Connection.DtbConnAndQuery import runQuery
