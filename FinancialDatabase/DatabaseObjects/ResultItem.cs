@@ -456,131 +456,27 @@ public class ResultItem : IEquatable<ResultItem>
         return ret;
     }
 
-    public bool hasItemEntry()
-    {
-        return this.ITEM_ID != Util.DEFAULT_INT;
-    }
+    public bool hasItemEntry() => ITEM_ID != Util.DEFAULT_INT;
 
-    public bool hasPurchaseEntry()
-    {
-        return this.PurchaseID != Util.DEFAULT_INT;
-    }
+    public bool hasPurchaseEntry() => PurchaseID != Util.DEFAULT_INT;
 
-    // TODO: Delete this and all sale-entry related items?
-    public bool hasSaleEntry()
-    {
-        return this.SaleID != Util.DEFAULT_INT;
-    }
+    public bool hasSaleEntry() => SaleID != Util.DEFAULT_INT;
 
-    public bool hasShippingEntry()
-    {
-        return this.ShippingID != Util.DEFAULT_INT;
-    }
+    public bool hasShippingEntry() => ShippingID != Util.DEFAULT_INT;
 
 
-    public bool hasImageEntry()
-    {
-        return this.images != Util.DEFAULT_IMAGES;
-    }
+    public bool hasImageEntry() => images != Util.DEFAULT_IMAGES;
 
 
     // From item table
-    public int get_ITEM_ID()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (ITEM_ID == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return ITEM_ID;
-        }
-    }
-    public string get_Name()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Name == Util.DEFAULT_STRING)
-        {
-            return Util.DEFAULT_STRING;
-        }
-        else
-        {
-            return Name;
-        }
-    }
-    public int get_PurchaseID()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (PurchaseID == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return PurchaseID;
-        }
-    }
-    public int get_SaleID()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (SaleID == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return SaleID;
-        }
-    }
-    public int get_ShippingID()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (ShippingID == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return ShippingID;
-        }
-    }
-    public int get_InitialQuantity()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (InitialQuantity == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return InitialQuantity;
-        }
-    }
-    public int get_CurrentQuantity()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (CurrentQuantity == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return CurrentQuantity;
-        }
-    }
-    public string get_Notes_item()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Notes_item == Util.DEFAULT_STRING)
-        {
-            return Util.DEFAULT_STRING;
-        }
-        else
-        {
-            return Notes_item;
-        }
-    }
+    public int get_ITEM_ID() => ITEM_ID;
+    public string get_Name() => Name;
+    public int get_PurchaseID() => PurchaseID;
+    public int get_SaleID() => SaleID;
+    public int get_ShippingID() => ShippingID;
+    public int get_InitialQuantity() => InitialQuantity;
+    public int get_CurrentQuantity() => CurrentQuantity;
+    public string get_Notes_item() => Notes_item;
     public MyImage get_Thumbnail()
     {
         if (this.thumbnail == null) { set_Thumbnail(Util.DEFAULT_IMAGE); } 
@@ -589,206 +485,31 @@ public class ResultItem : IEquatable<ResultItem>
 
 
     // From purchase table
-    public Date get_Date_Purchased()
-    {
-        return this.Date_Purchased;
-    }
-    public string get_Date_Purchased_str()
-    {
-        return this.Date_Purchased.toDateString();
-    }
-    public double get_Amount_purchase()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Amount_purchase == Util.DEFAULT_DOUBLE)
-        {
-            return Util.DEFAULT_DOUBLE;
-        }
-        else
-        {
-            return Amount_purchase;
-        }
-    }
-    public double get_Tax()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Tax == Util.DEFAULT_DOUBLE)
-        {
-            return Util.DEFAULT_DOUBLE;
-        }
-        else
-        {
-            return Tax;
-        }
-    }
-    public double get_Fees_purchase()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Fees_purchase == Util.DEFAULT_DOUBLE)
-        {
-            return Util.DEFAULT_DOUBLE;
-        }
-        else
-        {
-            return Fees_purchase;
-        }
-    }
-    public string get_Seller()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Seller == Util.DEFAULT_STRING)
-        {
-            return Util.DEFAULT_STRING;
-        }
-        else
-        {
-            return Seller;
-        }
-    }
-    public string get_Notes_purchase()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Notes_purchase == Util.DEFAULT_STRING)
-        {
-            return Util.DEFAULT_STRING;
-        }
-        else
-        {
-            return Notes_purchase;
-        }
-    }
+    public Date get_Date_Purchased() => Date_Purchased;
+    public string get_Date_Purchased_str() => Date_Purchased.toDateString();
+    public double get_Amount_purchase() => Amount_purchase;
+    public double get_Tax() => Tax;
+    public double get_Fees_purchase() => Fees_purchase;
+    public string get_Seller() => Seller;
+    public string get_Notes_purchase() => Notes_purchase;
 
     // From sale table
-    public Date get_Date_Sold()
-    {
-        return Date_Sold;
-    }
+    public Date get_Date_Sold() => Date_Sold;
 
-    public string get_Date_Sold_str()
-    {
-        return this.Date_Sold.toDateString();
-    }
+    public string get_Date_Sold_str() => this.Date_Sold.toDateString();
 
-    public double get_Amount_sale()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Amount_sale == Util.DEFAULT_DOUBLE)
-        {
-            return Util.DEFAULT_DOUBLE;
-        }
-        else
-        {
-            return Amount_sale;
-        }
-    }
-    public double get_Fees_sale()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Fees_sale == Util.DEFAULT_DOUBLE)
-        {
-            return Util.DEFAULT_DOUBLE;
-        }
-        else
-        {
-            return Fees_sale;
-        }
-    }
-    public string get_Buyer()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Buyer == Util.DEFAULT_STRING)
-        {
-            return Util.DEFAULT_STRING;
-        }
-        else
-        {
-            return Buyer;
-        }
-    }
+    public double get_Amount_sale() => Amount_sale;
+    public double get_Fees_sale() => Fees_sale;
+    public string get_Buyer() => Buyer;
 
     // From shipping table
-    public int get_Length()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Length == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return Length;
-        }
-    }
-    public int get_Width()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Width == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return Width;
-        }
-    }
-    public int get_Height()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Height == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return Height;
-        }
-    }
-    public int get_Weight()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Weight == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return Weight;
-        }
-    }
-    public int get_WeightOz()
-    {
-        if (Weight == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return Weight % 16;
-        }
-    }
-    public int get_WeightLbs()
-    {
-        if (Weight == Util.DEFAULT_INT)
-        {
-            return Util.DEFAULT_INT;
-        }
-        else
-        {
-            return Weight / 16;
-        }
-    }
-    public string get_Notes_shipping()
-    {
-        // Util.DEFAULT value if uninitialized
-        if (Notes_shipping == Util.DEFAULT_STRING)
-        {
-            return Util.DEFAULT_STRING;
-        }
-        else
-        {
-            return Notes_shipping;
-        }
-    }
+    public int get_Length() => Length;
+    public int get_Width() => Width;
+    public int get_Height() => Height;
+    public int get_Weight() => Weight;
+    public int get_WeightOz() => Weight % 16;
+    public int get_WeightLbs() => Weight / 16;
+    public string get_Notes_shipping() => Notes_shipping;
 
     // From image table
     public List<MyImage> get_Images() {
@@ -803,17 +524,8 @@ public class ResultItem : IEquatable<ResultItem>
     }
 
     // Extra
-    public double getTotalSales()
-    {
-        if (totalSales == Util.DEFAULT_DOUBLE)
-        {
-            return Util.DEFAULT_DOUBLE;
-        }
-        else
-        {
-            return totalSales;
-        }
-    }
+    public double getTotalSales() => totalSales;
+    
 
     // From item table
     public void set_ITEM_ID(int ITEM_ID) => this.ITEM_ID = ITEM_ID;

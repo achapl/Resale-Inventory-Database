@@ -27,7 +27,6 @@ namespace FinancialDatabase
             int count = 0;
             // Note: for edge case, special char at start of string, copy switch
             // inside for loop, and modify it outside for case i=0
-            // TODO: Changed to i=0 during refactoring with no changes. Keep it his way?
             for (int i = 0; i < query.Length; i++)
             {
                 switch (query[i])
