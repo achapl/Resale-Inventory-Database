@@ -1,16 +1,17 @@
 ﻿using FinancialDatabase;
+using FinancialDatabase.DatabaseObjects;
 using Date = Util.Date;
 
 public class PurchasedLotTab : Tab
 {
 
     private List<Control> newPurchaseGroupControls;
-    public List<ResultItem> currentPurchaseItems;
+    private Purchase currPurc;
     public bool isNewPurchase;
 
     public PurchasedLotTab(TabController tabController, Form1 Form1) : base(Form1)
 	{
-        currentPurchaseItems = new List<ResultItem>();
+        currPurc = null;
         updateButton = Form1.UpdatePurcButton;
         editButton   = Form1.EditPurcButton;
         this.tabController = tabController;
@@ -100,20 +101,34 @@ public class PurchasedLotTab : Tab
     }
 
 
-    public List<ResultItem> getCurrPurcItems() => currentPurchaseItems;
-    public void addCurrPurcItem(ResultItem newItem)
+    public Purchase getCurrPurc() => currPurc;
+
+    public void setCurrPurc(Purchase purc) { currPurc = purc; }
+
+    public List<ResultItem> getCurrPurcItems() => currPurc.items;
+    public void addCurrPurcItem(ResultItem item)
     {
-        currentPurchaseItems.Add(newItem);
+        if (currPurc is null)
+        {
+            currPurc = new Purchase();
+        }
+        currPurc.add(item);
     }
 
     public void addCurrPurchaseItems(List<ResultItem> newPurchaseItems)
     {
-        currentPurchaseItems.AddRange(newPurchaseItems);
+        if (currPurc is not null)
+        {
+            currPurc.items.AddRange(newPurchaseItems);
+        }
     }
 
     public void clearCurrPurcItems()
     {
-        currentPurchaseItems.Clear();
+        if (currPurc is not null)
+        {
+            currPurc.items.Clear();
+        }
     }
 
     override public void flipEditMode()
@@ -161,7 +176,7 @@ public class PurchasedLotTab : Tab
         // or editing existing one
         if (isNewPurchase)
         {
-            addItem();
+            addItemToPurc();
             return true;
         }
         // Null check
@@ -209,7 +224,6 @@ public class PurchasedLotTab : Tab
     }
 
 
-    // TODO: Delete or make part of TabController?
     public void showItemsFromLot(ResultItem item)
     {
         if (item == null) { return; }
@@ -222,12 +236,13 @@ public class PurchasedLotTab : Tab
         foreach (ResultItem i in result)
         {
             Form1.PurchaseListBox.Items.Add(i.get_Name());
-            tabController.addCurrPurcItems(DatabaseConnector.getItem(i.get_ITEM_ID()));
+            addCurrPurcItem(DatabaseConnector.getItem(i.get_ITEM_ID()));
         }
 
         Form1.PurcPurcPriceLbl.Text = item.get_Amount_purchase().ToString();
         Form1.PurcPurcNotesLbl.Text = item.get_Notes_purchase();
     }
+
 
     public bool allNewPurchaseBoxesFilled()
     {
@@ -246,6 +261,7 @@ public class PurchasedLotTab : Tab
         return true;
     }
 
+
     public bool allNewShippingBoxesFilled()
     {
         foreach (Control c in shippingTBoxes)
@@ -259,10 +275,13 @@ public class PurchasedLotTab : Tab
     }
 
 
-    public void addItem()
+    // Button was pushed to add an item to the current purchase
+    // If there is no current purchase, create one from given user input
+    public void addItemToPurc()
     {
         int purcID = -1;
         Date purcDate = new Date();
+
         if (tabController.getCurrItem() is not null)
         {
             purcDate = tabController.getCurrItem().get_Date_Purchased();
@@ -298,7 +317,7 @@ public class PurchasedLotTab : Tab
         string attrib = "item.PurchaseID";
         string type = tabController.colDataTypes[attrib];
         DatabaseConnector.updateRow(newItem, attrib, type, purcID.ToString());
-        //TODO: Can the following line be removed since tabController.setCurrItem(newItem) is called and should update the currItem with modified purc date?
+        //TODO: Can the following line be removed since tabController.setCurrItem(item) is called and should update the currItem with modified purc date?
         newItem.set_PurchaseID(purcID);
         tabController.setCurrItem(newItem);
         showItemsFromLot(tabController.getCurrItem());
@@ -360,11 +379,15 @@ public class PurchasedLotTab : Tab
 
     public ResultItem getCurrPurcItemsAt(int index)
     {
-        return currentPurchaseItems[index];
+        if (currPurc is not null)
+        {
+            return currPurc.items[index];
+        }
+        else { return null; }
     }
 
     public void setCurrPurcItems(List<ResultItem> newPurcItems)
     {
-        currentPurchaseItems = newPurcItems;
+        currPurc.items = newPurcItems;
     }
 }

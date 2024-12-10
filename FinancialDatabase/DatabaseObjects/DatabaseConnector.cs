@@ -84,7 +84,7 @@ public static class DatabaseConnector
     // { { {'item',     'ITEM_ID',     'int unsigned', ...},
     //     {'item',     'PurcID_item', 'int unsigned', ...} },
     //   { {'purchace', 'PURCHACE_ID', 'int unsigned', ...},
-    //     {'purchace', 'purcAmount',  'int unsigned', ...} } }
+    //     {'purchace', 'amount',  'int unsigned', ...} } }
     private static List<List<List<string>>> getColsInfoAllTables()
     {
         List<List<List<string>>> colInfoAllTables = new List<List<List<string>>>();

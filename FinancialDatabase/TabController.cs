@@ -155,7 +155,7 @@ namespace FinancialDatabase
 
         public void PLaddItem()
         {
-            purchasedLotTab.addItem();
+            purchasedLotTab.addItemToPurc();
         }
 
         public void PLnewPurchase()
