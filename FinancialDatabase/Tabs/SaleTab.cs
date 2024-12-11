@@ -117,7 +117,7 @@ public class SaleTab : Tab
             TextBox t = c as TextBox ?? new TextBox();
 
             string query = "";
-            if (tableEntryExists(t))
+            if (databaseEntryExists(t))
             {
                 bool success = false;
                 string type = tabController.colDataTypes[controlAttrib[c]];
@@ -155,7 +155,7 @@ public class SaleTab : Tab
                     }
                 }
             }
-            else if (!tableEntryExists(t))
+            else if (!databaseEntryExists(t))
             {
                 throw new Exception("ERROR: no purchase entry for CurrItem, This should not be possible");
             }

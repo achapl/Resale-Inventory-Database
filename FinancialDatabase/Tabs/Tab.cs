@@ -104,8 +104,8 @@ public abstract class Tab
                         // Since both vals need to be considered at the same time
                         // The one user input will be caught and both will be considered
                         if (currState == Form1.itemWeightLbsTxtbox ||
-                            currState == Form1.itemWeightOzTxtbox &&
-                            !changedFields.Contains(Form1.itemWeightLbsTxtbox)) // Don't add it twice
+                            (currState == Form1.itemWeightOzTxtbox &&
+                            !changedFields.Contains(Form1.itemWeightLbsTxtbox))) // Don't add it twice
                         {
                             changedFields.Add(Form1.itemWeightLbsTxtbox);
                         }
@@ -269,7 +269,7 @@ public abstract class Tab
     // Check if a user-inputted control attribute corresponds to data
     // for which there is an entry in the database
     // Don't want to be updating data that doesn't exist
-    protected bool tableEntryExists(Control c)
+    protected bool databaseEntryExists(Control c)
     {
         if (!controlAttrib.ContainsKey(c))
         {

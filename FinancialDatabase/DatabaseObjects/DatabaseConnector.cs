@@ -105,6 +105,12 @@ public static class DatabaseConnector
     }
     
 
+    public static ResultItem getItem(ResultItem item)
+    {
+        return getItem(item.get_ITEM_ID());
+    }
+
+
     // Gets a ResultItem from the database given the item's itemID
     public static ResultItem getItem(int itemID)
     {

@@ -194,7 +194,7 @@ public class PurchasedLotTab : Tab
 
             string query = "";
             
-            if (tableEntryExists(c))
+            if (databaseEntryExists(c))
             {
                 string type = tabController.colDataTypes[controlAttrib[c]];
                 if (c is TextBox)
@@ -212,7 +212,7 @@ public class PurchasedLotTab : Tab
                     DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], new Date(c));
                 }
             }
-            else if (!tableEntryExists(c))
+            else if (!databaseEntryExists(c))
             {
                 throw new Exception("ERROR: no purchase entry for CurrItem, This should not be possible");
             }

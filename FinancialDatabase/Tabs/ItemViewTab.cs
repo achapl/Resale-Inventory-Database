@@ -164,7 +164,7 @@ public class ItemViewTab : Tab
 
     public void updateFromUserInput()
     {
-        bool success = UpdateCurrItemWithUserInput();
+        bool success = updateCurrItemWithUserInput();
         if (success)
         {
             viewMode();
@@ -172,57 +172,56 @@ public class ItemViewTab : Tab
     }
 
 
-    // Take user input, and use it to update the currItem
-    // UpdateCurrItemWithUserInput
-    public bool UpdateCurrItemWithUserInput()
+    private bool typeCheckUserInput(List<Control> changedFields)
     {
-        bool goodEdit = true;
+        foreach (Control c in changedFields)
+        {
+
+            // Special case, weight textboxes
+            if (!Int32.TryParse(Form1.itemWeightLbsTxtbox.Text, out _)
+                || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out _))
+            {
+                MessageBox.Show("Must Input Correct Numerical Format For weight. No decimals/commas allowed!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            string attrib = controlAttrib[c];
+            string type = tabController.colDataTypes[attrib];
+            if (!Util.checkTypeOkay(attrib, type))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    // Use user input to update the currItem
+    public bool updateCurrItemWithUserInput()
+    {
         if (tabController.getCurrItem() == null) { return false; }
+
         List<Control> changedFields = getChangedFields();
+        if (!typeCheckUserInput(changedFields))  { return false; }
 
         foreach (Control userInputContainer in changedFields)
         {
-            if (userInputContainer is null) { throw new Exception("ERROR: Control Object userInputContainer is null, ItemViewTab.cs"); }
-
             TextBox userInputTextbox = userInputContainer as TextBox;
-            if (tableEntryExists(userInputTextbox))
+            if (databaseEntryExists(userInputTextbox))
             {
-                string output = "";
                 if (userInputTextbox == Form1.itemWeightLbsTxtbox)
                 {
-                    int ttlWeight;
-                    bool success = getUserInputWeight(out ttlWeight);
-                    
-                    // Update the database with new weight
-                    string attrib = "shipping.Weight";
-                    string type = tabController.colDataTypes[attrib];
-                    DatabaseConnector.updateRow(getCurrItem(), attrib, ttlWeight.ToString());
-
-                    // These must be cleared manually since they are both used at the same time.
-                    // Clearing one produces an error when the other textbox is then used to get the total weight
-                    Util.clearTBox(Form1.itemWeightLbsTxtbox);
-                    Util.clearTBox(Form1.itemWeightOzTxtbox);
-
+                    int ttlWeight = getUserInputWeight();
+                    DatabaseConnector.updateRow(getCurrItem(), "shipping.Weight", ttlWeight.ToString());
                 }
                 else
                 {
-                    string newAttribVal = userInputTextbox.Text;
-                    string type = tabController.colDataTypes[controlAttrib[userInputContainer]];
-                    if (!Util.checkTypeOkay(newAttribVal, type))
-                    {
-                        goodEdit = false;
-                        continue;
-                    }
-
                     string attrib = controlAttrib[userInputContainer];
                     string newVal = getUserInputVal(userInputContainer);
 
                     DatabaseConnector.updateRow(getCurrItem(), attrib, newVal);
                 }
-                // Update the item in the view
-                showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
                 Util.clearTBox(userInputTextbox);
-
             }
             else
             {
@@ -238,16 +237,11 @@ public class ItemViewTab : Tab
                     throw new Exception("ERROR: no item entry for CurrItem, This should not be possible");
                 }
             }
-            
         }
 
-        // It is correct to run showItem, updateCurrItem, and viewMode
-        // from inside this function since you will always need to
-        // update the shown information after updating the
-        // ResultItem copy of it
         updateCurrItem();
-        showItemAttributes(getCurrItem());
-        return goodEdit;
+        showItemAttributes(currItem);
+        return true;
     }
 
 
@@ -257,31 +251,32 @@ public class ItemViewTab : Tab
         {
             case TextBox:
                 return (c as TextBox).Text;
-                break;
             case DateTimePicker:
                 return new Date(c).toDateString();
-                break;
             default:
                 throw new Exception("Error: Unaccounted for Control Type");
         }
     }
 
 
-    private bool getUserInputWeight(out int ttlWeight)
+    private int getUserInputWeight()
     {
+        int ttlWeight = 0;
         int lbs = 0;
         int oz = 0;
         if (!Int32.TryParse(Form1.itemWeightLbsTxtbox.Text, out lbs)
          || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out oz))
         {
-            Util.clearTBox(Form1.itemWeightLbsTxtbox);
-            Util.clearTBox(Form1.itemWeightOzTxtbox);
             ttlWeight = -1;
-            return false;
+            MessageBox.Show("Must Input Correct Numerical Format For weight. No decimals/commas allowed!","Warning",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+            return -1;
         }
+        Util.clearTBox(Form1.itemWeightLbsTxtbox);
+        Util.clearTBox(Form1.itemWeightOzTxtbox);
+
         ttlWeight = lbs * 16 + oz;
 
-        return true;
+        return ttlWeight;
     }
 
 
