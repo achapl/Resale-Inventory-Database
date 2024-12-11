@@ -117,18 +117,28 @@ public class PurchasedLotTab : Tab
 
     public void addCurrPurchaseItems(List<ResultItem> newPurchaseItems)
     {
-        if (currPurc is not null)
+        if (currPurc is null)
         {
-            currPurc.items.AddRange(newPurchaseItems);
+            currPurc = new Purchase();
         }
+        if (currPurc.items is null)
+        {
+            currPurc.items = currPurc.items = new List<ResultItem>();
+        }
+        currPurc.items.AddRange(newPurchaseItems);
     }
 
     public void clearCurrPurcItems()
     {
-        if (currPurc is not null)
+        if (currPurc is null)
         {
-            currPurc.items.Clear();
+            currPurc = new Purchase();
         }
+        if (currPurc.items is null)
+        {
+            currPurc.items = new List<ResultItem>();
+        }
+        currPurc.items.Clear();
     }
 
     override public void flipEditMode()

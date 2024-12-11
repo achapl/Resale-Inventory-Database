@@ -100,8 +100,8 @@ namespace FinancialDatabase
         {
             setCurrItemVar(newItem);
 
-            itemViewTab.showItemAttributes(newItem);
             purchasedLotTab.setCurrPurcAndShowItems(newItem);
+            itemViewTab.showItemAttributes(newItem);
             saleTab.showItemSales(newItem);
 
             Form1.tabCollection.SelectTab(itemViewTabNum);
