@@ -16,7 +16,7 @@ public class ItemViewTab : Tab
 {
     protected List<TextBox> weightTBoxes;
 
-    private ResultItem? currItem;
+    private Item? currItem;
 
     public ItemViewTab(TabController tabController, Form1 Form1) : base(Form1)
     {
@@ -30,14 +30,14 @@ public class ItemViewTab : Tab
     }
     
     
-    public ResultItem getCurrItemsAt(int index)
+    public Item getCurrItemsAt(int index)
     {
         if (index == -1) { return null; }
         return tabController.getSearchItems()[index];
     }
 
 
-    public ResultItem getCurrItem()
+    public Item getCurrItem()
     {
         if (currItem != null)
         {
@@ -315,7 +315,7 @@ public class ItemViewTab : Tab
 
     }
 
-    public override void showItemAttributes(ResultItem item)
+    public override void showItemAttributes(Item item)
     { 
 
         Util.clearLabelText(attributeValueLabels);
@@ -378,7 +378,7 @@ public class ItemViewTab : Tab
         return true;
     }
 
-    public void showItemPictures(ResultItem newItem)
+    public void showItemPictures(Item newItem)
     {
         Form1.allPictureViewer.setImages(newItem.get_Images());
         if (newItem.get_Images().Count > 0)
@@ -397,7 +397,7 @@ public class ItemViewTab : Tab
         return Form1.mainPictureViewer.getCurrImageID();
     }
 
-    public void setCurrItem(ResultItem? newItem)
+    public void setCurrItem(Item? newItem)
     {
        
         if (newItem == null) { currItem = null; }

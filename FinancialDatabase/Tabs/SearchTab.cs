@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using ItemHitPair = System.Tuple<ResultItem, int>;
+using ItemHitPair = System.Tuple<Item, int>;
 using Date = Util.Date;
 
 public class SearchTab
@@ -16,17 +16,17 @@ public class SearchTab
     Form1 Form1;
     TabController tabController;
 
-    public List<ResultItem> searchItems;
+    public List<Item> searchItems;
 
     public SearchTab(TabController tabController, Form1 Form1)
     {
-        searchItems = new List<ResultItem>();
+        searchItems = new List<Item>();
         this.tabController = tabController;
         this.Form1 = Form1;
     }
 
 
-    private List<ResultItem> getItemList(List<ItemHitPair> list)
+    private List<Item> getItemList(List<ItemHitPair> list)
     {
         return list.Select(_ => _.Item1).ToList();
     }
@@ -37,7 +37,7 @@ public class SearchTab
     }
 
     // Given a list of search terms, run a separate search on each individual search term, and aggregate the results
-    public List<ResultItem> runSearch(SearchQuery Q)
+    public List<Item> runSearch(SearchQuery Q)
     {
         // List of ResultItems and how many times it has been found given all of the search terms individually
         // (max one hit per search term)
@@ -47,11 +47,11 @@ public class SearchTab
         foreach (string searchTerm in Q.getSearchTerms())
         {
             Q.setSingleSearchTerm(searchTerm);
-            List<ResultItem> result = Database.getItems(Q);
+            List<Item> result = Database.getItems(Q);
 
             // Put the results from the search term into itemAndHitsPair
             // If already in there, increase the hit count for that term
-            foreach (ResultItem item in result)
+            foreach (Item item in result)
             {
                 if (!getItemList(itemsAndHits).Contains(item))
                 {
@@ -116,7 +116,7 @@ public class SearchTab
                                         dateCol,
                                         priceCol);
 
-        List<ResultItem> result = runSearch(Q);
+        List<Item> result = runSearch(Q);
         string itemStr = "";
         Form1.itemSearchView.clearItems();
         for (int i = 0; i < result.Count; i++)
@@ -134,7 +134,7 @@ public class SearchTab
         Form1.itemSearchView.clearItems();
     }
 
-    public List<ResultItem> getSearchItems()
+    public List<Item> getSearchItems()
     {
         return searchItems;
     }
@@ -144,12 +144,12 @@ public class SearchTab
         searchItems.Clear();
     }
 
-    public void addSearchItems(ResultItem newItem)
+    public void addSearchItems(Item newItem)
     {
         searchItems.Add(newItem);
     }
 
-    public void addSearchItems(List<ResultItem> newItems)
+    public void addSearchItems(List<Item> newItems)
     {
         searchItems.AddRange(newItems);
     }

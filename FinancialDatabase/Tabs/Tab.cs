@@ -278,7 +278,7 @@ public abstract class Tab
     }
 
 
-    abstract public void showItemAttributes(ResultItem item);
+    abstract public void showItemAttributes(Item item);
 
     // Clear all shown info about currItem
     public void clearCurrItemControls()

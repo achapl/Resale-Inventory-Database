@@ -105,18 +105,18 @@ public static class Database
     }
     
 
-    public static ResultItem getItem(ResultItem item)
+    public static Item getItem(Item item)
     {
         return getItem(item.get_ITEM_ID());
     }
 
 
-    // Gets a ResultItem from the database given the item's itemID
-    public static ResultItem getItem(int itemID)
+    // Gets a Item from the database given the item's itemID
+    public static Item getItem(int itemID)
     {
         string query = QueryBuilder.completeItemIDSearchQuery(itemID);
 
-        List<ResultItem> result = getItems(itemID, true);
+        List<Item> result = getItems(itemID, true);
 
         // Error Checking
         if (result.Count > 1)
@@ -134,11 +134,11 @@ public static class Database
         }
 
         // Only option left, a single item was found (Count will not be negative)
-        ResultItem item = result[0];
+        Item item = result[0];
         return item;
     }
 
-    public static List<ResultItem> getPurchItems(ResultItem item)
+    public static List<Item> getPurchItems(Item item)
     {
         string query = QueryBuilder.purchaseQuery(item);
         return Database.getItems(query, false);
@@ -218,13 +218,13 @@ public static class Database
         return colDataTypes;
     }
 
-    public static List<ResultItem> getItems(SearchQuery Q)
+    public static List<Item> getItems(SearchQuery Q)
     {
         string query = QueryBuilder.searchByNameQuery(Q);
         return getItems(query, true);
     }
 
-    private static List<ResultItem> getItems(string query, bool includeThumbnails)
+    private static List<Item> getItems(string query, bool includeThumbnails)
     {
         // Empty case
         if (query.CompareTo("") == 0)
@@ -237,7 +237,7 @@ public static class Database
         string queryOutput = runStatement(query, out colNames);
 
         // Parse raw items
-        List<ResultItem> parsedItems = DtbParser.parseItems(queryOutput, colNames);
+        List<Item> parsedItems = DtbParser.parseItems(queryOutput, colNames);
 
         // Attach thumbnails
         if (includeThumbnails)
@@ -251,12 +251,12 @@ public static class Database
     // General search queries, done by manual string input
     // Returns a list of the items found by the query
     // Can opt with includeThumbnails to attach thumbnails with ResultItems
-    public static List<ResultItem> getItems(ResultItem item, bool includeThumbnails)
+    public static List<Item> getItems(Item item, bool includeThumbnails)
     {
         return getItems(item.get_ITEM_ID(), includeThumbnails);
     }
 
-    public static List<ResultItem> getItems(int itemID, bool includeThumbnails)
+    public static List<Item> getItems(int itemID, bool includeThumbnails)
     {
         string query = QueryBuilder.completeItemIDSearchQuery(itemID);
         return getItems(query, includeThumbnails);
@@ -264,7 +264,7 @@ public static class Database
 
 
     // Get a mapping of itemID's and their corresponding thumbnails
-    private static Dictionary<int, MyImage> getThumbnails(List<ResultItem> items)
+    private static Dictionary<int, MyImage> getThumbnails(List<Item> items)
     {
         // Empty case
         if (items.Count == 0)
@@ -319,12 +319,12 @@ public static class Database
     // Given a list of ResultItems without a thumbnail,
     // it will return the list with all items having a thumbnail
     // Default thumbnail is provided for those without one
-    private static List<ResultItem> attachThumbnails(List<ResultItem> items)
+    private static List<Item> attachThumbnails(List<Item> items)
     {
         // Empty case
         if (items.Count == 0)
         {
-            return new List<ResultItem>();
+            return new List<Item>();
         }
 
         // Init vals
@@ -332,8 +332,8 @@ public static class Database
 
         Dictionary<int, MyImage> thumbnails = getThumbnails(items);
         
-        // Attach each thumbnail to the respective ResultItem
-        foreach (ResultItem item in items)
+        // Attach each thumbnail to the respective Item
+        foreach (Item item in items)
         {
             if (thumbnails.TryGetValue(item.get_ITEM_ID(), out thumbnail))
             {
@@ -367,7 +367,7 @@ public static class Database
     }
 
     // Get a list of Sale objects given the search query
-    public static List<Sale> runSaleSearchQuery(ResultItem item)
+    public static List<Sale> runSaleSearchQuery(Item item)
     {
         string query = QueryBuilder.saleQuery(item);
         List<string> colNames;
@@ -465,19 +465,19 @@ public static class Database
     }
 
 
-    // Insert a ResultItem into the database
+    // Insert a Item into the database
     // Returns colInfo of running the SQL statement
-    public static string insertItem(ResultItem item)
+    public static string insertItem(Item item)
     {
         int throwaway;
         return insertItem(item, out throwaway);
     }
 
 
-    // Insert a ResultItem into the database
+    // Insert a Item into the database
     // Returns colInfo of running the SQL statement
     // Gives option of keeping the lastrowid
-    public static string insertItem(ResultItem item, out int lastrowid)
+    public static string insertItem(Item item, out int lastrowid)
     {
         // Insert item into database
         string query = QueryBuilder.itemInsertQuery(item);
@@ -676,8 +676,8 @@ public static class Database
     }
 
 
-    // Given a ResultItem, delete from the database
-    public static void deleteItem(ResultItem item)
+    // Given a Item, delete from the database
+    public static void deleteItem(Item item)
     {
         if (item is null) { return; }
 
@@ -706,7 +706,7 @@ public static class Database
 
 
     // Given an item, delete its sales from the database
-    private static void deleteSales(ResultItem item)
+    private static void deleteSales(Item item)
     {
         string query = QueryBuilder.deleteAllSalesQuery(item);
         runStatement(query);
@@ -714,14 +714,14 @@ public static class Database
 
 
     // Given a item, delete its purchase object from the database
-    private static void deletePurchase(ResultItem item)
+    private static void deletePurchase(Item item)
     {
         string query = QueryBuilder.deletePurchaseQuery(item);
         runStatement(query);
     }
 
 
-    public static void deleteShipInfo(ResultItem item)
+    public static void deleteShipInfo(Item item)
     {
         string query = QueryBuilder.deleteShipInfoQuery(item);
         runStatement(query);
@@ -735,7 +735,7 @@ public static class Database
 
 
     // Will get all the full images, not the thumbnails
-    public static List<MyImage> getAllImages(ResultItem newItem)
+    public static List<MyImage> getAllImages(Item newItem)
     {
 
         int lastrowid;
@@ -756,7 +756,7 @@ public static class Database
         List<MyImage> results = [];
         foreach (string rawImageInfo in rawImageInfos)
         {
-            // Seperate each item into individual item attributes to make a ResultItem with it
+            // Seperate each item into individual item attributes to make a Item with it
             List<string> imageAttributes = new(Util.splitOnTopLevelCommas(rawImageInfo));
             string rawImage = imageAttributes[1];
             int imageID = Int32.Parse(imageAttributes[0]);
@@ -784,18 +784,18 @@ public static class Database
         return thumbnailID;
     }
 
-    public static bool updateRow(ResultItem resultItem, string attrib, string newVal)
+    public static bool updateRow(Item resultItem, string attrib, string newVal)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, colDataTypesLocal[attrib], newVal);
         return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
     
-    public static bool updateRow(ResultItem resultItem, string attrib, int newVal)
+    public static bool updateRow(Item resultItem, string attrib, int newVal)
     {
         return updateRow(resultItem, attrib, newVal.ToString());
     }
 
-    public static bool updateRow(ResultItem resultItem, string attrib, double newVal)
+    public static bool updateRow(Item resultItem, string attrib, double newVal)
     {
         return updateRow(resultItem, attrib, newVal.ToString());
     }
@@ -810,13 +810,13 @@ public static class Database
         return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
     
-    public static bool updateRow(ResultItem resultItem, string attrib, Date d)
+    public static bool updateRow(Item resultItem, string attrib, Date d)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, colDataTypesLocal[attrib], d);
         return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
 
-    public static void insertShipInfo(ResultItem resultItem, int weightLbs, int weightOz, int l, int w, int h)
+    public static void insertShipInfo(Item resultItem, int weightLbs, int weightOz, int l, int w, int h)
     {
         string query = QueryBuilder.shipInfoInsertQuery(resultItem, weightLbs, weightOz, l, w, h);
 
@@ -839,7 +839,7 @@ public static class Database
         return output.CompareTo("ERROR") == 0;
     }
 
-    public static Purchase getPurchase(ResultItem item)
+    public static Purchase getPurchase(Item item)
     {
         List<string> colNames;
         string query = QueryBuilder.purchaseQueryByItemID(item.get_ITEM_ID());

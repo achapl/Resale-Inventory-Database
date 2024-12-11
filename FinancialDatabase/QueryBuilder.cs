@@ -108,12 +108,12 @@ namespace FinancialDatabase
             return query;
         }
 
-        public static string purchaseQuery(ResultItem item)
+        public static string purchaseQuery(Item item)
         {
             return purchaseQuery(item.get_PurchaseID());
         }
 
-        public static string saleQuery(ResultItem item)
+        public static string saleQuery(Item item)
         {
             return "SELECT * FROM sale WHERE ItemID_sale = " + item.get_ITEM_ID().ToString() + ";";
         }
@@ -146,12 +146,12 @@ namespace FinancialDatabase
             }
         }
 
-        public static string shipInfoInsertQuery(ResultItem item) {
+        public static string shipInfoInsertQuery(Item item) {
             List<int> weight = Util.ozToOzLbs(item.get_Weight());
             return shipInfoInsertQuery(item, weight[0], weight[1], item.get_Length(), item.get_Width(), item.get_Height());
         }
 
-        public static string shipInfoInsertQuery(ResultItem currItem, int weightLbs, int weightOz, int l, int w, int h)
+        public static string shipInfoInsertQuery(Item currItem, int weightLbs, int weightOz, int l, int w, int h)
         {
             if (l <= 0 ||  w <= 0 || h <= 0 || weightOz < 0 || weightLbs < 0 || (weightOz == 0 && weightLbs == 0))
             {
@@ -162,7 +162,7 @@ namespace FinancialDatabase
             return "INSERT INTO shipping (Length, Width, Height, Weight, ItemID_shipping) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + currItem.get_ITEM_ID() + ")";
         }
 
-        public static string deleteShipInfoQuery(ResultItem item)
+        public static string deleteShipInfoQuery(Item item)
         {
             if (item.get_ShippingID() == Util.DEFAULT_INT)
             {
@@ -179,7 +179,7 @@ namespace FinancialDatabase
             return "DELETE FROM sale WHERE SALE_ID = " + sale.get_SALE_ID().ToString() + ";";
         }
 
-        public static string updateQuery(ResultItem currItem, string controlAttribute, string type, Date updateDate)
+        public static string updateQuery(Item currItem, string controlAttribute, string type, Date updateDate)
         {
             if (!Util.checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
 
@@ -215,7 +215,7 @@ namespace FinancialDatabase
             return query;
         }
 
-        public static string updateQuery(ResultItem currItem, string controlAttribute, string type, string updateText)
+        public static string updateQuery(Item currItem, string controlAttribute, string type, string updateText)
         {
 
             if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
@@ -312,7 +312,7 @@ namespace FinancialDatabase
             return query;
         }
 
-        public static string itemInsertQuery(ResultItem item)
+        public static string itemInsertQuery(Item item)
         {
             return "INSERT INTO item (Name, InitialQuantity, CurrentQuantity, PurchaseID) VALUES (" + "\"" + item.get_Name() + "\"" + ", " + item.get_InitialQuantity() + ", " + item.get_CurrentQuantity() + ", " + item.get_PurchaseID() + ");";
         }
@@ -322,23 +322,23 @@ namespace FinancialDatabase
             return "INSERT INTO sale (Date_Sold, Amount_sale, ItemID_sale) VALUES (" + formatAttribute(sale.get_Date_Sold().toDateString(), "date") + ", " + sale.get_Amount_sale().ToString() + ", " + sale.get_ItemID_sale().ToString() + ");";
         }
 
-        public static string deletePurchaseQuery(ResultItem item)
+        public static string deletePurchaseQuery(Item item)
         {
             int purcID = item.get_PurchaseID();
             return "DELETE FROM purchase WHERE purchase.PURCHASE_ID = " + purcID + ";";
         }
 
-        public static string deleteAllSalesQuery(ResultItem item)
+        public static string deleteAllSalesQuery(Item item)
         {
             return "DELETE FROM sale WHERE sale.Item_ID_sale = " + item.get_ITEM_ID() + ";";
         }
 
-        public static string deleteItemQuery(ResultItem item)
+        public static string deleteItemQuery(Item item)
         {
             return "DELETE FROM item WHERE ITEM_ID = " + item.get_ITEM_ID() + ";";
         }
 
-        public static string thumbnailQuery(List<ResultItem> parsedItems)
+        public static string thumbnailQuery(List<Item> parsedItems)
         {
             if (parsedItems == null || parsedItems.Count == 0) { throw new Exception("ERROR: QuyeryBuilder.thumbnailQuery(): Null or Empty list passed into it"); }
 
@@ -347,7 +347,7 @@ namespace FinancialDatabase
 
             if (parsedItems.Count > 1)
             {
-                foreach (ResultItem item in parsedItems[1..])
+                foreach (Item item in parsedItems[1..])
                 {
                     query += ", " + item.get_ITEM_ID().ToString();
                 }

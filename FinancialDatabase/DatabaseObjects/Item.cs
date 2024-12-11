@@ -7,7 +7,7 @@ using Date = Util.Date;
 
 
 
-public class ResultItem : IEquatable<ResultItem>
+public class Item : IEquatable<Item>
 {
     string rawResult;
     List<string> rawList;
@@ -52,12 +52,12 @@ public class ResultItem : IEquatable<ResultItem>
 
 
 #pragma warning disable CS8618 // Util.DEFAULTs are set to non-null vals
-    public ResultItem()
+    public Item()
     {
         setDefaults();
     }
     #pragma warning disable CS8618 // Util.DEFAULTs are set to non-null vals
-    public ResultItem(string item, List<string> colNames)
+    public Item(string item, List<string> colNames)
 	{
         this.setDefaults();
 		this.rawResult = item;
@@ -106,7 +106,7 @@ public class ResultItem : IEquatable<ResultItem>
         totalSales      = SaleTab.getTotalSales(this);
     }
 
-    public ResultItem(List<string> item, List<string> colNames)
+    public Item(List<string> item, List<string> colNames)
     {
         this.rawList = item;
 
@@ -775,7 +775,7 @@ public class ResultItem : IEquatable<ResultItem>
     }
 
     #pragma warning disable CS8767 // 'other' and 'this' are checked for null
-    public bool Equals(ResultItem other)
+    public bool Equals(Item other)
     {
         if (this  == null && other == null)  return true;
         if (this  == null)  return false;

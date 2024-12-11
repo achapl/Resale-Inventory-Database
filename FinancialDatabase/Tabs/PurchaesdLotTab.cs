@@ -105,8 +105,8 @@ public class PurchasedLotTab : Tab
 
     public void setCurrPurc(Purchase purc) { currPurc = purc; }
 
-    public List<ResultItem> getCurrPurcItems() => currPurc.items;
-    public void addCurrPurcItem(ResultItem item)
+    public List<Item> getCurrPurcItems() => currPurc.items;
+    public void addCurrPurcItem(Item item)
     {
         if (currPurc is null)
         {
@@ -115,7 +115,7 @@ public class PurchasedLotTab : Tab
         currPurc.add(item);
     }
 
-    public void addCurrPurchaseItems(List<ResultItem> newPurchaseItems)
+    public void addCurrPurchaseItems(List<Item> newPurchaseItems)
     {
         if (currPurc is null)
         {
@@ -123,7 +123,7 @@ public class PurchasedLotTab : Tab
         }
         if (currPurc.items is null)
         {
-            currPurc.items = currPurc.items = new List<ResultItem>();
+            currPurc.items = currPurc.items = new List<Item>();
         }
         currPurc.items.AddRange(newPurchaseItems);
     }
@@ -136,7 +136,7 @@ public class PurchasedLotTab : Tab
         }
         if (currPurc.items is null)
         {
-            currPurc.items = new List<ResultItem>();
+            currPurc.items = new List<Item>();
         }
         currPurc.items.Clear();
     }
@@ -152,7 +152,7 @@ public class PurchasedLotTab : Tab
     }
 
 
-    public override void showItemAttributes(ResultItem item)
+    public override void showItemAttributes(Item item)
     {
 
         Util.clearLabelText(attributeValueLabels);
@@ -230,7 +230,7 @@ public class PurchasedLotTab : Tab
     }
 
 
-    public void setCurrPurcAndShowItems(ResultItem item)
+    public void setCurrPurcAndShowItems(Item item)
     {
         if (item == null) { return; }
 
@@ -240,9 +240,9 @@ public class PurchasedLotTab : Tab
 
         Form1.PurchaseListBox.Items.Clear();
         tabController.clearCurrPurcItems();
-        List<ResultItem> result = Database.getPurchItems(item);
+        List<Item> result = Database.getPurchItems(item);
 
-        foreach (ResultItem i in result)
+        foreach (Item i in result)
         {
             Form1.PurchaseListBox.Items.Add(i.get_Name());
             addCurrPurcItem(Database.getItem(i.get_ITEM_ID()));
@@ -310,12 +310,12 @@ public class PurchasedLotTab : Tab
             return;
         }
 
-        // Make the new ResultItem given by the user to go into the current purchase
+        // Make the new Item given by the user to go into the current purchase
         int itemID = -1;
 
-        if (!ResultItem.isValidName(Form1.itemNameTxtbox.Text)) return;
+        if (!Item.isValidName(Form1.itemNameTxtbox.Text)) return;
 
-        ResultItem newItem = getNewItemFromUserInput();
+        Item newItem = getNewItemFromUserInput();
 
         Database.insertItem(newItem, out itemID);
         newItem.set_PurchaseID(purcID);
@@ -331,9 +331,9 @@ public class PurchasedLotTab : Tab
         isNewPurchase = false;
     }
 
-    private ResultItem getNewItemFromUserInput()
+    private Item getNewItemFromUserInput()
     {
-        ResultItem newItem = new ResultItem();
+        Item newItem = new Item();
 
         newItem.set_Name(Form1.PurcNameTextbox.Text);
 
@@ -377,7 +377,7 @@ public class PurchasedLotTab : Tab
 
     }
 
-    public ResultItem getCurrPurcItemsAt(int index)
+    public Item getCurrPurcItemsAt(int index)
     {
         if (currPurc is not null)
         {
@@ -386,7 +386,7 @@ public class PurchasedLotTab : Tab
         else { return null; }
     }
 
-    public void setCurrPurcItems(List<ResultItem> newPurcItems)
+    public void setCurrPurcItems(List<Item> newPurcItems)
     {
         currPurc.items = newPurcItems;
     }

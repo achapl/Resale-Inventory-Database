@@ -1288,7 +1288,7 @@
             // 
             // resultItemBindingSource
             // 
-            resultItemBindingSource.DataSource = typeof(ResultItem);
+            resultItemBindingSource.DataSource = typeof(Item);
             // 
             // openFileDialog1
             // 

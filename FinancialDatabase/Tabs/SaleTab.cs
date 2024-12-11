@@ -159,7 +159,7 @@ public class SaleTab : Tab
 
     }
 
-    public void showItemSales(ResultItem item)
+    public void showItemSales(Item item)
     {
         Form1.saleListBox.Items.Clear();
         clearCurrItemSales();
@@ -174,12 +174,12 @@ public class SaleTab : Tab
     }
 
 
-    public static List<Sale> getSales(ResultItem item)
+    public static List<Sale> getSales(Item item)
     {
         return Database.runSaleSearchQuery(item);
     }
 
-    public static double getTotalSales(ResultItem item)
+    public static double getTotalSales(Item item)
     {
         double totalSales = 0;
         List<Sale> sales = getSales(item);
@@ -244,7 +244,7 @@ public class SaleTab : Tab
 
     }
 
-    public override void showItemAttributes(ResultItem item)
+    public override void showItemAttributes(Item item)
     {
         Form1.SaleNameLbl.Text = ""; // Must be cleared manually as to not clear sale fields after showSale has been called (or visa versa from showSale's perspective)
         

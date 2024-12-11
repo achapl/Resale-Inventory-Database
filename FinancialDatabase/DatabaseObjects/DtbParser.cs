@@ -43,18 +43,18 @@ public static class DtbParser
     }
 
     // raw result from a search query is given from the result of the query in the format "[(itemName, itemID, .etc)(item2Name, item2ID, .etc)]"
-    // Seperates them all and creates ResultItem objects from each of them. Returns these as a list
-    public static List<ResultItem> parseItems(string rawResult, List<string> colNames)
+    // Seperates them all and creates Item objects from each of them. Returns these as a list
+    public static List<Item> parseItems(string rawResult, List<string> colNames)
     {
 
         List<string> rawItems = parseItems(rawResult);
 
-        List<ResultItem> results = new List<ResultItem>();
+        List<Item> results = new List<Item>();
         foreach (string rawItem in rawItems)
         {
-            // Seperate each item into individual item attributes to make a ResultItem with it
+            // Seperate each item into individual item attributes to make a Item with it
             List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
-            results.Add(new ResultItem(itemAttributes, colNames));
+            results.Add(new Item(itemAttributes, colNames));
         }
 
         return results;
@@ -69,7 +69,7 @@ public static class DtbParser
         List<Sale> results = new List<Sale>();
         foreach (string rawItem in rawItems)
         {
-            // Seperate each item into individual item attributes to make a ResultItem with it
+            // Seperate each item into individual item attributes to make a Item with it
             List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
             results.Add(new Sale(itemAttributes, colNames));
         }
@@ -84,7 +84,7 @@ public static class DtbParser
         List<Purchase> results = new List<Purchase>();
         foreach (string rawItem in rawItems)
         {
-            // Seperate each item into individual item attributes to make a ResultItem with it
+            // Seperate each item into individual item attributes to make a Item with it
             List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
             results.Add(new Purchase(itemAttributes, colNames));
         }

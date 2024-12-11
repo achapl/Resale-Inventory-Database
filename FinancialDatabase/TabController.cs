@@ -48,15 +48,15 @@ namespace FinancialDatabase
         }
 
         // currItem
-        public void setCurrItemVar(ResultItem newItem) => itemViewTab.setCurrItem(newItem);
-        public ResultItem getCurrItem() => itemViewTab.getCurrItem();
+        public void setCurrItemVar(Item newItem) => itemViewTab.setCurrItem(newItem);
+        public Item getCurrItem() => itemViewTab.getCurrItem();
 
 
         // searchItems
-        public void setSearchItems(List<ResultItem> newItems) => searchTab.addSearchItems(newItems);
-        public ResultItem getSearchItemsAt(int index) => itemViewTab.getCurrItemsAt(index);
-        public void addSearchItems(ResultItem newItem) => searchTab.addSearchItems(newItem);
-        public List<ResultItem> getSearchItems() => searchTab.getSearchItems();
+        public void setSearchItems(List<Item> newItems) => searchTab.addSearchItems(newItems);
+        public Item getSearchItemsAt(int index) => itemViewTab.getCurrItemsAt(index);
+        public void addSearchItems(Item newItem) => searchTab.addSearchItems(newItem);
+        public List<Item> getSearchItems() => searchTab.getSearchItems();
         public void clearSearchItems()
         {
             Form1.itemSearchView.clearItems();
@@ -68,10 +68,10 @@ namespace FinancialDatabase
         public Purchase getCurrPurc() => purchasedLotTab.getCurrPurc();
 
         // currPurcItems
-        public void setCurrPurcItems(List<ResultItem> newPurcItems) => purchasedLotTab.setCurrPurcItems(newPurcItems);
-        public void addCurrPurcItems(ResultItem newPurcItem) => purchasedLotTab.addCurrPurcItem(newPurcItem);
-        public ResultItem getCurrPurcItemsAt(int index) => purchasedLotTab.getCurrPurcItemsAt(index);
-        public List<ResultItem> getCurrPurcItems() => purchasedLotTab.getCurrPurcItems();
+        public void setCurrPurcItems(List<Item> newPurcItems) => purchasedLotTab.setCurrPurcItems(newPurcItems);
+        public void addCurrPurcItems(Item newPurcItem) => purchasedLotTab.addCurrPurcItem(newPurcItem);
+        public Item getCurrPurcItemsAt(int index) => purchasedLotTab.getCurrPurcItemsAt(index);
+        public List<Item> getCurrPurcItems() => purchasedLotTab.getCurrPurcItems();
         public void clearCurrPurcItems() => purchasedLotTab.clearCurrPurcItems();
 
 
@@ -96,7 +96,7 @@ namespace FinancialDatabase
 
 
         // Update the program (the model of the database) with a new resultItem, not just the backend variable currItem
-        public void setCurrItem(ResultItem newItem)
+        public void setCurrItem(Item newItem)
         {
             setCurrItemVar(newItem);
 
@@ -115,9 +115,9 @@ namespace FinancialDatabase
             {
                 throw new Exception("Index of the search results to set the new currItem to in Form1.TabController setCurrItem() is greater than the number of items in the search result");
             }
-            ResultItem shellItem = getSearchItemsAt(index);
+            Item shellItem = getSearchItemsAt(index);
 
-            ResultItem newItem = Database.getItem(shellItem.get_ITEM_ID());
+            Item newItem = Database.getItem(shellItem.get_ITEM_ID());
             newItem.set_images();
             setCurrItem(newItem);
 

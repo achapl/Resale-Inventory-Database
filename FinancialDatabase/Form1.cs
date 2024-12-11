@@ -53,7 +53,7 @@ namespace FinancialDatabase
         private void purcListBox_DoubleClick(object sender, MouseEventArgs e)
         {
             int index = this.PurchaseListBox.IndexFromPoint(e.Location);
-            ResultItem item = tabControl.getCurrPurcItemsAt(index);
+            Item item = tabControl.getCurrPurcItemsAt(index);
             tabControl.setCurrItem(item);
         }
 

@@ -10,7 +10,7 @@ namespace FinancialDatabase.DatabaseObjects
     {
 
         public string notes_purchase;
-        public List<ResultItem> items;
+        public List<Item> items;
         public double fees_purchase;
         public Util.Date date;
         public string seller;
@@ -67,11 +67,11 @@ namespace FinancialDatabase.DatabaseObjects
             }
         }
 
-        public void add(ResultItem item)
+        public void add(Item item)
         {
             if (items is null)
             {
-                items = new List<ResultItem>();
+                items = new List<Item>();
             }
             items.Add(item);
         }
