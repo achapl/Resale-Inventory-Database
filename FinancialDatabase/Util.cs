@@ -18,6 +18,25 @@ public class Util
 	{
 	}
 
+
+    public static bool containsAlphaNumeric(string str)
+    {
+        if (str.Length == 0) return false;
+
+        foreach (char c in str)
+        {
+            int charVal = c;
+            if (!((charVal >= 48 && charVal <= 57) || // Number
+                  (charVal >= 65 && charVal <= 90) || // Uppercase letter
+                  (charVal >= 97 && charVal <= 122))) // Lowercase letter
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     public static List<string> mySplit(string str, string delim)
     {
         string[] arrOfStrings = str.Split(delim);

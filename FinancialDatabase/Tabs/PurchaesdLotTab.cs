@@ -190,7 +190,8 @@ public class PurchasedLotTab : Tab
             addItemToPurc();
             return true;
         }
-        // Null check
+        // Null check: Every currPurc must have at least one item.
+        // There if not a new purc, there must therefore be a currItem
         else if (tabController.getCurrItem() is null)
         {
             return false;
@@ -311,7 +312,11 @@ public class PurchasedLotTab : Tab
 
         // Make the new ResultItem given by the user to go into the current purchase
         int itemID = -1;
+
+        if (!ResultItem.isValidName(Form1.itemNameTxtbox.Text)) return;
+
         ResultItem newItem = getNewItemFromUserInput();
+
         Database.insertItem(newItem, out itemID);
         newItem.set_PurchaseID(purcID);
         newItem.set_ITEM_ID(itemID);

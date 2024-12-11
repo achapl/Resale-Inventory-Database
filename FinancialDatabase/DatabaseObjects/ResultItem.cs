@@ -798,4 +798,14 @@ public class ResultItem : IEquatable<ResultItem>
         // ["2020","1","1"] (string[])
         return new Date(Int32.Parse(ymd[0]), Int32.Parse(ymd[1]), Int32.Parse(ymd[2]));
     }
+
+    // Name for an item in the database
+    // Escape characters are taken care of,
+    // So it should at least contain 1 alpha numeric char
+    // And be >=1 length
+    public static bool isValidName(string name)
+    {
+        if (name.Length == 0) return false;
+        return Util.containsAlphaNumeric(name);
+    }
 }
