@@ -101,7 +101,7 @@ public class SaleTab : Tab
             throw new Exception("Sale Not Found: Form1.TabController.updateSale()");
         }
 
-        currItemSales[index] = DatabaseConnector.getSale(s.get_SALE_ID());
+        currItemSales[index] = Database.getSale(s.get_SALE_ID());
     }
 
     public bool getUserInputUpdate() {
@@ -121,11 +121,11 @@ public class SaleTab : Tab
                 if (c is TextBox)
                 {
                     string attrib = t.Text;
-                    DatabaseConnector.updateRow(currSale, controlAttrib[c], t.Text);
+                    Database.updateRow(currSale, controlAttrib[c], t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    DatabaseConnector.updateRow(currSale, controlAttrib[c], new Date(c));
+                    Database.updateRow(currSale, controlAttrib[c], new Date(c));
                 }
                 Util.clearTBox(t);
             }
@@ -176,7 +176,7 @@ public class SaleTab : Tab
 
     public static List<Sale> getSales(ResultItem item)
     {
-        return DatabaseConnector.runSaleSearchQuery(item);
+        return Database.runSaleSearchQuery(item);
     }
 
     public static double getTotalSales(ResultItem item)
@@ -213,7 +213,7 @@ public class SaleTab : Tab
         newItem.set_ItemID_sale(tabController.getCurrItem().get_ITEM_ID());
 
         Util.clearTBox(newItemTBoxes);
-        DatabaseConnector.insertSale(newItem);
+        Database.insertSale(newItem);
         showItemSales(tabController.getCurrItem());
     }
 
@@ -272,7 +272,7 @@ public class SaleTab : Tab
         if (index == -1) { return; }
         int sale_id = currItemSales[index].get_SALE_ID();
 
-        Sale sale = DatabaseConnector.getSale(sale_id);
+        Sale sale = Database.getSale(sale_id);
         setCurrSale(sale);
     }
 
@@ -302,7 +302,7 @@ public class SaleTab : Tab
     public bool deleteCurrSale()
     {
         
-        bool success = DatabaseConnector.deleteSale(currSale);
+        bool success = Database.deleteSale(currSale);
         if (!success) { return false; }
 
         

@@ -199,11 +199,11 @@ public class PurchasedLotTab : Tab
             {
                 if (c is TextBox)
                 {
-                    DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], (c as TextBox).Text);
+                    Database.updateRow(tabController.getCurrItem(), controlAttrib[c], (c as TextBox).Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], new Date(c));
+                    Database.updateRow(tabController.getCurrItem(), controlAttrib[c], new Date(c));
                 }
             }
             else if (!databaseEntryExists(c))
@@ -213,7 +213,7 @@ public class PurchasedLotTab : Tab
 
         }
 
-        setCurrPurcAndShowItems(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
+        setCurrPurcAndShowItems(Database.getItem(tabController.getCurrItem().get_ITEM_ID()));
         showItemAttributes(tabController.getCurrItem());
         return true;
     }
@@ -223,18 +223,18 @@ public class PurchasedLotTab : Tab
     {
         if (item == null) { return; }
 
-        currPurc = DatabaseConnector.getPurchase(item);
+        currPurc = Database.getPurchase(item);
 
         showItemAttributes(item);
 
         Form1.PurchaseListBox.Items.Clear();
         tabController.clearCurrPurcItems();
-        List<ResultItem> result = DatabaseConnector.getPurchItems(item);
+        List<ResultItem> result = Database.getPurchItems(item);
 
         foreach (ResultItem i in result)
         {
             Form1.PurchaseListBox.Items.Add(i.get_Name());
-            addCurrPurcItem(DatabaseConnector.getItem(i.get_ITEM_ID()));
+            addCurrPurcItem(Database.getItem(i.get_ITEM_ID()));
         }
 
         Form1.PurcPurcPriceLbl.Text = currPurc.amount.ToString();
@@ -289,7 +289,7 @@ public class PurchasedLotTab : Tab
         { 
             DateTime dt = Form1.PurcDatePicker.Value;
             purcDate = new (dt.Year, dt.Month, dt.Day);
-            purcID = DatabaseConnector.newPurchase(Int32.Parse(Form1.PurcPurcPriceTextbox.Text), Form1.PurcPurcNotesTextbox.Text, purcDate);
+            purcID = Database.newPurchase(Int32.Parse(Form1.PurcPurcPriceTextbox.Text), Form1.PurcPurcNotesTextbox.Text, purcDate);
 
         }
         // Incorrectly formed new purchase from user input, don't continue on
@@ -302,12 +302,12 @@ public class PurchasedLotTab : Tab
         // Make the new ResultItem given by the user to go into the current purchase
         int itemID = -1;
         ResultItem newItem = getNewItemFromUserInput();
-        DatabaseConnector.insertItem(newItem, out itemID);
+        Database.insertItem(newItem, out itemID);
         newItem.set_PurchaseID(purcID);
         newItem.set_ITEM_ID(itemID);
 
         // Update database to reflect the current purchase's purchaseID
-        DatabaseConnector.updateRow(newItem, "item.PurchaseID", purcID);
+        Database.updateRow(newItem, "item.PurchaseID", purcID);
 
         // Cleanup
         Util.clearTBox(newItemTBoxes);

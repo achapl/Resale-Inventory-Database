@@ -750,7 +750,7 @@ public class ResultItem : IEquatable<ResultItem>
 
     public void set_images()
     {
-        set_images(DatabaseConnector.getAllImages(this));
+        set_images(Database.getAllImages(this));
     }
 
     public void set_images(List<MyImage> images)

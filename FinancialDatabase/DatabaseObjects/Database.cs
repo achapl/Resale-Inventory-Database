@@ -22,7 +22,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using static FinancialDatabase.Form1;
 using FinancialDatabase.DatabaseObjects;
 
-public static class DatabaseConnector
+public static class Database
 {
     static bool pythonInitialized = false;
 
@@ -141,7 +141,7 @@ public static class DatabaseConnector
     public static List<ResultItem> getPurchItems(ResultItem item)
     {
         string query = QueryBuilder.purchaseQuery(item);
-        return DatabaseConnector.getItems(query, false);
+        return Database.getItems(query, false);
     }
 
 
@@ -242,7 +242,7 @@ public static class DatabaseConnector
         // Attach thumbnails
         if (includeThumbnails)
         {
-            parsedItems = DatabaseConnector.attachThumbnails(parsedItems);
+            parsedItems = Database.attachThumbnails(parsedItems);
         }
 
         return parsedItems;
@@ -634,7 +634,7 @@ public static class DatabaseConnector
     }
 
 
-    // Heart of the DatabaseConnector
+    // Heart of the Database
     // Talks to the python that actually interacts with the database.
     // Gives python the query, and gets from python, the result of running the SQL query
     private static List<string> runPython(string query)
@@ -660,7 +660,7 @@ public static class DatabaseConnector
             dynamic Connector = Py.Import("Connection.DtbConnAndQuery");
             PyObject[] rawResult = Connector.runQuery(query);
             
-            string ErrMsg = "ERROR: NULL rawResult val in DatabaseConnector.cs:runPython()";
+            string ErrMsg = "ERROR: NULL rawResult val in Database.cs:runPython()";
             List<List<string>> result = new List<List<string>>();
 
             // Convert Python Objects to normal C# strings
@@ -787,7 +787,7 @@ public static class DatabaseConnector
     public static bool updateRow(ResultItem resultItem, string attrib, string newVal)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, colDataTypesLocal[attrib], newVal);
-        return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
+        return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
     
     public static bool updateRow(ResultItem resultItem, string attrib, int newVal)
@@ -802,18 +802,18 @@ public static class DatabaseConnector
 
     public static bool updateRow(Sale saleItem, string attrib, string newVal) {
         string query = QueryBuilder.updateQuery(saleItem, attrib, colDataTypesLocal[attrib], newVal);
-        return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
+        return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
     
     public static bool updateRow(Sale saleItem, string attrib, Date d) {
         string query = QueryBuilder.updateQuery(saleItem, attrib, colDataTypesLocal[attrib], d);
-        return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
+        return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
     
     public static bool updateRow(ResultItem resultItem, string attrib, Date d)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, colDataTypesLocal[attrib], d);
-        return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
+        return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
 
     public static void insertShipInfo(ResultItem resultItem, int weightLbs, int weightOz, int l, int w, int h)
@@ -821,7 +821,7 @@ public static class DatabaseConnector
         string query = QueryBuilder.shipInfoInsertQuery(resultItem, weightLbs, weightOz, l, w, h);
 
         int lastrowid;
-        string output = DatabaseConnector.runStatement(query, out lastrowid);
+        string output = Database.runStatement(query, out lastrowid);
 
         string attrib = "item.ShippingID";
         string type = "INT UNSIGNED";
@@ -829,7 +829,7 @@ public static class DatabaseConnector
         query = QueryBuilder.updateQuery(resultItem, attrib, type, shippingID.ToString());
 
         // Update the item table with the new shipping info
-        output = DatabaseConnector.runStatement(query);
+        output = Database.runStatement(query);
     }
 
     public static bool deleteSale(Sale currSale)

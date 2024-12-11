@@ -47,7 +47,7 @@ public class SearchTab
         foreach (string searchTerm in Q.getSearchTerms())
         {
             Q.setSingleSearchTerm(searchTerm);
-            List<ResultItem> result = DatabaseConnector.getItems(Q);
+            List<ResultItem> result = Database.getItems(Q);
 
             // Put the results from the search term into itemAndHitsPair
             // If already in there, increase the hit count for that term

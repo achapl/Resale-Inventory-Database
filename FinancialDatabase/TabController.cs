@@ -33,7 +33,7 @@ namespace FinancialDatabase
         public TabController(Form1 Form1)
         {
             this.Form1 = Form1;
-            colDataTypes = DatabaseConnector.getColDataTypes();
+            colDataTypes = Database.getColDataTypes();
 
 
             purchasedLotTab = new PurchasedLotTab(this, Form1);
@@ -117,7 +117,7 @@ namespace FinancialDatabase
             }
             ResultItem shellItem = getSearchItemsAt(index);
 
-            ResultItem newItem = DatabaseConnector.getItem(shellItem.get_ITEM_ID());
+            ResultItem newItem = Database.getItem(shellItem.get_ITEM_ID());
             newItem.set_images();
             setCurrItem(newItem);
 
@@ -240,7 +240,7 @@ namespace FinancialDatabase
                 List<string> files = Form1.getOpenFileDialogNames();
                 foreach (string file in files)
                 {
-                    DatabaseConnector.insertImage(file, itemViewTab.getCurrItem().get_ITEM_ID());
+                    Database.insertImage(file, itemViewTab.getCurrItem().get_ITEM_ID());
                 }
             }
         }

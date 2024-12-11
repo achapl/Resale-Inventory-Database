@@ -142,7 +142,7 @@ public class ItemViewTab : Tab
     // Update the under-hood reference to the object in the database
     public void updateCurrItem()
     {
-        currItem = DatabaseConnector.getItem(currItem.get_ITEM_ID());
+        currItem = Database.getItem(currItem.get_ITEM_ID());
     }
 
 
@@ -187,14 +187,14 @@ public class ItemViewTab : Tab
                 if (userInputTextbox == Form1.itemWeightLbsTxtbox)
                 {
                     int ttlWeight = getUserInputWeight();
-                    DatabaseConnector.updateRow(getCurrItem(), "shipping.Weight", ttlWeight.ToString());
+                    Database.updateRow(getCurrItem(), "shipping.Weight", ttlWeight.ToString());
                 }
                 else
                 {
                     string attrib = controlAttrib[userInputContainer];
                     string newVal = getUserInputVal(userInputContainer);
 
-                    DatabaseConnector.updateRow(getCurrItem(), attrib, newVal);
+                    Database.updateRow(getCurrItem(), attrib, newVal);
                 }
                 Util.clearTBox(userInputTextbox);
             }
@@ -270,9 +270,9 @@ public class ItemViewTab : Tab
             int w = Int32.Parse(Form1.itemWidthTxtbox.Text);
             int h = Int32.Parse(Form1.itemHeightTxtbox.Text);
 
-            DatabaseConnector.insertShipInfo(getCurrItem(), weightLbs, weightOz, l, w, h);
+            Database.insertShipInfo(getCurrItem(), weightLbs, weightOz, l, w, h);
             Util.clearTBox(weightTBoxes);
-            showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
+            showItemAttributes(Database.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
         }
         else
         {
@@ -284,15 +284,15 @@ public class ItemViewTab : Tab
     public void deleteShippingInfo()
     {
         // Delete shipping info entry
-        DatabaseConnector.deleteShipInfo(tabController.getCurrItem());
+        Database.deleteShipInfo(tabController.getCurrItem());
 
         // Remove foreign key reference to shipping info from item table
         string attrib = "item.ShippingID";
-        bool success = DatabaseConnector.updateRow(tabController.getCurrItem(), attrib, null);
+        bool success = Database.updateRow(tabController.getCurrItem(), attrib, null);
 
         if (success)
         {
-            showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID()));
+            showItemAttributes(Database.getItem(tabController.getCurrItem().get_ITEM_ID()));
         }
         flipEditMode();
     }
@@ -373,7 +373,7 @@ public class ItemViewTab : Tab
             if (result == DialogResult.No) { return false; }
         }
 
-        DatabaseConnector.deleteItem(tabController.getCurrItem());
+        Database.deleteItem(tabController.getCurrItem());
 
         return true;
     }
@@ -435,7 +435,7 @@ public class ItemViewTab : Tab
             return;
         }
 
-        int newThumbnailID = DatabaseConnector.getImageThumbnailID(currImageID);
-        DatabaseConnector.runStatement("UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + getCurrItem().get_ITEM_ID() + ";");
+        int newThumbnailID = Database.getImageThumbnailID(currImageID);
+        Database.runStatement("UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + getCurrItem().get_ITEM_ID() + ";");
     }
 }
