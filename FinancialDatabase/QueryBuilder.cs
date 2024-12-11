@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using Date = Util.Date;
@@ -10,6 +11,8 @@ namespace FinancialDatabase
 	public static class QueryBuilder
 	{
         public const string DEFAULTQUERY = "SELECT item.ITEM_ID, item.Name, thumbnail.thumbnail FROM item LEFT JOIN thumbnail ON thumbnail.ThumbnailID = item.ThumbnailID;";
+
+        static Dictionary<string, string> colDataTypesLocal = null;
 
         public static string defaultQuery()
         {
@@ -179,8 +182,9 @@ namespace FinancialDatabase
             return "DELETE FROM sale WHERE SALE_ID = " + sale.get_SALE_ID().ToString() + ";";
         }
 
-        public static string updateQuery(Item currItem, string controlAttribute, string type, Date updateDate)
+        public static string updateQuery(Item currItem, string controlAttribute, Date updateDate)
         {
+            string type = colDataTypesLocal[controlAttribute];
             if (!Util.checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
 
             if (controlAttribute.Split('.').Length != 2)
@@ -215,9 +219,9 @@ namespace FinancialDatabase
             return query;
         }
 
-        public static string updateQuery(Item currItem, string controlAttribute, string type, string updateText)
+        public static string updateQuery(Item currItem, string controlAttribute, string updateText)
         {
-
+            string type = colDataTypesLocal[controlAttribute];
             if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
 
             if (controlAttribute.Split('.').Length != 2)
@@ -255,8 +259,9 @@ namespace FinancialDatabase
             return query;
         }
     
-        public static string updateQuery(Sale sale, string controlAttribute, string type, string updateText)
+        public static string updateQuery(Sale sale, string controlAttribute, string updateText)
         {
+            string type = colDataTypesLocal[controlAttribute];
 
             if (sale is null)
             {
@@ -287,8 +292,10 @@ namespace FinancialDatabase
             return query;
         }
 
-        public static string updateQuery(Sale sale, string controlAttribute, string type, Date updateDate)
+        public static string updateQuery(Sale sale, string controlAttribute, Date updateDate)
         {
+            string type = colDataTypesLocal[controlAttribute];
+
             if (!Util.checkTypeOkay(updateDate.toDateString(), type)) { return "ERROR: BAD USER INPUT"; }
 
             if (controlAttribute.Split('.').Length != 2)
@@ -378,6 +385,11 @@ namespace FinancialDatabase
         public static string purchaseQueryByItemID(int itemID)
         {
             return "SELECT * FROM purchase JOIN item ON item.PurchaseID = purchase.PURCHASE_ID WHERE item.ITEM_ID = " + itemID + ";";
+        }
+
+        internal static void setColDataTypesLocal(Dictionary<string, string> colDataTypes)
+        {
+            colDataTypesLocal = colDataTypes;
         }
     }
 }

@@ -31,7 +31,7 @@ public static class Database
     const string END_COL_MARKER = "END OF COLUMN NAMES"; // Marker to the End of Column Names
     const string EOS = "EOS";     // end-of-stream
     static Size maxDims = new Size(300, 300);
-    static Dictionary<string, string> colDataTypesLocal = null;
+    
 
 
     
@@ -214,7 +214,8 @@ public static class Database
         //Hardcoded types for special cases that can't be found in database
         colDataTypes["shipping.WeightLbs"] = "int unsigned";
         colDataTypes["shipping.WeightOz"] = "int unsigned";
-        colDataTypesLocal = colDataTypes;
+        colDataTypes["item.ShippingID"] = "int unsigned";
+        QueryBuilder.setColDataTypesLocal(colDataTypes);
         return colDataTypes;
     }
 
@@ -496,8 +497,7 @@ public static class Database
 
             // Update item entry to link to shipping info
             string attrib = "item.ShippingID";
-            string type   = "int unsigned";
-            query = QueryBuilder.updateQuery(item, attrib, type, shippingID.ToString());
+            query = QueryBuilder.updateQuery(item, attrib, shippingID.ToString());
 
             // Update the item table with the new shipping info
             output = runStatement(query);
@@ -786,7 +786,7 @@ public static class Database
 
     public static bool updateRow(Item resultItem, string attrib, string newVal)
     {
-        string query = QueryBuilder.updateQuery(resultItem, attrib, colDataTypesLocal[attrib], newVal);
+        string query = QueryBuilder.updateQuery(resultItem, attrib, newVal);
         return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
     
@@ -801,18 +801,18 @@ public static class Database
     }
 
     public static bool updateRow(Sale saleItem, string attrib, string newVal) {
-        string query = QueryBuilder.updateQuery(saleItem, attrib, colDataTypesLocal[attrib], newVal);
+        string query = QueryBuilder.updateQuery(saleItem, attrib, newVal);
         return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
     
     public static bool updateRow(Sale saleItem, string attrib, Date d) {
-        string query = QueryBuilder.updateQuery(saleItem, attrib, colDataTypesLocal[attrib], d);
+        string query = QueryBuilder.updateQuery(saleItem, attrib, d);
         return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
     
     public static bool updateRow(Item resultItem, string attrib, Date d)
     {
-        string query = QueryBuilder.updateQuery(resultItem, attrib, colDataTypesLocal[attrib], d);
+        string query = QueryBuilder.updateQuery(resultItem, attrib, d);
         return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
 
@@ -824,9 +824,8 @@ public static class Database
         string output = Database.runStatement(query, out lastrowid);
 
         string attrib = "item.ShippingID";
-        string type = "INT UNSIGNED";
         int shippingID = lastrowid;
-        query = QueryBuilder.updateQuery(resultItem, attrib, type, shippingID.ToString());
+        query = QueryBuilder.updateQuery(resultItem, attrib, shippingID.ToString());
 
         // Update the item table with the new shipping info
         output = Database.runStatement(query);
