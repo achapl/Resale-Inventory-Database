@@ -126,20 +126,14 @@ public class Util
                 return true;
 
             case "double unsigned":
-                try { Double.Parse(attrib); }
-                catch { return false; }
-                return true;
+                return Double.TryParse(attrib, out double _);
 
             case "int unsigned":
-                try { Int32.Parse(attrib); }
-                catch { return false; }
-                if (Int32.Parse(attrib) < 0) return false;
-                return true;
+                return Int32.TryParse(attrib, out int _) &&
+                       Int32.Parse(attrib) >= 0;
 
             case "int":
-                try { Int32.Parse(attrib); }
-                catch { return false; }
-                return true;
+                return Int32.TryParse(attrib, out int _);
 
             case "varchar(255)":
                 return true;

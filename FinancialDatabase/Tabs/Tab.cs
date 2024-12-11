@@ -128,6 +128,40 @@ public abstract class Tab
     }
 
 
+    internal bool typeCheckUserInput(List<TextBox> userInputFields)
+    {
+        List<Control> userInputControls = new List<Control>();
+        foreach (TextBox userInputField in userInputFields)
+        {
+            userInputControls.Add(userInputField as Control);
+        }
+        return typeCheckUserInput(userInputControls);
+    }
+
+    internal bool typeCheckUserInput(List<Control> userInputFields)
+    {
+        foreach (Control c in userInputFields)
+        {
+
+            // Special case, weight textboxes
+            if (!Int32.TryParse(Form1.itemWeightLbsTxtbox.Text, out _)
+                || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out _))
+            {
+                showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
+                return false;
+            }
+
+            string attrib = controlAttrib[c];
+            string type = tabController.colDataTypes[attrib];
+            if (!Util.checkTypeOkay(attrib, type))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     // Check if a value is a defualt value
     protected string checkDefault(int val)
     {

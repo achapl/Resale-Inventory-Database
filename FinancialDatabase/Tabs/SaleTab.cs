@@ -68,8 +68,8 @@ public class SaleTab : Tab
 
         controlAttrib = new Dictionary<Control, string>
         {
-            { Form1.SaleDatePicker,  "sale.Date_Sold" },
-            { Form1.SaleAmountTextbox,        "sale.Amount_sale" }
+            { Form1.SaleDatePicker,    "sale.Date_Sold" },
+            { Form1.SaleAmountTextbox, "sale.Amount_sale" }
         };
     }
 
@@ -108,47 +108,26 @@ public class SaleTab : Tab
 
         if (tabController.getCurrItem() == null) { return false; }
         List<Control> changedFields = getChangedFields();
+        if (!typeCheckUserInput(changedFields)) { return false; }
 
-        bool goodEdit = true;
         foreach (Control c in changedFields)
         {
             if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); continue; }
 
             TextBox t = c as TextBox ?? new TextBox();
 
-            string query = "";
-            if (databaseEntryExists(t))
+            if (databaseEntryExists(c))
             {
-                bool success = false;
-                string type = tabController.colDataTypes[controlAttrib[c]];
                 if (c is TextBox)
                 {
                     string attrib = t.Text;
-                    if (!Util.checkTypeOkay(attrib, type))
-                    {
-                        goodEdit = false;
-                        showWarning("Wrong data type given");
-                        return false;
-                    }
-                    success = DatabaseConnector.updateRow(currSale, controlAttrib[c], t.Text);
+                    DatabaseConnector.updateRow(currSale, controlAttrib[c], t.Text);
                 }
                 else if (c is DateTimePicker)
                 {
-                    success = DatabaseConnector.updateRow(currSale, controlAttrib[c], new Date(c));
+                    DatabaseConnector.updateRow(currSale, controlAttrib[c], new Date(c));
                 }
-
-                if (goodEdit)
-                {
-                    if (success)
-                    {
-                        t.Clear();
-                        t.BackColor = Color.White;
-                    }
-                    else
-                    {
-                        throw new Exception("ERROR: Bad DatabaseConnector.runStatement: " + query);
-                    }
-                }
+                Util.clearTBox(t);
             }
             else if (!databaseEntryExists(t))
             {

@@ -187,6 +187,7 @@ public class PurchasedLotTab : Tab
         }
 
         List<Control> changedFields = getChangedFields();
+        if (!typeCheckUserInput(changedFields)) { return false; }
 
         foreach (Control c in changedFields)
         {
@@ -196,16 +197,9 @@ public class PurchasedLotTab : Tab
             
             if (databaseEntryExists(c))
             {
-                string type = tabController.colDataTypes[controlAttrib[c]];
                 if (c is TextBox)
                 {
-                    TextBox userInputTBox = c as TextBox;
-                    string attrib = userInputTBox.Text;
-                    if (!Util.checkTypeOkay(attrib, type))
-                    {
-                        return false;
-                    }
-                    DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], userInputTBox.Text);
+                    DatabaseConnector.updateRow(tabController.getCurrItem(), controlAttrib[c], (c as TextBox).Text);
                 }
                 else if (c is DateTimePicker)
                 {
@@ -328,7 +322,7 @@ public class PurchasedLotTab : Tab
 
         newItem.set_Name(Form1.PurcNameTextbox.Text);
 
-        // If no Init or curr quantities, set to default 1
+        // Make to default 1
         string initQty = "1";
         if (Form1.PurcInitQtyTextbox.Text.CompareTo("") != 0)
         {

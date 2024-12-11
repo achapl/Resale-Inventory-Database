@@ -16,7 +16,6 @@ public class ItemViewTab : Tab
 {
     protected List<TextBox> weightTBoxes;
 
-    
     private ResultItem? currItem;
 
     public ItemViewTab(TabController tabController, Form1 Form1) : base(Form1)
@@ -29,7 +28,6 @@ public class ItemViewTab : Tab
         Util.clearLabelText(attributeValueLabels);
         showControlVisibility();
     }
-
     
     
     public ResultItem getCurrItemsAt(int index)
@@ -37,6 +35,8 @@ public class ItemViewTab : Tab
         if (index == -1) { return null; }
         return tabController.getSearchItems()[index];
     }
+
+
     public ResultItem getCurrItem()
     {
         if (currItem != null)
@@ -45,7 +45,6 @@ public class ItemViewTab : Tab
         }
         return currItem;
     }
-
 
     protected override void generateTBoxGroups()
     {
@@ -172,40 +171,6 @@ public class ItemViewTab : Tab
     }
 
 
-    private bool typeCheckUserInput(List<TextBox> userInputFields)
-    {
-        List<Control> userInputControls = new List<Control>();
-        foreach(TextBox userInputField in userInputFields)
-        {
-            userInputControls.Add(userInputField as Control);
-        }
-        return typeCheckUserInput(userInputControls);
-    }
-
-    private bool typeCheckUserInput(List<Control> userInputFields)
-    {
-        foreach (Control c in userInputFields)
-        {
-
-            // Special case, weight textboxes
-            if (!Int32.TryParse(Form1.itemWeightLbsTxtbox.Text, out _)
-                || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out _))
-            {
-                showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
-                return false;
-            }
-
-            string attrib = controlAttrib[c];
-            string type = tabController.colDataTypes[attrib];
-            if (!Util.checkTypeOkay(attrib, type))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
     // Use user input to update the currItem
     public bool updateCurrItemWithUserInput()
     {
@@ -313,8 +278,6 @@ public class ItemViewTab : Tab
         {
             showWarning("To Add Shipping Info, all fields must be filled (Lbs, Oz, L, W, H)");
         }
-
-        
     }
 
 
