@@ -816,7 +816,7 @@ public static class DatabaseConnector
         return DatabaseConnector.runStatement(query).CompareTo("ERROR") != 0;
     }
 
-    public static void insertShipInfo(ResultItem resultItem, int weightLbs, int weightOz, int l, int w, int h, string weightType)
+    public static void insertShipInfo(ResultItem resultItem, int weightLbs, int weightOz, int l, int w, int h)
     {
         string query = QueryBuilder.shipInfoInsertQuery(resultItem, weightLbs, weightOz, l, w, h);
 
@@ -824,7 +824,6 @@ public static class DatabaseConnector
         string output = DatabaseConnector.runStatement(query, out lastrowid);
 
         string attrib = "item.ShippingID";
-        // TOOD: This is hardcoded, but dtbconnector doens't have access to tabController.controlAttributes
         string type = "INT UNSIGNED";
         int shippingID = lastrowid;
         query = QueryBuilder.updateQuery(resultItem, attrib, type, shippingID.ToString());

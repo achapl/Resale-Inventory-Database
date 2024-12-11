@@ -305,8 +305,7 @@ public class ItemViewTab : Tab
             int w = Int32.Parse(Form1.itemWidthTxtbox.Text);
             int h = Int32.Parse(Form1.itemHeightTxtbox.Text);
 
-            string type = getShippingInfoType(); 
-            DatabaseConnector.insertShipInfo(getCurrItem(), weightLbs, weightOz, l, w, h, type);
+            DatabaseConnector.insertShipInfo(getCurrItem(), weightLbs, weightOz, l, w, h);
             Util.clearTBox(weightTBoxes);
             showItemAttributes(DatabaseConnector.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
         }
@@ -316,46 +315,6 @@ public class ItemViewTab : Tab
         }
 
         
-    }
-
-
-    // Get the mySQL type of the shipping information.
-    // All shipping info should have the same mySQL type
-    private string getShippingInfoType()
-    {
-        if (shippingTBoxes == null || shippingTBoxes[0] == null)
-        {
-            throw new Exception("Error: There are no shipping textboxes initialized!");
-        }
-        string attrib = controlAttrib[shippingTBoxes[0]];
-        string type = tabController.colDataTypes[attrib];
-        
-        // Double check that all shipping info attributes are the same
-        // Should all be integers, but if that ever changes to something like double,
-        // all shipping info elements should have the same type.
-        foreach (Control tBox in shippingTBoxes)
-        {
-            string otherAttrib = "";
-            string otherType = "";
-
-            if (!controlAttrib.TryGetValue(tBox, out otherAttrib))
-            {
-                throw new Exception("Error: No mySQL attrib entry exists for a shipping information textbox");
-            }
-            
-            if (!tabController.colDataTypes.TryGetValue(otherAttrib, out otherType))
-            {
-                throw new Exception("Error: No mySQL type entry exists for a shipping information attribute");
-            }
-
-            if (type.CompareTo(otherType) != 0)
-            {
-                throw new Exception("Error: Not all shipping information types are the same!");
-            }
-        }
-
-
-        return type;
     }
 
 
