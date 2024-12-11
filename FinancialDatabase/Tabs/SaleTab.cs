@@ -127,12 +127,7 @@ public class SaleTab : Tab
                     if (!Util.checkTypeOkay(attrib, type))
                     {
                         goodEdit = false;
-                        MessageBox.Show(
-                            "Wrong data type given",
-                            "Error",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
-                        );
+                        showWarning("Wrong data type given");
                         return false;
                     }
                     success = DatabaseConnector.updateRow(currSale, controlAttrib[c], t.Text);

@@ -288,4 +288,14 @@ public abstract class Tab
         }
         return true;
     }
+
+    public void showWarning(string message)
+    {
+        MessageBox.Show(
+                message,
+                "Error",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+                );
+    }
 }

@@ -172,16 +172,26 @@ public class ItemViewTab : Tab
     }
 
 
-    private bool typeCheckUserInput(List<Control> changedFields)
+    private bool typeCheckUserInput(List<TextBox> userInputFields)
     {
-        foreach (Control c in changedFields)
+        List<Control> userInputControls = new List<Control>();
+        foreach(TextBox userInputField in userInputFields)
+        {
+            userInputControls.Add(userInputField as Control);
+        }
+        return typeCheckUserInput(userInputControls);
+    }
+
+    private bool typeCheckUserInput(List<Control> userInputFields)
+    {
+        foreach (Control c in userInputFields)
         {
 
             // Special case, weight textboxes
             if (!Int32.TryParse(Form1.itemWeightLbsTxtbox.Text, out _)
                 || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out _))
             {
-                MessageBox.Show("Must Input Correct Numerical Format For weight. No decimals/commas allowed!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
                 return false;
             }
 
@@ -268,7 +278,7 @@ public class ItemViewTab : Tab
          || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out oz))
         {
             ttlWeight = -1;
-            MessageBox.Show("Must Input Correct Numerical Format For weight. No decimals/commas allowed!","Warning",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+            showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
             return -1;
         }
         Util.clearTBox(Form1.itemWeightLbsTxtbox);
@@ -284,28 +294,16 @@ public class ItemViewTab : Tab
     {
         if (allShippingBoxesFilled())
         {
-            int weightLbs = 0;
-            int weightOz = 0;
-            int l = 0;
-            int w = 0;
-            int h = 0;
-            try
+            if (!typeCheckUserInput(shippingTBoxes))
             {
-                weightLbs = Int32.Parse(Form1.itemWeightLbsTxtbox.Text);
-                weightOz = Int32.Parse(Form1.itemWeightOzTxtbox.Text);
-                l = Int32.Parse(Form1.itemLengthTxtbox.Text);
-                w = Int32.Parse(Form1.itemWidthTxtbox.Text);
-                h = Int32.Parse(Form1.itemHeightTxtbox.Text);
+                showWarning("Warning: Input shipping information as integers!");
             }
-            catch
-            {
-                MessageBox.Show(
-                    "To Add Shipping Info, all fields must be filled with integers",
-                    "Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                    );
-                }
+
+            int weightLbs = Int32.Parse(Form1.itemWeightLbsTxtbox.Text);
+            int weightOz = Int32.Parse(Form1.itemWeightOzTxtbox.Text);
+            int l = Int32.Parse(Form1.itemLengthTxtbox.Text);
+            int w = Int32.Parse(Form1.itemWidthTxtbox.Text);
+            int h = Int32.Parse(Form1.itemHeightTxtbox.Text);
 
             string type = getShippingInfoType(); 
             DatabaseConnector.insertShipInfo(getCurrItem(), weightLbs, weightOz, l, w, h, type);
@@ -314,12 +312,7 @@ public class ItemViewTab : Tab
         }
         else
         {
-            MessageBox.Show(
-                "To Add Shipping Info, all fields must be filled (Lbs, Oz, L, W, H)",
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-                );
+            showWarning("To Add Shipping Info, all fields must be filled (Lbs, Oz, L, W, H)");
         }
 
         

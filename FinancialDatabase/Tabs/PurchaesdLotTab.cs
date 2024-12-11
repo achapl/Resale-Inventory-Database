@@ -301,12 +301,7 @@ public class PurchasedLotTab : Tab
         // Incorrectly formed new purchase from user input, don't continue on
         else if (isNewPurchase && !allNewPurchaseBoxesFilled())
         {
-            MessageBox.Show(
-                            "To Add New Purchase, a Purchase Price, Purchase Date, and NEW ITEM Name, Initial Quantity, and Current Quantity must each be filled out",
-                            "Error",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning
-                            );
+            showWarning("To Add New Purchase, a Purchase Price, Purchase Date, and NEW ITEM Name, Initial Quantity, and Current Quantity must each be filled out");
             return;
         }
 
