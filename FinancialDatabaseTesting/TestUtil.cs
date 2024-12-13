@@ -3,7 +3,7 @@ namespace FinancialDatabaseTesting;
 using FinancialDatabase;
 using System.Drawing;
 
-public class Tests
+public class TestUtil
 {
 
     Image defImage;
