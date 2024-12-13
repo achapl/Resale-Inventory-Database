@@ -5,14 +5,45 @@ using System.Windows.Forms;
 
 public class Util
 {
-
+    /// <summary>
+    /// Default value used for unassigned init values for a database object
+    /// </summary>
     public static int DEFAULT_INT = -1;
+
+    /// <summary>
+    /// Default value used for unassigned init values for a database object
+    /// </summary>
     public static double DEFAULT_DOUBLE = -1.0;
+
+    /// <summary>
+    /// Default value used for unassigned init values for a database object
+    /// </summary>
     public static string DEFAULT_STRING = null;
+
+    /// <summary>
+    /// Default Date used for unassigned init values for a database object
+    /// </summary>
     public static Date DEFAULT_DATE = new Date(-1, -1, -1);
+
+    /// <summary>
+    /// Default image used for unassigned init values for a database object
+    /// </summary>
     public static MyImage DEFAULT_IMAGE = new MyImage(Image.FromFile(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Resources\NoImage.png"), -1);
+
+    /// <summary>
+    /// Default list of images used for unassigned init values for a database object
+    /// </summary>
     public static List<MyImage> DEFAULT_IMAGES = new List<MyImage>() {DEFAULT_IMAGE};
+
+
+    /// <summary>
+    /// Token used for finding definitively the start of a raw image returned from python
+    /// </summary>
     public static string imgStartToken = "'IMAGESTART***";
+
+    /// <summary>
+    /// Token used for finding definitively the start of a raw image returned from python
+    /// </summary>
     public static string imgEndToken   = "***IMAGEEND'";
     public Util()
 	{
@@ -44,9 +75,17 @@ public class Util
         return listOfStrings;
     }
 
-    public static string datetoString(List<int> d)
+
+    /// <summary>
+    /// Turns a date into a string
+    /// Formatted for usage in SQL (with escape characters)
+    /// ex: List {2024,12,5} -> '\"2024-12-5\"'
+    /// </summary>
+    /// <param name="dateList">List of ints that represent the date</param>
+    /// <returns></returns>
+    public static string datetoString(List<int> dateList)
     {
-        return "\\\"" + d[0] + "-" + d[1] + "-" + d[2] + "\\\"";
+        return "\\\"" + dateList[0] + "-" + dateList[1] + "-" + dateList[2] + "\\\"";
     }
 
     public static string dateToString(Date d)
@@ -495,7 +534,7 @@ public class Util
                 month = Int32.Parse(components[1]);
                 day = Int32.Parse(components[2].Trim(')'));
             }
-            // Assumed to be format "yyyy-mm-d"
+            // Assumed to be format "yyyy-mm-dateList"
             else
             {
                 List<string> components = new List<string>(s.Split("-"));
