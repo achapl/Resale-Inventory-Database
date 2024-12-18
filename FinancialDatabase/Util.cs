@@ -623,19 +623,6 @@ public class Util
 
         public int year, month, day;
 
-        private void checkValidDate(int y, int m, int d)
-        {
-            if (y == -1 && m == -1 && d == -1) { return; } // -1/ -1/ -1 is fine for default date
-            try
-            {
-                new DateTime(y, m, d);
-            }
-            catch
-            {
-                throw new Exception("ERROR: Invalid Date: Y-" + year + " M-" + month + " D-" + day);
-            }
-        }
-
         public Date(int y, int m, int d)
         {
             
@@ -691,18 +678,24 @@ public class Util
             this.day = d.Value.Day;
         }
 
+
         public string toDateString()
         {
             return  year + "-" + month + "-" + day;
         }
 
-        // Note: Should not restrict input to only date-valid integers since this method should work for "invalid" dates that the user may want to display intentionally
+
+        /// <summary>
+        /// Formats Y M D into a string yyyy-mm-dd
+        /// Note: Should not restrict input to only date-valid integers since this method should work for "invalid" dates that the user may want to display intentionally
         // This is espically true since this func is also used to test constructors for invalid dates.
+        /// </summary>
         public static string toDateString(int y, int m, int d)
         {
             return y + "-" + m + "-" + d;
         }
         
+
         public DateTime toDateTime()
         {
             // Cannot have DateTime(0,0,0), set to min DateTime 
@@ -713,7 +706,20 @@ public class Util
 
             return new DateTime(year, month, day);
         }
-        
+
+
+        private void checkValidDate(int y, int m, int d)
+        {
+            if (y == -1 && m == -1 && d == -1) { return; } // -1/ -1/ -1 is fine for default date
+            try
+            {
+                new DateTime(y, m, d);
+            }
+            catch
+            {
+                throw new Exception("ERROR: Invalid Date: Y-" + year + " M-" + month + " D-" + day);
+            }
+        }
     };
 
 }
