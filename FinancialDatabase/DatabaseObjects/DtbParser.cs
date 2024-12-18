@@ -29,11 +29,11 @@ public static class DtbParser
         // Which is based on whether there exist parenthesises inside of an attribute or not (see above)
         if (rawResult.Length > 0 && rawResult[0] == '[')
         {
-            rawItems = Util.PairedCharTopLevelSplit(rawResult, '[');
+            rawItems = Util.pairedCharTopLevelSplit(rawResult, '[');
         }
         else if (rawResult.Length > 0 && rawResult[0] == '(')
         {
-            rawItems = Util.PairedCharTopLevelSplit(rawResult, '(');
+            rawItems = Util.pairedCharTopLevelSplit(rawResult, '(');
         }
         else
         {

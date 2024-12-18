@@ -806,6 +806,6 @@ public class Item : IEquatable<Item>
     public static bool isValidName(string name)
     {
         if (name.Length == 0) return false;
-        return Util.containsAlphaNumeric(name);
+        return Util.containsAnAlphaNumeric(name);
     }
 }

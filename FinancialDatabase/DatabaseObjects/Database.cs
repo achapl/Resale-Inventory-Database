@@ -279,7 +279,7 @@ public static class Database
 
         // Parse raw data into individual raw thumbnails
         rawResult = rawResult.Substring(1, rawResult.Length - 2);
-        List<string> rawThumbnails = Util.PairedCharTopLevelSplit(rawResult, '[');
+        List<string> rawThumbnails = Util.pairedCharTopLevelSplit(rawResult, '[');
 
         Dictionary<int, MyImage> results = new Dictionary<int, MyImage>();
         List<string> thumbnailAttribs;
@@ -751,7 +751,7 @@ public static class Database
         
         // Trim '[]' that surrounds the whole string
         rawResult = rawResult.Substring(1, rawResult.Length - 2);
-        List<string> rawImageInfos = Util.PairedCharTopLevelSplit(rawResult, '[');
+        List<string> rawImageInfos = Util.pairedCharTopLevelSplit(rawResult, '[');
 
         List<MyImage> results = [];
         foreach (string rawImageInfo in rawImageInfos)
@@ -777,7 +777,7 @@ public static class Database
 
         // Trim '[]' that surrounds the whole string
         rawResult = rawResult.Substring(1, rawResult.Length - 2);
-        List<string> rawImageInfos = Util.PairedCharTopLevelSplit(rawResult, '[');
+        List<string> rawImageInfos = Util.pairedCharTopLevelSplit(rawResult, '[');
 
         int thumbnailID = Int32.Parse(rawImageInfos[0]);
 

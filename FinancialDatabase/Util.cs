@@ -49,27 +49,42 @@ public class Util
 	{
 	}
 
-
-    public static bool containsAlphaNumeric(string str)
+    /// <summary>
+    /// Checks if a given string contains at least 1 alpha numeric char
+    /// Making a name for an item should require at least 1
+    /// </summary>
+    /// <param name="str">String to test</param>
+    /// <returns>True if str contains at least 1 alpha numeric char</returns>
+    public static bool containsAnAlphaNumeric(string str)
     {
         if (str.Length == 0) return false;
 
         foreach (char c in str)
         {
             int charVal = c;
-            if (!((charVal >= 48 && charVal <= 57) || // Number
+            if (((charVal >= 48 && charVal <= 57) || // Number
                   (charVal >= 65 && charVal <= 90) || // Uppercase letter
                   (charVal >= 97 && charVal <= 122))) // Lowercase letter
             {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
 
+    /// <summary>
+    /// Wraps String.Split(delim) so it can be returned as a list
+    /// </summary>
+    /// <param name="str">String to be split</param>
+    /// <param name="delim">Delimeter to split on</param>
+    /// <returns>List of strings (not including delims) seperated by the delim from the original str</returns>
     public static List<string> mySplit(string str, string delim)
     {
+        if (delim is null || delim.CompareTo("") == 0)
+        {
+            throw new Exception("ERROR: Delimeter is null or empty!");
+        }
         string[] arrOfStrings = str.Split(delim);
         List<string> listOfStrings = new List<string>(arrOfStrings);
         return listOfStrings;
@@ -93,37 +108,51 @@ public class Util
         return d.toDateString();
     }
 
+
+    /// <summary>
+    /// Trims only the first matches from a list of given substrings off start/end of a string
+    /// Regardless of if the trim at the start and end of the given string are the same
+    /// Ex: strToTrim: "Hello Cruel World"
+    ///     trimStrs:  {"World", "Lumber", "Cruel", "Hello", "Dog"}
+    ///     Returns -> " Cruel "
+    /// </summary>
+    /// <param name="strToTrim">Given string to trim</param>
+    /// <param name="trimStrs">Array of strings to trim off</param>
+    /// <returns>Returns original string, but without any strings from the given list that may be at the start/end of the original string</returns>
     public static string myTrim(string strToTrim, string[] trimStrs)
     {
-        if (strToTrim == null) { return ""; }
-        if (trimStrs == null) { return strToTrim; }
+        if (strToTrim == null) { throw new Exception("Error: Null strToTrim"); }
+        if (trimStrs == null) { throw new Exception("ERROR: Expected at least empty array for trimStrings, not null"); }
 
-        bool foundStartTrim = false;
-        bool foundEndTrim = false;
+        bool trimmedStart = false;
+        bool trimmedEnd = false;
 
         foreach (string s in trimStrs)
         {
-            if (!foundStartTrim && strToTrim.StartsWith(s)) 
+            if (!trimmedStart && strToTrim.StartsWith(s)) 
             {
-                foundStartTrim = true;
+                trimmedStart = true;
                 strToTrim = strToTrim.Remove(strToTrim.IndexOf(s), s.Length);
             }
 
-            if (!foundEndTrim   && strToTrim.EndsWith(s))   
+            if (!trimmedEnd   && strToTrim.EndsWith(s))   
             {
-                foundEndTrim = true;  
+                trimmedEnd = true;  
                 strToTrim = strToTrim.Remove(strToTrim.LastIndexOf(s));
             }
 
-            if (foundStartTrim && foundEndTrim) { break; }
+            // Algorithm is finished when the first and last parts of the string are trimmed off
+            if (trimmedStart && trimmedEnd) { break; }
         }
 
         return strToTrim;
-
-
-
     }
 
+
+    /// <summary>
+    /// Clears all the text of a given list of labels
+    /// </summary>
+    /// <param name="l"> List of labels</param>
     public static void clearLabelText(List<Label> l)
     {
         foreach (Label label in l)
@@ -132,18 +161,12 @@ public class Util
         }
     }
 
-    public static void clearTBox(List<Control> t)
-    {
-        TextBox tb;
-        foreach (Control c in t)
-        {
-            if (c is not TextBox) { continue; }
-            tb = c as TextBox;
-            tb.Text = "";
-            tb.BackColor = Color.White;
-        } 
-    }
 
+    /// <summary>
+    /// Clears all the text of a given list of text boxes
+    /// And resets their background color to white
+    /// </summary>
+    /// <param name="t">List of textboxes</param>
     public static void clearTBox(List<TextBox> t)
     {
         foreach (TextBox tb in t)
@@ -153,6 +176,12 @@ public class Util
         }
     }
 
+
+    /// <summary>
+    /// Clears all the text of a given list of text boxes
+    /// And resets their background color to white
+    /// </summary>
+    /// <param name="c">TextBox given as a control</param>
     public static void clearTBox(Control c)
     {
         if (c is not TextBox) { return; }
@@ -162,18 +191,33 @@ public class Util
         tb.BackColor = Color.White;
     }
 
+
+    /// <summary>
+    /// Converts an amount of ounces to ounces and pounds
+    /// </summary>
+    /// <param name="ozs">Number of ounces</param>
+    /// <returns>List of 2 ints. First is lbs, and second element is ounces</returns>
     public static List<int> ozToOzLbs(int ozs)
     {
         // Default
-        if (ozs == -1)
+        if (ozs < 0)
         {
-            return new List<int>() { -1, -1 };
+            throw new Exception("ERROR: Given Ounces is < 0 or Null!");
         }
         int lbs = ozs / 16;
         int oz = ozs - (16 * lbs);
         return new List<int>(new int[] { lbs, oz });
     }
 
+
+    /// <summary>
+    /// Check that a given attribute value (Given as a string) is of the given type
+    /// Note: Types are from MySQL, not C#
+    /// Ex: "1234.5" for the type "double unsigned" returns true, but false for "int unsigned"
+    /// </summary>
+    /// <param name="attrib">Value to test</param>
+    /// <param name="type">Type that value should match</param>
+    /// <returns></returns>
     public static bool checkTypeOkay(string attrib, string type)
     {
         // It is not this function's job to catch null values for data types. That would depend on the way the database table is set up for the corresponding column
@@ -181,23 +225,32 @@ public class Util
         switch (type)
         {
             case "date":
-                return true;
+                try
+                {
+                    new Date(attrib);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
 
             case "double unsigned":
-                return Double.TryParse(attrib, out double _);
+                return (Double.TryParse(attrib, out double doub) &&
+                        doub >= 0);
 
             case "int unsigned":
-                return Int32.TryParse(attrib, out int _) &&
-                       Int32.Parse(attrib) >= 0;
+                return Int32.TryParse(attrib, out int i) &&
+                       i >= 0;
 
             case "int":
                 return Int32.TryParse(attrib, out int _);
 
             case "varchar(255)":
-                return true;
+                return attrib.Length <= 255;
 
             case "varchar(45)":
-                return true;
+                return attrib.Length <= 45;
 
             case "mediumtext":
                 return true;
@@ -206,13 +259,31 @@ public class Util
                 return true;
 
             default:
-                return false;
+                throw new Exception("ERROR: UNKNOWN TYPE: " + type + "\n For attribute: " + attrib);
 
         }
     }
 
+
+    /// <summary>
+    /// Helper function for splitOnTopLevelCommas
+    /// Will clean up the string by
+    /// - removing comma at s[0],
+    /// - trim whitespace at start and end,
+    /// - trim quotes at s[0] and s[end]
+    /// Treats a  substring of a single quote as a valid substring
+    /// Since it could theoretically be a "valid" name for an item
+    /// 
+    /// ex: ', "Item-2"'
+    /// Gives: 'Item-2'
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
     public static string splitOnTopLevelCommas_StringCleanup(string s)
     {
+        if (s.Length == 0) { return ""; }
+
+
         // Clean up the split item to be added
         // Remove the comma
         if (s[0] == ',')
@@ -220,9 +291,15 @@ public class Util
             s = s.Substring(1);
         }
 
+        if (s.Length == 0) { return ""; } // Check for edge case, 0 length string after trimming anything off
+
         // Remove whitespaces
         s = s.Trim();
 
+        if (s.Length == 0) { return ""; }
+        // Return string of len 1 since nothing could be trimmed off it further.
+        // Ex: A single unmatched quote can be assumed to be a literal title of something since the quote wasn't paired
+        if (s.Length == 1) { return s; }
         // Remove any quotes
         if (s[0] == '\'')
         {
@@ -234,13 +311,18 @@ public class Util
         }
         return s;
     }
-    
-    // Split string inStr on commas, except the ones contained in strings inside of the string, encapsulated in quotes
-    // ie: ('2521', 'name "of i\'tem', '43', 435, .etc) will be split into the list (strings represented w/o quotes for simplicity)
-    //     { 2521,   name "of i\'tem,   43,  435, .etc }
+
+
+    /// <summary>
+    /// Split string inStr on commas, except the ones contained in strings inside of the string, encapsulated in quotes
+    //   ie: ('2521', 'name "of i\'tem', '43', 435, .etc) will be split into the list (strings represented w/o quotes for simplicity)
+    //       { 2521,   name "of i\'tem,   43,  435, .etc }
+    /// </summary>
+    /// <param name="s">String to be split</param>
+    /// <returns>List of the string s split on the top level commas</returns>
     public static List<string> splitOnTopLevelCommas(string s)
     {
-        if (s.Length == 0) return new List<string>();
+        if (s.Length == 0) return new List<string> {""};
 
         char escape = '/';
         char endQuote = (char)0;
@@ -308,7 +390,7 @@ public class Util
                 }
                 else if (i <= 0)
                 {
-                    throw new Exception("ERROR splitOnTopLevelCommas - current index <= 0, when it should be past zero for index: " + i);
+                    throw new Exception("ERROR splitOnTopLevelCommas - current curr <= 0, when it should be past zero for curr: " + i);
                 }
                 // Else, inStr[i] - 1 must be escape char, skip continue to next char
                 else
@@ -330,7 +412,7 @@ public class Util
 
         }
         // Add last element, (which doesn't have a comma after it)
-        if (lastTopLevelComma < s.Length - 1)
+        if (lastTopLevelComma <= s.Length - 1)
         {
             splitToBeAdded = s.Substring(lastTopLevelComma);
             splitToBeAdded = splitOnTopLevelCommas_StringCleanup(splitToBeAdded);
@@ -341,35 +423,54 @@ public class Util
 
     }
 
+
+    /// <summary>
+    /// Count number of a certain substrings found within a string
+    /// </summary>
+    /// <param name="str">String containing substrings</param>
+    /// <param name="substr">Substring to count in the main string</param>
+    /// <returns>Count of substring finds in the string</returns>
     public static int substringCount(string str, string substr)
     {
-        int count = -1;
+        if (substr == null || substr.Length == 0) { throw new Exception("Error: Substring to find is empty"); }
+        if (str == null) { throw new Exception("Error: string to search for is null"); }
+        if (str.Length == 0) {  return 0; }
+
+        int count = 0;
         int index = 0;
-        while (index != -1)
+        int curr = 0;
+        while (curr < str.Length)
         {
-            index = str.IndexOf(substr, index++);
+            index = str.IndexOf(substr, curr);
+            if (index == -1) { break; }
+            curr = index + 1;
             count++;
         }
         return count;
     }
 
-    // Given a string, it will split it on the first character
-    // Will split on top level commas
-    public static List<string> PairedCharTopLevelSplit(string inStr, char left)
+    /// <summary>
+    /// Given a string, it will split it on the first character
+    // Will split on top level pairings, not any commas
+    // Won't work on quotes, both "\"", and "'"
+    /// </summary>
+    /// <param name="inStr">String to split</param>
+    /// <param name="left">'left' of the pair of chars to split on (ex: '(', or '{')</param>
+    /// <returns>Returns a List of strings of the split of inStr</returns>
+    // 
+    public static List<string> pairedCharTopLevelSplit(string inStr, char left)
     {
 
-        if (inStr.Length == 0) return new List<string>();
+        if (inStr.Length == 0) return new List<string> { "" };
         Dictionary<char, char> LRDict = new Dictionary<char, char>() {
             { '(', ')' },
             { '[', ']' },
             { '{', '}' },
-            { '\'', '\'' },
-            { '"' , '"'  }};
+        };
 
         if (!LRDict.ContainsKey(left))
         {
-            Console.WriteLine("ERROR splitOnFirstChar (SplitOnTopLevelPairs): Unknown Paired-Char to Split on encountered: " + left);
-            return new List<string>();
+            throw new Exception("ERROR splitOnFirstChar (SplitOnTopLevelPairs): Unknown Paired-Char to Split on encountered: " + left);
         }
         char right = LRDict[left];
 
@@ -416,7 +517,7 @@ public class Util
             }
             if (c == right) pairCount--;
 
-            if (pairCount < 0) break;
+            if (pairCount < 0) throw new Exception("\"ERROR splitOnFirstChar (SplitOnTopLevelPairs): Unbalanced start/end pairings. More ends than starts");
 
             // Even top-level pairing found
             if (pairCount == 0 && !needNewL)
@@ -428,12 +529,18 @@ public class Util
 
         if (pairCount != 0)
         {
-            Console.WriteLine("ERROR splitOnFirstChar (SplitOnTopLevelPairs): Unbalanced Pairing");
+            throw new Exception("ERROR splitOnFirstChar (SplitOnTopLevelPairs): Unbalanced start/end pairings. More starts than ends");
         }
 
         return result;
     }
 
+
+    /// <summary>
+    /// For the raw output of a database query that includes images, give a list of tuples that mark the start and end token positions of the images
+    /// </summary>
+    /// <param name="inStr">raw query output from python containing image start and end tokens</param>
+    /// <param name="imgStartsAndEnds">List containing tuples that mark the start and end token positions of the images</param>
     private static void getImageStartEnds(string inStr, out List<Tuple<int, int>> imgStartsAndEnds)
     {
         imgStartsAndEnds = new List<Tuple<int, int>>();
@@ -489,6 +596,7 @@ public class Util
     {
         for (int i = 0; i < controlAttribs.Length-1; i++)
         {
+            if (controlAttribs[i] == null) throw new Exception("ERROR: Null Dictionary when combining dictionaries!");
             controlAttribs[0] = _combineDictionaries(controlAttribs[i], controlAttribs[i+1]);
         }
         return controlAttribs[0];
@@ -515,8 +623,23 @@ public class Util
 
         public int year, month, day;
 
+        private void checkValidDate(int y, int m, int d)
+        {
+            if (y == -1 && m == -1 && d == -1) { return; } // -1/ -1/ -1 is fine for default date
+            try
+            {
+                new DateTime(y, m, d);
+            }
+            catch
+            {
+                throw new Exception("ERROR: Invalid Date: Y-" + year + " M-" + month + " D-" + day);
+            }
+        }
+
         public Date(int y, int m, int d)
         {
+            
+            checkValidDate(y,m,d);
             this.year = y;
             this.month = m;
             this.day = d;
@@ -524,9 +647,9 @@ public class Util
 
         public Date(string s)
         {
-            if (s.CompareTo("") == 0) { this = new Date(); return; }
+            if (s.CompareTo("") == 0) { throw new Exception("ERROR: Empty Date Given"); }
 
-            // Assumed to be format "datetime.date(yyyy, mm, dd)"
+            // Assumed to be format "datetime.date(yyyy, (m)m, (d)d)"
             if (s.Length > 14 && s.Substring(0, 14).CompareTo("datetime.date(") == 0)
             {
                 List<string> components = new List<string>(s.Split(", "));
@@ -534,7 +657,7 @@ public class Util
                 month = Int32.Parse(components[1]);
                 day = Int32.Parse(components[2].Trim(')'));
             }
-            // Assumed to be format "yyyy-mm-dateList"
+            // Assumed to be format "yyyy-mm-dd"
             else
             {
                 List<string> components = new List<string>(s.Split("-"));
@@ -542,6 +665,8 @@ public class Util
                 month = Int32.Parse(components[1]);
                 day = Int32.Parse(components[2]);
             }
+
+            this = new Date(year, month, day);
         }
 
         public Date(Control d)
@@ -559,13 +684,6 @@ public class Util
                 this.day = dtp.Value.Day;
         }
 
-        public Date(DateTime d)
-        {
-            this.year  = d.Year;
-            this.month = d.Month;
-            this.day   = d.Day;
-        }
-
         public Date(DateTimePicker d)
         {
             this.year = d.Value.Year;
@@ -576,6 +694,13 @@ public class Util
         public string toDateString()
         {
             return  year + "-" + month + "-" + day;
+        }
+
+        // Note: Should not restrict input to only date-valid integers since this method should work for "invalid" dates that the user may want to display intentionally
+        // This is espically true since this func is also used to test constructors for invalid dates.
+        public static string toDateString(int y, int m, int d)
+        {
+            return y + "-" + m + "-" + d;
         }
         
         public DateTime toDateTime()
