@@ -26,12 +26,16 @@ def convertImageData(result, colNames, f):
 	f.write("Here1.5")
 	return result
 
-def runQuery(query):
+def runQuery(query, testing):
 
 
 	f = open("C:/Users/Owner/Desktop/debug.txt", 'a')
 	# user: testuser, pass: testuser
-	cnx = mysql.connector.connect(user='testuser', password='testuser', host='127.0.0.1', database='tool_database', get_warnings=True)
+	if testing :
+		cnx = mysql.connector.connect(user='testuser', password='testuser', host='127.0.0.1', database='tool_database_testing', get_warnings=True)
+	else :
+		cnx = mysql.connector.connect(user='testuser', password='testuser', host='127.0.0.1', database='tool_database', get_warnings=True)
+
 	cnx.autocommit=True
 	cursor = cnx.cursor()
 	cnx.rollback()

@@ -31,8 +31,8 @@ public static class Database
     const string END_COL_MARKER = "END OF COLUMN NAMES"; // Marker to the End of Column Names
     const string EOS = "EOS";     // end-of-stream
     static Size maxDims = new Size(300, 300);
-    
 
+    public static bool TESTING = false;
 
     
     private static List<string> getTableNames()
@@ -655,10 +655,9 @@ public static class Database
             dynamic os = Py.Import("os");
             dynamic sys = Py.Import("sys");
             sys.path.append(os.path.dirname(os.path.expanduser(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Python\")));
-
             // Start Dtb Connector
             dynamic Connector = Py.Import("Connection.DtbConnAndQuery");
-            PyObject[] rawResult = Connector.runQuery(query);
+            PyObject[] rawResult = Connector.runQuery(query, TESTING);
             
             string ErrMsg = "ERROR: NULL rawResult val in Database.cs:runPython()";
             List<List<string>> result = new List<List<string>>();
