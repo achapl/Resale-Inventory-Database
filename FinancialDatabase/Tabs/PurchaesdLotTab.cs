@@ -300,7 +300,7 @@ public class PurchasedLotTab : Tab
         { 
             DateTime dt = Form1.PurcDatePicker.Value;
             purcDate = new (dt.Year, dt.Month, dt.Day);
-            purcID = Database.newPurchase(Int32.Parse(Form1.PurcPurcPriceTextbox.Text), Form1.PurcPurcNotesTextbox.Text, purcDate);
+            purcID = Database.insertPurchase(Int32.Parse(Form1.PurcPurcPriceTextbox.Text), Form1.PurcPurcNotesTextbox.Text, purcDate);
 
         }
         // Incorrectly formed new purchase from user input, don't continue on

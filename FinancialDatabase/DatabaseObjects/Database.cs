@@ -32,7 +32,7 @@ public static class Database
     const string EOS = "EOS";     // end-of-stream
     static Size maxDims = new Size(300, 300);
 
-    public static bool TESTING = false;
+    private static bool TESTING = false;
 
     
     private static List<string> getTableNames()
@@ -457,7 +457,7 @@ public static class Database
     // Insert a new purchase into the database
     // Note: This does not insert an item to go with it, just the purchase itself
     // Return the purcID
-    public static int newPurchase(int purcPrice, string notes, Date PurcDate)
+    public static int insertPurchase(int purcPrice, string notes, Date PurcDate)
     {
         string query = QueryBuilder.insertPurchaseQuery(purcPrice, notes, PurcDate);
         int purcID;
@@ -849,5 +849,19 @@ public static class Database
         }
         return purchases[0];
 
+    }
+
+    public static void clearAll()
+    {
+        if (TESTING)
+        {
+            runStatement("DELETE FROM purchase;");
+            runStatement("DELETE FROM sale;");
+            runStatement("DELETE FROM shipping;");
+            runStatement("DELETE FROM thumbnail;");
+            runStatement("DELETE FROM image;");
+            runStatement("DELETE FROM fee;");
+            runStatement("DELETE FROM item;");
+        }
     }
 }
