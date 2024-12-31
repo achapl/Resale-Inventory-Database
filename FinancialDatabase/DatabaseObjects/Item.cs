@@ -114,7 +114,7 @@ public class Item : IEquatable<Item>
         {
             string itemAttribute = item[i];
             // Missing info, skip
-            if (item[i].CompareTo("None") == 0)
+            if (itemAttribute.CompareTo("None") == 0)
             {
                 itemAttribute = null!;
             }
@@ -369,6 +369,9 @@ public class Item : IEquatable<Item>
             case "purchase.Notes_purchase":
                 ret = get_Notes_purchase();
                 break;
+            case "purchase.Date_Purchased":
+                ret = get_Date_Purchased_str();
+                break;
 
             // From sale table
             case "sale.Buyer":
@@ -445,7 +448,7 @@ public class Item : IEquatable<Item>
             ret.CompareTo(Util.DEFAULT_INT.ToString())  == 0 ||
             ret.CompareTo(Util.DEFAULT_STRING) == 0)
         {
-            ret = "";
+            throw new Exception("ERROR: Unknown attribute: " + attrib);
         }
     }
 
@@ -532,6 +535,12 @@ public class Item : IEquatable<Item>
     public void set_ITEM_ID(string ITEM_ID) => this.ITEM_ID = Int32.Parse(ITEM_ID);
     public void set_Name(string Name)
     {
+        if (Name.CompareTo("") == 0)
+        { 
+            this.Name = "";
+            return;
+        }
+
         // Trim off any quotations around the name should there be any
         if (Name[0] == Name[Name.Length - 1] && Name[0] == '\'')
         {
@@ -787,7 +796,7 @@ public class Item : IEquatable<Item>
     {
         if (date == null)
         {
-            return new Date(0, 0, 0);
+            return Util.DEFAULT_DATE;
         }
         // date is format (y,m,d): "datetime.date(2020, 1, 1)" 
         date = date.Remove(0, "datetime.date".Length);

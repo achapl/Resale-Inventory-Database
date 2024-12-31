@@ -434,8 +434,6 @@ public class ItemViewTab : Tab
         {
             return;
         }
-
-        int newThumbnailID = Database.getImageThumbnailID(currImageID);
-        Database.runStatement("UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + getCurrItem().get_ITEM_ID() + ";");
+        Database.setThumbnail(tabController.getCurrItem().get_ITEM_ID(), currImageID);
     }
 }

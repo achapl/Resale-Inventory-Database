@@ -53,9 +53,12 @@ public static class Database
 
 
 
-
-    // Gets the names of a table's columns
-    // And for each column, and list of attributes as strings
+    /// <summary>
+    /// Gets the names of a table's columns
+    /// And for each column, and list of attributes as strings
+    /// </summary>
+    /// <param name="tableName">Table to get the col info for</param>
+    /// <returns>A list of (a list of attributes as strings for each col)</returns>
     private static List<List<string>> getColumnsInfo(string tableName)
     {
         // Init vals
@@ -82,13 +85,14 @@ public static class Database
         return infoForEachCol;
     }
 
-
-    // Get a table that covers all column-info for each column for each table
-    // Returns something such as:
-    // { { {'item',     'ITEM_ID',     'int unsigned', ...},
-    //     {'item',     'PurcID_item', 'int unsigned', ...} },
-    //   { {'purchace', 'PURCHACE_ID', 'int unsigned', ...},
-    //     {'purchace', 'amount',  'int unsigned', ...} } }
+    /// <summary>
+    /// Get a table that covers all column-info for each column for each table
+    /// </summary>
+    /// <returns>Returns something such as:
+    /// { { {'item',     'ITEM_ID',     'int unsigned', ...},
+    ///     {'item',     'PurcID_item', 'int unsigned', ...} },
+    ///   { {'purchace', 'PURCHACE_ID', 'int unsigned', ...},
+    ///     {'purchace', 'amount',      'int unsigned', ...} } }</returns>
     private static List<List<List<string>>> getColsInfoAllTables()
     {
         List<List<List<string>>> colInfoAllTables = new List<List<List<string>>>();
@@ -103,15 +107,13 @@ public static class Database
 
         return colInfoAllTables;
     }
-    
-
-    public static Item getItem(Item item)
-    {
-        return getItem(item.get_ITEM_ID());
-    }
 
 
-    // Gets a Item from the database given the item's itemID
+    /// <summary>
+    /// Gets a Item from the database given the item's itemID
+    /// </summary>
+    /// <param name="itemID">ID of item to get from database</param>
+    /// <returns>Item represenation of info in databaes</returns>
     public static Item getItem(int itemID)
     {
         string query = QueryBuilder.completeItemIDSearchQuery(itemID);
@@ -138,6 +140,13 @@ public static class Database
         return item;
     }
 
+
+    /// <summary>
+    /// Gets all items from a single purchase
+    /// Purchase is identified by an object from that purchase group
+    /// </summary>
+    /// <param name="item">Item from the purchase used to identify that purchase group</param>
+    /// <returns>List of items from that purchse</returns>
     public static List<Item> getPurchItems(Item item)
     {
         string query = QueryBuilder.purchaseQuery(item);
@@ -145,7 +154,11 @@ public static class Database
     }
 
 
-    // Gets a Sale from the database given the sale's saleID
+    /// <summary>
+    /// Gets a Sale from the database given the sale's saleID
+    /// </summary>
+    /// <param name="saleID">ID of Sale to search for</param>
+    /// <returns>Object representing sale</returns>
     public static Sale getSale(int saleID)
     {
         string querySale = QueryBuilder.getSaleByID(saleID);
@@ -173,12 +186,14 @@ public static class Database
     }
 
 
-    // Get the types of each column from all tables form the database
-    // Returns dictionary of the format <key,value>
-    //      <columnName, sqlType>
-    // where columnName is of the format
-    //      tableName.columnName
-    // ex:  colDataTypes[ITEM_ID] = 'item.int unsigned' 
+    /// <summary>
+    /// Get the types of each column from all tables form the database
+    /// </summary>
+    /// <returns> Returns dictionary of the format <key,value>
+    ///      <columnName, sqlType>
+    /// where columnName is of the format
+    ///      tableName.columnName
+    /// ex:  colDataTypes[ITEM_ID] = 'item.int unsigned' </returns>
     public static Dictionary<string, string> getColDataTypes()
     {
         // Init vals
@@ -219,11 +234,19 @@ public static class Database
         return colDataTypes;
     }
 
+
+    /// <summary>
+    /// For the item search tab
+    /// Given a search query, will search the database for items related to the query
+    /// </summary>
+    /// <param name="Q"> Object that represents user-input search query</param>
+    /// <returns>List of Items from the database</returns>
     public static List<Item> getItems(SearchQuery Q)
     {
         string query = QueryBuilder.searchByNameQuery(Q);
         return getItems(query, true);
     }
+
 
     private static List<Item> getItems(string query, bool includeThumbnails)
     {
@@ -249,14 +272,15 @@ public static class Database
         return parsedItems;
     }
 
-    // General search queries, done by manual string input
-    // Returns a list of the items found by the query
-    // Can opt with includeThumbnails to attach thumbnails with ResultItems
-    public static List<Item> getItems(Item item, bool includeThumbnails)
-    {
-        return getItems(item.get_ITEM_ID(), includeThumbnails);
-    }
 
+    /// <summary>
+    /// For the item search tab
+    /// Given an itemID, it will search the database for items related to the query
+    /// This gives a complete item, with purchase info, shipping info, .etc
+    /// </summary>
+    /// <param name="itemID"> itemID of object to search for</param>
+    /// <param name="includeThumbnails"> Include thumbnail images with the returned items</param>
+    /// <returns>List of Items from the database</returns>
     public static List<Item> getItems(int itemID, bool includeThumbnails)
     {
         string query = QueryBuilder.completeItemIDSearchQuery(itemID);
@@ -367,7 +391,12 @@ public static class Database
         return parsedItems;
     }
 
-    // Get a list of Sale objects given the search query
+
+    /// <summary>
+    /// Get a list of Sale objects given the search query
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
     public static List<Sale> runSaleSearchQuery(Item item)
     {
         string query = QueryBuilder.saleQuery(item);
@@ -386,7 +415,14 @@ public static class Database
     }
 
 
-    // Run a given SQL statement with ability to return col names and lastrowid
+    /// <summary>
+    /// Run a given SQL statement with ability to return col names and lastrowid
+    /// </summary>
+    /// <param name="statement">MySQL Statement to run</param>
+    /// <param name="colNames">ColNames if the statement returns any rows. Note: These rows may be for MySQL Database variables, not necessiarily just column names from a table</param>
+    /// <param name="lastrowid">If MySQL Statement creates, updates, or deletes row, that rowID number would be returned here</param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public static string runStatement(string statement, out List<string> colNames, out int lastrowid)
     {
         string retList;
@@ -454,10 +490,12 @@ public static class Database
     }
 
 
-    // Insert a new purchase into the database
-    // Note: This does not insert an item to go with it, just the purchase itself
-    // Return the purcID
-    public static int insertPurchase(int purcPrice, string notes, Date PurcDate)
+    /// <summary>
+    /// Insert a new purchase into the database
+    /// Note: This does not insert an item to go with it, just the purchase itself
+    /// </summary>
+    /// <returns>Returns the ID of the purchase inserted</returns>
+    public static int insertPurchase(double purcPrice, string notes, Date PurcDate)
     {
         string query = QueryBuilder.insertPurchaseQuery(purcPrice, notes, PurcDate);
         int purcID;
@@ -466,8 +504,10 @@ public static class Database
     }
 
 
-    // Insert a Item into the database
-    // Returns colInfo of running the SQL statement
+    /// <summary>
+    /// Insert a Item into the database
+    /// </summary>
+    /// <returns>Returns colInfo of running the SQL statement</returns>
     public static string insertItem(Item item)
     {
         int throwaway;
@@ -508,11 +548,17 @@ public static class Database
     }
 
 
-    // Returns colInfo of running the SQL statement
     public static string insertSale(Sale sale)
     {
+        return insertSale(sale, out int _);
+    }
+
+
+    // Returns colInfo of running the SQL statement
+    public static string insertSale(Sale sale, out int lastrowid)
+    {
         string query = QueryBuilder.saleInsertQuery(sale);
-        string output = runStatement(query);
+        string output = runStatement(query, out lastrowid);
         return output;
     }
 
@@ -596,8 +642,10 @@ public static class Database
     }
 
 
-    public static void insertImage(string filePath, int itemID)
+    public static int insertImage(string filePath, int itemID)
     {
+        if (filePath == null) { throw new Exception("ERROR: No image path to inesrt"); }
+
         // Copy file to database folder
         string copiedFile = copyImageToDtbFolder(filePath);
 
@@ -631,6 +679,7 @@ public static class Database
         // Clean up copied files after uploading the image
         File.Delete(copiedFile);
         File.Delete(resizedImFileDest);
+        return imageID;
     }
 
 
@@ -720,11 +769,23 @@ public static class Database
     }
 
 
+
+    public static void deleteImages(Item item)
+    {
+        string query = QueryBuilder.deleteImagesQuery(item);
+        runStatement(query);
+
+        query = QueryBuilder.setThumbnail(item.get_ITEM_ID(), null);
+        runStatement(query);
+    }
+
+
     public static void deleteShipInfo(Item item)
     {
         string query = QueryBuilder.deleteShipInfoQuery(item);
         runStatement(query);
     }
+
 
     // Checks if the given purchase has no items associated with it
     private static bool isEmptyPurchase(int purcID)
@@ -770,7 +831,7 @@ public static class Database
 
     
     // Given an imageID, get it's thumbnailID
-    public static int getImageThumbnailID(int currImageID)
+    private static int getImageThumbnailID(int currImageID)
     {
         string rawResult = runStatement("SELECT thumbnailID FROM image WHERE IMAGE_ID = " + currImageID + ";");
 
@@ -786,7 +847,7 @@ public static class Database
     public static bool updateRow(Item resultItem, string attrib, string newVal)
     {
         string query = QueryBuilder.updateQuery(resultItem, attrib, newVal);
-        return Database.runStatement(query).CompareTo("ERROR") != 0;
+        return Database.runStatement(query).CompareTo("['ERROR']") != 0; // "ERROR"?
     }
     
     public static bool updateRow(Item resultItem, string attrib, int newVal)
@@ -815,6 +876,7 @@ public static class Database
         return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
 
+
     public static void insertShipInfo(Item resultItem, int weightLbs, int weightOz, int l, int w, int h)
     {
         string query = QueryBuilder.shipInfoInsertQuery(resultItem, weightLbs, weightOz, l, w, h);
@@ -830,12 +892,14 @@ public static class Database
         output = Database.runStatement(query);
     }
 
+
     public static bool deleteSale(Sale currSale)
     {
         string query = QueryBuilder.deleteSaleQuery(currSale);
         string output = runStatement(query);
         return output.CompareTo("ERROR") == 0;
     }
+
 
     public static Purchase getPurchase(Item item)
     {
@@ -850,6 +914,29 @@ public static class Database
         return purchases[0];
 
     }
+
+
+    public static List<MyImage> getImages(Item item)
+    {
+        string query = QueryBuilder.getImages(item);
+        string rawOutput = runStatement(query, out List<string> colNames);
+        return DtbParser.parseImages(rawOutput, colNames);
+    }
+
+
+    public static void setThumbnail(int itemID, int imageID)
+    {
+        // Check defualt val. Do nothing
+        if (itemID == Util.DEFAULT_INT)
+        {
+            return;
+        }
+
+        int newThumbnailID = Database.getImageThumbnailID(imageID);
+        string query = QueryBuilder.setThumbnail(itemID, newThumbnailID);
+        Database.runStatement(query);
+    }
+
 
     public static void clearAll()
     {

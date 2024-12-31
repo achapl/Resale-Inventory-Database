@@ -13,21 +13,6 @@ using FormsLabel = System.Windows.Forms.Label;
 public class TestUtil
 {
 
-    Image defImage;
-
-    [OneTimeSetUp]
-    public void OneTimeSetup()
-    {
-        defImage = Image.FromFile(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Resources\NoImage.png");
-
-    }
-
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
-    {
-        defImage.Dispose();
-    }
-
     [SetUp]
     public void Setup()
     {
@@ -61,14 +46,14 @@ public class TestUtil
     [Test]
     public void Test_DefaultVal_Image()
     {
-        Assert.IsTrue(compareImages(defImage, Util.DEFAULT_IMAGE.image));
+        Assert.IsTrue(TestingUtil.compareImages(TestingUtil.defImage, Util.DEFAULT_IMAGE.image, false));
         Assert.AreEqual(-1, Util.DEFAULT_IMAGE.imageID);
     }
 
     [Test]
     public void Test_DefaultVal_Images()
     {
-        Assert.IsTrue(compareImages(defImage, Util.DEFAULT_IMAGES[0].image));
+        Assert.IsTrue(TestingUtil.compareImages(TestingUtil.defImage, Util.DEFAULT_IMAGES[0].image, false));
         Assert.AreEqual(-1, Util.DEFAULT_IMAGES[0].imageID);
     }
 
@@ -446,7 +431,7 @@ public class TestUtil
         new object[] {"This,string,is,a,test", new List<string> {"This", "string", "is", "a", "test"} },
         new object[] {", ", new List<string> {"",""} },
         new object[] {",", new List<string> {"",""} },
-        new object[] {"", new List<string> {""} },
+        new object[] {"", new List<string> { } },
     };
     [TestCaseSource(nameof(splitOnTopLevelCommasCases))]
     public static void Test_splitOnTopLevelCommas(string s, List<string> expected)
@@ -498,7 +483,7 @@ public class TestUtil
         new object[] {"[This],[ is a test]", '[', new List<String> {"This", " is a test"} },
         new object[] {"[Cat]asfaslfijat[Dog]", '[', new List<string> { "Cat", "Dog"} },
         new object[] {"{}",'{', new List<string>{ "" } },
-        new object[] {"", '(', new List<string>{ "" } },
+        new object[] {"", '(', new List<string>{ } },
     };
     [TestCaseSource(nameof(pairedCharTopLevelSplitCases))]
     public static void Test_pairedCharTopLevelSplit(string input, char left, List<string> expected)
@@ -673,26 +658,5 @@ public class TestUtil
         DateTime control = new DateTime(y, m, d);
         Util.Date test  = new Util.Date(y, m, d);
         Assert.AreEqual(control, test.toDateTime());
-    }
-
-
-
-
-    public bool compareImages(Image image1, Image image2)
-    {
-        Bitmap bmp1 = new Bitmap(image1);
-        Bitmap bmp2 = new Bitmap(image2);
-
-        for (int i = 0; i < defImage.Width; i++)
-        {
-            for (int j = 0; j < defImage.Height; j++)
-            {
-                if (!bmp1.GetPixel(i, j).Equals(bmp2.GetPixel(i, j)))
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

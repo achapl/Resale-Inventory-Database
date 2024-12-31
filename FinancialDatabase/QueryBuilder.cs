@@ -121,7 +121,7 @@ namespace FinancialDatabase
             return "SELECT * FROM sale WHERE ItemID_sale = " + item.get_ITEM_ID().ToString() + ";";
         }
 
-        public static string insertPurchaseQuery(int purcPrice, string purcNotes, Date d)
+        public static string insertPurchaseQuery(double purcPrice, string purcNotes, Date d)
         {
             return "INSERT INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", \"" + purcNotes + "\", " + formatAttribute(d.toDateString(), "date") + ");";
         }
@@ -158,7 +158,7 @@ namespace FinancialDatabase
         {
             if (l <= 0 ||  w <= 0 || h <= 0 || weightOz < 0 || weightLbs < 0 || (weightOz == 0 && weightLbs == 0))
             {
-                return "ERROR: Incorrect Shipping Info Given";
+                throw new Exception("ERROR: Incorrect Shipping Info Given. Possible value <=0");
             }
 
             int ttlWeight = weightLbs * 16 + weightOz;
@@ -167,10 +167,6 @@ namespace FinancialDatabase
 
         public static string deleteShipInfoQuery(Item item)
         {
-            if (item.get_ShippingID() == Util.DEFAULT_INT)
-            {
-                return "ERROR: NO shipping info to delete. QueryBuilder.BuildDelShipInfoQuery()";
-            }
 
             int shipID = item.get_ShippingID();
 
@@ -248,7 +244,7 @@ namespace FinancialDatabase
                     itemID = table + ".PURCHASE_ID = " + currItem.get_PurchaseID();
                     break;
                 case "sale":
-                    itemID = table + "._ID = " + currItem.get_SaleID();
+                    itemID = table + ".SALE_ID = " + currItem.get_SaleID();
                     break;
 
 
@@ -337,7 +333,7 @@ namespace FinancialDatabase
 
         public static string deleteAllSalesQuery(Item item)
         {
-            return "DELETE FROM sale WHERE sale.Item_ID_sale = " + item.get_ITEM_ID() + ";";
+            return "DELETE FROM sale WHERE sale.ItemID_sale = " + item.get_ITEM_ID() + ";";
         }
 
         public static string deleteItemQuery(Item item)
@@ -390,6 +386,24 @@ namespace FinancialDatabase
         internal static void setColDataTypesLocal(Dictionary<string, string> colDataTypes)
         {
             colDataTypesLocal = colDataTypes;
+        }
+
+        internal static string deleteImagesQuery(Item item)
+        {
+            return "DELETE FROM image WHERE ItemID =" + item.get_ITEM_ID() + ";";
+        }
+
+        internal static string setThumbnail(int itemID, int? newThumbnailID)
+        {
+            if (newThumbnailID.HasValue)
+                return "UPDATE item SET ThumbnailID = " + newThumbnailID + " WHERE item.ITEM_ID = " + itemID + ";";
+            else
+                return "UPDATE item SET ThumbnailID = NULL WHERE item.ITEM_ID = " + itemID + ";";
+        }
+
+        internal static string getImages(Item item)
+        {
+            return "SELECT * FROM image WHERE Item_ID = " + item.get_ITEM_ID() + ";";
         }
     }
 }

@@ -322,7 +322,7 @@ public class Util
     /// <returns>List of the string s split on the top level commas</returns>
     public static List<string> splitOnTopLevelCommas(string s)
     {
-        if (s.Length == 0) return new List<string> {""};
+        if (s.Length == 0) return new List<string> {};
 
         char escape = '/';
         char endQuote = (char)0;
@@ -461,7 +461,7 @@ public class Util
     public static List<string> pairedCharTopLevelSplit(string inStr, char left)
     {
 
-        if (inStr.Length == 0) return new List<string> { "" };
+        if (inStr.Length == 0) return new List<string> { };
         Dictionary<char, char> LRDict = new Dictionary<char, char>() {
             { '(', ')' },
             { '[', ']' },
