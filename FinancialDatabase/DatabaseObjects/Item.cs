@@ -30,12 +30,6 @@ public class Item : IEquatable<Item>
     string Seller;
     string Notes_purchase;
 
-    // From sale table
-    Date Date_Sold;
-    double Amount_sale;
-    double Fees_sale;
-    string Buyer;
-
     // From shipping table
     int Length;
     int Width;
@@ -56,12 +50,6 @@ public class Item : IEquatable<Item>
     {
         setDefaults();
     }
-    #pragma warning disable CS8618 // Util.DEFAULTs are set to non-null vals
-    public Item(string item, List<string> colNames)
-	{
-        this.setDefaults();
-		this.rawResult = item;
-	}
     
     void setDefaults()
     {
@@ -85,12 +73,6 @@ public class Item : IEquatable<Item>
         Fees_purchase   = Util.DEFAULT_DOUBLE;
         Seller          = Util.DEFAULT_STRING;
         Notes_purchase  = Util.DEFAULT_STRING;
-
-        // From sale table
-        Date_Sold       = Util.DEFAULT_DATE;
-        Amount_sale     = Util.DEFAULT_DOUBLE;
-        Fees_sale       = Util.DEFAULT_DOUBLE;
-        Buyer           = Util.DEFAULT_STRING;
 
         // From shipping table
         Length          = Util.DEFAULT_INT;
@@ -168,20 +150,6 @@ public class Item : IEquatable<Item>
                     set_Notes_purchase(itemAttribute);
                     break;
 
-                // From sale table
-                case "Date_Sold":
-                    set_Date_Sold(itemAttribute);
-                    break;
-                case "Amount_sale":
-                    set_Amount_sale(itemAttribute);
-                    break;
-                case "Fees_sale":
-                    set_Fees_sale(itemAttribute);
-                    break;
-                case "Buyer":
-                    set_Buyer(itemAttribute);
-                    break;
-
                 // From shipping table
                 case "Length":
                     set_Length(itemAttribute);
@@ -234,11 +202,6 @@ public class Item : IEquatable<Item>
                 break;
             case "purchase.Notes_purchase":
                 ret = get_Notes_purchase();
-                break;
-
-            // From sale table
-            case "sale.Buyer":
-                ret = get_Buyer();
                 break;
 
             // From shipping table
@@ -309,14 +272,6 @@ public class Item : IEquatable<Item>
                 ret = get_Fees_purchase();
                 break;
 
-            // From sale table
-            case "sale.Amount_sale":
-                ret = get_Amount_sale();
-                break;
-            case "sale.Fees_sale":
-                ret = get_Fees_sale();
-                break;
-
             // From shipping table
             case "shipping.Length":
                 ret = get_Length();
@@ -337,11 +292,6 @@ public class Item : IEquatable<Item>
     {
         switch (attrib)
         {
-            // From sale table
-            case "sale.Date_Sold":
-                ret = get_Date_Sold();
-                break;
-
             // From purchase table
             case "purhcase.Date_Purchased":
                 ret = get_Date_Purchased();
@@ -371,11 +321,6 @@ public class Item : IEquatable<Item>
                 break;
             case "purchase.Date_Purchased":
                 ret = get_Date_Purchased_str();
-                break;
-
-            // From sale table
-            case "sale.Buyer":
-                ret = get_Buyer();
                 break;
 
             // From shipping table
@@ -433,14 +378,6 @@ public class Item : IEquatable<Item>
             case "purchase.Fees_purchase":
                 ret = get_Fees_purchase().ToString();
                 break;
-
-            // From sale table
-            case "sale.Amount_sale":
-                ret = get_Amount_sale().ToString();
-                break;
-            case "sale.Fees_sale":
-                ret = get_Fees_sale().ToString();
-                break;
         }
 
         if (ret.CompareTo(Util.DEFAULT_DATE.toDateString()) == 0 || 
@@ -495,16 +432,6 @@ public class Item : IEquatable<Item>
     public double get_Fees_purchase() => Fees_purchase;
     public string get_Seller() => Seller;
     public string get_Notes_purchase() => Notes_purchase;
-
-    // From sale table
-    public Date get_Date_Sold() => Date_Sold;
-
-    public string get_Date_Sold_str() => this.Date_Sold.toDateString();
-
-    public double get_Amount_sale() => Amount_sale;
-    public double get_Fees_sale() => Fees_sale;
-    public string get_Buyer() => Buyer;
-
     // From shipping table
     public int get_Length() => Length;
     public int get_Width() => Width;
@@ -559,7 +486,7 @@ public class Item : IEquatable<Item>
     {
         if (PurchaseID == null)
         {
-            this.PurchaseID = -1;
+            this.PurchaseID = Util.DEFAULT_INT;
         }
         else
         {
@@ -653,38 +580,6 @@ public class Item : IEquatable<Item>
     public void set_Seller(string Seller) => this.Seller = Seller;
     public void set_Notes_purchase(string Notes_purchase) => this.Notes_purchase = Notes_purchase;
     
-
-    // From sale table
-    public void set_Date_Sold(int year, int month, int day) => this.Date_Sold = new Date(year, month, day);
-    public void set_Date_Sold(Date date) => this.Date_Sold = date;
-    public void set_Date_Sold(string date) => this.Date_Sold = parseDate(date);
-    public void set_Amount_sale(double Amount_sale) => this.Amount_sale = Amount_sale;
-    public void set_Amount_sale(string Amount_sale)
-    {
-        if (Amount_sale == null)
-        {
-            this.Amount_sale = -1.0;
-        }
-        else
-        {
-            this.Amount_sale = Double.Parse(Amount_sale);
-        }
-    }
-    public void set_Fees_sale(double Fees_sale) => this.Fees_sale = Fees_sale;
-    public void set_Fees_sale(string Fees_sale)
-    {
-        if (Fees_sale == null)
-        {
-            this.Fees_sale = -1.0;
-        }
-        else
-        {
-            this.Fees_sale = Double.Parse(Fees_sale);
-        }
-    }
-    public void set_Buyer(string Buyer) => this.Buyer = Buyer;
-    
-
 
     // From shipping table
     public void set_Length(int Length) => this.Length = Length;

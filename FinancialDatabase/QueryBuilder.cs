@@ -203,9 +203,6 @@ namespace FinancialDatabase
                 case "purchase":
                     itemID = table + ".PURCHASE_ID = " + currItem.get_PurchaseID();
                     break;
-                case "sale":
-                    itemID = table + "._ID = " + currItem.get_SaleID();
-                    break;
 
 
             }
@@ -243,10 +240,6 @@ namespace FinancialDatabase
                 case "purchase":
                     itemID = table + ".PURCHASE_ID = " + currItem.get_PurchaseID();
                     break;
-                case "sale":
-                    itemID = table + ".SALE_ID = " + currItem.get_SaleID();
-                    break;
-
 
             }
             // Note: Since, for example, item : purchase is a many to 1 relationship (buying a lot),
@@ -275,7 +268,6 @@ namespace FinancialDatabase
             string query;
             string itemID = sale.get_SALE_ID().ToString();
 
-            
             string updatedText = formatAttribute(updateText, type);
 
             if (table.CompareTo("sale") != 0) {

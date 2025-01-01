@@ -31,7 +31,7 @@ public class TestDatabase
 
 
 
-    private static object[] dtbTestingItemsGeneric =
+    private static object[] testingItemsArrays =
     {
         //            0          1      2                          3        4        5          6         7       8                            8[0]   8[1]                        8[2]     9
         //            name,      price, purc date,                 initQty, currQty, image,     imageID,  itemID, sales                        amount, date,                      saleID   purcID
@@ -40,14 +40,6 @@ public class TestDatabase
         new object[] {"Item2",   200.0, new Util.Date(1978,12,17), 2,       1,       imagePath, null,     null,   new object[] { new object[] { 220.0, new Util.Date(1979, 12, 16), null }}, null,},
         new object[] {"Item3",   300.0, new Util.Date(1978,12,18), 2,       1,       null,      null,     null,   new object[] { new object[] { 330.0, new Util.Date(1979, 12, 16), null }}, null,},
         new object[] {"Item4",   400.0, new Util.Date(1978,12,18), 2,       1,       null,      null,     null,   new object[] { new object[] { 440.0, new Util.Date(1979, 12, 16), null }}, null,},
-    };
-
-    private static object[] dtbTestingItemsGeneric_Sales =
-    {
-        //            amount, date,                      saleID
-        new object[] {110.0,  new Util.Date(1979,12,16), null},
-        new object[] {220.0,  new Util.Date(1979,12,16), null},
-        new object[] {330.0,  new Util.Date(1979,12,16), null},
     };
 
     private static object[] dtbTestingItemsSamePurc =
@@ -60,7 +52,7 @@ public class TestDatabase
 
     private static int getNumTestingItems()
     {
-        return dtbTestingItemsGeneric.Length + dtbTestingItemsSamePurc.Length;
+        return testingItemsArrays.Length + dtbTestingItemsSamePurc.Length;
     }
 
     [OneTimeSetUp]
@@ -88,7 +80,7 @@ public class TestDatabase
 
     private static void addGenericItems_Sales()
     {
-        foreach (object[] item in dtbTestingItemsGeneric)
+        foreach (object[] item in testingItemsArrays)
         {
             
             object[] sales = (object[]) item[8];
@@ -121,7 +113,7 @@ public class TestDatabase
     private static void addGenericItems()
     {
         itemIDsGeneric.Clear();
-        foreach (object[] item in dtbTestingItemsGeneric)
+        foreach (object[] item in testingItemsArrays)
         {
             int purcID = Database.insertPurchase((double)item[1], "", (Util.Date)item[2]);
             Item newItem = new Item();
@@ -140,7 +132,7 @@ public class TestDatabase
             itemIDsGeneric.Add(itemID);
         }
 
-        if (itemIDsGeneric.Count != dtbTestingItemsGeneric.Length) { throw new Exception("TESTING ERROR: Not all items could be inputted into the database!"); }
+        if (itemIDsGeneric.Count != testingItemsArrays.Length) { throw new Exception("TESTING ERROR: Not all items could be inputted into the database!"); }
     }
 
 
@@ -196,7 +188,7 @@ public class TestDatabase
         for (int i = 0; i < itemIDsGeneric.Count; i++)
         {
             int itemID = itemIDsGeneric[i];
-            object[] expectedItem = (object[])dtbTestingItemsGeneric[i];
+            object[] expectedItem = (object[])testingItemsArrays[i];
             Item result = Database.getItem(itemID);
 
             Assert.AreEqual(itemID, result.get_ITEM_ID());
@@ -237,7 +229,7 @@ public class TestDatabase
     [Test]
     public static void Test_getSale()
     {
-        foreach (object[] itemArr in dtbTestingItemsGeneric)
+        foreach (object[] itemArr in testingItemsArrays)
         {
             foreach (object[] saleArr in (object[]) itemArr[8])
             {
@@ -327,7 +319,7 @@ public class TestDatabase
     [Test]
     public static void Test_getItemsItemID()
     {
-        foreach (object[] item in dtbTestingItemsGeneric)
+        foreach (object[] item in testingItemsArrays)
         {
             string itemName = (string)item[0];
             int itemID = (int)item[7];
@@ -361,7 +353,7 @@ public class TestDatabase
     public static void Test_runSaleSearchQuery()
     {
         List<Item> items = new List<Item>();
-        foreach (object[] itemArr in dtbTestingItemsGeneric)
+        foreach (object[] itemArr in testingItemsArrays)
         {
             Item item = new Item();
             item.set_ITEM_ID((int)itemArr[7]);
@@ -476,7 +468,7 @@ public class TestDatabase
     public static void Test_insertItem()
     {
         string name = "INSERT_ITEM_TEST";
-        foreach (object[] item in dtbTestingItemsGeneric)
+        foreach (object[] item in testingItemsArrays)
         {
             int purcID = Database.insertPurchase((double)item[1], "", (Util.Date)item[2]);
             Item newItem = new Item();
@@ -496,7 +488,7 @@ public class TestDatabase
     public static void Test_insertItemLastrowid()
     {
         string name = "INSERT_ITEM_TEST";
-        foreach (object[] item in dtbTestingItemsGeneric)
+        foreach (object[] item in testingItemsArrays)
         {
             int lastrowid = -2;
 
@@ -520,8 +512,8 @@ public class TestDatabase
     public static void Test_insertSale()
     {
         string name = "INSERT_ITEM_TEST";
-        int itemID = (int)((object[])dtbTestingItemsGeneric[0])[7];
-        foreach (object[] item in dtbTestingItemsGeneric)
+        int itemID = (int)((object[])testingItemsArrays[0])[7];
+        foreach (object[] item in testingItemsArrays)
         {
             int lastrowid = -2;
 
@@ -546,8 +538,8 @@ public class TestDatabase
     public static void Test_insertSaleLastrowid()
     {
         string name = "INSERT_ITEM_TEST";
-        int itemID = (int)((object[])dtbTestingItemsGeneric[0])[7];
-        foreach (object[] item in dtbTestingItemsGeneric)
+        int itemID = (int)((object[])testingItemsArrays[0])[7];
+        foreach (object[] item in testingItemsArrays)
         {
             int lastrowid = -2;
 
@@ -576,7 +568,7 @@ public class TestDatabase
         string[] images = Directory.GetFiles(imagesDir);
         foreach (string imagePath in images)
         {
-            int itemID = (int)((object[])dtbTestingItemsGeneric[0])[7];
+            int itemID = (int)((object[])testingItemsArrays[0])[7];
             Item item = new Item();
             item.set_ITEM_ID(itemID);
 
@@ -600,7 +592,7 @@ public class TestDatabase
     public static void Test_deleteItem()
     {
         string name = "DELETE_ITEM_TEST";
-        foreach (object[] item in dtbTestingItemsGeneric)
+        foreach (object[] item in testingItemsArrays)
         {
             // Set up new item to delete
             int purcID = Database.insertPurchase((double)item[1], "", (Util.Date)item[2]);
@@ -628,7 +620,7 @@ public class TestDatabase
     [Test]
     public static void Test_deleteImages()
     {
-        foreach (object[] itemArr in dtbTestingItemsGeneric)
+        foreach (object[] itemArr in testingItemsArrays)
         {
             // Setup to give item exactly 1 image
             int itemID = (int)((object[])itemArr)[7];
@@ -665,7 +657,7 @@ public class TestDatabase
     public static void Test_deleteShipInfo()
     {
         
-        foreach (object[] itemArr in dtbTestingItemsGeneric)
+        foreach (object[] itemArr in testingItemsArrays)
         {
             int itemID = (int)itemArr[7];
             Item item = new Item();
@@ -709,7 +701,7 @@ public class TestDatabase
         int maxImages = 10;
         int imgGroupSize = 4;
         Item item = new Item();
-        int itemID = (int)((object[])dtbTestingItemsGeneric[0])[7];
+        int itemID = (int)((object[])testingItemsArrays[0])[7];
         item.set_ITEM_ID(itemID);
         string[] images = Directory.GetFiles(imagesDir);
         for (int i = 0; i < Math.Min(images.Length, maxImages) - imgGroupSize; i += imgGroupSize)
@@ -743,7 +735,7 @@ public class TestDatabase
     public static void Test_updateRowString(string attrib, string newVal)
     {
         Item itemToChange = new Item();
-        int itemID = (int)((object[])dtbTestingItemsGeneric[0])[7];
+        int itemID = (int)((object[])testingItemsArrays[0])[7];
         itemToChange.set_ITEM_ID(itemID);
         Database.updateRow(itemToChange, attrib, newVal);
 
@@ -760,8 +752,8 @@ public class TestDatabase
     public static void Test_updateRowDouble(string attrib, double newVal)
     {
         Item itemToChange = new Item();
-        int itemID = (int)((object[])dtbTestingItemsGeneric[0])[7];
-        int purcID = (int)((object[])dtbTestingItemsGeneric[0])[9];
+        int itemID = (int)((object[])testingItemsArrays[0])[7];
+        int purcID = (int)((object[])testingItemsArrays[0])[9];
         itemToChange.set_ITEM_ID(itemID);
         itemToChange.set_PurchaseID(purcID);
         Database.updateRow(itemToChange, attrib, newVal);
@@ -779,7 +771,7 @@ public class TestDatabase
     public static void Test_updateRowInt(string attrib, int newVal)
     {
         Item itemToChange = new Item();
-        int itemID = (int)((object[])dtbTestingItemsGeneric[0])[7];
+        int itemID = (int)((object[])testingItemsArrays[0])[7];
         itemToChange.set_ITEM_ID(itemID);
         Database.updateRow(itemToChange, attrib, newVal);
 
@@ -800,8 +792,8 @@ public class TestDatabase
     public static void Test_updateRowDate(string attrib, Util.Date newVal)
     {
         Item itemToChange = new Item();
-        int itemID = (int)((object[])dtbTestingItemsGeneric[0])[7];
-        int purcID = (int)((object[])dtbTestingItemsGeneric[0])[9];
+        int itemID = (int)((object[])testingItemsArrays[0])[7];
+        int purcID = (int)((object[])testingItemsArrays[0])[9];
         itemToChange.set_ITEM_ID(itemID);
         itemToChange.set_PurchaseID(purcID);
         Database.updateRow(itemToChange, attrib, newVal);
@@ -819,8 +811,8 @@ public class TestDatabase
     public static void Test_updateRowStringSale(string attrib, string newVal)
     {
         Sale saleToChange = new Sale();
-        int saleID = (int)((object[])((object[])((object[])dtbTestingItemsGeneric[0])[8])[0])[2];
-        //int saleID = (int)((object[])((object[])((object[])dtbTestingItemsGeneric[0])[8])[0])[2];
+        int saleID = (int)((object[])((object[])((object[])testingItemsArrays[0])[8])[0])[2];
+        //int saleID = (int)((object[])((object[])((object[])testingItemsArrays[0])[8])[0])[2];
         saleToChange.set_SALE_ID(saleID);
         Database.updateRow(saleToChange, attrib, newVal);
 
@@ -842,7 +834,7 @@ public class TestDatabase
     public static void Test_updateRowDateSale(string attrib, Util.Date newVal)
     {
         Sale saleToChange = new Sale();
-        int saleID = (int)((object[])((object[])((object[])dtbTestingItemsGeneric[0])[8])[0])[2];
+        int saleID = (int)((object[])((object[])((object[])testingItemsArrays[0])[8])[0])[2];
         saleToChange.set_SALE_ID(saleID);
         Database.updateRow(saleToChange, attrib, newVal);
 
@@ -859,7 +851,7 @@ public class TestDatabase
     [Test]
     public static void Test_insertShipInfo()
     {
-        foreach (object[] itemArr in dtbTestingItemsGeneric)
+        foreach (object[] itemArr in testingItemsArrays)
         {
             int itemID = (int)itemArr[7];
             Item item = new Item();
@@ -891,7 +883,7 @@ public class TestDatabase
     public static void Test_deleteSale()
     {
         Sale sale = new Sale();
-        int itemID = (int)((object[])dtbTestingItemsGeneric[0])[7];
+        int itemID = (int)((object[])testingItemsArrays[0])[7];
         sale.set_Date_Sold(new Util.Date(1978,12,16));
         sale.set_Amount_sale(100.0);
         sale.set_ItemID_sale(itemID);
@@ -912,7 +904,7 @@ public class TestDatabase
     [Test]
     public static void Test_getPurchase()
     {
-        foreach (object[] itemArr in dtbTestingItemsGeneric)
+        foreach (object[] itemArr in testingItemsArrays)
         {
             Item item = new Item();
             int itemID = (int)itemArr[7];
@@ -929,7 +921,7 @@ public class TestDatabase
     [Test]
     public static void Test_setThumbnail()
     {
-        foreach (object[] itemArr in dtbTestingItemsGeneric)
+        foreach (object[] itemArr in testingItemsArrays)
         {
             int itemID = (int)itemArr[7];
             Item item = Database.getItem(itemID);
