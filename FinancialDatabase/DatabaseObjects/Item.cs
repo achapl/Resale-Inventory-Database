@@ -51,7 +51,7 @@ public class Item : IEquatable<Item>
         setDefaults();
     }
     
-    void setDefaults()
+    private void setDefaults()
     {
         //string rawResult;
         //List<string> rawList;
@@ -90,6 +90,7 @@ public class Item : IEquatable<Item>
 
     public Item(List<string> item, List<string> colNames)
     {
+        setDefaults();
         this.rawList = item;
 
         for(int i = 0; i < colNames.Count; i++) 
@@ -693,12 +694,23 @@ public class Item : IEquatable<Item>
         {
             return Util.DEFAULT_DATE;
         }
+
+        List<string> ymd;
+
+        // date is format y-m-d
+        if (date[4] ==  '-')
+        {
+            ymd = new List<string>(date.Split("-"));
+            return new Date(Int32.Parse(ymd[0]), Int32.Parse(ymd[1]), Int32.Parse(ymd[2]));
+        }
+
+
         // date is format (y,m,d): "datetime.date(2020, 1, 1)" 
         date = date.Remove(0, "datetime.date".Length);
         // "(2020, 1, 1)"
         date = date.Trim(new char[] { '(', ')' });
         // "2020, 1, 1"
-        List<string> ymd = new List<string>(date.Split(new string[] { ", " }, StringSplitOptions.None));
+        ymd = new List<string>(date.Split(new string[] { ", " }, StringSplitOptions.None));
         // ["2020","1","1"] (string[])
         return new Date(Int32.Parse(ymd[0]), Int32.Parse(ymd[1]), Int32.Parse(ymd[2]));
     }

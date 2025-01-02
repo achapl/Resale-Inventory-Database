@@ -12,6 +12,21 @@ namespace FinancialDatabaseTesting
         public static Image defImage = Image.FromFile(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Resources\NoImage.png");
 
 
+        public static bool compareImages(MyImage image1, MyImage image2, bool resizeLargerimage)
+        {
+            return compareImages(image1.image, image2.image, resizeLargerimage) && image1.imageID == image2.imageID;
+        }
+        
+        public static bool compareImages(MyImage image1, MyImage image2)
+        {
+            return compareImages(image1.image, image2.image) && image1.imageID == image2.imageID;
+        }
+
+        public static bool compareImages(Image image1, Image image2)
+        {
+            return compareImages(image1, image2, false);
+        }
+
         public static bool compareImages(Image image1, Image image2, bool resizeLargerImage)
         {
             Bitmap bmp1;

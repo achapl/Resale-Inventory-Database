@@ -579,17 +579,45 @@ public class Util
     public static Image rawImageStrToImage(string rawImage)
     {
         if (rawImage == null) { return Util.DEFAULT_IMAGE.image; }
-        byte[] ret2 = new byte[rawImage.Length];
+        
 
         rawImage = rawImage.Trim(new char[] { '[', ']' });
+        bool isHex = isStringHex(rawImage);
 
-        List<string> s = new List<string>(rawImage.Split(", "));
+        string splitToken;
+        if (rawImage.Contains(','))
+            splitToken = ", ";
+        else if (rawImage.Contains('-'))
+            splitToken = "-";
+        else
+            throw new Exception("Error: Unknown split token in raw image: " + rawImage[..10]);
+
+        List<string> s = new List<string>(rawImage.Split(splitToken));
+        byte[] ret2 = new byte[s.Count];
         for (int j = 0; j < s.Count; j++)
         {
             string elem = s[j];
-            ret2[j] = (byte)Int32.Parse(elem);
+            if (isHex)
+                ret2[j] = (byte)Int32.Parse(s[j], System.Globalization.NumberStyles.HexNumber);
+            else
+                ret2[j] = (byte)Int32.Parse(elem);
         }
-        return Image.FromStream(new MemoryStream(ret2));
+        MemoryStream m = new MemoryStream(ret2);
+        int max = ret2.Max();
+        return Image.FromStream(m);
+    }
+
+    private static bool isStringHex(string str)
+    {
+        foreach (char c in str)
+        {
+            if ((c >= 65 && c <= 70) || // 'A'->'F'
+                (c >= 97 && c <= 102)) // 'a'->'f'
+            {
+                return true; 
+            }
+        }
+        return false;
     }
 
     public static Dictionary<Control, string> combineDictionaries(params Dictionary<Control, string>[] controlAttribs)
