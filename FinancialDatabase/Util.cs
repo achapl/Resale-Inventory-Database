@@ -579,7 +579,7 @@ public class Util
     public static Image rawImageStrToImage(string rawImage)
     {
         if (rawImage == null) { return Util.DEFAULT_IMAGE.image; }
-        
+        if (rawImage.CompareTo("") == 0) { throw new Exception("Error: Empty Image given to convert"); }
 
         rawImage = rawImage.Trim(new char[] { '[', ']' });
         bool isHex = isStringHex(rawImage);
@@ -624,7 +624,7 @@ public class Util
     {
         for (int i = 0; i < controlAttribs.Length-1; i++)
         {
-            if (controlAttribs[i] == null) throw new Exception("ERROR: Null Dictionary when combining dictionaries!");
+            if (controlAttribs[i] == null || controlAttribs[i+1] == null) throw new Exception("ERROR: Null Dictionary when combining dictionaries!");
             controlAttribs[0] = _combineDictionaries(controlAttribs[i], controlAttribs[i+1]);
         }
         return controlAttribs[0];

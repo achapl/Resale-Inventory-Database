@@ -310,9 +310,8 @@ public abstract class Tab
             return false;
         }
 
-        string ret = "";
         // Check if the attribute associated with the textbox is a default value in the curr item
-        tabController.getCurrItem().getAttribAsStr(controlAttrib[c], out ret);
+        string ret = tabController.getCurrItem().getAttribAsStr(controlAttrib[c]);
         if (ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
             ret.CompareTo(Util.DEFAULT_DATE.ToString()) == 0 ||
             ret.CompareTo(Util.DEFAULT_INT.ToString()) == 0 ||

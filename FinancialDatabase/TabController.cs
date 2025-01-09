@@ -260,7 +260,7 @@ namespace FinancialDatabase
         {
             string attrib = allControlAttribs[textBox];
 
-            string attribVal = getCurrItem().getAttribVal(attrib);
+            string attribVal = getCurrItem().getAttribAsStr(attrib);
 
             if (attribVal.CompareTo(textBox.Text) != 0)
             {

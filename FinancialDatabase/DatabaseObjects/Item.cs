@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinancialDatabase;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -82,7 +83,8 @@ public class Item : IEquatable<Item>
         Notes_shipping  = Util.DEFAULT_STRING;
 
         //From image table
-        images       = Util.DEFAULT_IMAGES;
+        set_images(Util.DEFAULT_IMAGES);
+        
         
         // Extra
         totalSales      = SaleTab.getTotalSales(this);
@@ -105,66 +107,86 @@ public class Item : IEquatable<Item>
             {
                 // From item table
                 case "ITEM_ID":
+                case "item.ITEM_ID":
                     set_ITEM_ID(itemAttribute);
                     break;
                 case "Name":
+                case "item.Name":
                     set_Name(itemAttribute);
                     break;
                 case "PurchaseID":
+                case "item.PurchaseID":
                     set_PurchaseID(itemAttribute);
                     break;
                 case "SaleID":
+                case "item.SaleID":
                     set_SaleID(itemAttribute);
                     break;
                 case "ShippingID":
+                case "item.ShippingID":
                     set_ShippingID(itemAttribute);
                     break;
                 case "InitialQuantity":
+                case "item.InitialQuantity":
                     set_InitialQuantity(itemAttribute);
                     break;
                 case "CurrentQuantity":
+                case "item.CurrentQuantity":
                     set_CurrentQuantity(itemAttribute);
                     break;
                 case "Notes_item":
+                case "item.Notes_item":
                     set_Notes_item(itemAttribute);
                     break;
                 case "thumbnail":
+                case "thumbnail.thumbnail":
                     set_Thumbnail(itemAttribute);
                     break;
                 // From purchase table
                 case "Date_Purchased":
+                case "purchase.Date_Purchased":
                     set_Date_Purchased(itemAttribute);
                     break;
                 case "Amount_purchase":
+                case "purchase.Amount_purchase":
                     set_Amount_purchase(itemAttribute);
                     break;
                 case "Tax":
+                case "purchase.Tax":
                     set_Tax(itemAttribute);
                     break;
                 case "Fees_purchase":
+                case "purchase.Fees_purchase":
                     set_Fees_purchase(itemAttribute);
                     break;
                 case "Seller":
+                case "purchase.Seller":
                     set_Seller(itemAttribute);
                     break;
                 case "Notes_purchase":
+                case "purchase.Notes_purchase":
                     set_Notes_purchase(itemAttribute);
                     break;
 
                 // From shipping table
                 case "Length":
+                case "shipping.Length":
                     set_Length(itemAttribute);
                     break;
                 case "Width":
+                case "shipping.Width":
                     set_Width(itemAttribute);
                     break;
                 case "Height":
+                case "shipping.Height":
                     set_Height(itemAttribute);
                     break;
                 case "Weight":
+                case "shipping.Weight":
                     set_Weight(itemAttribute);
                     break;
                 case "Notes_shipping":
+                case "shipping.Notes_shipping":
                     set_Notes_shipping(itemAttribute);
                     break;
             }
@@ -181,11 +203,17 @@ public class Item : IEquatable<Item>
     }
     public void set_Thumbnail(string itemAttribute)
     {
+        if (itemAttribute is null || itemAttribute.CompareTo("") == 0)
+        {
+            this.thumbnail = Util.DEFAULT_IMAGE;
+            return;
+        }
+
         Image i = Util.rawImageStrToImage(itemAttribute);
         this.thumbnail = new MyImage(i,-1);
     }
 
-    public void getAttrib(string attrib, ref string ret)
+    public void getAttrib(string attrib, out string ret)
     {
         switch (attrib)
         {
@@ -209,10 +237,12 @@ public class Item : IEquatable<Item>
             case "shipping.Notes_shipping":
                 ret = get_Notes_shipping();
                 break;
+            default:
+                throw new Exception("ERROR: Unknown string Attrib: " + attrib);
         }
     }
     
-    public void getAttrib(string attrib, ref int ret)
+    public void getAttrib(string attrib, out int ret)
     {
         switch (attrib)
         {
@@ -255,10 +285,13 @@ public class Item : IEquatable<Item>
             case "shipping.WeightOz":
                 ret = get_WeightOz();
                 break;
+
+            default:
+                throw new Exception("ERROR: Unknown int Attrib: " + attrib);
         }
     }
     
-    public void getAttrib(string attrib, ref double ret)
+    public void getAttrib(string attrib, out double ret)
     {
         switch (attrib)
         {
@@ -286,115 +319,115 @@ public class Item : IEquatable<Item>
             case "shipping.Weight":
                 ret = get_Weight();
                 break;
+
+            default:
+                throw new Exception("ERROR: Unknown double Attrib: " + attrib);
         }
     }
     
-    public void getAttrib(string attrib, ref Date ret)
+    public void getAttrib(string attrib, out Date ret)
     {
         switch (attrib)
         {
             // From purchase table
-            case "purhcase.Date_Purchased":
+            case "purchase.Date_Purchased":
                 ret = get_Date_Purchased();
                 break;
+
+            default:
+                throw new Exception("ERROR: Unknown date Attrib: " + attrib);
         }
     }
 
-    public void getAttribAsStr(string attrib, out string ret)
+    public string getAttribAsStr(string attrib)
     {
-        ret = "";
+        string retVal = "";
         switch (attrib)
         {
             // From item table
             case "item.Name":
-                ret = get_Name();
+                retVal = get_Name();
                 break;
             case "item.Notes_item":
-                ret = get_Notes_item();
+                retVal = get_Notes_item();
                 break;
 
             // From purchase table
             case "purchase.Seller":
-                ret = get_Seller();
+                retVal = get_Seller();
                 break;
             case "purchase.Notes_purchase":
-                ret = get_Notes_purchase();
+                retVal = get_Notes_purchase();
                 break;
             case "purchase.Date_Purchased":
-                ret = get_Date_Purchased_str();
+                retVal = get_Date_Purchased_str();
                 break;
 
             // From shipping table
             case "shipping.Notes_shipping":
-                ret = get_Notes_shipping();
+                retVal = get_Notes_shipping();
                 break;
 
             // From item table
             case "item.ITEM_ID":
-                ret = get_ITEM_ID().ToString();
+                retVal = get_ITEM_ID().ToString();
                 break;
             case "item.PurchaseID":
-                ret = get_PurchaseID().ToString();
+                retVal = get_PurchaseID().ToString();
                 break;
             case "item.SaleID":
-                ret = get_SaleID().ToString();
+                retVal = get_SaleID().ToString();
                 break;
             case "item.ShippingID":
-                ret = get_ShippingID().ToString();
+                retVal = get_ShippingID().ToString();
                 break;
             case "item.InitialQuantity":
-                ret = get_InitialQuantity().ToString();
+                retVal = get_InitialQuantity().ToString();
                 break;
             case "item.CurrentQuantity":
-                ret = get_CurrentQuantity().ToString();
+                retVal = get_CurrentQuantity().ToString();
                 break;
 
             // From shipping table
             case "shipping.Length":
-                ret = get_Length().ToString();
+                retVal = get_Length().ToString();
                 break;
             case "shipping.Width":
-                ret = get_Width().ToString();
+                retVal = get_Width().ToString();
                 break;
             case "shipping.Height":
-                ret = get_Height().ToString();
+                retVal = get_Height().ToString();
                 break;
             case "shipping.Weight":
-                ret = get_Weight().ToString();
+                retVal = get_Weight().ToString();
                 break;
             case "shipping.WeightLbs":
-                ret = get_WeightLbs().ToString();
+                retVal = get_WeightLbs().ToString();
                 break;
             case "shipping.WeightOz":
-                ret = get_WeightOz().ToString();
+                retVal = get_WeightOz().ToString();
                 break;
 
             // From purchase table
             case "purchase.Amount_purchase":
-                ret = get_Amount_purchase().ToString();
+                retVal = get_Amount_purchase().ToString();
                 break;
             case "purchase.Tax":
-                ret = get_Tax().ToString();
+                retVal = get_Tax().ToString();
                 break;
             case "purchase.Fees_purchase":
-                ret = get_Fees_purchase().ToString();
+                retVal = get_Fees_purchase().ToString();
                 break;
         }
 
-        if (ret.CompareTo(Util.DEFAULT_DATE.toDateString()) == 0 || 
-            ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
-            ret.CompareTo(Util.DEFAULT_INT.ToString())  == 0 ||
-            ret.CompareTo(Util.DEFAULT_STRING) == 0)
+        if (retVal.CompareTo(Util.DEFAULT_DATE.toDateString()) == 0 || 
+            retVal.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
+            retVal.CompareTo(Util.DEFAULT_INT.ToString())  == 0 ||
+            retVal.CompareTo(Util.DEFAULT_STRING) == 0)
         {
             throw new Exception("ERROR: Unknown attribute: " + attrib);
         }
-    }
-
-    public string getAttribVal(string attrib)
-    {
-        string ret = "";
-        getAttribAsStr(attrib, out ret);
-        return ret;
+        return retVal;
     }
 
     public bool hasItemEntry() => ITEM_ID != Util.DEFAULT_INT;
@@ -464,19 +497,13 @@ public class Item : IEquatable<Item>
     public void set_Name(string Name)
     {
         if (Name.CompareTo("") == 0)
-        { 
-            this.Name = "";
-            return;
-        }
-
-        // Trim off any quotations around the name should there be any
-        if (Name[0] == Name[Name.Length - 1] && Name[0] == '\'')
         {
-            Name = Name.Trim('\'');
+            throw new Exception("Error: Name is blank");
         }
-        else if (Name[0] == Name[Name.Length - 1] && Name[0] == '"')
+        // Trim off any quotations around the name should there be any. Just the first and last ones. Any others would probably actually be a part of the name
+        if (Name[0] == Name[Name.Length - 1] && (Name[0] == '\'' || Name[0] == '"'))
         {
-            Name = Name.Trim('"');
+            Name = Name.Substring(1, Name.Length-2);
         }
         this.Name = Name;
 
@@ -485,62 +512,52 @@ public class Item : IEquatable<Item>
     public void set_PurchaseID(int PurchaseID) => this.PurchaseID = PurchaseID;
     public void set_PurchaseID(string PurchaseID)
     {
-        if (PurchaseID == null)
+        if (PurchaseID is null || PurchaseID.CompareTo("") == 0)
         {
             this.PurchaseID = Util.DEFAULT_INT;
+            return;
         }
-        else
-        {
-            this.PurchaseID = Int32.Parse(PurchaseID);
-        }
+        this.PurchaseID = Int32.Parse(PurchaseID);
     }
     public void set_SaleID(int SaleID) => this.SaleID = SaleID;
     public void set_SaleID(string SaleID)
     {
-        if (SaleID == null)
+        if (SaleID is null || SaleID.CompareTo("") == 0)
         {
-            this.SaleID = -1;
+            this.SaleID = Util.DEFAULT_INT;
+            return;
         }
-        else
-        {
-            this.SaleID = Int32.Parse(SaleID);
-        }
+        this.SaleID = Int32.Parse(SaleID);
     }
     public void set_ShippingID(int ShippingID) => this.ShippingID = ShippingID;
     public void set_ShippingID(string ShippingID)
     {
-        if (ShippingID == null)
+        if (ShippingID is null || ShippingID.CompareTo("") == 0)
         {
-            this.ShippingID = -1;
+            this.ShippingID = Util.DEFAULT_INT;
+            return;
         }
-        else
-        {
-            this.ShippingID = Int32.Parse(ShippingID);
-        }
+        this.ShippingID = Int32.Parse(ShippingID);
     }
     public void set_InitialQuantity(int InitialQuantity) => this.InitialQuantity = InitialQuantity;
     public void set_InitialQuantity(string InitialQuantity)
     {
-        if (InitialQuantity == null)
+        if (InitialQuantity is null || InitialQuantity.CompareTo("") == 0)
         {
-            this.InitialQuantity = -1;
+            this.InitialQuantity = Util.DEFAULT_INT;
+            return;
         }
-        else
-        {
-            this.InitialQuantity = Int32.Parse(InitialQuantity);
-        }
+        this.InitialQuantity = Int32.Parse(InitialQuantity);
     }
     public void set_CurrentQuantity(int CurrentQuantity) => this.CurrentQuantity = CurrentQuantity;
     public void set_CurrentQuantity(string CurrentQuantity)
     {
-        if (CurrentQuantity == null)
+        if (CurrentQuantity is null || CurrentQuantity.CompareTo("") == 0)
         {
-            this.CurrentQuantity = -1;
+            this.CurrentQuantity = Util.DEFAULT_INT;
+            return;
         }
-        else
-        {
-            this.CurrentQuantity = Int32.Parse(CurrentQuantity);
-        }
+        this.CurrentQuantity = Int32.Parse(CurrentQuantity);
     }
     public void set_Notes_item(string Notes_item) => this.Notes_item = Notes_item;
 
@@ -551,33 +568,45 @@ public class Item : IEquatable<Item>
         this.Date_Purchased = new Date(year, month, day);
     }
     public void set_Date_Purchased(Date date) => this.Date_Purchased = date;
-    public void set_Date_Purchased(string date) => this.Date_Purchased = parseDate(date);
+    public void set_Date_Purchased(string date)
+    {
+        if (date is null || date.CompareTo("") == 0)
+        {
+            this.Date_Purchased = Util.DEFAULT_DATE;
+            return;
+        }
+        this.Date_Purchased = parseDate(date);
+    }
     public void set_Amount_purchase(double Amount_purchase) => this.Amount_purchase = Amount_purchase;
     public void set_Amount_purchase(string Amount_purchase)
     {
-        if (Amount_purchase == null)
+        if (Amount_purchase is null || Amount_purchase.CompareTo("") == 0)
         {
-            this.Amount_purchase = -1.0;
+            this.Amount_purchase = Util.DEFAULT_DOUBLE;
+            return;
         }
-        else
-        {
-            this.Amount_purchase = Double.Parse(Amount_purchase);
-        }
+        this.Amount_purchase = Double.Parse(Amount_purchase);
     }
     public void set_Tax(double Tax) => this.Tax = Tax;
     public void set_Tax(string Tax)
     {
-        if (Tax == null)
+        if (Tax is null || Tax.CompareTo("") == 0)
         {
-            this.Tax = -1.0;
+            this.Tax = Util.DEFAULT_DOUBLE;
+            return;
         }
-        else
-        {
-            this.Tax = Double.Parse(Tax);
-        }
+        this.Tax = Double.Parse(Tax);
     }
     public void set_Fees_purchase(double Fees_purchase) => this.Fees_purchase = Fees_purchase;
-    public void set_Fees_purchase(string Fees_purchase) => this.Fees_purchase = double.Parse(Fees_purchase);
+    public void set_Fees_purchase(string Fees_purchase)
+    {
+        if (Fees_purchase is null || Fees_purchase.CompareTo("") == 0)
+        {
+            this.Fees_purchase = Util.DEFAULT_DOUBLE;
+            return;
+        }
+        this.Fees_purchase = Double.Parse(Fees_purchase);
+    }
     public void set_Seller(string Seller) => this.Seller = Seller;
     public void set_Notes_purchase(string Notes_purchase) => this.Notes_purchase = Notes_purchase;
     
@@ -586,71 +615,84 @@ public class Item : IEquatable<Item>
     public void set_Length(int Length) => this.Length = Length;
     public void set_Length(string Length)
     {
-        if (Length == null)
+        if (Length is null || Length.CompareTo("") == 0)
         {
-            this.Length = -1;
+            this.Length = Util.DEFAULT_INT;
+            return;
         }
-        else
-        {
-            this.Length = Int32.Parse(Length);
-        }
+        this.Length = Int32.Parse(Length);
     }
     public void set_Width(int Width) => this.Width = Width;
     public void set_Width(string Width)
     {
-        if (Width == null)
+        if (Width is null || Width.CompareTo("") == 0)
         {
-            this.Width = -1;
+            this.Width = Util.DEFAULT_INT;
+            return;
         }
-        else
-        {
-            this.Width = Int32.Parse(Width);
-        }
+        this.Width = Int32.Parse(Width);
     }
     public void set_Height(int Height) => this.Height = Height;
     public void set_Height(string Height)
     {
-        if (Height == null)
+        if (Height is null || Height.CompareTo("") == 0)
         {
-            this.Height = -1;
+            this.Height = Util.DEFAULT_INT;
+            return;
         }
-        else
-        {
-            this.Height = Int32.Parse(Height);
-        }
+        this.Height = Int32.Parse(Height);
     }
     public void set_Weight(int Weight) => this.Weight = Weight;
     public void set_Weight(string Weight)
     {
-        if (Weight == null)
+        if (Weight is null || Weight.CompareTo("") == 0)
         {
-            this.Weight = -1;
+            this.Weight = Util.DEFAULT_INT;
+            return;
         }
-        else
-        {
-            this.Weight = Int32.Parse(Weight);
-        }
+        this.Weight = Int32.Parse(Weight);
     }
     public void set_Notes_shipping(string Notes_shipping) => this.Notes_shipping = Notes_shipping;
 
     // From image table
-    public void clear_images() => this.images = Util.DEFAULT_IMAGES;
-    public void add_image(MyImage image) 
+    public void clear_images()
     {
-        if (images == null)
+        if (this.images is null)
         {
-            set_images(new List<MyImage>() { image });
-        } else
-        {
-            this.images.Append(image);
+            this.images = new List<MyImage>();
         }
+        this.images.Clear();
+        // Note: this.images = Util.DEFAULT_IMAGES does not work. Must deep copy
+        foreach (MyImage image in Util.DEFAULT_IMAGES)
+        {
+            this.images.Add(image);
+        } 
+    }
+    public void add_image(MyImage image)
+    {
+        if (this.images is null)
+        {
+            this.images = new List<MyImage>();
+        }
+
+        if (this.images.Count != 0 && this.images[0] == Util.DEFAULT_IMAGE)
+        {
+            this.images.Clear();
+        }
+        this.images.Add(image);
     }
     public void add_images(List<MyImage> images)
     {
-        if (images.Count > 0)
+        if (this.images is null)
         {
-            this.images.AddRange(images);
+            this.images = new List<MyImage>();
         }
+
+        if (this.images.Count != 0 && this.images[0] == Util.DEFAULT_IMAGE)
+        {
+            this.images.Clear();
+        }
+        this.images.AddRange(images);
     }
 
     public void set_images()
@@ -660,27 +702,21 @@ public class Item : IEquatable<Item>
 
     public void set_images(List<MyImage> images)
     {
-        if (images.Count > 0)
+        if (this.images is null)
         {
-            this.images = images;
+            this.images = new List<MyImage>();
+        }
+        this.images.Clear();
+        foreach(MyImage image in images)
+        {
+            this.images.Add(image);
         }
     }
 
     // Extra
-    public void set_totalSales(double totalSales)
-    {
-        if (totalSales == null)
-        {
-            this.totalSales = -1;
-        }
-        else
-        {
-            this.totalSales = totalSales;
-        }
-    }
+    public void set_totalSales(double totalSales) => this.totalSales = totalSales;
 
-    #pragma warning disable CS8767 // 'other' and 'this' are checked for null
-    public bool Equals(Item other)
+    public bool Equals(Item? other)
     {
         if (this  == null && other == null)  return true;
         if (this  == null)  return false;
@@ -698,7 +734,7 @@ public class Item : IEquatable<Item>
         List<string> ymd;
 
         // date is format y-m-d
-        if (date[4] ==  '-')
+        if (date[4] == '-')
         {
             ymd = new List<string>(date.Split("-"));
             return new Date(Int32.Parse(ymd[0]), Int32.Parse(ymd[1]), Int32.Parse(ymd[2]));
@@ -708,11 +744,17 @@ public class Item : IEquatable<Item>
         // date is format (y,m,d): "datetime.date(2020, 1, 1)" 
         date = date.Remove(0, "datetime.date".Length);
         // "(2020, 1, 1)"
-        date = date.Trim(new char[] { '(', ')' });
-        // "2020, 1, 1"
-        ymd = new List<string>(date.Split(new string[] { ", " }, StringSplitOptions.None));
-        // ["2020","1","1"] (string[])
-        return new Date(Int32.Parse(ymd[0]), Int32.Parse(ymd[1]), Int32.Parse(ymd[2]));
+        if (date[0] == '(') {
+            date = date.Trim(new char[] { '(', ')' });
+            // "2020, 1, 1"
+            ymd = new List<string>(date.Split(new string[] { ", " }, StringSplitOptions.None));
+            // ["2020","1","1"] (string[])
+            return new Date(Int32.Parse(ymd[0]), Int32.Parse(ymd[1]), Int32.Parse(ymd[2]));
+        }
+        else
+        {
+            throw new Exception("Error: Unknown date format");
+        }
     }
 
     // Name for an item in the database

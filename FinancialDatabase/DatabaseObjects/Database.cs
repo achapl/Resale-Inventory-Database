@@ -877,7 +877,7 @@ public static class Database
     }
 
 
-    public static void insertShipInfo(Item resultItem, int weightLbs, int weightOz, int l, int w, int h)
+    public static int insertShipInfo(Item resultItem, int weightLbs, int weightOz, int l, int w, int h)
     {
         string query = QueryBuilder.shipInfoInsertQuery(resultItem, weightLbs, weightOz, l, w, h);
 
@@ -890,6 +890,8 @@ public static class Database
 
         // Update the item table with the new shipping info
         output = Database.runStatement(query);
+
+        return shippingID;
     }
 
 

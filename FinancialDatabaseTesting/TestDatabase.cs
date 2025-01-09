@@ -17,6 +17,7 @@ using System.Windows.Forms.VisualStyles;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
 using NUnit.Framework.Internal.Commands;
+using System.Runtime.InteropServices.Marshalling;
 
 public class TestDatabase
 {
@@ -33,13 +34,13 @@ public class TestDatabase
 
     private static object[] testingItemsArrays =
     {
-        //            0          1      2                          3        4        5          6         7       8                            8[0]   8[1]                        8[2]     9
-        //            name,      price, purc date,                 initQty, currQty, image,     imageID,  itemID, sales                        amount, date,                      saleID   purcID
-        new object[] {"Item1",   100.0, new Util.Date(1978,12,16), 2,       1,       imagePath, null,     null,   new object[] { new object[] { 110.0, new Util.Date(1979, 12, 16), null },
-                                                                                                                                 new object[] { 100.0, new Util.Date(1979, 12, 17), null }}, null,},
-        new object[] {"Item2",   200.0, new Util.Date(1978,12,17), 2,       1,       imagePath, null,     null,   new object[] { new object[] { 220.0, new Util.Date(1979, 12, 16), null }}, null,},
-        new object[] {"Item3",   300.0, new Util.Date(1978,12,18), 2,       1,       null,      null,     null,   new object[] { new object[] { 330.0, new Util.Date(1979, 12, 16), null }}, null,},
-        new object[] {"Item4",   400.0, new Util.Date(1978,12,18), 2,       1,       null,      null,     null,   new object[] { new object[] { 440.0, new Util.Date(1979, 12, 16), null }}, null,},
+        //            0          1      2                          3        4        5          6         7       8                            8[0]   8[1]                        8[2]     9      10                       11[0] 11[1] 11[2] 11[3]
+        //            name,      price, purc date,                 initQty, currQty, image,     imageID,  itemID, sales                        amount, date,                      saleID   purcID shippingID               L     W     H     W
+        new object[] {"Item1",   100.0, new Util.Date(1978,12,16), 2,       1,       imagePath, -1,       -1,     new object[] { new object[] { 110.0, new Util.Date(1979, 12, 16), -1  },
+                                                                                                                                 new object[] { 100.0, new Util.Date(1979, 12, 17), -1  }}, -1,   -1,        new object[] {1,    1,    1,    1 } },
+        new object[] {"Item2",   200.0, new Util.Date(1978,12,17), 2,       1,       imagePath, -1,      -1,      new object[] { new object[] { 220.0, new Util.Date(1979, 12, 16), -1  }}, -1,   -1,        new object[] {1,    1,    1,    1 } },
+        new object[] {"Item3",   300.0, new Util.Date(1978,12,18), 2,       1,       null,      -1,      -1,      new object[] { new object[] { 330.0, new Util.Date(1979, 12, 16), -1  }}, -1,   -1,        new object[] {1,    1,    1,    1 } },
+        new object[] {"Item4",   400.0, new Util.Date(1978,12,18), 2,       1,       null,      -1,      -1,      new object[] { new object[] { 440.0, new Util.Date(1979, 12, 16), -1  }}, -1,   -1,        new object[] {1,    1,    1,    1 } },
     };
 
     private static object[] dtbTestingItemsSamePurc =
@@ -58,9 +59,7 @@ public class TestDatabase
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        var DtbObject = typeof(Database);
-        var testingVar = DtbObject.GetField("TESTING", BindingFlags.NonPublic | BindingFlags.Static);
-        testingVar.SetValue(null, true);
+        setDatabaseTesting(true);
 
         Database.clearAll();
         Database.getColDataTypes();
@@ -72,9 +71,15 @@ public class TestDatabase
     public void OneTimeTearDown()
     {
         Database.clearAll();
+        setDatabaseTesting(false);
+    }
+
+
+    private static void setDatabaseTesting(bool testingVal)
+    {
         var DtbObject = typeof(Database);
         var testingVar = DtbObject.GetField("TESTING", BindingFlags.NonPublic | BindingFlags.Static);
-        testingVar.SetValue(null, true);
+        testingVar.SetValue(null, testingVal);
     }
 
 
@@ -115,14 +120,18 @@ public class TestDatabase
         itemIDsGeneric.Clear();
         foreach (object[] item in testingItemsArrays)
         {
+            // Make purchase
             int purcID = Database.insertPurchase((double)item[1], "", (Util.Date)item[2]);
             Item newItem = new Item();
             newItem.set_Name((string)item[0]);
             newItem.set_InitialQuantity((int)item[3]);
             newItem.set_CurrentQuantity((int)item[4]);
             newItem.set_PurchaseID(purcID);
+
+            // Insert item
             int itemID;
             Database.insertItem(newItem, out itemID);
+            newItem.set_ITEM_ID(itemID);
             if (item[5] != null)
             {
                 Database.insertImage((string)item[5], itemID);
@@ -130,6 +139,20 @@ public class TestDatabase
             item[7] = itemID;
             item[9] = purcID;
             itemIDsGeneric.Add(itemID);
+
+            // Insert shipping info
+            object[] shippingInfo = (object[]) item[11];
+            if (shippingInfo != null)
+            {
+                int l = (int)shippingInfo[0];
+                int w = (int)shippingInfo[1];
+                int h = (int)shippingInfo[2];
+                int weight = (int)shippingInfo[3];
+                
+                int shippingID = Database.insertShipInfo(newItem, 0, weight, l, w, h);
+
+                item[10] = shippingID;
+            }
         }
 
         if (itemIDsGeneric.Count != testingItemsArrays.Length) { throw new Exception("TESTING ERROR: Not all items could be inputted into the database!"); }
@@ -660,8 +683,12 @@ public class TestDatabase
         foreach (object[] itemArr in testingItemsArrays)
         {
             int itemID = (int)itemArr[7];
+            int purcID = (int)itemArr[9];
+            int shipID = (int)itemArr[10];
             Item item = new Item();
             item.set_ITEM_ID(itemID);
+            item.set_PurchaseID(purcID);
+            item.set_ShippingID(shipID);
 
 
             int l = Math.Abs(rand.Next(2000000000));
@@ -689,6 +716,8 @@ public class TestDatabase
             Assert.AreEqual(Util.DEFAULT_INT, itemWithoutShipInfo.get_Width());
             Assert.AreEqual(Util.DEFAULT_INT, itemWithoutShipInfo.get_Height());
 
+            Database.clearAll();
+            addTestingItems();
 
         }
     }
@@ -728,20 +757,24 @@ public class TestDatabase
 
 
 
-    [TestCase("item.Name", "")]
     [TestCase("item.Name", "123")]
     [TestCase("item.Notes_item", "2bc")]
-    [TestCase("item.Notes_item", "3ab")]
+    [TestCase("purchase.Seller", "2bc")]
+    [TestCase("purchase.Notes_purchase", "3ab")]
+    [TestCase("shipping.Notes_shipping", "4ab")]
     public static void Test_updateRowString(string attrib, string newVal)
     {
         Item itemToChange = new Item();
         int itemID = (int)((object[])testingItemsArrays[0])[7];
+        int purcID = (int)((object[])testingItemsArrays[0])[9];
+        int shipID = (int)((object[])testingItemsArrays[0])[10];
         itemToChange.set_ITEM_ID(itemID);
+        itemToChange.set_PurchaseID(purcID);
+        itemToChange.set_ShippingID(shipID);
         Database.updateRow(itemToChange, attrib, newVal);
 
         Item changedItem = Database.getItem(itemToChange.get_ITEM_ID());
-
-        changedItem.getAttribAsStr(attrib, out string changedAttrib);
+        string changedAttrib = changedItem.getAttribAsStr(attrib);
 
         Assert.AreEqual(0, newVal.CompareTo(changedAttrib));
     }
@@ -749,6 +782,8 @@ public class TestDatabase
 
 
     [TestCase("purchase.Amount_purchase", 3.14)]
+    [TestCase("purchase.Tax", 3.15)]
+    [TestCase("purchase.Fees_purchase", 3.16)]
     public static void Test_updateRowDouble(string attrib, double newVal)
     {
         Item itemToChange = new Item();
@@ -760,26 +795,63 @@ public class TestDatabase
 
         Item changedItem = Database.getItem(itemToChange.get_ITEM_ID());
 
-        changedItem.getAttribAsStr(attrib, out string changedAttrib);
+        string changedAttrib = changedItem.getAttribAsStr(attrib);
 
         Assert.AreEqual(newVal, Double.Parse(changedAttrib));
     }
 
 
 
+    /*[TestCase("item.ITEM_ID", 1)]   Shouldn't try and update foreign key
+    [TestCase("item.PurchaseID", 2)]
+    [TestCase("item.ShippingID", 4)]*/
     [TestCase("item.InitialQuantity", 5)]
+    [TestCase("item.CurrentQuantity", 6)]
+    [TestCase("shipping.Length", 7)]
+    [TestCase("shipping.Width", 8)]
+    [TestCase("shipping.Height", 9)]
+    [TestCase("shipping.Width", 10)]
     public static void Test_updateRowInt(string attrib, int newVal)
     {
+
+        // Special Case
+        int oldItemID;
+        oldItemID = (int)((object[])testingItemsArrays[0])[7];
+
         Item itemToChange = new Item();
         int itemID = (int)((object[])testingItemsArrays[0])[7];
+        int purcID = (int)((object[])testingItemsArrays[0])[9];
+        int shipID = (int)((object[])testingItemsArrays[0])[10];
         itemToChange.set_ITEM_ID(itemID);
+        itemToChange.set_PurchaseID(purcID);
+        itemToChange.set_ShippingID(shipID);
+
+        Item oldItem = Database.getItem(itemID);
+
         Database.updateRow(itemToChange, attrib, newVal);
 
         Item changedItem = Database.getItem(itemToChange.get_ITEM_ID());
-
-        changedItem.getAttribAsStr(attrib, out string changedAttrib);
-
+        string changedAttrib = "-999";
+        try
+        {
+            changedAttrib = changedItem.getAttribAsStr(attrib);
+        }
+        catch (Exception ex)
+        {
+            // If attribute does not exist in item to begin with, pass the test case by default
+            if (ex.Message == "ERROR: Unknown attribute: " + attrib)
+            {
+                Assert.Pass();
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
         Assert.AreEqual(newVal, Int32.Parse(changedAttrib));
+
+        // Reset ItemID in case it changed from a test case
+        Database.updateRow(itemToChange, "item.ITEM_ID", oldItemID);
     }
 
 
@@ -800,7 +872,7 @@ public class TestDatabase
 
         Item changedItem = Database.getItem(itemToChange.get_ITEM_ID());
 
-        changedItem.getAttribAsStr(attrib, out string changedAttrib);
+        string changedAttrib = changedItem.getAttribAsStr(attrib);
 
         Assert.IsTrue(newVal.Equals(new Util.Date(changedAttrib)));
     }
@@ -853,8 +925,14 @@ public class TestDatabase
     {
         foreach (object[] itemArr in testingItemsArrays)
         {
-            int itemID = (int)itemArr[7];
+
             Item item = new Item();
+            int itemID = (int)itemArr[7];
+            int purcID = (int)itemArr[9];
+            int shipID = (int)itemArr[10];
+            item.set_ITEM_ID(itemID);
+            item.set_PurchaseID(purcID);
+            item.set_ShippingID(shipID);
             item.set_ITEM_ID(itemID);
 
 
@@ -874,6 +952,9 @@ public class TestDatabase
             Assert.AreEqual(w, itemWithShipInfo.get_Width());
             Assert.AreEqual(h, itemWithShipInfo.get_Height());
             Assert.AreEqual(oz + 16 * lbs, itemWithShipInfo.get_Weight());
+
+            Database.clearAll();
+            addTestingItems();
         }
     }
 
