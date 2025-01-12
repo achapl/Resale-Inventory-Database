@@ -1244,7 +1244,7 @@
             SaleTagNewSaleAmountLbl.Name = "SaleTagNewSaleAmountLbl";
             SaleTagNewSaleAmountLbl.Size = new Size(75, 15);
             SaleTagNewSaleAmountLbl.TabIndex = 16;
-            SaleTagNewSaleAmountLbl.Text = "Sale amount";
+            SaleTagNewSaleAmountLbl.Text = "Sale Amount_purchase";
             // 
             // AddSaleButton
             // 
@@ -1273,7 +1273,7 @@
             SaleTagSaleAmountLbl.Name = "SaleTagSaleAmountLbl";
             SaleTagSaleAmountLbl.Size = new Size(75, 15);
             SaleTagSaleAmountLbl.TabIndex = 1;
-            SaleTagSaleAmountLbl.Text = "Sale amount";
+            SaleTagSaleAmountLbl.Text = "Sale Amount_purchase";
             // 
             // saleListBox
             // 

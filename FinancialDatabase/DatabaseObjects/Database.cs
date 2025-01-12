@@ -92,7 +92,7 @@ public static class Database
     /// { { {'item',     'ITEM_ID',     'int unsigned', ...},
     ///     {'item',     'PurcID_item', 'int unsigned', ...} },
     ///   { {'purchace', 'PURCHACE_ID', 'int unsigned', ...},
-    ///     {'purchace', 'amount',      'int unsigned', ...} } }</returns>
+    ///     {'purchace', 'Amount_purchase',      'int unsigned', ...} } }</returns>
     private static List<List<List<string>>> getColsInfoAllTables()
     {
         List<List<List<string>>> colInfoAllTables = new List<List<List<string>>>();
@@ -864,7 +864,7 @@ public static class Database
         string query = QueryBuilder.updateQuery(saleItem, attrib, newVal);
         return Database.runStatement(query).CompareTo("ERROR") != 0;
     }
-    
+
     public static bool updateRow(Sale saleItem, string attrib, Date d) {
         string query = QueryBuilder.updateQuery(saleItem, attrib, d);
         return Database.runStatement(query).CompareTo("ERROR") != 0;

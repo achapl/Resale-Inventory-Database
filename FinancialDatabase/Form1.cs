@@ -202,7 +202,7 @@ namespace FinancialDatabase
         private void addImageButton_Click(object sender, EventArgs e)
         {
             tabControl.insertImage();
-            //tabControl.updateCurrItem();
+            //tabControl.updateCurrItemUsingDtb();
         }
 
 

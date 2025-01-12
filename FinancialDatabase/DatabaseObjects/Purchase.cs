@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace FinancialDatabase.DatabaseObjects
@@ -9,14 +10,25 @@ namespace FinancialDatabase.DatabaseObjects
     public class Purchase
     {
 
-        public string notes_purchase;
+        [JsonInclude]
+        public string Notes_purchase;
+        [JsonInclude]
         public List<Item> items;
-        public double fees_purchase;
-        public Util.Date date;
-        public string seller;
-        public double amount;
-        public double tax;
-        public int id;
+        [JsonInclude]
+        public double Fees_purchase;
+        public Util.Date Date_Purchased;
+        [JsonInclude]
+        public string Seller;
+        [JsonInclude]
+        public double Amount_purchase;
+        [JsonInclude]
+        public double Tax;
+        [JsonInclude]
+        public int PURCHASE_ID;
+
+        [JsonInclude]
+        // For testing
+        public string Date_Purchased_str;
 
         public Purchase()
         {
@@ -25,9 +37,9 @@ namespace FinancialDatabase.DatabaseObjects
 
         public Purchase(int id, Util.Date date, double amount)
         {
-            this.id = id;
-            this.date = date;
-            this.amount = amount;
+            this.PURCHASE_ID = id;
+            this.Date_Purchased = date;
+            this.Amount_purchase = amount;
         }
 
         public Purchase(List<string> itemAttributes, List<string> colNames)
@@ -80,77 +92,77 @@ namespace FinancialDatabase.DatabaseObjects
         {
             if (fees_purchase == null)
             {
-                this.fees_purchase = Util.DEFAULT_DOUBLE;
+                this.Fees_purchase = Util.DEFAULT_DOUBLE;
             }
             else
             {
-                this.fees_purchase = Double.Parse(fees_purchase);
+                this.Fees_purchase = Double.Parse(fees_purchase);
             }
         }
         public void set_amount(string amount)
         {
             if (amount == null)
             {
-                this.amount = Util.DEFAULT_DOUBLE;
+                this.Amount_purchase = Util.DEFAULT_DOUBLE;
             }
             else
             {
-                this.amount = Double.Parse(amount);
+                this.Amount_purchase = Double.Parse(amount);
             }
         }
         public void set_date(string date)
         {
             if (date == null)
             {
-                this.date = Util.DEFAULT_DATE;
+                this.Date_Purchased = Util.DEFAULT_DATE;
             }
             else
             {
-                this.date = new Util.Date(date);
+                this.Date_Purchased = new Util.Date(date);
             }
         }
         public void set_seller(string seller)
         {
             if (seller == null)
             {
-                this.seller = Util.DEFAULT_STRING;
+                this.Seller = Util.DEFAULT_STRING;
             }
             else
             {
-                this.seller = seller;
+                this.Seller = seller;
             }
         }
         public void set_tax(string tax)
         {
             if (tax == null)
             {
-                this.tax = Util.DEFAULT_DOUBLE;
+                this.Tax = Util.DEFAULT_DOUBLE;
             }
             else
             {
-                this.tax = Double.Parse(tax);
+                this.Tax = Double.Parse(tax);
             }
         }
         public void set_id(string id)
         {
             if (id == null)
             {
-                this.id = Util.DEFAULT_INT;
+                this.PURCHASE_ID = Util.DEFAULT_INT;
             }
             else
             {
-                this.id = Int32.Parse(id);
+                this.PURCHASE_ID = Int32.Parse(id);
             }
         }
         public void set_notes_purchase(string notes_purchase)
         {
             if (notes_purchase == null)
             {
-                this.notes_purchase = Util.DEFAULT_STRING;
+                this.Notes_purchase = Util.DEFAULT_STRING;
             }
             else
             {
-                this.notes_purchase = notes_purchase;
+                this.Notes_purchase = notes_purchase;
             }
         }
 

@@ -123,7 +123,7 @@ namespace FinancialDatabase
 
         public static string insertPurchaseQuery(double purcPrice, string purcNotes, Date d)
         {
-            return "INSERT INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", \"" + purcNotes + "\", " + formatAttribute(d.toDateString(), "date") + ");";
+            return "INSERT INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", \"" + purcNotes + "\", " + formatAttribute(d.toDateString(), "Date_Purchased") + ");";
         }
         
         
@@ -135,7 +135,7 @@ namespace FinancialDatabase
 
             attrib = attrib.Replace("\"", "\\\"");
 
-            if (type.CompareTo("date") == 0)
+            if (type.CompareTo("Date_Purchased") == 0)
             {
                 return "DATE(\"" + attrib + "\")";
             }
@@ -208,7 +208,7 @@ namespace FinancialDatabase
             }
             // Note: Since, for example, item : purchase is a many to 1 relationship (buying a lot),
             // one must update the purchase price with the purchaseID, not itemID of the current item
-            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE " + itemID + ";";
+            query = "UPDATE " + table + " SET " + controlAttribute + " = date(\"" + updatedText + "\") WHERE " + itemID + ";";
             return query;
         }
 
@@ -314,7 +314,7 @@ namespace FinancialDatabase
 
         public static string saleInsertQuery(Sale sale)
         {
-            return "INSERT INTO sale (Date_Sold, Amount_sale, ItemID_sale) VALUES (" + formatAttribute(sale.get_Date_Sold().toDateString(), "date") + ", " + sale.get_Amount_sale().ToString() + ", " + sale.get_ItemID_sale().ToString() + ");";
+            return "INSERT INTO sale (Date_Sold, Amount_sale, ItemID_sale) VALUES (" + formatAttribute(sale.get_Date_Sold().toDateString(), "Date_Purchased") + ", " + sale.get_Amount_sale().ToString() + ", " + sale.get_ItemID_sale().ToString() + ");";
         }
 
         public static string deletePurchaseQuery(Item item)

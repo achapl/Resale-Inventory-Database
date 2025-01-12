@@ -1,4 +1,5 @@
 ﻿using FinancialDatabase;
+using FinancialDatabase.DatabaseObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,24 @@ namespace FinancialDatabaseTesting
         {
             form1 = new Form1();
             tabController = new TabController(form1);
+
+            List<Purchase> purchases = TestingUtil.getTestingItems();
+            foreach (Purchase purchase in purchases)
+            {
+                int purcID = Database.insertPurchase(purchase.Amount_purchase, purchase.Notes_purchase, new Util.Date(purchase.Date_Purchased_str));
+                foreach (Item item in purchase.items)
+                {
+                    item.set_PurchaseID(purcID);
+                    Database.insertItem(item, out int itemID);
+
+                    foreach (Sale sale in item.sales)
+                    {
+                        sale.set_ItemID_sale(item.get_ITEM_ID());
+                        sale.set_Date_Sold(new Util.Date(sale.Date_Sold_str));
+                        Database.insertSale(sale);
+                    }
+                }
+            }
         }
 
         [OneTimeTearDown]
@@ -32,8 +51,7 @@ namespace FinancialDatabaseTesting
         public static void Test_ItemViewTab()
         {
             ItemViewTab tab = new ItemViewTab(tabController, form1);
-
-            tab.setCurrItem(Database.getItem())
+            Assert.IsNull(tab.getCurrItem());
         }
     }
 }

@@ -342,7 +342,7 @@ public class TestItem
         item.set_Amount_purchase(Amount_purchase);
         item.set_Tax(Tax);
         item.set_Fees_purchase(Fees_purchase);
-        item.set_Seller(Seller); // Valid to have seller just be empty, it is not necessary information
+        item.set_Seller(Seller); // Valid to have Seller just be empty, it is not necessary information
         item.set_Notes_purchase(Notes_purchase);  // Valid to have miscellaneous notes just be empty
         item.set_Length(Length);
         item.set_Width(Width);

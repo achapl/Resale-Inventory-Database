@@ -92,11 +92,11 @@ public class Util
 
 
     /// <summary>
-    /// Turns a date into a string
+    /// Turns a Date_Purchased into a string
     /// Formatted for usage in SQL (with escape characters)
     /// ex: List {2024,12,5} -> '\"2024-12-5\"'
     /// </summary>
-    /// <param name="dateList">List of ints that represent the date</param>
+    /// <param name="dateList">List of ints that represent the Date_Purchased</param>
     /// <returns></returns>
     public static string datetoString(List<int> dateList)
     {
@@ -193,7 +193,7 @@ public class Util
 
 
     /// <summary>
-    /// Converts an amount of ounces to ounces and pounds
+    /// Converts an Amount_purchase of ounces to ounces and pounds
     /// </summary>
     /// <param name="ozs">Number of ounces</param>
     /// <returns>List of 2 ints. First is lbs, and second element is ounces</returns>
@@ -664,7 +664,7 @@ public class Util
         {
             if (s.CompareTo("") == 0) { throw new Exception("ERROR: Empty Date Given"); }
 
-            // Assumed to be format "datetime.date(yyyy, (m)m, (d)d)"
+            // Assumed to be format "datetime.Date_Purchased(yyyy, (m)m, (d)d)"
             if (s.Length > 14 && s.Substring(0, 14).CompareTo("datetime.date(") == 0)
             {
                 List<string> components = new List<string>(s.Split(", "));
@@ -715,7 +715,7 @@ public class Util
 
         /// <summary>
         /// Formats Y M D into a string yyyy-mm-dd
-        /// Note: Should not restrict input to only date-valid integers since this method should work for "invalid" dates that the user may want to display intentionally
+        /// Note: Should not restrict input to only Date_Purchased-valid integers since this method should work for "invalid" dates that the user may want to display intentionally
         // This is espically true since this func is also used to test constructors for invalid dates.
         /// </summary>
         public static string toDateString(int y, int m, int d)
@@ -738,7 +738,7 @@ public class Util
 
         private void checkValidDate(int y, int m, int d)
         {
-            if (y == -1 && m == -1 && d == -1) { return; } // -1/ -1/ -1 is fine for default date
+            if (y == -1 && m == -1 && d == -1) { return; } // -1/ -1/ -1 is fine for default Date_Purchased
             try
             {
                 new DateTime(y, m, d);

@@ -28,20 +28,13 @@ public class ItemViewTab : Tab
         Util.clearLabelText(attributeValueLabels);
         showControlVisibility();
     }
-    
-    
-    public Item getCurrItemsAt(int index)
-    {
-        if (index == -1) { return null; }
-        return tabController.getSearchItems()[index];
-    }
 
 
     public Item getCurrItem()
     {
         if (currItem != null)
         {
-            updateCurrItem();
+            updateCurrItemUsingDtb();
         }
         return currItem;
     }
@@ -140,7 +133,7 @@ public class ItemViewTab : Tab
 
 
     // Update the under-hood reference to the object in the database
-    public void updateCurrItem()
+    public void updateCurrItemUsingDtb()
     {
         currItem = Database.getItem(currItem.get_ITEM_ID());
     }
@@ -214,7 +207,7 @@ public class ItemViewTab : Tab
             }
         }
 
-        updateCurrItem();
+        updateCurrItemUsingDtb();
         showItemAttributes(currItem);
         return true;
     }
@@ -331,9 +324,9 @@ public class ItemViewTab : Tab
 
         if (item.hasPurchaseEntry())
         {
-            Date datePurc = tabController.getCurrPurc().date;
+            Date datePurc = tabController.getCurrPurc().Date_Purchased;
             Form1.itemDatePurcLbl.Text = datePurc.toDateString();
-            Form1.itemPurcPriceLbl.Text = checkDefault(tabController.getCurrPurc().amount);
+            Form1.itemPurcPriceLbl.Text = checkDefault(tabController.getCurrPurc().Amount_purchase);
         }
 
         if (item.hasSaleEntry())
@@ -417,7 +410,7 @@ public class ItemViewTab : Tab
         }
 
         currItem = newItem;
-        updateCurrItem();
+        updateCurrItemUsingDtb();
     }
 
     public void clearCurrItem()

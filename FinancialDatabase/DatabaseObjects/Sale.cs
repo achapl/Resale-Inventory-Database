@@ -1,14 +1,20 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Date = Util.Date;
 
 public class Sale : IEquatable<Sale>
 {
     int SALE_ID;
     Date Date_Sold;
+    [JsonInclude]
     double Amount_sale;
     double Fees_sale;
     string Buyer;
     int ItemID_sale;
+
+    // For testing
+    [JsonInclude]
+    public string Date_Sold_str { get; set; }
 
 
     public Sale()

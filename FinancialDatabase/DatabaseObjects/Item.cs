@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using Date = Util.Date;
@@ -15,12 +16,16 @@ public class Item : IEquatable<Item>
 
     // From item table
     int ITEM_ID;
+    [JsonInclude]
     string Name;
     int PurchaseID;
     int SaleID;
     int ShippingID;
+    [JsonInclude]
     int InitialQuantity;
+    [JsonInclude]
     int CurrentQuantity;
+    [JsonInclude]
     string Notes_item;
 
     // From purchase table
@@ -32,9 +37,13 @@ public class Item : IEquatable<Item>
     string Notes_purchase;
 
     // From shipping table
+    [JsonInclude]
     int Length;
+    [JsonInclude]
     int Width;
+    [JsonInclude]
     int Height;
+    [JsonInclude]
     int Weight;
     string Notes_shipping;
 
@@ -44,6 +53,12 @@ public class Item : IEquatable<Item>
     // Extra
     double totalSales;
     private MyImage thumbnail;
+
+    // For Testing
+    [JsonInclude]
+    List<string> imagePaths;
+    [JsonInclude]
+    public List<Sale> sales { get; set; }
 
 
 #pragma warning disable CS8618 // Util.DEFAULTs are set to non-null vals
@@ -335,7 +350,7 @@ public class Item : IEquatable<Item>
                 break;
 
             default:
-                throw new Exception("ERROR: Unknown date Attrib: " + attrib);
+                throw new Exception("ERROR: Unknown Date_Purchased Attrib: " + attrib);
         }
     }
 
@@ -741,7 +756,7 @@ public class Item : IEquatable<Item>
         }
 
 
-        // date is format (y,m,d): "datetime.date(2020, 1, 1)" 
+        // Date is format (y,m,d): "datetime.date(2020, 1, 1)" 
         date = date.Remove(0, "datetime.date".Length);
         // "(2020, 1, 1)"
         if (date[0] == '(') {
@@ -753,7 +768,7 @@ public class Item : IEquatable<Item>
         }
         else
         {
-            throw new Exception("Error: Unknown date format");
+            throw new Exception("Error: Unknown Date_Purchased format");
         }
     }
 

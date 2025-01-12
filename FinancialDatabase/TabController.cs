@@ -54,7 +54,7 @@ namespace FinancialDatabase
 
         // searchItems
         public void setSearchItems(List<Item> newItems) => searchTab.addSearchItems(newItems);
-        public Item getSearchItemsAt(int index) => itemViewTab.getCurrItemsAt(index);
+        public Item getSearchItemsAt(int index) => getSearchItems()[index];
         public void addSearchItems(Item newItem) => searchTab.addSearchItems(newItem);
         public List<Item> getSearchItems() => searchTab.getSearchItems();
         public void clearSearchItems()
@@ -192,7 +192,7 @@ namespace FinancialDatabase
             if (success)
             {
                 saleTab.showItemSales(itemViewTab.getCurrItem());
-                itemViewTab.updateCurrItem();
+                itemViewTab.updateCurrItemUsingDtb();
                 Form1.tabCollection.SelectTab(saleTabNum);
             }
         }

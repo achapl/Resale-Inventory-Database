@@ -1,8 +1,11 @@
-﻿using System;
+﻿using FinancialDatabase.DatabaseObjects;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace FinancialDatabaseTesting
@@ -60,6 +63,14 @@ namespace FinancialDatabaseTesting
                 }
             }
             return true;
+        }
+
+        internal static List<Purchase> getTestingItems()
+        {
+            string inFile = File.ReadAllText("C:\\Users\\Owner\\source\\repos\\FinancialDatabaseSolution\\FinancialDatabaseTesting\\TestingItems.json");
+            JsonNode wholeFile = JsonArray.Parse(inFile);
+            List<Purchase> purchases = wholeFile.Deserialize<List<Purchase>>();
+            return purchases;
         }
     }
 

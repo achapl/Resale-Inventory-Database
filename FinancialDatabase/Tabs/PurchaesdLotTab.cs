@@ -160,11 +160,11 @@ public class PurchasedLotTab : Tab
         if (item.hasPurchaseEntry())
         {
             Purchase currPurc = tabController.getCurrPurc();
-            Date datePurc = currPurc.date;
+            Date datePurc = currPurc.Date_Purchased;
             Form1.PurcDatePicker.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
-            Form1.PurcPurcPriceLbl.Text = checkDefault(currPurc.amount);
-            Form1.PurcPurcNotesLbl.Text = checkDefault(currPurc.notes_purchase);
-            Form1.PurcPurcDateLbl.Text = checkDefault(currPurc.date.toDateString());
+            Form1.PurcPurcPriceLbl.Text = checkDefault(currPurc.Amount_purchase);
+            Form1.PurcPurcNotesLbl.Text = checkDefault(currPurc.Notes_purchase);
+            Form1.PurcPurcDateLbl.Text = checkDefault(currPurc.Date_Purchased.toDateString());
         }
         updateUserInputDefaultText();
         
@@ -248,8 +248,8 @@ public class PurchasedLotTab : Tab
             addCurrPurcItem(Database.getItem(i.get_ITEM_ID()));
         }
 
-        Form1.PurcPurcPriceLbl.Text = currPurc.amount.ToString();
-        Form1.PurcPurcNotesLbl.Text = currPurc.notes_purchase;
+        Form1.PurcPurcPriceLbl.Text = currPurc.Amount_purchase.ToString();
+        Form1.PurcPurcNotesLbl.Text = currPurc.Notes_purchase;
     }
 
 
@@ -288,12 +288,12 @@ public class PurchasedLotTab : Tab
     // If there is no current purchase, create one from given user input
     public void addItemToPurc()
     {
-        int purcID = currPurc.id;
+        int purcID = currPurc.PURCHASE_ID;
         Date purcDate = new Date();
 
         if (tabController.getCurrPurc() is not null)
         {
-            purcDate = tabController.getCurrPurc().date;
+            purcDate = tabController.getCurrPurc().Date_Purchased;
         }
         
         if (isNewPurchase && allNewPurchaseBoxesFilled())

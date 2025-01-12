@@ -35,7 +35,7 @@ public class TestDatabase
     private static object[] testingItemsArrays =
     {
         //            0          1      2                          3        4        5          6         7       8                            8[0]   8[1]                        8[2]     9      10                       11[0] 11[1] 11[2] 11[3]
-        //            name,      price, purc date,                 initQty, currQty, image,     imageID,  itemID, sales                        amount, date,                      saleID   purcID shippingID               L     W     H     W
+        //            name,      price, purc Date_Purchased,                 initQty, currQty, image,     imageID,  itemID, sales                        Amount_purchase, Date_Purchased,                      saleID   purcID shippingID               L     W     H     W
         new object[] {"Item1",   100.0, new Util.Date(1978,12,16), 2,       1,       imagePath, -1,       -1,     new object[] { new object[] { 110.0, new Util.Date(1979, 12, 16), -1  },
                                                                                                                                  new object[] { 100.0, new Util.Date(1979, 12, 17), -1  }}, -1,   -1,        new object[] {1,    1,    1,    1 } },
         new object[] {"Item2",   200.0, new Util.Date(1978,12,17), 2,       1,       imagePath, -1,      -1,      new object[] { new object[] { 220.0, new Util.Date(1979, 12, 16), -1  }}, -1,   -1,        new object[] {1,    1,    1,    1 } },
@@ -45,7 +45,7 @@ public class TestDatabase
 
     private static object[] dtbTestingItemsSamePurc =
     {
-        //            name,     price, purc date,                 initQty, currQty, purcID
+        //            name,     price, purc Date_Purchased,                 initQty, currQty, purcID
         new object[] {"ItemA",  100.0, new Util.Date(1978,12,16), 1,       1,       null   },
         new object[] {"ItemB",  null,                       null, 1,       1,       null   },
         new object[] {"ItemC",  null,                       null, 1,       1,       null   },
@@ -236,7 +236,7 @@ public class TestDatabase
             currItem.set_PurchaseID((int)((object[])dtbTestingItemsSamePurc[i])[5]);
             List<Item> purcItems = Database.getPurchItems(currItem);
 
-            // Check propor amount of items returned
+            // Check propor Amount_purchase of items returned
             Assert.AreEqual(dtbTestingItemsSamePurc.Length, purcItems.Count());
 
             // Check all items are from the same purchase
@@ -993,7 +993,7 @@ public class TestDatabase
             item.set_PurchaseID((int) itemArr[9]);
 
             Purchase purchase = Database.getPurchase(item);
-            Assert.AreEqual((double) itemArr[1], purchase.amount);
+            Assert.AreEqual((double) itemArr[1], purchase.Amount_purchase);
         }
     }
 
