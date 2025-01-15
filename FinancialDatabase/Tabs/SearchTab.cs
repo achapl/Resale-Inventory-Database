@@ -125,7 +125,7 @@ public class SearchTab
             if (priceCol) { itemStr = result[i].get_Amount_purchase() + ", " + itemStr; }
             if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
             Form1.itemSearchView.addRow(result[i].get_Thumbnail().image, itemStr);
-            addSearchItems(result[i]);
+            searchItems.Add(result[i]);
             
         }
     }
@@ -146,15 +146,5 @@ public class SearchTab
     public void clearCurrItemsVar()
     {
         searchItems.Clear();
-    }
-
-    public void addSearchItems(Item newItem)
-    {
-        searchItems.Add(newItem);
-    }
-
-    public void addSearchItems(List<Item> newItems)
-    {
-        searchItems.AddRange(newItems);
     }
 }

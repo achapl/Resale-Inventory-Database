@@ -48,14 +48,12 @@ namespace FinancialDatabase
         }
 
         // currItem
-        public void setCurrItemVar(Item newItem) => itemViewTab.setCurrItem(newItem);
+        private void setCurrItemVar(Item newItem) => itemViewTab.setCurrItem(newItem);
         public Item getCurrItem() => itemViewTab.getCurrItem();
 
 
         // searchItems
-        public void setSearchItems(List<Item> newItems) => searchTab.addSearchItems(newItems);
         public Item getSearchItemsAt(int index) => getSearchItems()[index];
-        public void addSearchItems(Item newItem) => searchTab.addSearchItems(newItem);
         public List<Item> getSearchItems() => searchTab.getSearchItems();
         public void clearSearchItems()
         {

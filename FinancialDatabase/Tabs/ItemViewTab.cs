@@ -134,7 +134,7 @@ public class ItemViewTab : Tab
 
 
     // Update the under-hood reference to the object in the database
-    protected void updateCurrItemUsingDtb()
+    public void updateCurrItemUsingDtb()
     {
         currItem = Database.getItem(currItem.get_ITEM_ID());
     }
