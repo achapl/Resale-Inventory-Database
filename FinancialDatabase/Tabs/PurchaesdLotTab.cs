@@ -105,7 +105,20 @@ public class PurchasedLotTab : Tab
 
     public void setCurrPurc(Purchase purc) { currPurc = purc; }
 
-    public List<Item> getCurrPurcItems() => currPurc.items;
+    public List<Item> getCurrPurcItems()
+    {
+        if (currPurc is null)
+        {
+            return new List<Item>();
+        }
+        
+        if (currPurc.items is null)
+        {
+            throw new Exception("Error: Curr purc has no initialized items list. Not 0 items, just no initialized list");
+        }
+
+        return currPurc.items;
+    }
     public void addCurrPurcItem(Item item)
     {
         if (currPurc is null)

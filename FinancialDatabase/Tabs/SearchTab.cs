@@ -37,7 +37,7 @@ public class SearchTab
     }
 
     // Given a list of search terms, run a separate search on each individual search term, and aggregate the results
-    public List<Item> runSearch(SearchQuery Q)
+    private List<Item> runSearch(SearchQuery Q)
     {
         // List of ResultItems and how many times it has been found given all of the search terms individually
         // (max one hit per search term)
@@ -125,7 +125,7 @@ public class SearchTab
             if (priceCol) { itemStr = result[i].get_Amount_purchase() + ", " + itemStr; }
             if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
             Form1.itemSearchView.addRow(result[i].get_Thumbnail().image, itemStr);
-            tabController.addSearchItems(result[i]);
+            addSearchItems(result[i]);
             
         }
     }
@@ -136,6 +136,10 @@ public class SearchTab
 
     public List<Item> getSearchItems()
     {
+        if (searchItems is null)
+        {
+            searchItems = new List<Item>();
+        }
         return searchItems;
     }
 

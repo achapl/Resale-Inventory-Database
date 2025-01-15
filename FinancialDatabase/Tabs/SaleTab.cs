@@ -164,6 +164,8 @@ public class SaleTab : Tab
         Form1.saleListBox.Items.Clear();
         clearCurrItemSales();
 
+        if (item is null) { return; }
+
         List<Sale> sales = getSales(item);
 
         foreach (Sale s in sales)

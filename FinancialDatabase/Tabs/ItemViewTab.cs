@@ -57,6 +57,7 @@ public class ItemViewTab : Tab
         };
         mutableAttribValueLabels = new List<Label>(){
             Form1.itemNameLbl,
+            Form1.itemSoldPriceLbl,
             Form1.itemInitQtyLbl,
             Form1.itemCurrQtyLbl,
             Form1.itemWeightLbsLbl,
@@ -133,7 +134,7 @@ public class ItemViewTab : Tab
 
 
     // Update the under-hood reference to the object in the database
-    public void updateCurrItemUsingDtb()
+    protected void updateCurrItemUsingDtb()
     {
         currItem = Database.getItem(currItem.get_ITEM_ID());
     }
@@ -313,6 +314,8 @@ public class ItemViewTab : Tab
 
         Util.clearLabelText(attributeValueLabels);
 
+        if (item is null) { return; }
+
         if (item.hasItemEntry())
         {
             Form1.itemNameLbl.Text = checkDefault(item.get_Name());
@@ -393,20 +396,21 @@ public class ItemViewTab : Tab
     public void setCurrItem(Item? newItem)
     {
        
-        if (newItem == null) { currItem = null; }
+        if (newItem == null) {
+            currItem = null;
+            return;
+        }
         
+        // Items must only come from user input or currently indexed items such as from the current purchase or item search list.
+        // If one has to bring an item outside of these places, there's something wrong. Possibility of bugs introduced.
         if (!tabController.getSearchItems().Contains(newItem) &&
-            !tabController.getCurrPurcItems().Contains(newItem) && !tabController.isNewPurchase())
+            !tabController.getCurrPurcItems().Contains(newItem) &&
+            !tabController.isNewPurchase())
         {
             throw new Exception("Error: ItemViewTab.setCurrItem,"
                                 + "Result item ID: " + newItem.get_ITEM_ID().ToString() + ", "
                                 + "Name: " + newItem.get_Name() + ", "
                                 + "Not found!");
-        }
-
-        if (newItem == null)
-        {
-            throw new Exception("Error: newItem is null for ItemViewTab.setCurrItem()");
         }
 
         currItem = newItem;

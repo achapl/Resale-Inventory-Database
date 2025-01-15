@@ -449,7 +449,8 @@ public class Item : IEquatable<Item>
 
     public bool hasPurchaseEntry() => PurchaseID != Util.DEFAULT_INT;
 
-    public bool hasSaleEntry() => SaleID != Util.DEFAULT_INT;
+    public bool hasSaleEntry() => totalSales != Util.DEFAULT_INT;
+
 
     public bool hasShippingEntry() => ShippingID != Util.DEFAULT_INT;
 

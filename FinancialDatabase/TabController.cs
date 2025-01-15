@@ -99,6 +99,7 @@ namespace FinancialDatabase
         public void setCurrItem(Item newItem)
         {
             setCurrItemVar(newItem);
+            newItem = getCurrItem(); // Updated item
 
             purchasedLotTab.setCurrPurcAndShowItems(newItem);
             itemViewTab.showItemAttributes(newItem);

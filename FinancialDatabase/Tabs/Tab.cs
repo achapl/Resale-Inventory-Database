@@ -270,11 +270,17 @@ public abstract class Tab
             if (field is DateTimePicker)
             {
                 DateTimePicker d = field as DateTimePicker;
-                Date date = new Date(labelTextboxPairs[field].Text);
-                d.Value = date.toDateTime();
+                if (labelTextboxPairs[field].Text != "")
+                {
+                    Date date = new Date(labelTextboxPairs[field].Text);
+                    d.Value = date.toDateTime();
+                } else
+                {
+                    d.Value = System.DateTime.Now;
+                }
 
+                }
             }
-        }
     }
 
 
