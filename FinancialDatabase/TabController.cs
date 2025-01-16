@@ -53,6 +53,7 @@ namespace FinancialDatabase
 
 
         // searchItems
+        public void setSearchItems(List<Item> items) => searchTab.setSearchItems(items);
         public Item getSearchItemsAt(int index) => getSearchItems()[index];
         public List<Item> getSearchItems() => searchTab.getSearchItems();
         public void clearSearchItems()
@@ -66,8 +67,6 @@ namespace FinancialDatabase
         public Purchase getCurrPurc() => purchasedLotTab.getCurrPurc();
 
         // currPurcItems
-        public void setCurrPurcItems(List<Item> newPurcItems) => purchasedLotTab.setCurrPurcItems(newPurcItems);
-        public void addCurrPurcItems(Item newPurcItem) => purchasedLotTab.addCurrPurcItem(newPurcItem);
         public Item getCurrPurcItemsAt(int index) => purchasedLotTab.getCurrPurcItemsAt(index);
         public List<Item> getCurrPurcItems() => purchasedLotTab.getCurrPurcItems();
         public void clearCurrPurcItems() => purchasedLotTab.clearCurrPurcItems();
@@ -78,12 +77,10 @@ namespace FinancialDatabase
 
 
         // currSales
-        public void setCurrentItemSales(List<Sale> newSales) => saleTab.setCurrSales(newSales);
-        public void addCurrentItemSales(Sale newSales) => saleTab.addSale(newSales);
+        internal void addCurrentItemSales(Sale newSales) => saleTab.addSale(newSales);
         public Sale getCurrSaleAt(int index) => saleTab.getCurrItemSales(index);
         public List<Sale> getCurrentItemSales() => saleTab.getCurrItemSales();
         public void setCurrSale(int index) => saleTab.setCurrSale(index);
-        public void setCurrSale(Sale s) => saleTab.setCurrSale(s);
 
 
 

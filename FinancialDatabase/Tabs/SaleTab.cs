@@ -279,7 +279,7 @@ public class SaleTab : Tab
     }
 
 
-    public void setCurrSale(Sale s)
+    private void setCurrSale(Sale s)
     {
         if (!currItemSales.Contains(s))
         {
@@ -317,10 +317,5 @@ public class SaleTab : Tab
     public void clearCurrItemSales()
     {
         currItemSales.Clear();
-    }
-
-    public void setCurrSales(List<Sale> newSales)
-    {
-        currItemSales = newSales;
     }
 }

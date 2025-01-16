@@ -119,7 +119,7 @@ public class PurchasedLotTab : Tab
 
         return currPurc.items;
     }
-    public void addCurrPurcItem(Item item)
+    private void addCurrPurcItem(Item item)
     {
         if (currPurc is null)
         {
@@ -397,10 +397,5 @@ public class PurchasedLotTab : Tab
             return currPurc.items[index];
         }
         else { return null; }
-    }
-
-    public void setCurrPurcItems(List<Item> newPurcItems)
-    {
-        currPurc.items = newPurcItems;
     }
 }

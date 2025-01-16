@@ -145,6 +145,17 @@ public class SearchTab
 
     public void clearCurrItemsVar()
     {
+        if (searchItems == null)
+        {
+            searchItems = new List<Item>();
+            return;
+        }
+
         searchItems.Clear();
+    }
+
+    internal void setSearchItems(List<Item> items)
+    {
+        this.searchItems = items;
     }
 }
