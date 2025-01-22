@@ -13,7 +13,7 @@ public static class DtbParser
     // Seperates whole string into list of multiple item strings,
     //
     //       List<string>{ "(itemName, itemID, .etc)", "(item2Name, item2ID, .etc)" }
-    public static List<string> parseItems(string rawResult)
+    public static List<string> parseItemsIntoAttribs(string rawResult)
     {
         if (rawResult.CompareTo("[]") == 0)
         {
@@ -48,24 +48,49 @@ public static class DtbParser
     public static List<Item> parseItems(string rawResult, List<string> colNames)
     {
 
-        List<string> rawItems = parseItems(rawResult);
+        List<string> rawItems = parseItemsIntoAttribs(rawResult);
 
         List<Item> results = new List<Item>();
         foreach (string rawItem in rawItems)
         {
             // Seperate each item into individual item attributes to make a Item with it
             List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
-            results.Add(new Item(itemAttributes, colNames));
+            // If no ITEM_ID, there cannot be an object there.
+            if (itemAttributes[colNames.IndexOf("ITEM_ID")] != "None" &&
+                getItemIndex(results, Int32.Parse(itemAttributes[colNames.IndexOf("ITEM_ID")])) == -1)
+            {
+                results.Add(new Item(itemAttributes, colNames));
+            }
+
+
+            if (colNames.IndexOf("SALE_ID") != -1 &&
+                itemAttributes[colNames.IndexOf("SALE_ID")] != "None")
+            {
+                int saleID = Int32.Parse(itemAttributes[colNames.IndexOf("ItemID_sale")]);
+                results[getItemIndex(results, saleID)].sales.Add(new Sale(itemAttributes, colNames));
+            }
         }
 
         return results;
+    }
+
+    private static int getItemIndex(List<Item> items, int itemID)
+    {
+        for (int i = 0; i < items.Count(); i++)
+        {
+            if (items[i].get_ITEM_ID().Equals(itemID))
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 
     // raw result from a sale query is given from the result of the query in the format "[(salePrice, itemID, .etc)(salePrice2, item2ID, .etc)]"
     // Seperates them all and creates Sale objects from each of them. Returns these as a list
     public static List<Sale> parseRawSales(string rawResult, List<string> colNames)
     {
-        List<string> rawItems = parseItems(rawResult);
+        List<string> rawItems = parseItemsIntoAttribs(rawResult);
 
         List<Sale> results = new List<Sale>();
         foreach (string rawItem in rawItems)
@@ -78,25 +103,117 @@ public static class DtbParser
         return results;
     }
 
-    public static List<Purchase> parsePurchase(string rawResult, List<string> colNames)
+
+    private static bool hasAttrib(int attribIndex)
     {
-        List<string> rawItems = parseItems(rawResult);
+        return attribIndex != -1;
+    }
+
+    private static void setAttrib(out Util.Date date, int index, List<string> purcAttributes)
+    {
+        if (hasAttrib(index)) {
+            date = new Util.Date(purcAttributes[index]);
+        }
+        else
+        {
+            date = Util.DEFAULT_DATE;
+        }
+    }
+
+    private static void setAttrib(out int date, int index, List<string> purcAttributes)
+    {
+        if (hasAttrib(index))
+        {
+            date = Int32.Parse(purcAttributes[index]);
+        }
+        else
+        {
+            date = Util.DEFAULT_INT;
+        }
+    }
+
+
+    private static void setAttrib(out double date, int index, List<string> purcAttributes)
+    {
+        if (hasAttrib(index))
+        {
+            date = Double.Parse(purcAttributes[index]);
+        }
+        else
+        {
+            date = Util.DEFAULT_DOUBLE;
+        }
+    }
+
+
+    private static void setAttrib(out string date, int index, List<string> purcAttributes)
+    {
+        if (hasAttrib(index))
+        {
+            date = purcAttributes[index];
+        }
+        else
+        {
+            date = Util.DEFAULT_STRING;
+        }
+    }
+
+
+    public static Purchase parsePurchase(string rawResult, List<string> colNames)
+    {
+        List<string> rawItems = parseItemsIntoAttribs(rawResult);
+
+        if (rawItems.Count == 0)
+        {
+            throw new Exception("Error: Unparsable Raw Result, or No rows, not even purchase information returned by query for parsing");
+        }
 
         List<Purchase> results = new List<Purchase>();
+        List<Item> items = new List<Item>();
+        List<string> purcAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItems[0]));
+        Purchase retPurc = new Purchase();
+
+        int indexPurcAmount = colNames.IndexOf("Amount_purchase");
+        int indexNotes_purc = colNames.IndexOf("Notes_purchase");
+        int indexFees_Purc = colNames.IndexOf("Fees_purchase");
+        int indexPurcDate = colNames.IndexOf("Date_Purchased");
+        int indexPURC_ID = colNames.IndexOf("PURCHASE_ID");
+        int indexSeller = colNames.IndexOf("Seller");
+        int indexTax = colNames.IndexOf("Tax");
+
+        setAttrib(out retPurc.Amount_purchase, indexPurcAmount, purcAttributes);
+        setAttrib(out retPurc.Notes_purchase, indexNotes_purc, purcAttributes);
+        setAttrib(out retPurc.Date_Purchased, indexPurcDate, purcAttributes);
+        setAttrib(out retPurc.Fees_purchase, indexFees_Purc, purcAttributes);
+        setAttrib(out retPurc.PURCHASE_ID, indexPURC_ID, purcAttributes);
+        setAttrib(out retPurc.Seller, indexSeller, purcAttributes);
+        setAttrib(out retPurc.Tax, indexTax, purcAttributes);
+
+
         foreach (string rawItem in rawItems)
         {
             // Seperate each item into individual item attributes to make a Item with it
             List<string> itemAttributes = new List<string>(Util.splitOnTopLevelCommas(rawItem));
-            results.Add(new Purchase(itemAttributes, colNames));
-        }
+            int itemIDCol = colNames.IndexOf("ITEM_ID");
+            if (itemIDCol == -1) break;
 
-        return results;
+            // Check if item exists for this row
+            if (itemAttributes[itemIDCol] == "None")
+            {
+                continue;
+            }
+
+            items.Add(new Item(itemAttributes, colNames));
+        }
+        retPurc.items = items;
+        // TODO: Add items to the purchase
+        return retPurc;
     }
 
 
     public static List<MyImage> parseImages(string rawResult, List<string> colNames)
     {
-        List<string> rawItems = parseItems(rawResult);
+        List<string> rawItems = parseItemsIntoAttribs(rawResult);
         List<MyImage> results = new List<MyImage>();
         foreach (string rawItem in rawItems)
         {

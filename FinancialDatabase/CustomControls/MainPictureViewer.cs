@@ -24,6 +24,16 @@ namespace FinancialDatabase
             InitializeComponent();
         }
 
+        public Image getMainImage()
+        {
+            if (mainImage == null)
+            {
+                return null;
+            }
+
+            return mainImage.image;
+        }
+
         protected override void OnPaint(PaintEventArgs pe)
         {
             mainImageHeight = this.Size.Height;

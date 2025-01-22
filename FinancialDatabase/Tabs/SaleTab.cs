@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
+using System.Reflection;
 using FinancialDatabase;
 using Date = Util.Date;
 
@@ -151,7 +152,10 @@ public class SaleTab : Tab
     override public void flipEditMode()
     {
         // Don't go into edit mode if there is no item to edit
-        if (!inEditingState && getCurrSale() == null) { return; }
+        // Unsuccessful flip of edit mode
+        if (!inEditingState && getCurrSale() == null) { return; }// throw new Exception("Error: No Current Sale to Edit for flipping Sale Tab edit mode"); }
+
+        if (!inEditingState) { recordAttributeStates(); }
 
         inEditingState = !inEditingState;
         if (inEditingState) updateUserInputDefaultText();
@@ -246,7 +250,7 @@ public class SaleTab : Tab
 
     }
 
-    public override void showItemAttributes(Item item)
+    public override void showItemAttributesAndPics(Item item)
     {
         Form1.SaleNameLbl.Text = ""; // Must be cleared manually as to not clear sale fields after showSale has been called (or visa versa from showSale's perspective)
         
@@ -258,13 +262,21 @@ public class SaleTab : Tab
 
     public Sale getCurrItemSales(int index)
     {
-        return this.currItemSales[index];
+        updateCurrSalesFromDtb();
+        return currItemSales[index];
     }
 
 
     public List<Sale> getCurrItemSales()
     {
-        return this.currItemSales;
+        updateCurrSalesFromDtb();
+        return currItemSales;
+    }
+
+
+    public void updateCurrSalesFromDtb()
+    {
+        currItemSales = getSales(tabController.getCurrItem());
     }
 
 

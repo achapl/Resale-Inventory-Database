@@ -30,6 +30,8 @@ public abstract class Tab
 
     protected Form1 Form1;
 
+    private static bool TESTING = false;
+
     public Tab(Form1 Form1)
     {
         this.Form1 = Form1;
@@ -100,17 +102,6 @@ public abstract class Tab
                 case TextBox:
                     if (pastState.Text.CompareTo(currState.Text) != 0)
                     {
-                        // Special case for weight, only add 1 of the 2 user inputs
-                        // Since both vals need to be considered at the same time
-                        // The one user input will be caught and both will be considered
-                        if (currState == Form1.itemWeightLbsTxtbox ||
-                            (currState == Form1.itemWeightOzTxtbox &&
-                            !changedFields.Contains(Form1.itemWeightLbsTxtbox))) // Don't add it twice
-                        {
-                            changedFields.Add(Form1.itemWeightLbsTxtbox);
-                        }
-
-
                         changedFields.Add(currState);
                     }
                     break;
@@ -153,7 +144,8 @@ public abstract class Tab
 
             string attrib = controlAttrib[c];
             string type = tabController.colDataTypes[attrib];
-            if (!Util.checkTypeOkay(attrib, type))
+
+            if (c is TextBox && !Util.checkTypeOkay(c.Text, type))
             {
                 return false;
             }
@@ -284,7 +276,7 @@ public abstract class Tab
     }
 
 
-    abstract public void showItemAttributes(Item item);
+    abstract public void showItemAttributesAndPics(Item item);
 
     // Clear all shown info about currItem
     public void clearCurrItemControls()
@@ -330,11 +322,27 @@ public abstract class Tab
 
     public void showWarning(string message)
     {
-        MessageBox.Show(
-                message,
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-                );
+        if (!TESTING)
+        {
+            MessageBox.Show(
+                    message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                    );
+        }
+    }
+
+    public bool showWarningYESNO(string message)
+    {
+        if (TESTING) { return true; }
+
+        DialogResult result = MessageBox.Show(
+                            message,
+                            "Warning",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning
+                            );
+        return result == DialogResult.Yes;
     }
 }

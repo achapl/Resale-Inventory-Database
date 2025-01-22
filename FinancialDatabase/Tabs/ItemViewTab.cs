@@ -11,6 +11,7 @@ using System.Diagnostics.Eventing.Reader;
 using System.Transactions;
 using System.ComponentModel;
 using Button = System.Windows.Forms.Button;
+using Microsoft.VisualBasic;
 
 public class ItemViewTab : Tab
 {
@@ -57,7 +58,7 @@ public class ItemViewTab : Tab
         };
         mutableAttribValueLabels = new List<Label>(){
             Form1.itemNameLbl,
-            Form1.itemSoldPriceLbl,
+            //Form1.itemSoldPriceLbl,
             Form1.itemInitQtyLbl,
             Form1.itemCurrQtyLbl,
             Form1.itemWeightLbsLbl,
@@ -117,6 +118,7 @@ public class ItemViewTab : Tab
         {
             if (c is not Button)
             {
+                Label l = mutableAttribValueLabels[i];
                 labelTextboxPairs[c] = mutableAttribValueLabels[i++];
             }
         }
@@ -173,15 +175,22 @@ public class ItemViewTab : Tab
         List<Control> changedFields = getChangedFields();
         if (!typeCheckUserInput(changedFields))  { return false; }
 
+        bool weightIsUpdated = false;
+
         foreach (Control userInputContainer in changedFields)
         {
             TextBox userInputTextbox = userInputContainer as TextBox;
             if (databaseEntryExists(userInputTextbox))
             {
-                if (userInputTextbox == Form1.itemWeightLbsTxtbox)
+                if (userInputTextbox == Form1.itemWeightLbsTxtbox ||
+                     userInputTextbox == Form1.itemWeightOzTxtbox)
                 {
-                    int ttlWeight = getUserInputWeight();
-                    Database.updateRow(getCurrItem(), "shipping.Weight", ttlWeight.ToString());
+                    if (!weightIsUpdated)
+                    {
+                        int ttlWeight = getUserInputWeight();
+                        Database.updateRow(getCurrItem(), "shipping.Weight", ttlWeight.ToString());
+                        weightIsUpdated = true;
+                    }
                 }
                 else
                 {
@@ -209,7 +218,7 @@ public class ItemViewTab : Tab
         }
 
         updateCurrItemUsingDtb();
-        showItemAttributes(currItem);
+        showItemAttributesAndPics(currItem);
         return true;
     }
 
@@ -266,7 +275,7 @@ public class ItemViewTab : Tab
 
             Database.insertShipInfo(getCurrItem(), weightLbs, weightOz, l, w, h);
             Util.clearTBox(weightTBoxes);
-            showItemAttributes(Database.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
+            showItemAttributesAndPics(Database.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
         }
         else
         {
@@ -286,7 +295,7 @@ public class ItemViewTab : Tab
 
         if (success)
         {
-            showItemAttributes(Database.getItem(tabController.getCurrItem().get_ITEM_ID()));
+            showItemAttributesAndPics(Database.getItem(tabController.getCurrItem().get_ITEM_ID()));
         }
         flipEditMode();
     }
@@ -309,7 +318,7 @@ public class ItemViewTab : Tab
 
     }
 
-    public override void showItemAttributes(Item item)
+    public override void showItemAttributesAndPics(Item item)
     { 
 
         Util.clearLabelText(attributeValueLabels);
@@ -360,13 +369,11 @@ public class ItemViewTab : Tab
         // Deleting this item results in deletion of the lot purchase entry
         if (tabController.getCurrPurcItems().Count == 1)
         {
-            DialogResult result = MessageBox.Show(
-                            "This is the last item left in the purchased lot, are you sure you want to delete it? Doing so will delete the whole purchase.",
-                            "Warning",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Warning
-                            );
-            if (result == DialogResult.No) { return false; }
+            if (!showWarningYESNO(
+                            "This is the last item left in the purchased lot, are you sure you want to delete it? Doing so will delete the whole purchase." ))
+            {
+                return false;
+            }
         }
 
         Database.deleteItem(tabController.getCurrItem());
@@ -376,6 +383,7 @@ public class ItemViewTab : Tab
 
     public void showItemPictures(Item newItem)
     {
+        newItem.set_images();
         Form1.allPictureViewer.setImages(newItem.get_Images());
         if (newItem.get_Images().Count > 0)
         {

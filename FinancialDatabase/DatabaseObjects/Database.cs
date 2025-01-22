@@ -908,13 +908,16 @@ public static class Database
         List<string> colNames;
         string query = QueryBuilder.purchaseQueryByItemID(item.get_ITEM_ID());
         string output = runStatement(query, out colNames);
-        List<Purchase> purchases = DtbParser.parsePurchase(output, colNames);
-        if (purchases.Count != 1)
-        {
-            throw new Exception("ERROR: Multiple purchases found for a single item: " + item.get_ITEM_ID() + " " + item.get_Name());
-        }
-        return purchases[0];
+        return  DtbParser.parsePurchase(output, colNames);
+    }
 
+
+    public static Purchase getPurchase(int purchaseID)
+    {
+        List<string> colNames;
+        string query = QueryBuilder.purchaseQuery(purchaseID);
+        string output = runStatement(query, out colNames);
+        return DtbParser.parsePurchase(output, colNames);
     }
 
 

@@ -21,6 +21,14 @@ public class PurchasedLotTab : Tab
         showControlVisibility();
     }
 
+    public override void showItemAttributesAndPics(Item item)
+    {
+        // TODO: DELETE THIS and change it so that this method is not an inherited method. Not all tabs show item attributes.
+
+        // Or account for the equivilant with ShowAttributes(). IE: sale tab shows sale attributes, item tab shows item attributes, purc tab shows purc attributes
+        // Note this method is currently listed as showPurchaseAttributes()
+        throw new NotImplementedException();
+    }
 
     protected override void generateTBoxGroups()
     {
@@ -158,27 +166,22 @@ public class PurchasedLotTab : Tab
     {
         // Don't go into edit mode if there is no item to edit
         if (!isNewPurchase && !inEditingState && tabController.getCurrItem() == null) { return; }
-
         inEditingState = !inEditingState;
+        recordAttributeStates();
         showControlVisibility();
 
     }
 
 
-    public override void showItemAttributes(Item item)
+    public void showPurchaseAttributes(Purchase purchase)
     {
-
         Util.clearLabelText(attributeValueLabels);
-
-        if (item.hasPurchaseEntry())
-        {
-            Purchase currPurc = tabController.getCurrPurc();
-            Date datePurc = currPurc.Date_Purchased;
-            Form1.PurcDatePicker.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
-            Form1.PurcPurcPriceLbl.Text = checkDefault(currPurc.Amount_purchase);
-            Form1.PurcPurcNotesLbl.Text = checkDefault(currPurc.Notes_purchase);
-            Form1.PurcPurcDateLbl.Text = checkDefault(currPurc.Date_Purchased.toDateString());
-        }
+        Purchase currPurc = tabController.getCurrPurc();
+        Date datePurc = currPurc.Date_Purchased;
+        Form1.PurcDatePicker.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
+        Form1.PurcPurcPriceLbl.Text = checkDefault(currPurc.Amount_purchase);
+        Form1.PurcPurcNotesLbl.Text = checkDefault(currPurc.Notes_purchase);
+        Form1.PurcPurcDateLbl.Text = checkDefault(currPurc.Date_Purchased.toDateString());
         updateUserInputDefaultText();
         
     }
@@ -237,28 +240,27 @@ public class PurchasedLotTab : Tab
 
         }
 
-        setCurrPurcAndShowItems(Database.getItem(tabController.getCurrItem().get_ITEM_ID()));
-        showItemAttributes(tabController.getCurrItem());
+        setCurrPurcAndShowItems(currPurc.PURCHASE_ID);
+        showPurchaseAttributes(tabController.getCurrPurc());
         return true;
     }
 
 
-    public void setCurrPurcAndShowItems(Item item)
+    public void setCurrPurcAndShowItems(int purchaseID)
     {
-        if (item == null) { return; }
+        if (purchaseID == null || purchaseID <= 0) { throw new Exception("Error: trying to set curr purchase and show its items from a bad purchaseID!"); }
 
-        currPurc = Database.getPurchase(item);
+        // Update purchase from database
+        currPurc = Database.getPurchase(purchaseID);
 
-        showItemAttributes(item);
+        showPurchaseAttributes(currPurc);
 
         Form1.PurchaseListBox.Items.Clear();
-        tabController.clearCurrPurcItems();
-        List<Item> result = Database.getPurchItems(item);
 
-        foreach (Item i in result)
+        foreach (Item i in currPurc.items)
         {
             Form1.PurchaseListBox.Items.Add(i.get_Name());
-            addCurrPurcItem(Database.getItem(i.get_ITEM_ID()));
+           // addCurrPurcItem(Database.getItem(i.get_ITEM_ID()));
         }
 
         Form1.PurcPurcPriceLbl.Text = currPurc.Amount_purchase.ToString();
@@ -273,6 +275,12 @@ public class PurchasedLotTab : Tab
             if (c is TextBox)
             {
                 TextBox t = c as TextBox;
+                // Set defaults
+                if (t.Name.CompareTo("PurcInitQtyTextbox") == 0 ||
+                    t.Name.CompareTo("PurcCurrQtyTextbox") == 0)
+                {
+                    t.Text = "1";
+                }
                 if (t.Text.CompareTo("") == 0)
                 {
                     return false;
@@ -301,46 +309,48 @@ public class PurchasedLotTab : Tab
     // If there is no current purchase, create one from given user input
     public void addItemToPurc()
     {
-        int purcID = currPurc.PURCHASE_ID;
-        Date purcDate = new Date();
+        int purcID;
+        Date purcDate;
 
-        if (tabController.getCurrPurc() is not null)
+        if ((currPurc is null || isNewPurchase)
+             && allNewPurchaseBoxesFilled())
         {
-            purcDate = tabController.getCurrPurc().Date_Purchased;
-        }
-        
-        if (isNewPurchase && allNewPurchaseBoxesFilled())
-        { 
             DateTime dt = Form1.PurcDatePicker.Value;
-            purcDate = new (dt.Year, dt.Month, dt.Day);
+            purcDate = new(dt.Year, dt.Month, dt.Day);
             purcID = Database.insertPurchase(Int32.Parse(Form1.PurcPurcPriceTextbox.Text), Form1.PurcPurcNotesTextbox.Text, purcDate);
+            setCurrPurc(Database.getPurchase(purcID));
 
         }
         // Incorrectly formed new purchase from user input, don't continue on
-        else if (isNewPurchase && !allNewPurchaseBoxesFilled())
+        else if ((currPurc is null || isNewPurchase)
+             && !allNewPurchaseBoxesFilled())
         {
             showWarning("To Add New Purchase, a Purchase Price, Purchase Date, and NEW ITEM Name, Initial Quantity, and Current Quantity must each be filled out");
             return;
         }
+        purcID = currPurc.PURCHASE_ID;
+        purcDate = tabController.getCurrPurc().Date_Purchased;
 
         // Make the new Item given by the user to go into the current purchase
         int itemID = -1;
 
-        if (!Item.isValidName(Form1.itemNameTxtbox.Text)) return;
+        if (!Item.isValidName(Form1.PurcNameTextbox.Text))
+        {
+            showWarning("To Add New Item, a valid name for the item must be filled out");
+            return;
+        }
 
         Item newItem = getNewItemFromUserInput();
-
-        Database.insertItem(newItem, out itemID);
         newItem.set_PurchaseID(purcID);
+        Database.insertItem(newItem, out itemID);
         newItem.set_ITEM_ID(itemID);
-
-        // Update database to reflect the current purchase's purchaseID
-        Database.updateRow(newItem, "item.PurchaseID", purcID);
 
         // Cleanup
         Util.clearTBox(newItemTBoxes);
         Util.clearTBox(shippingTBoxes);
-        setCurrPurcAndShowItems(tabController.getCurrItem());
+        // Currently, this method gets the current item and uses it to update the curr purchase so that the idsplay can be updated with the new purchase associated with it
+        // Should instead update the curr purchase and use that to update the purchase tab with the new item.
+        setCurrPurcAndShowItems(tabController.getCurrPurc().PURCHASE_ID);
         isNewPurchase = false;
     }
 

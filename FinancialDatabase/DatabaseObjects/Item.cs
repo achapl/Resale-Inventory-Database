@@ -103,6 +103,8 @@ public class Item : IEquatable<Item>
         
         // Extra
         totalSales      = SaleTab.getTotalSales(this);
+
+        sales = new List<Sale>();
     }
 
     public Item(List<string> item, List<string> colNames)
@@ -510,8 +512,13 @@ public class Item : IEquatable<Item>
     // From item table
     public void set_ITEM_ID(int ITEM_ID) => this.ITEM_ID = ITEM_ID;
     public void set_ITEM_ID(string ITEM_ID) => this.ITEM_ID = Int32.Parse(ITEM_ID);
+
     public void set_Name(string Name)
     {
+        if (Name is null)
+        {
+            throw new Exception("Error: Name is null");
+        }
         if (Name.CompareTo("") == 0)
         {
             throw new Exception("Error: Name is blank");

@@ -82,6 +82,8 @@ namespace FinancialDatabase
         public List<Sale> getCurrentItemSales() => saleTab.getCurrItemSales();
         public void setCurrSale(int index) => saleTab.setCurrSale(index);
 
+        public bool getSaleInEditingState() => saleTab.inEditingState;
+        public bool getItemInEditingState() => itemViewTab.inEditingState;
 
 
         public void saleTabUpdate()
@@ -91,13 +93,14 @@ namespace FinancialDatabase
 
 
         // Update the program (the model of the database) with a new resultItem, not just the backend variable currItem
+        // Will work with null val for newItem
         public void setCurrItem(Item newItem)
         {
             setCurrItemVar(newItem);
-            newItem = getCurrItem(); // Updated item
-
-            purchasedLotTab.setCurrPurcAndShowItems(newItem);
-            itemViewTab.showItemAttributes(newItem);
+            newItem = getCurrItem(); // Updated
+            if (newItem == null) { return; }
+            purchasedLotTab.setCurrPurcAndShowItems(newItem.get_PurchaseID());
+            itemViewTab.showItemAttributesAndPics(newItem);
             saleTab.showItemSales(newItem);
 
             Form1.tabCollection.SelectTab(itemViewTabNum);
@@ -114,12 +117,11 @@ namespace FinancialDatabase
             Item shellItem = getSearchItemsAt(index);
 
             Item newItem = Database.getItem(shellItem.get_ITEM_ID());
-            newItem.set_images();
             setCurrItem(newItem);
 
         }
 
-        public void clearCurrSaleItems()
+        private void clearCurrSaleItems()
         {
             saleTab.clearCurrItemSales();
         }
@@ -164,9 +166,30 @@ namespace FinancialDatabase
             itemViewTab.clearCurrItemControls();
         }
 
+        public void clearCurrItemControls()
+        {
+            itemViewTab.clearCurrItemControls();
+        }
+
         public void saleTflipEditMode()
         {
             saleTab.flipEditMode();
+        }
+
+        public void saleTEditMode()
+        {
+            if (!saleTab.inEditingState)
+            {
+                saleTab.flipEditMode();
+            }
+        }
+
+        public void saleTViewMode()
+        {
+            if (saleTab.inEditingState)
+            {
+                saleTab.flipEditMode();
+            }
         }
 
         public void saleTaddSale()
@@ -239,6 +262,7 @@ namespace FinancialDatabase
                     Database.insertImage(file, itemViewTab.getCurrItem().get_ITEM_ID());
                 }
             }
+            itemViewTab.showItemPictures(getCurrItem());
         }
 
 
@@ -258,11 +282,15 @@ namespace FinancialDatabase
 
             string attribVal = getCurrItem().getAttribAsStr(attrib);
 
-            if (attribVal.CompareTo(textBox.Text) != 0)
+            if (attribVal is null ||
+                attribVal.CompareTo(Util.DEFAULT_DATE.toDateString()) == 0 ||
+                attribVal.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
+                attribVal.CompareTo(Util.DEFAULT_INT.ToString()) == 0)
             {
-                return true;
+                return attribVal.CompareTo("") == 0;
             }
-            return false;
+
+            return attribVal.CompareTo(textBox.Text) != 0;
         }
 
         public bool checkTypeOkay(TextBox textBox)
@@ -276,6 +304,15 @@ namespace FinancialDatabase
                 return true;
             }
             return false;
+        }
+
+        public bool getPLInEditingState() => purchasedLotTab.inEditingState;
+
+        public Item getCurrItemWithImages()
+        {
+            Item item = getCurrItem();
+            item.set_images();
+            return item;
         }
     }
 }

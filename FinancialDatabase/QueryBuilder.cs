@@ -107,7 +107,8 @@ namespace FinancialDatabase
 
         public static string purchaseQuery(int purcID)
         {
-            string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE item.PurchaseID = " + purcID + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
+            string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM purchase WHERE PURCHASE_ID = " + purcID + ") subPurchase LEFT JOIN item ON item.PurchaseID = subPurchase.PURCHASE_ID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
+            // string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE item.PurchaseID = " + purcID + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
             return query;
         }
 
@@ -123,7 +124,7 @@ namespace FinancialDatabase
 
         public static string insertPurchaseQuery(double purcPrice, string purcNotes, Date d)
         {
-            return "INSERT INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", \"" + purcNotes + "\", " + formatAttribute(d.toDateString(), "Date_Purchased") + ");";
+            return "INSERT INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", \"" + purcNotes + "\", " + formatAttribute(d.toDateString(), "date") + ");";
         }
         
         
@@ -135,7 +136,7 @@ namespace FinancialDatabase
 
             attrib = attrib.Replace("\"", "\\\"");
 
-            if (type.CompareTo("Date_Purchased") == 0)
+            if (type.CompareTo("date") == 0)
             {
                 return "DATE(\"" + attrib + "\")";
             }
@@ -191,7 +192,7 @@ namespace FinancialDatabase
             string query;
             string itemID = "";
 
-            string updatedText = formatAttribute(updateDate.toDateString(), type);
+            string updatedText = formatAttribute(updateDate.toDateString(), "date");
             switch (table)
             {
                 case "item":
@@ -208,14 +209,14 @@ namespace FinancialDatabase
             }
             // Note: Since, for example, item : purchase is a many to 1 relationship (buying a lot),
             // one must update the purchase price with the purchaseID, not itemID of the current item
-            query = "UPDATE " + table + " SET " + controlAttribute + " = date(\"" + updatedText + "\") WHERE " + itemID + ";";
+            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE " + itemID + ";";
             return query;
         }
 
         public static string updateQuery(Item currItem, string controlAttribute, string updateText)
         {
             string type = colDataTypesLocal[controlAttribute];
-            if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
+            if (!Util.checkTypeOkay(updateText, type)) { throw new Exception("ERROR: BAD USER INPUT"); }
 
             if (controlAttribute.Split('.').Length != 2)
             {
@@ -276,7 +277,7 @@ namespace FinancialDatabase
                     
             // Note: Since, for example, item : purchase is a many to 1 relationship (buying a lot),
             // one must update the purchase price with the purchaseID, not itemID of the current item
-            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE " + itemID + ";";
+            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE sale.SALE_ID = " + itemID + ";";
             return query;
         }
 
@@ -303,7 +304,7 @@ namespace FinancialDatabase
                     
             // Note: Since, for example, item : purchase is a many to 1 relationship (buying a lot),
             // one must update the purchase price with the purchaseID, not itemID of the current item
-            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE " + itemID + ";";
+            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE sale.SALE_ID = " + itemID + ";";
             return query;
         }
 
@@ -314,7 +315,7 @@ namespace FinancialDatabase
 
         public static string saleInsertQuery(Sale sale)
         {
-            return "INSERT INTO sale (Date_Sold, Amount_sale, ItemID_sale) VALUES (" + formatAttribute(sale.get_Date_Sold().toDateString(), "Date_Purchased") + ", " + sale.get_Amount_sale().ToString() + ", " + sale.get_ItemID_sale().ToString() + ");";
+            return "INSERT INTO sale (Date_Sold, Amount_sale, ItemID_sale) VALUES (" + formatAttribute(sale.get_Date_Sold().toDateString(), "date") + ", " + sale.get_Amount_sale().ToString() + ", " + sale.get_ItemID_sale().ToString() + ");";
         }
 
         public static string deletePurchaseQuery(Item item)
@@ -357,7 +358,7 @@ namespace FinancialDatabase
         {
             return "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE ITEM_ID = "
                 + itemID.ToString()
-                + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
+                + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.ItemID_sale = subSale.ITEM_ID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
         }
 
         public static string getColumnNames(string tableName)
