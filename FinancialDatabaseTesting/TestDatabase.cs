@@ -59,7 +59,7 @@ public class TestDatabase
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        setDatabaseTesting(true);
+        TestingUtil.setDatabaseTesting(true);
 
         Database.clearAll();
         Database.getColDataTypes();
@@ -71,16 +71,11 @@ public class TestDatabase
     public void OneTimeTearDown()
     {
         Database.clearAll();
-        setDatabaseTesting(false);
+        TestingUtil.setDatabaseTesting(false);
     }
 
 
-    private static void setDatabaseTesting(bool testingVal)
-    {
-        var DtbObject = typeof(Database);
-        var testingVar = DtbObject.GetField("TESTING", BindingFlags.NonPublic | BindingFlags.Static);
-        testingVar.SetValue(null, testingVal);
-    }
+    
 
 
     private static void addGenericItems_Sales()
@@ -994,6 +989,23 @@ public class TestDatabase
 
             Purchase purchase = Database.getPurchase(item);
             Assert.AreEqual((double) itemArr[1], purchase.Amount_purchase);
+        }
+    }
+
+
+
+    [Test]
+    public static void Test_getPurchasePurchaseID()
+    {
+        foreach (object[] itemArr in testingItemsArrays)
+        {
+            Item item = new Item();
+            int itemID = (int)itemArr[7];
+            item.set_ITEM_ID(itemID);
+            item.set_PurchaseID((int)itemArr[9]);
+
+            Purchase purchase = Database.getPurchase(item.get_PurchaseID());
+            Assert.AreEqual((double)itemArr[1], purchase.Amount_purchase);
         }
     }
 

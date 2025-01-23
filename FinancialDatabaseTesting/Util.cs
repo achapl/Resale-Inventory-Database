@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -13,6 +14,15 @@ namespace FinancialDatabaseTesting
     internal class TestingUtil
     {
         public static Image defImage = Image.FromFile(@"C:\Users\Owner\source\repos\FinancialDatabaseSolution\FinancialDatabase\Resources\NoImage.png");
+
+        public static Random random = new Random();
+
+        public static void setDatabaseTesting(bool testingVal)
+        {
+            var DtbObject = typeof(Database);
+            var testingVar = DtbObject.GetField("TESTING", BindingFlags.NonPublic | BindingFlags.Static);
+            testingVar.SetValue(null, testingVal);
+        }
 
 
         public static bool compareImages(MyImage image1, MyImage image2, bool resizeLargerimage)
@@ -70,7 +80,33 @@ namespace FinancialDatabaseTesting
             string inFile = File.ReadAllText("C:\\Users\\Owner\\source\\repos\\FinancialDatabaseSolution\\FinancialDatabaseTesting\\TestingItems.json");
             JsonNode wholeFile = JsonArray.Parse(inFile);
             List<Purchase> purchases = wholeFile.Deserialize<List<Purchase>>();
+
+            foreach (Purchase purchase in purchases)
+            {
+                purchase.Date_Purchased = new Util.Date(purchase.Date_Purchased_str);
+                foreach (Item item in purchase.items)
+                {
+                    item.set_Date_Purchased(purchase.Date_Purchased);
+                    item.set_Amount_purchase(purchase.Amount_purchase);
+                    item.set_Seller(purchase.Seller);
+                    item.set_Fees_purchase(purchase.Fees_purchase);
+                    item.set_Tax(purchase.Tax);
+                    item.set_Notes_purchase(purchase.Notes_purchase);
+                    foreach (Sale sale in item.sales)
+                    {
+                        sale.set_Date_Sold(new Util.Date(sale.Date_Sold_str));
+                    }
+                }
+            }
+
             return purchases;
+        }
+
+        internal static void setTabTesting(bool testingVal)
+        {
+            var Tab = typeof(Tab);
+            var testingVar = Tab.GetField("TESTING", BindingFlags.NonPublic | BindingFlags.Static);
+            testingVar.SetValue(null, testingVal);
         }
     }
 

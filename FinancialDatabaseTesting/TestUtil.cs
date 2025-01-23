@@ -13,12 +13,6 @@ using FormsLabel = System.Windows.Forms.Label;
 public class TestUtil
 {
 
-    [SetUp]
-    public void Setup()
-    {
-
-    }
-
     [Test]
     public void Test_DefaultVal_Int()
     {
