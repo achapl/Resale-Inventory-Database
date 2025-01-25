@@ -31,6 +31,7 @@
             components = new System.ComponentModel.Container();
             tabCollection = new TabControl();
             SearchTab = new TabPage();
+            textBoxLabelPair1 = new TextBoxLabelPair();
             itemSearchView = new ItemSearchViewer();
             showPurcPriceCheckBox = new CheckBox();
             showDateCheckBox = new CheckBox();
@@ -163,6 +164,7 @@
             // 
             // SearchTab
             // 
+            SearchTab.Controls.Add(textBoxLabelPair1);
             SearchTab.Controls.Add(itemSearchView);
             SearchTab.Controls.Add(showPurcPriceCheckBox);
             SearchTab.Controls.Add(showDateCheckBox);
@@ -184,6 +186,14 @@
             SearchTab.TabIndex = 0;
             SearchTab.Text = "Search";
             SearchTab.UseVisualStyleBackColor = true;
+            // 
+            // textBoxLabelPair1
+            // 
+            textBoxLabelPair1.Location = new Point(158, 245);
+            textBoxLabelPair1.Name = "textBoxLabelPair1";
+            textBoxLabelPair1.Size = new Size(100, 23);
+            textBoxLabelPair1.TabIndex = 19;
+            textBoxLabelPair1.Click += textBoxLabelPair1_Clicked;
             // 
             // itemSearchView
             // 
@@ -1242,7 +1252,7 @@
             SaleTagNewSaleAmountLbl.Location = new Point(104, 356);
             SaleTagNewSaleAmountLbl.Margin = new Padding(4, 0, 4, 0);
             SaleTagNewSaleAmountLbl.Name = "SaleTagNewSaleAmountLbl";
-            SaleTagNewSaleAmountLbl.Size = new Size(75, 15);
+            SaleTagNewSaleAmountLbl.Size = new Size(128, 15);
             SaleTagNewSaleAmountLbl.TabIndex = 16;
             SaleTagNewSaleAmountLbl.Text = "Sale Amount_purchase";
             // 
@@ -1271,7 +1281,7 @@
             SaleTagSaleAmountLbl.Location = new Point(538, 79);
             SaleTagSaleAmountLbl.Margin = new Padding(4, 0, 4, 0);
             SaleTagSaleAmountLbl.Name = "SaleTagSaleAmountLbl";
-            SaleTagSaleAmountLbl.Size = new Size(75, 15);
+            SaleTagSaleAmountLbl.Size = new Size(128, 15);
             SaleTagSaleAmountLbl.TabIndex = 1;
             SaleTagSaleAmountLbl.Text = "Sale Amount_purchase";
             // 
@@ -1317,6 +1327,11 @@
             Sale.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)resultItemBindingSource).EndInit();
             ResumeLayout(false);
+        }
+
+        private void textBoxlabelPair1_ControlAdded(object sender, ControlEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -1432,6 +1447,7 @@
         public Button AddImageButton;
         public OpenFileDialog openFileDialog1;
         private Button setThumbnailButton;
+        private TextBoxLabelPair textBoxLabelPair1;
     }
 }
 
