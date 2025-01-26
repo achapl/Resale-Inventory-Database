@@ -12,7 +12,7 @@ using System.Windows.Forms;
 namespace FinancialDatabase
 {
     public partial class TextBoxLabelPair : TextBox
-    {
+    { 
         Label label;
 
         public TextBoxLabelPair()
@@ -23,7 +23,6 @@ namespace FinancialDatabase
             ParentChanged += ParentChangedMethod;
             this.LocationChanged += UpdatedAttributes;
             this.VisibleChanged += VisibilityChangedMethod;
-            
         }
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -55,6 +54,38 @@ namespace FinancialDatabase
         internal void labelClicked(Object e, EventArgs ea)
         {
             this.Visible = true;
+        }
+
+        public bool getLabelVisible()
+        {
+            return label.Visible;
+        }
+
+        public string getLabelText()
+        {
+
+        }
+
+        public string getTextBoxText()
+        {
+
+        }
+
+        public void flipVisibility()
+        {
+
+        }
+
+
+        public void editMode()
+        {
+
+        }
+
+
+        public void viewMode()
+        {
+
         }
     }
 }
