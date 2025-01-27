@@ -16,6 +16,17 @@ namespace FinancialDatabase
         Label label;
         public bool inEditMode { get; private set; }
 
+        private string _attrib;
+        public string attrib { get { return _attrib; }
+            set
+            {
+                // Only set attrib once for any object, should never need to change it
+                if (_attrib != null) { throw new Exception("Error TextBoxLabelPair: Trying to set attrib when attrib is already set"); }
+
+                _attrib = value;
+            } }
+
+
         public TextBoxLabelPair()
         {
             this.Visible = false;
@@ -26,18 +37,14 @@ namespace FinancialDatabase
             ParentChanged += ParentChangedMethod;
             this.LocationChanged += UpdatedAttributes;
             this.VisibleChanged += VisibilityChangedMethod;
-            this.Click += Clicked;
         }
+
 
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
         }
 
-        internal void Clicked(Object e, EventArgs ea)
-        {
-            viewMode();
-        }
 
         internal void ParentChangedMethod(Object e, EventArgs ea)
         {
@@ -47,6 +54,7 @@ namespace FinancialDatabase
             }
         }
 
+
         internal void UpdatedAttributes(Object e, EventArgs ea)
         {
             label.Location = new Point(this.Location.X, this.Location.Y+30);
@@ -55,8 +63,8 @@ namespace FinancialDatabase
             label.Text = "This Is A Test!!!";
             label.Name = "Label-" + this.Name;
             label.Visible = true;
-            label.Click += labelClicked;
         }
+
 
         internal void VisibilityChangedMethod(Object e, EventArgs ea)
         {
@@ -64,10 +72,6 @@ namespace FinancialDatabase
             label.Visible = !this.Visible;
         }
 
-        internal void labelClicked(Object e, EventArgs ea)
-        {
-            flipEditMode();
-        }
 
         public string getLabelText()
         {
@@ -75,10 +79,12 @@ namespace FinancialDatabase
             return label.Text;
         }
 
+
         public string getTextBoxText()
         {
             return this.Text;
         }
+
 
         public void flipEditMode()
         {
