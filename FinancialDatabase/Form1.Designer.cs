@@ -193,7 +193,7 @@
             textBoxLabelPair1.Name = "textBoxLabelPair1";
             textBoxLabelPair1.Size = new Size(100, 23);
             textBoxLabelPair1.TabIndex = 19;
-            textBoxLabelPair1.Click += textBoxLabelPair1_Clicked;
+            textBoxLabelPair1.Visible = false;
             // 
             // itemSearchView
             // 

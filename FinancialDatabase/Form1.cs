@@ -221,10 +221,5 @@ namespace FinancialDatabase
         {
             return new List<string>(openFileDialog1.FileNames);
         }
-
-        private void textBoxLabelPair1_Clicked(object sender, EventArgs e)
-        {
-            textBoxLabelPair1.Visible = !textBoxLabelPair1.Visible;
-        }
     }
 }
