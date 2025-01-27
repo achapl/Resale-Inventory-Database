@@ -57,10 +57,9 @@ namespace FinancialDatabase
 
         internal void UpdatedAttributes(Object e, EventArgs ea)
         {
-            label.Location = new Point(this.Location.X, this.Location.Y+30);
+            label.Location = new Point(this.Location.X, this.Location.Y);
             label.Size = new Size(100, 30);
             label.BackColor = Color.Transparent;
-            label.Text = "This Is A Test!!!";
             label.Name = "Label-" + this.Name;
             label.Visible = true;
         }

@@ -15,7 +15,6 @@ public abstract class Tab
     protected List<TextBox> shippingTBoxes;
     protected List<TextBox> newItemTBoxes;
     protected Dictionary<Control, Label> labelTextboxPairs;
-    public    Dictionary<Control, string> controlAttrib;
     protected List<Label> attributeValueLabels;
 
 
@@ -41,8 +40,6 @@ public abstract class Tab
         {
             Form1.itemPurcPriceLbl,
             Form1.itemSoldPriceLbl,
-            Form1.itemInitQtyLbl,
-            Form1.itemCurrQtyLbl,
             Form1.itemItemNoLbl,
             Form1.itemWeightLbsLbl,
             Form1.itemWeightOzLbl,
@@ -58,8 +55,8 @@ public abstract class Tab
             Form1.SaleNameLbl,
             Form1.SaleDateLbl,
             Form1.itemNameTxtbox,
-            Form1.itemInitQtyTxtbox,
-            Form1.itemCurrQtyTxtbox,
+            Form1.itemInitQtyTLP,
+            Form1.itemCurrQtyTLP,
             Form1.itemWeightLbsTxtbox,
             Form1.itemWeightOzTxtbox,
             Form1.itemLengthTxtbox,
@@ -135,14 +132,22 @@ public abstract class Tab
         {
 
             // Special case, weight textboxes
-            if (!Int32.TryParse(Form1.itemWeightLbsTxtbox.Text, out _)
-                || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out _))
+            if (!Int32.TryParse(Form1.itemWeightLbsTLP.getTextBoxText(), out _)
+                || !Int32.TryParse(Form1.itemWeightOzTxtbox.getTextBoxText(), out _))
             {
                 showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
                 return false;
             }
 
-            string attrib = controlAttrib[c];
+            string attrib;
+            if (c is TextBoxLabelPair)
+            {
+                attrib = (c as TextBoxLabelPair).attrib;
+            }
+            else if (c is /*DateTimePicker*/)
+            {
+                attrib = (c as /*DateTimePicker*/).attrib;
+            }
             string type = tabController.colDataTypes[attrib];
 
             if (c is TextBox && !Util.checkTypeOkay(c.Text, type))

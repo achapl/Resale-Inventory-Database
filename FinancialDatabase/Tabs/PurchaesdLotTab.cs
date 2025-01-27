@@ -100,12 +100,9 @@ public class PurchasedLotTab : Tab
             }
         }
 
-        controlAttrib = new Dictionary<Control, string>
-        {
-            { Form1.PurcDatePicker,  "purchase.Date_Purchased" },
-            { Form1.PurcPurcPriceTextbox,        "purchase.Amount_purchase" },
-            { Form1.PurcPurcNotesTextbox,        "purchase.Notes_purchase" }
-        };
+            Form1.PurcDatePicker,  "purchase.Date_Purchased";
+            Form1.PurcPurcPriceTLP.attrib = "purchase.Amount_purchase";
+            Form1.PurcPurcNotesTLP.attrib = "purchase.Notes_purchase";
     }
 
 
@@ -224,13 +221,13 @@ public class PurchasedLotTab : Tab
             
             if (databaseEntryExists(c))
             {
-                if (c is TextBox)
+                if (c is TextBoxLabelPair)
                 {
-                    Database.updateRow(tabController.getCurrItem(), controlAttrib[c], (c as TextBox).Text);
+                    Database.updateRow(tabController.getCurrItem(), (c as TextBoxLabelPair).attrib, (c as TextBoxLabelPair).getTextBoxText());
                 }
-                else if (c is DateTimePicker)
+                else if (c is /*MyDateTimepicker*/)
                 {
-                    Database.updateRow(tabController.getCurrItem(), controlAttrib[c], new Date(c));
+                    Database.updateRow(tabController.getCurrItem(), (c as /*MyDateTimepicker*/).attrib, new Date(c));
                 }
             }
             else if (!databaseEntryExists(c))

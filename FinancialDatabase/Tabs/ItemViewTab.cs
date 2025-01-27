@@ -71,8 +71,8 @@ public class ItemViewTab : Tab
         newItemTBoxes = new List<TextBox>()
         {
             Form1.itemNameTxtbox,
-            Form1.itemInitQtyTxtbox,
-            Form1.itemCurrQtyTxtbox
+            Form1.itemInitQtyTLP,
+            Form1.itemCurrQtyTLP
         };
         weightTBoxes = new List<TextBox>()
         {
@@ -89,8 +89,8 @@ public class ItemViewTab : Tab
         };
         mutableAttribValueControls = new List<Control>(){
             Form1.itemNameTxtbox,
-            Form1.itemInitQtyTxtbox,
-            Form1.itemCurrQtyTxtbox,
+            Form1.itemInitQtyTLP,
+            Form1.itemCurrQtyTLP,
             Form1.itemWeightLbsTxtbox,
             Form1.itemWeightOzTxtbox,
             Form1.itemLengthTxtbox,
@@ -101,8 +101,8 @@ public class ItemViewTab : Tab
 
         hideableAttribValueControls = new List<Control>(){
             Form1.itemNameTxtbox,
-            Form1.itemInitQtyTxtbox,
-            Form1.itemCurrQtyTxtbox,
+            Form1.itemInitQtyTLP,
+            Form1.itemCurrQtyTLP,
             Form1.itemWeightLbsTxtbox,
             Form1.itemWeightOzTxtbox,
             Form1.itemLengthTxtbox,
@@ -123,15 +123,15 @@ public class ItemViewTab : Tab
             }
         }
 
-        controlAttrib = new Dictionary<Control, string>
-        {{ Form1.itemWeightLbsTxtbox,  "shipping.WeightLbs" },
-        { Form1.itemInitQtyTxtbox,  "item.InitialQuantity" },
-        { Form1.itemCurrQtyTxtbox,  "item.CurrentQuantity" },
-        { Form1.itemWeightOzTxtbox, "shipping.WeightOz" },
-        { Form1.itemHeightTxtbox, "shipping.Height" },
-        { Form1.itemLengthTxtbox, "shipping.Length" },
-        { Form1.itemWidthTxtbox, "shipping.Width" },
-        { Form1.itemNameTxtbox,  "item.Name" }};
+        
+        Form1.itemWeightLbsTLP.attrib =  "shipping.WeightLbs";
+        Form1.itemInitQtyTLP.attrib =  "item.InitialQuantity";
+        Form1.itemCurrQtyTLP.attrib =  "item.CurrentQuantity";
+        Form1.itemWeightOzTLP.attrib =  "shipping.WeightOz";
+        Form1.itemHeightTLP.attrib =  "shipping.Height";
+        Form1.itemLengthTLP.attrib =  "shipping.Length";
+        Form1.itemWidthTLP.attrib =  "shipping.Width";
+        Form1.itemNameTLP.attrib =  "item.Name";
     }
 
 
@@ -194,7 +194,17 @@ public class ItemViewTab : Tab
                 }
                 else
                 {
-                    string attrib = controlAttrib[userInputContainer];
+                    string attrib;
+                    if (userInputContainer is TextBoxLabelPair)
+                    {
+                        attrib = ((TextBoxLabelPair)userInputContainer).attrib;
+                    } else if (userInputContainer is /*DateTimePickerWithlabel*/)
+                    {
+                        attrib = ((/*DateTimePickerWithlabel*/)userInputContainer).attrib;
+                    } else
+                    {
+                        throw new Exception("Error ItemViewTab: Unknown type trying to access its attribute");
+                    }
                     string newVal = getUserInputVal(userInputContainer);
 
                     Database.updateRow(getCurrItem(), attrib, newVal);

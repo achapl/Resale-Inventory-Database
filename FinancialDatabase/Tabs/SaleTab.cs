@@ -67,11 +67,8 @@ public class SaleTab : Tab
             }
         }
 
-        controlAttrib = new Dictionary<Control, string>
-        {
-            { Form1.SaleDatePicker,    "sale.Date_Sold" },
-            { Form1.SaleAmountTextbox, "sale.Amount_sale" }
-        };
+            Form1.SaleDatePicker, "sale.Date_Sold";
+            Form1.SaleAmountTLP.attrib = "sale.Amount_sale";
     }
 
     public void updateFromUserInput()
@@ -119,14 +116,14 @@ public class SaleTab : Tab
 
             if (databaseEntryExists(c))
             {
-                if (c is TextBox)
+                if (c is TextBoxLabelPair)
                 {
                     string attrib = t.Text;
-                    Database.updateRow(currSale, controlAttrib[c], t.Text);
+                    Database.updateRow(currSale, (c as TextBoxLabelPair).attrib, t.Text);
                 }
-                else if (c is DateTimePicker)
+                else if (c is /*MyDateTimepicker*/)
                 {
-                    Database.updateRow(currSale, controlAttrib[c], new Date(c));
+                    Database.updateRow(currSale, (c as /*MyDateTimepicker*/).attrib, new Date(c));
                 }
                 Util.clearTBox(t);
             }

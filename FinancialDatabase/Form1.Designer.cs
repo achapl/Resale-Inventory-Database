@@ -31,7 +31,6 @@
             components = new System.ComponentModel.Container();
             tabCollection = new TabControl();
             SearchTab = new TabPage();
-            textBoxLabelPair1 = new TextBoxLabelPair();
             itemSearchView = new ItemSearchViewer();
             showPurcPriceCheckBox = new CheckBox();
             showDateCheckBox = new CheckBox();
@@ -46,6 +45,8 @@
             comboBox1 = new ComboBox();
             comboBoxMenuStrip = new MenuStrip();
             ItemTab = new TabPage();
+            itemCurrQtyTLP = new TextBoxLabelPair();
+            itemInitQtyTLP = new TextBoxLabelPair();
             setThumbnailButton = new Button();
             deleteImageButton = new Button();
             AddImageButton = new Button();
@@ -57,14 +58,7 @@
             itemNameLbl = new Label();
             itemEditButton = new Button();
             itemUpdateButton = new Button();
-            itemHeightLbl = new Label();
-            itemWidthLbl = new Label();
-            itemLengthLbl = new Label();
-            itemWeightOzLbl = new Label();
-            itemWeightLbsLbl = new Label();
             itemItemNoLbl = new Label();
-            itemCurrQtyLbl = new Label();
-            itemInitQtyLbl = new Label();
             itemSoldPriceLbl = new Label();
             itemPurcPriceLbl = new Label();
             itemNameTxtbox = new TextBox();
@@ -80,27 +74,16 @@
             itemTagPurcPriceLbl = new Label();
             itemTagDatePurcLbl = new Label();
             itemTagNameLbl = new Label();
-            itemHeightTxtbox = new TextBox();
-            itemWidthTxtbox = new TextBox();
-            itemLengthTxtbox = new TextBox();
-            itemWeightOzTxtbox = new TextBox();
-            itemWeightLbsTxtbox = new TextBox();
-            itemCurrQtyTxtbox = new TextBox();
-            itemInitQtyTxtbox = new TextBox();
             PurchaseTab = new TabPage();
             PurcPurcDateLbl = new Label();
             PurcCurrQtyTextbox = new TextBox();
             PurcTagCurrQtyLbl = new Label();
             UpdatePurcButton = new Button();
-            PurcPurcNotesLbl = new Label();
-            PurcPurcPriceLbl = new Label();
             EditPurcButton = new Button();
             NewPurcButton = new Button();
-            PurcPurcNotesTextbox = new TextBox();
             PurcTagPurcNotesLbl = new Label();
             PurcTagPurcDateLbl = new Label();
             PurcDatePicker = new DateTimePicker();
-            PurcPurcPriceTextbox = new TextBox();
             PurcWeightOzTextbox = new TextBox();
             PurcWeightLbsTextbox = new TextBox();
             PurcHeightTextbox = new TextBox();
@@ -131,15 +114,21 @@
             SaleNameLbl = new Label();
             SaleTagNewSaleDateLbl = new Label();
             SaleNewSaleDatePicker = new DateTimePicker();
-            SaleAmountLbl = new Label();
             SaleNewSaleAmountTextbox = new TextBox();
             SaleTagNewSaleAmountLbl = new Label();
             AddSaleButton = new Button();
-            SaleAmountTextbox = new TextBox();
             SaleTagSaleAmountLbl = new Label();
             saleListBox = new ListBox();
             resultItemBindingSource = new BindingSource(components);
             openFileDialog1 = new OpenFileDialog();
+            textBoxLabelPair1 = new TextBoxLabelPair();
+            textBoxLabelPair2 = new TextBoxLabelPair();
+            textBoxLabelPair3 = new TextBoxLabelPair();
+            textBoxLabelPair4 = new TextBoxLabelPair();
+            textBoxLabelPair5 = new TextBoxLabelPair();
+            textBoxLabelPair6 = new TextBoxLabelPair();
+            textBoxLabelPair7 = new TextBoxLabelPair();
+            textBoxLabelPair8 = new TextBoxLabelPair();
             tabCollection.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -164,7 +153,6 @@
             // 
             // SearchTab
             // 
-            SearchTab.Controls.Add(textBoxLabelPair1);
             SearchTab.Controls.Add(itemSearchView);
             SearchTab.Controls.Add(showPurcPriceCheckBox);
             SearchTab.Controls.Add(showDateCheckBox);
@@ -186,14 +174,6 @@
             SearchTab.TabIndex = 0;
             SearchTab.Text = "Search";
             SearchTab.UseVisualStyleBackColor = true;
-            // 
-            // textBoxLabelPair1
-            // 
-            textBoxLabelPair1.Location = new Point(158, 245);
-            textBoxLabelPair1.Name = "textBoxLabelPair1";
-            textBoxLabelPair1.Size = new Size(100, 23);
-            textBoxLabelPair1.TabIndex = 19;
-            textBoxLabelPair1.Visible = false;
             // 
             // itemSearchView
             // 
@@ -333,6 +313,13 @@
             // 
             // ItemTab
             // 
+            ItemTab.Controls.Add(textBoxLabelPair5);
+            ItemTab.Controls.Add(textBoxLabelPair4);
+            ItemTab.Controls.Add(textBoxLabelPair3);
+            ItemTab.Controls.Add(textBoxLabelPair2);
+            ItemTab.Controls.Add(textBoxLabelPair1);
+            ItemTab.Controls.Add(itemCurrQtyTLP);
+            ItemTab.Controls.Add(itemInitQtyTLP);
             ItemTab.Controls.Add(setThumbnailButton);
             ItemTab.Controls.Add(deleteImageButton);
             ItemTab.Controls.Add(AddImageButton);
@@ -344,14 +331,7 @@
             ItemTab.Controls.Add(itemNameLbl);
             ItemTab.Controls.Add(itemEditButton);
             ItemTab.Controls.Add(itemUpdateButton);
-            ItemTab.Controls.Add(itemHeightLbl);
-            ItemTab.Controls.Add(itemWidthLbl);
-            ItemTab.Controls.Add(itemLengthLbl);
-            ItemTab.Controls.Add(itemWeightOzLbl);
-            ItemTab.Controls.Add(itemWeightLbsLbl);
             ItemTab.Controls.Add(itemItemNoLbl);
-            ItemTab.Controls.Add(itemCurrQtyLbl);
-            ItemTab.Controls.Add(itemInitQtyLbl);
             ItemTab.Controls.Add(itemSoldPriceLbl);
             ItemTab.Controls.Add(itemPurcPriceLbl);
             ItemTab.Controls.Add(itemNameTxtbox);
@@ -367,13 +347,6 @@
             ItemTab.Controls.Add(itemTagPurcPriceLbl);
             ItemTab.Controls.Add(itemTagDatePurcLbl);
             ItemTab.Controls.Add(itemTagNameLbl);
-            ItemTab.Controls.Add(itemHeightTxtbox);
-            ItemTab.Controls.Add(itemWidthTxtbox);
-            ItemTab.Controls.Add(itemLengthTxtbox);
-            ItemTab.Controls.Add(itemWeightOzTxtbox);
-            ItemTab.Controls.Add(itemWeightLbsTxtbox);
-            ItemTab.Controls.Add(itemCurrQtyTxtbox);
-            ItemTab.Controls.Add(itemInitQtyTxtbox);
             ItemTab.Location = new Point(4, 24);
             ItemTab.Margin = new Padding(4, 3, 4, 3);
             ItemTab.Name = "ItemTab";
@@ -382,6 +355,24 @@
             ItemTab.TabIndex = 1;
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
+            // 
+            // itemCurrQtyTLP
+            // 
+            itemCurrQtyTLP.attrib = null;
+            itemCurrQtyTLP.Location = new Point(120, 246);
+            itemCurrQtyTLP.Name = "itemCurrQtyTLP";
+            itemCurrQtyTLP.Size = new Size(100, 23);
+            itemCurrQtyTLP.TabIndex = 65;
+            itemCurrQtyTLP.Visible = false;
+            // 
+            // itemInitQtyTLP
+            // 
+            itemInitQtyTLP.attrib = null;
+            itemInitQtyTLP.Location = new Point(120, 211);
+            itemInitQtyTLP.Name = "itemInitQtyTLP";
+            itemInitQtyTLP.Size = new Size(100, 23);
+            itemInitQtyTLP.TabIndex = 63;
+            itemInitQtyTLP.Visible = false;
             // 
             // setThumbnailButton
             // 
@@ -488,56 +479,6 @@
             itemUpdateButton.UseVisualStyleBackColor = true;
             itemUpdateButton.Click += itemUpdateButton_Click;
             // 
-            // itemHeightLbl
-            // 
-            itemHeightLbl.AutoSize = true;
-            itemHeightLbl.Location = new Point(399, 282);
-            itemHeightLbl.Margin = new Padding(4, 0, 4, 0);
-            itemHeightLbl.Name = "itemHeightLbl";
-            itemHeightLbl.Size = new Size(44, 15);
-            itemHeightLbl.TabIndex = 36;
-            itemHeightLbl.Text = "label26";
-            // 
-            // itemWidthLbl
-            // 
-            itemWidthLbl.AutoSize = true;
-            itemWidthLbl.Location = new Point(399, 251);
-            itemWidthLbl.Margin = new Padding(4, 0, 4, 0);
-            itemWidthLbl.Name = "itemWidthLbl";
-            itemWidthLbl.Size = new Size(44, 15);
-            itemWidthLbl.TabIndex = 35;
-            itemWidthLbl.Text = "label25";
-            // 
-            // itemLengthLbl
-            // 
-            itemLengthLbl.AutoSize = true;
-            itemLengthLbl.Location = new Point(399, 220);
-            itemLengthLbl.Margin = new Padding(4, 0, 4, 0);
-            itemLengthLbl.Name = "itemLengthLbl";
-            itemLengthLbl.Size = new Size(44, 15);
-            itemLengthLbl.TabIndex = 34;
-            itemLengthLbl.Text = "label24";
-            // 
-            // itemWeightOzLbl
-            // 
-            itemWeightOzLbl.AutoSize = true;
-            itemWeightOzLbl.Location = new Point(399, 188);
-            itemWeightOzLbl.Margin = new Padding(4, 0, 4, 0);
-            itemWeightOzLbl.Name = "itemWeightOzLbl";
-            itemWeightOzLbl.Size = new Size(44, 15);
-            itemWeightOzLbl.TabIndex = 33;
-            itemWeightOzLbl.Text = "label23";
-            // 
-            // itemWeightLbsLbl
-            // 
-            itemWeightLbsLbl.AutoSize = true;
-            itemWeightLbsLbl.Location = new Point(399, 157);
-            itemWeightLbsLbl.Margin = new Padding(4, 0, 4, 0);
-            itemWeightLbsLbl.Name = "itemWeightLbsLbl";
-            itemWeightLbsLbl.Size = new Size(44, 15);
-            itemWeightLbsLbl.TabIndex = 32;
-            itemWeightLbsLbl.Text = "label22";
-            // 
             // itemItemNoLbl
             // 
             itemItemNoLbl.AutoSize = true;
@@ -548,30 +489,10 @@
             itemItemNoLbl.TabIndex = 31;
             itemItemNoLbl.Text = "label21";
             // 
-            // itemCurrQtyLbl
-            // 
-            itemCurrQtyLbl.AutoSize = true;
-            itemCurrQtyLbl.Location = new Point(120, 250);
-            itemCurrQtyLbl.Margin = new Padding(4, 0, 4, 0);
-            itemCurrQtyLbl.Name = "itemCurrQtyLbl";
-            itemCurrQtyLbl.Size = new Size(44, 15);
-            itemCurrQtyLbl.TabIndex = 30;
-            itemCurrQtyLbl.Text = "label20";
-            // 
-            // itemInitQtyLbl
-            // 
-            itemInitQtyLbl.AutoSize = true;
-            itemInitQtyLbl.Location = new Point(120, 219);
-            itemInitQtyLbl.Margin = new Padding(4, 0, 4, 0);
-            itemInitQtyLbl.Name = "itemInitQtyLbl";
-            itemInitQtyLbl.Size = new Size(44, 15);
-            itemInitQtyLbl.TabIndex = 29;
-            itemInitQtyLbl.Text = "label19";
-            // 
             // itemSoldPriceLbl
             // 
             itemSoldPriceLbl.AutoSize = true;
-            itemSoldPriceLbl.Location = new Point(120, 188);
+            itemSoldPriceLbl.Location = new Point(120, 184);
             itemSoldPriceLbl.Margin = new Padding(4, 0, 4, 0);
             itemSoldPriceLbl.Name = "itemSoldPriceLbl";
             itemSoldPriceLbl.Size = new Size(44, 15);
@@ -717,77 +638,19 @@
             itemTagNameLbl.TabIndex = 0;
             itemTagNameLbl.Text = "Name";
             // 
-            // itemHeightTxtbox
-            // 
-            itemHeightTxtbox.Location = new Point(399, 279);
-            itemHeightTxtbox.Name = "itemHeightTxtbox";
-            itemHeightTxtbox.Size = new Size(100, 23);
-            itemHeightTxtbox.TabIndex = 52;
-            itemHeightTxtbox.Leave += TextBoxAttribute_Leave;
-            // 
-            // itemWidthTxtbox
-            // 
-            itemWidthTxtbox.Location = new Point(399, 248);
-            itemWidthTxtbox.Name = "itemWidthTxtbox";
-            itemWidthTxtbox.Size = new Size(100, 23);
-            itemWidthTxtbox.TabIndex = 51;
-            itemWidthTxtbox.Leave += TextBoxAttribute_Leave;
-            // 
-            // itemLengthTxtbox
-            // 
-            itemLengthTxtbox.Location = new Point(399, 217);
-            itemLengthTxtbox.Name = "itemLengthTxtbox";
-            itemLengthTxtbox.Size = new Size(100, 23);
-            itemLengthTxtbox.TabIndex = 50;
-            itemLengthTxtbox.Leave += TextBoxAttribute_Leave;
-            // 
-            // itemWeightOzTxtbox
-            // 
-            itemWeightOzTxtbox.Location = new Point(399, 185);
-            itemWeightOzTxtbox.Name = "itemWeightOzTxtbox";
-            itemWeightOzTxtbox.Size = new Size(100, 23);
-            itemWeightOzTxtbox.TabIndex = 49;
-            itemWeightOzTxtbox.Leave += TextBoxAttribute_Leave;
-            // 
-            // itemWeightLbsTxtbox
-            // 
-            itemWeightLbsTxtbox.Location = new Point(399, 154);
-            itemWeightLbsTxtbox.Name = "itemWeightLbsTxtbox";
-            itemWeightLbsTxtbox.Size = new Size(100, 23);
-            itemWeightLbsTxtbox.TabIndex = 48;
-            itemWeightLbsTxtbox.Leave += TextBoxAttribute_Leave;
-            // 
-            // itemCurrQtyTxtbox
-            // 
-            itemCurrQtyTxtbox.Location = new Point(120, 247);
-            itemCurrQtyTxtbox.Name = "itemCurrQtyTxtbox";
-            itemCurrQtyTxtbox.Size = new Size(100, 23);
-            itemCurrQtyTxtbox.TabIndex = 47;
-            itemCurrQtyTxtbox.Leave += TextBoxAttribute_Leave;
-            // 
-            // itemInitQtyTxtbox
-            // 
-            itemInitQtyTxtbox.Location = new Point(120, 216);
-            itemInitQtyTxtbox.Name = "itemInitQtyTxtbox";
-            itemInitQtyTxtbox.Size = new Size(100, 23);
-            itemInitQtyTxtbox.TabIndex = 46;
-            itemInitQtyTxtbox.Leave += TextBoxAttribute_Leave;
-            // 
             // PurchaseTab
             // 
+            PurchaseTab.Controls.Add(textBoxLabelPair7);
+            PurchaseTab.Controls.Add(textBoxLabelPair6);
             PurchaseTab.Controls.Add(PurcPurcDateLbl);
             PurchaseTab.Controls.Add(PurcCurrQtyTextbox);
             PurchaseTab.Controls.Add(PurcTagCurrQtyLbl);
             PurchaseTab.Controls.Add(UpdatePurcButton);
-            PurchaseTab.Controls.Add(PurcPurcNotesLbl);
-            PurchaseTab.Controls.Add(PurcPurcPriceLbl);
             PurchaseTab.Controls.Add(EditPurcButton);
             PurchaseTab.Controls.Add(NewPurcButton);
-            PurchaseTab.Controls.Add(PurcPurcNotesTextbox);
             PurchaseTab.Controls.Add(PurcTagPurcNotesLbl);
             PurchaseTab.Controls.Add(PurcTagPurcDateLbl);
             PurchaseTab.Controls.Add(PurcDatePicker);
-            PurchaseTab.Controls.Add(PurcPurcPriceTextbox);
             PurchaseTab.Controls.Add(PurcWeightOzTextbox);
             PurchaseTab.Controls.Add(PurcWeightLbsTextbox);
             PurchaseTab.Controls.Add(PurcHeightTextbox);
@@ -852,24 +715,6 @@
             UpdatePurcButton.UseVisualStyleBackColor = true;
             UpdatePurcButton.Click += updatePurcButton_Click;
             // 
-            // PurcPurcNotesLbl
-            // 
-            PurcPurcNotesLbl.AutoSize = true;
-            PurcPurcNotesLbl.Location = new Point(603, 158);
-            PurcPurcNotesLbl.Name = "PurcPurcNotesLbl";
-            PurcPurcNotesLbl.Size = new Size(44, 15);
-            PurcPurcNotesLbl.TabIndex = 27;
-            PurcPurcNotesLbl.Text = "label41";
-            // 
-            // PurcPurcPriceLbl
-            // 
-            PurcPurcPriceLbl.AutoSize = true;
-            PurcPurcPriceLbl.Location = new Point(603, 51);
-            PurcPurcPriceLbl.Name = "PurcPurcPriceLbl";
-            PurcPurcPriceLbl.Size = new Size(44, 15);
-            PurcPurcPriceLbl.TabIndex = 26;
-            PurcPurcPriceLbl.Text = "label15";
-            // 
             // EditPurcButton
             // 
             EditPurcButton.Location = new Point(633, 7);
@@ -890,14 +735,6 @@
             NewPurcButton.Text = "New Purchase";
             NewPurcButton.UseVisualStyleBackColor = true;
             NewPurcButton.Click += newPurcButton_Click;
-            // 
-            // PurcPurcNotesTextbox
-            // 
-            PurcPurcNotesTextbox.Location = new Point(603, 155);
-            PurcPurcNotesTextbox.Margin = new Padding(4, 3, 4, 3);
-            PurcPurcNotesTextbox.Name = "PurcPurcNotesTextbox";
-            PurcPurcNotesTextbox.Size = new Size(207, 23);
-            PurcPurcNotesTextbox.TabIndex = 23;
             // 
             // PurcTagPurcNotesLbl
             // 
@@ -926,14 +763,6 @@
             PurcDatePicker.Name = "PurcDatePicker";
             PurcDatePicker.Size = new Size(233, 23);
             PurcDatePicker.TabIndex = 20;
-            // 
-            // PurcPurcPriceTextbox
-            // 
-            PurcPurcPriceTextbox.Location = new Point(603, 48);
-            PurcPurcPriceTextbox.Margin = new Padding(4, 3, 4, 3);
-            PurcPurcPriceTextbox.Name = "PurcPurcPriceTextbox";
-            PurcPurcPriceTextbox.Size = new Size(116, 23);
-            PurcPurcPriceTextbox.TabIndex = 19;
             // 
             // PurcWeightOzTextbox
             // 
@@ -1115,6 +944,7 @@
             // 
             // Sale
             // 
+            Sale.Controls.Add(textBoxLabelPair8);
             Sale.Controls.Add(SaleDeleteSaleButton);
             Sale.Controls.Add(SaleUpdateButton);
             Sale.Controls.Add(SaleDateLbl);
@@ -1125,11 +955,9 @@
             Sale.Controls.Add(SaleNameLbl);
             Sale.Controls.Add(SaleTagNewSaleDateLbl);
             Sale.Controls.Add(SaleNewSaleDatePicker);
-            Sale.Controls.Add(SaleAmountLbl);
             Sale.Controls.Add(SaleNewSaleAmountTextbox);
             Sale.Controls.Add(SaleTagNewSaleAmountLbl);
             Sale.Controls.Add(AddSaleButton);
-            Sale.Controls.Add(SaleAmountTextbox);
             Sale.Controls.Add(SaleTagSaleAmountLbl);
             Sale.Controls.Add(saleListBox);
             Sale.Location = new Point(4, 24);
@@ -1229,15 +1057,6 @@
             SaleNewSaleDatePicker.Size = new Size(200, 23);
             SaleNewSaleDatePicker.TabIndex = 22;
             // 
-            // SaleAmountLbl
-            // 
-            SaleAmountLbl.AutoSize = true;
-            SaleAmountLbl.Location = new Point(625, 79);
-            SaleAmountLbl.Name = "SaleAmountLbl";
-            SaleAmountLbl.Size = new Size(44, 15);
-            SaleAmountLbl.TabIndex = 20;
-            SaleAmountLbl.Text = "label48";
-            // 
             // SaleNewSaleAmountTextbox
             // 
             SaleNewSaleAmountTextbox.Location = new Point(108, 374);
@@ -1266,14 +1085,6 @@
             AddSaleButton.Text = "Add Sale";
             AddSaleButton.UseVisualStyleBackColor = true;
             AddSaleButton.Click += addSaleButton_Click;
-            // 
-            // SaleAmountTextbox
-            // 
-            SaleAmountTextbox.Location = new Point(625, 76);
-            SaleAmountTextbox.Margin = new Padding(4, 3, 4, 3);
-            SaleAmountTextbox.Name = "SaleAmountTextbox";
-            SaleAmountTextbox.Size = new Size(116, 23);
-            SaleAmountTextbox.TabIndex = 4;
             // 
             // SaleTagSaleAmountLbl
             // 
@@ -1304,6 +1115,78 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             openFileDialog1.Multiselect = true;
+            // 
+            // textBoxLabelPair1
+            // 
+            textBoxLabelPair1.attrib = null;
+            textBoxLabelPair1.Location = new Point(399, 154);
+            textBoxLabelPair1.Name = "textBoxLabelPair1";
+            textBoxLabelPair1.Size = new Size(100, 23);
+            textBoxLabelPair1.TabIndex = 69;
+            textBoxLabelPair1.Visible = false;
+            // 
+            // textBoxLabelPair2
+            // 
+            textBoxLabelPair2.attrib = null;
+            textBoxLabelPair2.Location = new Point(399, 185);
+            textBoxLabelPair2.Name = "textBoxLabelPair2";
+            textBoxLabelPair2.Size = new Size(100, 23);
+            textBoxLabelPair2.TabIndex = 71;
+            textBoxLabelPair2.Visible = false;
+            // 
+            // textBoxLabelPair3
+            // 
+            textBoxLabelPair3.attrib = null;
+            textBoxLabelPair3.Location = new Point(399, 216);
+            textBoxLabelPair3.Name = "textBoxLabelPair3";
+            textBoxLabelPair3.Size = new Size(100, 23);
+            textBoxLabelPair3.TabIndex = 73;
+            textBoxLabelPair3.Visible = false;
+            // 
+            // textBoxLabelPair4
+            // 
+            textBoxLabelPair4.attrib = null;
+            textBoxLabelPair4.Location = new Point(399, 247);
+            textBoxLabelPair4.Name = "textBoxLabelPair4";
+            textBoxLabelPair4.Size = new Size(100, 23);
+            textBoxLabelPair4.TabIndex = 75;
+            textBoxLabelPair4.Visible = false;
+            // 
+            // textBoxLabelPair5
+            // 
+            textBoxLabelPair5.attrib = null;
+            textBoxLabelPair5.Location = new Point(399, 278);
+            textBoxLabelPair5.Name = "textBoxLabelPair5";
+            textBoxLabelPair5.Size = new Size(100, 23);
+            textBoxLabelPair5.TabIndex = 77;
+            textBoxLabelPair5.Visible = false;
+            // 
+            // textBoxLabelPair6
+            // 
+            textBoxLabelPair6.attrib = null;
+            textBoxLabelPair6.Location = new Point(603, 48);
+            textBoxLabelPair6.Name = "textBoxLabelPair6";
+            textBoxLabelPair6.Size = new Size(100, 23);
+            textBoxLabelPair6.TabIndex = 65;
+            textBoxLabelPair6.Visible = false;
+            // 
+            // textBoxLabelPair7
+            // 
+            textBoxLabelPair7.attrib = null;
+            textBoxLabelPair7.Location = new Point(603, 155);
+            textBoxLabelPair7.Name = "textBoxLabelPair7";
+            textBoxLabelPair7.Size = new Size(233, 23);
+            textBoxLabelPair7.TabIndex = 67;
+            textBoxLabelPair7.Visible = false;
+            // 
+            // textBoxLabelPair8
+            // 
+            textBoxLabelPair8.attrib = null;
+            textBoxLabelPair8.Location = new Point(625, 76);
+            textBoxLabelPair8.Name = "textBoxLabelPair8";
+            textBoxLabelPair8.Size = new Size(100, 23);
+            textBoxLabelPair8.TabIndex = 65;
+            textBoxLabelPair8.Visible = false;
             // 
             // Form1
             // 
@@ -1363,16 +1246,9 @@
         public System.Windows.Forms.Label itemTagWidthLbl;
         public System.Windows.Forms.Label itemTagLengthLbl;
         public System.Windows.Forms.TextBox itemNameTxtbox;
-        public System.Windows.Forms.Label itemWidthLbl;
-        public System.Windows.Forms.Label itemLengthLbl;
-        public System.Windows.Forms.Label itemWeightOzLbl;
-        public System.Windows.Forms.Label itemWeightLbsLbl;
         public System.Windows.Forms.Label itemItemNoLbl;
-        public System.Windows.Forms.Label itemCurrQtyLbl;
-        public System.Windows.Forms.Label itemInitQtyLbl;
         public System.Windows.Forms.Label itemSoldPriceLbl;
         public System.Windows.Forms.Label itemPurcPriceLbl;
-        public System.Windows.Forms.Label itemHeightLbl;
         public System.Windows.Forms.Button itemUpdateButton;
         public System.Windows.Forms.TabPage PurchaseTab;
         public System.Windows.Forms.ListBox PurchaseListBox;
@@ -1394,30 +1270,18 @@
         public System.Windows.Forms.TextBox PurcInitQtyTextbox;
         public System.Windows.Forms.TextBox PurcNameTextbox;
         public System.Windows.Forms.Label PurcTagWeightOzLbl;
-        public System.Windows.Forms.TextBox PurcPurcNotesTextbox;
         public System.Windows.Forms.Label PurcTagPurcNotesLbl;
         public System.Windows.Forms.Label PurcTagPurcDateLbl;
         public System.Windows.Forms.DateTimePicker PurcDatePicker;
-        public System.Windows.Forms.TextBox PurcPurcPriceTextbox;
         public System.Windows.Forms.TabPage Sale;
         public System.Windows.Forms.Button NewPurcButton;
         public System.Windows.Forms.ListBox saleListBox;
         public System.Windows.Forms.BindingSource resultItemBindingSource;
         public System.Windows.Forms.Label SaleTagSaleAmountLbl;
-        public System.Windows.Forms.TextBox SaleAmountTextbox;
-        public TextBox itemHeightTxtbox;
-        public TextBox itemWidthTxtbox;
-        public TextBox itemWeightOzTxtbox;
-        public TextBox itemWeightLbsTxtbox;
-        public TextBox itemCurrQtyTxtbox;
-        public TextBox itemInitQtyTxtbox;
-        public TextBox itemLengthTxtbox;
         public Button itemEditButton;
         public Label itemNameLbl;
         public Button deleteShipInfoButton;
         public Button EditPurcButton;
-        public Label PurcPurcNotesLbl;
-        public Label PurcPurcPriceLbl;
         public Button UpdatePurcButton;
         public TextBox PurcCurrQtyTextbox;
         public Label PurcTagCurrQtyLbl;
@@ -1426,7 +1290,6 @@
         public Label SaleNameLbl;
         public Label SaleTagNewSaleDateLbl;
         public DateTimePicker SaleNewSaleDatePicker;
-        public Label SaleAmountLbl;
         public TextBox SaleNewSaleAmountTextbox;
         public Label SaleTagNewSaleAmountLbl;
         public Label label47;
@@ -1446,8 +1309,17 @@
         public Button deleteImageButton;
         public Button AddImageButton;
         public OpenFileDialog openFileDialog1;
-        private Button setThumbnailButton;
-        private TextBoxLabelPair textBoxLabelPair1;
+        public Button setThumbnailButton;
+        public TextBoxLabelPair itemCurrQtyTLP;
+        public TextBoxLabelPair itemInitQtyTLP;
+        public TextBoxLabelPair textBoxLabelPair1;
+        public TextBoxLabelPair textBoxLabelPair5;
+        public TextBoxLabelPair textBoxLabelPair4;
+        public TextBoxLabelPair textBoxLabelPair3;
+        public TextBoxLabelPair textBoxLabelPair2;
+        public TextBoxLabelPair textBoxLabelPair7;
+        public TextBoxLabelPair textBoxLabelPair6;
+        public TextBoxLabelPair textBoxLabelPair8;
     }
 }
 
