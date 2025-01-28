@@ -45,6 +45,11 @@
             comboBox1 = new ComboBox();
             comboBoxMenuStrip = new MenuStrip();
             ItemTab = new TabPage();
+            itemHeightTLP = new TextBoxLabelPair();
+            itemWidthTLP = new TextBoxLabelPair();
+            itemLengthTLP = new TextBoxLabelPair();
+            itemWeightOzTLP = new TextBoxLabelPair();
+            itemWeightLbsTLP = new TextBoxLabelPair();
             itemCurrQtyTLP = new TextBoxLabelPair();
             itemInitQtyTLP = new TextBoxLabelPair();
             setThumbnailButton = new Button();
@@ -55,13 +60,11 @@
             deleteItemButton = new Button();
             itemDatePurcLbl = new Label();
             deleteShipInfoButton = new Button();
-            itemNameLbl = new Label();
             itemEditButton = new Button();
             itemUpdateButton = new Button();
             itemItemNoLbl = new Label();
             itemSoldPriceLbl = new Label();
             itemPurcPriceLbl = new Label();
-            itemNameTxtbox = new TextBox();
             itemTagHeightLbl = new Label();
             itemTagWidthLbl = new Label();
             itemTagLengthLbl = new Label();
@@ -75,6 +78,8 @@
             itemTagDatePurcLbl = new Label();
             itemTagNameLbl = new Label();
             PurchaseTab = new TabPage();
+            PurcPurcNotesTLP = new TextBoxLabelPair();
+            PurcPurcPriceTLP = new TextBoxLabelPair();
             PurcPurcDateLbl = new Label();
             PurcCurrQtyTextbox = new TextBox();
             PurcTagCurrQtyLbl = new Label();
@@ -104,6 +109,7 @@
             PurcTagPurcPriceLbl = new Label();
             PurchaseListBox = new ListBox();
             Sale = new TabPage();
+            SaleAmountTLP = new TextBoxLabelPair();
             SaleDeleteSaleButton = new Button();
             SaleUpdateButton = new Button();
             SaleDateLbl = new Label();
@@ -121,14 +127,7 @@
             saleListBox = new ListBox();
             resultItemBindingSource = new BindingSource(components);
             openFileDialog1 = new OpenFileDialog();
-            textBoxLabelPair1 = new TextBoxLabelPair();
-            textBoxLabelPair2 = new TextBoxLabelPair();
-            textBoxLabelPair3 = new TextBoxLabelPair();
-            textBoxLabelPair4 = new TextBoxLabelPair();
-            textBoxLabelPair5 = new TextBoxLabelPair();
-            textBoxLabelPair6 = new TextBoxLabelPair();
-            textBoxLabelPair7 = new TextBoxLabelPair();
-            textBoxLabelPair8 = new TextBoxLabelPair();
+            itemNameTLP = new TextBoxLabelPair();
             tabCollection.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -313,11 +312,12 @@
             // 
             // ItemTab
             // 
-            ItemTab.Controls.Add(textBoxLabelPair5);
-            ItemTab.Controls.Add(textBoxLabelPair4);
-            ItemTab.Controls.Add(textBoxLabelPair3);
-            ItemTab.Controls.Add(textBoxLabelPair2);
-            ItemTab.Controls.Add(textBoxLabelPair1);
+            ItemTab.Controls.Add(itemNameTLP);
+            ItemTab.Controls.Add(itemHeightTLP);
+            ItemTab.Controls.Add(itemWidthTLP);
+            ItemTab.Controls.Add(itemLengthTLP);
+            ItemTab.Controls.Add(itemWeightOzTLP);
+            ItemTab.Controls.Add(itemWeightLbsTLP);
             ItemTab.Controls.Add(itemCurrQtyTLP);
             ItemTab.Controls.Add(itemInitQtyTLP);
             ItemTab.Controls.Add(setThumbnailButton);
@@ -328,13 +328,11 @@
             ItemTab.Controls.Add(deleteItemButton);
             ItemTab.Controls.Add(itemDatePurcLbl);
             ItemTab.Controls.Add(deleteShipInfoButton);
-            ItemTab.Controls.Add(itemNameLbl);
             ItemTab.Controls.Add(itemEditButton);
             ItemTab.Controls.Add(itemUpdateButton);
             ItemTab.Controls.Add(itemItemNoLbl);
             ItemTab.Controls.Add(itemSoldPriceLbl);
             ItemTab.Controls.Add(itemPurcPriceLbl);
-            ItemTab.Controls.Add(itemNameTxtbox);
             ItemTab.Controls.Add(itemTagHeightLbl);
             ItemTab.Controls.Add(itemTagWidthLbl);
             ItemTab.Controls.Add(itemTagLengthLbl);
@@ -356,10 +354,55 @@
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
             // 
+            // itemHeightTLP
+            // 
+            itemHeightTLP.attrib = null;
+            itemHeightTLP.Location = new Point(399, 278);
+            itemHeightTLP.Name = "itemHeightTLP";
+            itemHeightTLP.Size = new Size(100, 23);
+            itemHeightTLP.TabIndex = 77;
+            itemHeightTLP.Visible = false;
+            // 
+            // itemWidthTLP
+            // 
+            itemWidthTLP.attrib = null;
+            itemWidthTLP.Location = new Point(399, 247);
+            itemWidthTLP.Name = "itemWidthTLP";
+            itemWidthTLP.Size = new Size(100, 23);
+            itemWidthTLP.TabIndex = 75;
+            itemWidthTLP.Visible = false;
+            // 
+            // itemLengthTLP
+            // 
+            itemLengthTLP.attrib = null;
+            itemLengthTLP.Location = new Point(399, 216);
+            itemLengthTLP.Name = "itemLengthTLP";
+            itemLengthTLP.Size = new Size(100, 23);
+            itemLengthTLP.TabIndex = 73;
+            itemLengthTLP.Visible = false;
+            // 
+            // itemWeightOzTLP
+            // 
+            itemWeightOzTLP.attrib = null;
+            itemWeightOzTLP.Location = new Point(399, 185);
+            itemWeightOzTLP.Name = "itemWeightOzTLP";
+            itemWeightOzTLP.Size = new Size(100, 23);
+            itemWeightOzTLP.TabIndex = 71;
+            itemWeightOzTLP.Visible = false;
+            // 
+            // itemWeightLbsTLP
+            // 
+            itemWeightLbsTLP.attrib = null;
+            itemWeightLbsTLP.Location = new Point(399, 154);
+            itemWeightLbsTLP.Name = "itemWeightLbsTLP";
+            itemWeightLbsTLP.Size = new Size(100, 23);
+            itemWeightLbsTLP.TabIndex = 69;
+            itemWeightLbsTLP.Visible = false;
+            // 
             // itemCurrQtyTLP
             // 
             itemCurrQtyTLP.attrib = null;
-            itemCurrQtyTLP.Location = new Point(120, 246);
+            itemCurrQtyTLP.Location = new Point(120, 247);
             itemCurrQtyTLP.Name = "itemCurrQtyTLP";
             itemCurrQtyTLP.Size = new Size(100, 23);
             itemCurrQtyTLP.TabIndex = 65;
@@ -368,7 +411,7 @@
             // itemInitQtyTLP
             // 
             itemInitQtyTLP.attrib = null;
-            itemInitQtyTLP.Location = new Point(120, 211);
+            itemInitQtyTLP.Location = new Point(120, 216);
             itemInitQtyTLP.Name = "itemInitQtyTLP";
             itemInitQtyTLP.Size = new Size(100, 23);
             itemInitQtyTLP.TabIndex = 63;
@@ -449,15 +492,6 @@
             deleteShipInfoButton.UseVisualStyleBackColor = true;
             deleteShipInfoButton.Click += deleteShipInfoButton_Click;
             // 
-            // itemNameLbl
-            // 
-            itemNameLbl.AutoSize = true;
-            itemNameLbl.Location = new Point(120, 52);
-            itemNameLbl.Name = "itemNameLbl";
-            itemNameLbl.Size = new Size(44, 15);
-            itemNameLbl.TabIndex = 54;
-            itemNameLbl.Text = "label40";
-            // 
             // itemEditButton
             // 
             itemEditButton.Location = new Point(120, 20);
@@ -492,7 +526,7 @@
             // itemSoldPriceLbl
             // 
             itemSoldPriceLbl.AutoSize = true;
-            itemSoldPriceLbl.Location = new Point(120, 184);
+            itemSoldPriceLbl.Location = new Point(120, 188);
             itemSoldPriceLbl.Margin = new Padding(4, 0, 4, 0);
             itemSoldPriceLbl.Name = "itemSoldPriceLbl";
             itemSoldPriceLbl.Size = new Size(44, 15);
@@ -508,15 +542,6 @@
             itemPurcPriceLbl.Size = new Size(44, 15);
             itemPurcPriceLbl.TabIndex = 27;
             itemPurcPriceLbl.Text = "label17";
-            // 
-            // itemNameTxtbox
-            // 
-            itemNameTxtbox.Location = new Point(120, 49);
-            itemNameTxtbox.Margin = new Padding(4, 3, 4, 3);
-            itemNameTxtbox.Name = "itemNameTxtbox";
-            itemNameTxtbox.Size = new Size(309, 23);
-            itemNameTxtbox.TabIndex = 14;
-            itemNameTxtbox.Leave += TextBoxAttribute_Leave;
             // 
             // itemTagHeightLbl
             // 
@@ -640,8 +665,8 @@
             // 
             // PurchaseTab
             // 
-            PurchaseTab.Controls.Add(textBoxLabelPair7);
-            PurchaseTab.Controls.Add(textBoxLabelPair6);
+            PurchaseTab.Controls.Add(PurcPurcNotesTLP);
+            PurchaseTab.Controls.Add(PurcPurcPriceTLP);
             PurchaseTab.Controls.Add(PurcPurcDateLbl);
             PurchaseTab.Controls.Add(PurcCurrQtyTextbox);
             PurchaseTab.Controls.Add(PurcTagCurrQtyLbl);
@@ -678,6 +703,24 @@
             PurchaseTab.TabIndex = 2;
             PurchaseTab.Text = "Purchase Group";
             PurchaseTab.UseVisualStyleBackColor = true;
+            // 
+            // PurcPurcNotesTLP
+            // 
+            PurcPurcNotesTLP.attrib = null;
+            PurcPurcNotesTLP.Location = new Point(603, 155);
+            PurcPurcNotesTLP.Name = "PurcPurcNotesTLP";
+            PurcPurcNotesTLP.Size = new Size(233, 23);
+            PurcPurcNotesTLP.TabIndex = 67;
+            PurcPurcNotesTLP.Visible = false;
+            // 
+            // PurcPurcPriceTLP
+            // 
+            PurcPurcPriceTLP.attrib = null;
+            PurcPurcPriceTLP.Location = new Point(603, 48);
+            PurcPurcPriceTLP.Name = "PurcPurcPriceTLP";
+            PurcPurcPriceTLP.Size = new Size(100, 23);
+            PurcPurcPriceTLP.TabIndex = 65;
+            PurcPurcPriceTLP.Visible = false;
             // 
             // PurcPurcDateLbl
             // 
@@ -944,7 +987,7 @@
             // 
             // Sale
             // 
-            Sale.Controls.Add(textBoxLabelPair8);
+            Sale.Controls.Add(SaleAmountTLP);
             Sale.Controls.Add(SaleDeleteSaleButton);
             Sale.Controls.Add(SaleUpdateButton);
             Sale.Controls.Add(SaleDateLbl);
@@ -967,6 +1010,15 @@
             Sale.TabIndex = 4;
             Sale.Text = "Sale";
             Sale.UseVisualStyleBackColor = true;
+            // 
+            // SaleAmountTLP
+            // 
+            SaleAmountTLP.attrib = null;
+            SaleAmountTLP.Location = new Point(625, 76);
+            SaleAmountTLP.Name = "SaleAmountTLP";
+            SaleAmountTLP.Size = new Size(100, 23);
+            SaleAmountTLP.TabIndex = 65;
+            SaleAmountTLP.Visible = false;
             // 
             // SaleDeleteSaleButton
             // 
@@ -1116,77 +1168,14 @@
             openFileDialog1.FileName = "openFileDialog1";
             openFileDialog1.Multiselect = true;
             // 
-            // textBoxLabelPair1
+            // itemNameTLP
             // 
-            textBoxLabelPair1.attrib = null;
-            textBoxLabelPair1.Location = new Point(399, 154);
-            textBoxLabelPair1.Name = "textBoxLabelPair1";
-            textBoxLabelPair1.Size = new Size(100, 23);
-            textBoxLabelPair1.TabIndex = 69;
-            textBoxLabelPair1.Visible = false;
-            // 
-            // textBoxLabelPair2
-            // 
-            textBoxLabelPair2.attrib = null;
-            textBoxLabelPair2.Location = new Point(399, 185);
-            textBoxLabelPair2.Name = "textBoxLabelPair2";
-            textBoxLabelPair2.Size = new Size(100, 23);
-            textBoxLabelPair2.TabIndex = 71;
-            textBoxLabelPair2.Visible = false;
-            // 
-            // textBoxLabelPair3
-            // 
-            textBoxLabelPair3.attrib = null;
-            textBoxLabelPair3.Location = new Point(399, 216);
-            textBoxLabelPair3.Name = "textBoxLabelPair3";
-            textBoxLabelPair3.Size = new Size(100, 23);
-            textBoxLabelPair3.TabIndex = 73;
-            textBoxLabelPair3.Visible = false;
-            // 
-            // textBoxLabelPair4
-            // 
-            textBoxLabelPair4.attrib = null;
-            textBoxLabelPair4.Location = new Point(399, 247);
-            textBoxLabelPair4.Name = "textBoxLabelPair4";
-            textBoxLabelPair4.Size = new Size(100, 23);
-            textBoxLabelPair4.TabIndex = 75;
-            textBoxLabelPair4.Visible = false;
-            // 
-            // textBoxLabelPair5
-            // 
-            textBoxLabelPair5.attrib = null;
-            textBoxLabelPair5.Location = new Point(399, 278);
-            textBoxLabelPair5.Name = "textBoxLabelPair5";
-            textBoxLabelPair5.Size = new Size(100, 23);
-            textBoxLabelPair5.TabIndex = 77;
-            textBoxLabelPair5.Visible = false;
-            // 
-            // textBoxLabelPair6
-            // 
-            textBoxLabelPair6.attrib = null;
-            textBoxLabelPair6.Location = new Point(603, 48);
-            textBoxLabelPair6.Name = "textBoxLabelPair6";
-            textBoxLabelPair6.Size = new Size(100, 23);
-            textBoxLabelPair6.TabIndex = 65;
-            textBoxLabelPair6.Visible = false;
-            // 
-            // textBoxLabelPair7
-            // 
-            textBoxLabelPair7.attrib = null;
-            textBoxLabelPair7.Location = new Point(603, 155);
-            textBoxLabelPair7.Name = "textBoxLabelPair7";
-            textBoxLabelPair7.Size = new Size(233, 23);
-            textBoxLabelPair7.TabIndex = 67;
-            textBoxLabelPair7.Visible = false;
-            // 
-            // textBoxLabelPair8
-            // 
-            textBoxLabelPair8.attrib = null;
-            textBoxLabelPair8.Location = new Point(625, 76);
-            textBoxLabelPair8.Name = "textBoxLabelPair8";
-            textBoxLabelPair8.Size = new Size(100, 23);
-            textBoxLabelPair8.TabIndex = 65;
-            textBoxLabelPair8.Visible = false;
+            itemNameTLP.attrib = null;
+            itemNameTLP.Location = new Point(120, 49);
+            itemNameTLP.Name = "itemNameTLP";
+            itemNameTLP.Size = new Size(100, 23);
+            itemNameTLP.TabIndex = 86;
+            itemNameTLP.Visible = false;
             // 
             // Form1
             // 
@@ -1245,7 +1234,6 @@
         public System.Windows.Forms.Label itemTagHeightLbl;
         public System.Windows.Forms.Label itemTagWidthLbl;
         public System.Windows.Forms.Label itemTagLengthLbl;
-        public System.Windows.Forms.TextBox itemNameTxtbox;
         public System.Windows.Forms.Label itemItemNoLbl;
         public System.Windows.Forms.Label itemSoldPriceLbl;
         public System.Windows.Forms.Label itemPurcPriceLbl;
@@ -1279,7 +1267,6 @@
         public System.Windows.Forms.BindingSource resultItemBindingSource;
         public System.Windows.Forms.Label SaleTagSaleAmountLbl;
         public Button itemEditButton;
-        public Label itemNameLbl;
         public Button deleteShipInfoButton;
         public Button EditPurcButton;
         public Button UpdatePurcButton;
@@ -1312,14 +1299,15 @@
         public Button setThumbnailButton;
         public TextBoxLabelPair itemCurrQtyTLP;
         public TextBoxLabelPair itemInitQtyTLP;
-        public TextBoxLabelPair textBoxLabelPair1;
-        public TextBoxLabelPair textBoxLabelPair5;
-        public TextBoxLabelPair textBoxLabelPair4;
-        public TextBoxLabelPair textBoxLabelPair3;
-        public TextBoxLabelPair textBoxLabelPair2;
-        public TextBoxLabelPair textBoxLabelPair7;
-        public TextBoxLabelPair textBoxLabelPair6;
-        public TextBoxLabelPair textBoxLabelPair8;
+        public TextBoxLabelPair itemWeightLbsTLP;
+        public TextBoxLabelPair itemHeightTLP;
+        public TextBoxLabelPair itemWidthTLP;
+        public TextBoxLabelPair itemLengthTLP;
+        public TextBoxLabelPair itemWeightOzTLP;
+        public TextBoxLabelPair PurcPurcNotesTLP;
+        public TextBoxLabelPair PurcPurcPriceTLP;
+        public TextBoxLabelPair SaleAmountTLP;
+        public TextBoxLabelPair itemNameTLP;
     }
 }
 

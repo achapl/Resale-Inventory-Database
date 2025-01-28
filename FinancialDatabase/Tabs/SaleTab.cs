@@ -16,7 +16,7 @@ public class SaleTab : Tab
         editButton = Form1.SaleEditSaleButton;
         updateButton = Form1.SaleUpdateButton;
         generateTBoxGroups();
-        Util.clearLabelText(attributeValueLabels);
+        Util.clearLabelText(allAttributeValueLabels);
         showControlVisibility();
     }
 
@@ -24,24 +24,24 @@ public class SaleTab : Tab
     {
         
 
-        mutableAttribValueControls = new List<Control>()
+        mutableAttribValueControls = new List<ControlLabelPair>()
         {
-            Form1.SaleAmountTextbox,
+            Form1.SaleAmountTLP,
             Form1.SaleDatePicker
         };
 
         hideableAttribValueControls = new List<Control>()
         {
-            Form1.SaleAmountTextbox,
+            Form1.SaleAmountTLP,
             Form1.SaleDatePicker,
             Form1.SaleUpdateButton,
             Form1.SaleDeleteSaleButton
         };
 
-        attributeValueLabels = new List<Label>()
+        allAttributeValueLabels = new List<Control>()
         {
             Form1.SaleNameLbl,
-            Form1.SaleAmountLbl,
+            Form1.SaleAmountTLP,
             Form1.SaleDateLbl
         };
 
@@ -50,25 +50,9 @@ public class SaleTab : Tab
             Form1.SaleNewSaleAmountTextbox
         };
 
-        mutableAttribValueLabels = new List<Label>()
-        {
-            Form1.SaleAmountLbl,
-            Form1.SaleDateLbl
-        };
 
-        labelTextboxPairs = new Dictionary<Control, Label>();
-
-        int i = 0;
-        foreach (Control c in mutableAttribValueControls)
-        {
-            if (c is not Button)
-            {
-                labelTextboxPairs[c] = mutableAttribValueLabels[i++];
-            }
-        }
-
-            Form1.SaleDatePicker, "sale.Date_Sold";
-            Form1.SaleAmountTLP.attrib = "sale.Amount_sale";
+        Form1.SaleAmountTLP.attrib = "sale.Amount_sale";
+        Form1.SaleDatePicker, "sale.Date_Sold";
     }
 
     public void updateFromUserInput()
@@ -105,26 +89,18 @@ public class SaleTab : Tab
     public bool getUserInputUpdate() {
 
         if (tabController.getCurrItem() == null) { return false; }
-        List<Control> changedFields = getChangedFields();
+        List<ControlLabelPair> changedFields = getChangedFields();
         if (!typeCheckUserInput(changedFields)) { return false; }
 
-        foreach (Control c in changedFields)
+        foreach (ControlLabelPair c in changedFields)
         {
-            if (c is null) { Console.WriteLine("ERROR: Control Object c is null, ItemViewTab.cs"); continue; }
+            if (c is null) { Console.WriteLine("ERROR: ControlLabelpair Object c is null, ItemViewTab.cs"); continue; }
 
-            TextBox t = c as TextBox ?? new TextBox();
+            TextBoxLabelPair t = c as TextBoxLabelPair ?? new TextBoxLabelPair();
 
             if (databaseEntryExists(c))
             {
-                if (c is TextBoxLabelPair)
-                {
-                    string attrib = t.Text;
-                    Database.updateRow(currSale, (c as TextBoxLabelPair).attrib, t.Text);
-                }
-                else if (c is /*MyDateTimepicker*/)
-                {
-                    Database.updateRow(currSale, (c as /*MyDateTimepicker*/).attrib, new Date(c));
-                }
+                Database.updateRow(currSale, c.attrib, c.getControlValueAsStr());
                 Util.clearTBox(t);
             }
             else if (!databaseEntryExists(t))
@@ -143,7 +119,7 @@ public class SaleTab : Tab
             flipEditMode();
         }
 
-        Util.clearLabelText(attributeValueLabels);
+        Util.clearLabelText(allAttributeValueLabels);
     }
 
     override public void flipEditMode()
@@ -235,14 +211,14 @@ public class SaleTab : Tab
     
     public void clearAttribs()
     {
-        Util.clearLabelText(attributeValueLabels);
+        Util.clearLabelText(allAttributeValueLabels);
         Util.clearTBox(newItemTBoxes);
         Form1.PurcDatePicker.Value = DateTime.Now;
     }
 
     public void showSale(Sale sale)
     {
-        Form1.SaleAmountLbl.Text = sale.get_Amount_sale().ToString();
+        Form1.SaleAmountTLP.setLabelText(sale.get_Amount_sale().ToString());
         Form1.SaleDateLbl.Text = sale.get_Date_Sold().toDateString();
 
     }

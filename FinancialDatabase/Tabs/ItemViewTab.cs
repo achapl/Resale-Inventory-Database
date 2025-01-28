@@ -15,7 +15,7 @@ using Microsoft.VisualBasic;
 
 public class ItemViewTab : Tab
 {
-    protected List<TextBox> weightTBoxes;
+    protected List<TextBoxLabelPair> weightTBoxes;
 
     private Item? currItem;
 
@@ -26,7 +26,7 @@ public class ItemViewTab : Tab
         updateButton = Form1.itemUpdateButton;
         editButton = Form1.itemEditButton;
         generateTBoxGroups();
-        Util.clearLabelText(attributeValueLabels);
+        Util.clearLabelText(allAttributeValueLabels);
         showControlVisibility();
     }
 
@@ -42,87 +42,63 @@ public class ItemViewTab : Tab
 
     protected override void generateTBoxGroups()
     {
-        attributeValueLabels = new List<Label>() {
-            Form1.itemNameLbl,
+        allAttributeValueLabels = new List<Control>() {
+            Form1.itemNameTLP,
             Form1.itemPurcPriceLbl,
             Form1.itemSoldPriceLbl,
-            Form1.itemInitQtyLbl,
-            Form1.itemCurrQtyLbl,
+            Form1.itemInitQtyTLP,
+            Form1.itemCurrQtyTLP,
             Form1.itemItemNoLbl,
-            Form1.itemWeightLbsLbl,
-            Form1.itemWeightOzLbl,
-            Form1.itemLengthLbl,
-            Form1.itemWidthLbl,
-            Form1.itemHeightLbl,
+            Form1.itemWeightLbsTLP,
+            Form1.itemWeightOzTLP,
+            Form1.itemLengthTLP,
+            Form1.itemWidthTLP,
+            Form1.itemHeightTLP,
             Form1.itemDatePurcLbl
         };
-        mutableAttribValueLabels = new List<Label>(){
-            Form1.itemNameLbl,
-            //Form1.itemSoldPriceLbl,
-            Form1.itemInitQtyLbl,
-            Form1.itemCurrQtyLbl,
-            Form1.itemWeightLbsLbl,
-            Form1.itemWeightOzLbl,
-            Form1.itemLengthLbl,
-            Form1.itemWidthLbl,
-            Form1.itemHeightLbl,
-        };
 
-        newItemTBoxes = new List<TextBox>()
+        itemTBoxes = new List<TextBoxLabelPair>()
         {
-            Form1.itemNameTxtbox,
+            Form1.itemNameTLP,
             Form1.itemInitQtyTLP,
             Form1.itemCurrQtyTLP
         };
-        weightTBoxes = new List<TextBox>()
+        weightTBoxes = new List<TextBoxLabelPair>()
         {
-            Form1.itemWeightLbsTxtbox,
-            Form1.itemWeightOzTxtbox
+            Form1.itemWeightLbsTLP,
+            Form1.itemWeightOzTLP
         };
-        shippingTBoxes = new List<TextBox>()
+        shippingTBoxes = new List<TextBoxLabelPair>()
         {
-            Form1.itemWeightLbsTxtbox,
-            Form1.itemWeightOzTxtbox,
-            Form1.itemLengthTxtbox,
-            Form1.itemWidthTxtbox,
-            Form1.itemHeightTxtbox
+            Form1.itemWeightLbsTLP,
+            Form1.itemWeightOzTLP,
+            Form1.itemLengthTLP,
+            Form1.itemWidthTLP,
+            Form1.itemHeightTLP
         };
-        mutableAttribValueControls = new List<Control>(){
-            Form1.itemNameTxtbox,
+        mutableAttribValueControls = new List<ControlLabelPair>(){
+            Form1.itemNameTLP,
             Form1.itemInitQtyTLP,
             Form1.itemCurrQtyTLP,
-            Form1.itemWeightLbsTxtbox,
-            Form1.itemWeightOzTxtbox,
-            Form1.itemLengthTxtbox,
-            Form1.itemWidthTxtbox,
-            Form1.itemHeightTxtbox
+            Form1.itemWeightLbsTLP,
+            Form1.itemWeightOzTLP,
+            Form1.itemLengthTLP,
+            Form1.itemWidthTLP,
+            Form1.itemHeightTLP
 
         };
 
         hideableAttribValueControls = new List<Control>(){
-            Form1.itemNameTxtbox,
+            Form1.itemNameTLP,
             Form1.itemInitQtyTLP,
             Form1.itemCurrQtyTLP,
-            Form1.itemWeightLbsTxtbox,
-            Form1.itemWeightOzTxtbox,
-            Form1.itemLengthTxtbox,
-            Form1.itemWidthTxtbox,
-            Form1.itemHeightTxtbox,
+            Form1.itemWeightLbsTLP,
+            Form1.itemWeightOzTLP,
+            Form1.itemLengthTLP,
+            Form1.itemWidthTLP,
+            Form1.itemHeightTLP,
             Form1.deleteShipInfoButton
         };
-
-        labelTextboxPairs = new Dictionary<Control, Label>();
-
-        int i = 0;
-        foreach (Control c in mutableAttribValueControls)
-        {
-            if (c is not Button)
-            {
-                Label l = mutableAttribValueLabels[i];
-                labelTextboxPairs[c] = mutableAttribValueLabels[i++];
-            }
-        }
-
         
         Form1.itemWeightLbsTLP.attrib =  "shipping.WeightLbs";
         Form1.itemInitQtyTLP.attrib =  "item.InitialQuantity";
@@ -172,18 +148,18 @@ public class ItemViewTab : Tab
     {
         if (tabController.getCurrItem() == null) { return false; }
 
-        List<Control> changedFields = getChangedFields();
+        List<ControlLabelPair> changedFields = getChangedFields();
         if (!typeCheckUserInput(changedFields))  { return false; }
 
         bool weightIsUpdated = false;
 
-        foreach (Control userInputContainer in changedFields)
+        foreach (ControlLabelPair userInputContainer in changedFields)
         {
-            TextBox userInputTextbox = userInputContainer as TextBox;
-            if (databaseEntryExists(userInputTextbox))
+            TextBoxLabelPair userInputTLP = userInputContainer as TextBoxLabelPair;
+            if (databaseEntryExists(userInputTLP))
             {
-                if (userInputTextbox == Form1.itemWeightLbsTxtbox ||
-                     userInputTextbox == Form1.itemWeightOzTxtbox)
+                if (userInputTLP == Form1.itemWeightLbsTLP ||
+                     userInputTLP == Form1.itemWeightOzTLP)
                 {
                     if (!weightIsUpdated)
                     {
@@ -194,30 +170,21 @@ public class ItemViewTab : Tab
                 }
                 else
                 {
-                    string attrib;
-                    if (userInputContainer is TextBoxLabelPair)
-                    {
-                        attrib = ((TextBoxLabelPair)userInputContainer).attrib;
-                    } else if (userInputContainer is /*DateTimePickerWithlabel*/)
-                    {
-                        attrib = ((/*DateTimePickerWithlabel*/)userInputContainer).attrib;
-                    } else
-                    {
-                        throw new Exception("Error ItemViewTab: Unknown type trying to access its attribute");
-                    }
+                    string attrib = userInputContainer.attrib;
+
                     string newVal = getUserInputVal(userInputContainer);
 
                     Database.updateRow(getCurrItem(), attrib, newVal);
                 }
-                Util.clearTBox(userInputTextbox);
+                Util.clearTBox(userInputTLP);
             }
             else
             {
-                if (shippingTBoxes.Contains(userInputTextbox))
+                if (shippingTBoxes.Contains(userInputTLP))
                 {
                     makeShippingEntry();
                 }
-                else if (newItemTBoxes.Contains(userInputTextbox))
+                else if (itemTBoxes.Contains(userInputTLP))
                 {
                     // For there to be an item in the ItemTab, it must have an
                     // entry in the item table which requires at minimum
@@ -252,15 +219,15 @@ public class ItemViewTab : Tab
         int ttlWeight = 0;
         int lbs = 0;
         int oz = 0;
-        if (!Int32.TryParse(Form1.itemWeightLbsTxtbox.Text, out lbs)
-         || !Int32.TryParse(Form1.itemWeightOzTxtbox.Text, out oz))
+        if (!Int32.TryParse(Form1.itemWeightLbsTLP.getControlValueAsStr(), out lbs)
+         || !Int32.TryParse(Form1.itemWeightOzTLP.getControlValueAsStr(), out oz))
         {
             ttlWeight = -1;
             showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
             return -1;
         }
-        Util.clearTBox(Form1.itemWeightLbsTxtbox);
-        Util.clearTBox(Form1.itemWeightOzTxtbox);
+        Util.clearTBox(Form1.itemWeightLbsTLP);
+        Util.clearTBox(Form1.itemWeightOzTLP);
 
         ttlWeight = lbs * 16 + oz;
 
@@ -277,11 +244,11 @@ public class ItemViewTab : Tab
                 showWarning("Warning: Input shipping information as integers!");
             }
 
-            int weightLbs = Int32.Parse(Form1.itemWeightLbsTxtbox.Text);
-            int weightOz = Int32.Parse(Form1.itemWeightOzTxtbox.Text);
-            int l = Int32.Parse(Form1.itemLengthTxtbox.Text);
-            int w = Int32.Parse(Form1.itemWidthTxtbox.Text);
-            int h = Int32.Parse(Form1.itemHeightTxtbox.Text);
+            int weightLbs = Int32.Parse(Form1.itemWeightLbsTLP.getControlValueAsStr());
+            int weightOz = Int32.Parse(Form1.itemWeightOzTLP.getControlValueAsStr());
+            int l = Int32.Parse(Form1.itemLengthTLP.getControlValueAsStr());
+            int h = Int32.Parse(Form1.itemHeightTLP.getControlValueAsStr());
+            int w = Int32.Parse(Form1.itemWidthTLP.getControlValueAsStr());
 
             Database.insertShipInfo(getCurrItem(), weightLbs, weightOz, l, w, h);
             Util.clearTBox(weightTBoxes);
@@ -331,15 +298,15 @@ public class ItemViewTab : Tab
     public override void showItemAttributesAndPics(Item item)
     { 
 
-        Util.clearLabelText(attributeValueLabels);
+        Util.clearLabelText(allAttributeValueLabels);
 
         if (item is null) { return; }
 
         if (item.hasItemEntry())
         {
-            Form1.itemNameLbl.Text = checkDefault(item.get_Name());
-            Form1.itemInitQtyLbl.Text = checkDefault(item.get_InitialQuantity());
-            Form1.itemCurrQtyLbl.Text = checkDefault(item.get_CurrentQuantity());
+            Form1.itemNameTLP.setLabelText(checkDefault(item.get_Name()));
+            Form1.itemInitQtyTLP.setLabelText(checkDefault(item.get_InitialQuantity()));
+            Form1.itemCurrQtyTLP.setLabelText(checkDefault(item.get_CurrentQuantity()));
             Form1.itemItemNoLbl.Text = checkDefault(item.get_ITEM_ID());
             Form1.SaleNameLbl.Text = checkDefault(item.get_Name());
         }
@@ -359,11 +326,11 @@ public class ItemViewTab : Tab
         if (item.hasShippingEntry())
         {
             List<int> WeightLbsOz = Util.ozToOzLbs(item.get_Weight());
-            Form1.itemWeightLbsLbl.Text = checkDefault(WeightLbsOz[0]);
-            Form1.itemWeightOzLbl.Text = checkDefault(WeightLbsOz[1]);
-            Form1.itemLengthLbl.Text = checkDefault(item.get_Length());
-            Form1.itemWidthLbl.Text = checkDefault(item.get_Width());
-            Form1.itemHeightLbl.Text = checkDefault(item.get_Height());
+            Form1.itemWeightLbsTLP.setLabelText(checkDefault(WeightLbsOz[0]));
+            Form1.itemWeightOzTLP.setLabelText(checkDefault(WeightLbsOz[1]));
+            Form1.itemLengthTLP.setLabelText(checkDefault(item.get_Length()));
+            Form1.itemWidthTLP.setLabelText(checkDefault(item.get_Width()));
+            Form1.itemHeightTLP.setLabelText(checkDefault(item.get_Height()));
         }
 
         showItemPictures(item);

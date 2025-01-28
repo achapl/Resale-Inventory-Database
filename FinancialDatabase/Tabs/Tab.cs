@@ -8,14 +8,14 @@ public abstract class Tab
 
     
     public bool inEditingState;
-    protected List<Control> mutableAttribValueControls;
-    protected List<Label> mutableAttribValueLabels;
+    protected List<ControlLabelPair> mutableAttribValueControls;
     protected List<Control> hideableAttribValueControls;
 
-    protected List<TextBox> shippingTBoxes;
-    protected List<TextBox> newItemTBoxes;
-    protected Dictionary<Control, Label> labelTextboxPairs;
-    protected List<Label> attributeValueLabels;
+    protected List<TextBoxLabelPair> shippingTBoxes;
+    protected List<TextBox> purcNewItemShippingTBoxes;
+    protected List<TextBoxLabelPair> itemTBoxes;
+    protected List<TextBox> newItemTBoxes; // NOTE: Keep as TextBox, these are for new items and don't need TLP's
+    protected List<Control> allAttributeValueLabels;
 
 
     protected List<Control> controlBackup;
@@ -41,27 +41,18 @@ public abstract class Tab
             Form1.itemPurcPriceLbl,
             Form1.itemSoldPriceLbl,
             Form1.itemItemNoLbl,
-            Form1.itemWeightLbsLbl,
-            Form1.itemWeightOzLbl,
-            Form1.itemLengthLbl,
-            Form1.itemWidthLbl,
-            Form1.itemHeightLbl,
-            Form1.itemNameLbl,
             Form1.itemDatePurcLbl,
-            Form1.PurcPurcPriceLbl,
-            Form1.PurcPurcNotesLbl,
             Form1.PurcPurcDateLbl,
-            Form1.SaleAmountLbl,
             Form1.SaleNameLbl,
             Form1.SaleDateLbl,
-            Form1.itemNameTxtbox,
+            Form1.itemNameTLP,
             Form1.itemInitQtyTLP,
             Form1.itemCurrQtyTLP,
-            Form1.itemWeightLbsTxtbox,
-            Form1.itemWeightOzTxtbox,
-            Form1.itemLengthTxtbox,
-            Form1.itemWidthTxtbox,
-            Form1.itemHeightTxtbox,
+            Form1.itemWeightLbsTLP,
+            Form1.itemWeightOzTLP,
+            Form1.itemLengthTLP,
+            Form1.itemWidthTLP,
+            Form1.itemHeightTLP,
             Form1.PurcInitQtyTextbox,
             Form1.PurcLengthTextbox,
             Form1.PurcWidthTextbox,
@@ -70,9 +61,9 @@ public abstract class Tab
             Form1.PurcWeightOzTextbox,
             Form1.PurcNameTextbox,
             Form1.PurcCurrQtyTextbox,
-            Form1.PurcPurcPriceTextbox,
-            Form1.PurcPurcNotesTextbox,
-            Form1.SaleAmountTextbox,
+            Form1.PurcPurcPriceTLP,
+            Form1.PurcPurcNotesTLP,
+            Form1.SaleAmountTLP,
             Form1.SaleNewSaleAmountTextbox,
             Form1.SaleNewSaleDatePicker,
             Form1.PurcDatePicker,
@@ -85,72 +76,48 @@ public abstract class Tab
 
 
     // Returns only the textboxes and such that the user has changed while editing
-    protected List<Control> getChangedFields()
+    protected List<ControlLabelPair> getChangedFields()
     {
-        List<Control> changedFields = new List<Control>();
+        List<ControlLabelPair> changedFields = new List<ControlLabelPair>();
 
-        for(int i = 0; i < mutableAttribValueControls.Count; i++)
+        foreach (ControlLabelPair CLP in mutableAttribValueControls)
         {
-            Control pastState = controlBackup[i];
-            Control currState = mutableAttribValueControls[i];
-
-            switch (pastState)
+            if (CLP.userChangedValue())
             {
-                case TextBox:
-                    if (pastState.Text.CompareTo(currState.Text) != 0)
-                    {
-                        changedFields.Add(currState);
-                    }
-                    break;
-                case DateTimePicker:
-                    Util.Date oldDate = new Util.Date(pastState as DateTimePicker);
-                    Util.Date newDate = new Util.Date(currState as DateTimePicker);
-                    if (!oldDate.Equals(newDate))
-                    {
-                        changedFields.Add(currState);
-                    }
-                    break;
+                changedFields.Add(CLP);
             }
         }
         return changedFields;
     }
 
 
-    internal bool typeCheckUserInput(List<TextBox> userInputFields)
+    internal bool typeCheckUserInput(List<TextBoxLabelPair> userInputFields)
     {
-        List<Control> userInputControls = new List<Control>();
-        foreach (TextBox userInputField in userInputFields)
+        List<ControlLabelPair> userInputControls = new List<ControlLabelPair>();
+        foreach (TextBoxLabelPair userInputField in userInputFields)
         {
-            userInputControls.Add(userInputField as Control);
+            userInputControls.Add(userInputField as ControlLabelPair);
         }
         return typeCheckUserInput(userInputControls);
     }
 
-    internal bool typeCheckUserInput(List<Control> userInputFields)
+    internal bool typeCheckUserInput(List<ControlLabelPair> userInputFields)
     {
-        foreach (Control c in userInputFields)
+        foreach (ControlLabelPair c in userInputFields)
         {
 
             // Special case, weight textboxes
-            if (!Int32.TryParse(Form1.itemWeightLbsTLP.getTextBoxText(), out _)
-                || !Int32.TryParse(Form1.itemWeightOzTxtbox.getTextBoxText(), out _))
+            if (!Int32.TryParse(Form1.itemWeightLbsTLP.getControlValue(), out _)
+                || !Int32.TryParse(Form1.itemWeightOzTLP.getControlValue(), out _))
             {
                 showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
                 return false;
             }
 
-            string attrib;
-            if (c is TextBoxLabelPair)
-            {
-                attrib = (c as TextBoxLabelPair).attrib;
-            }
-            else if (c is /*DateTimePicker*/)
-            {
-                attrib = (c as /*DateTimePicker*/).attrib;
-            }
+            string attrib = c.attrib;
             string type = tabController.colDataTypes[attrib];
 
-            if (c is TextBox && !Util.checkTypeOkay(c.Text, type))
+            if (c is TextBoxLabelPair && !Util.checkTypeOkay(c.getControlValueAsStr(), type))
             {
                 return false;
             }
@@ -244,25 +211,26 @@ public abstract class Tab
         editButton.Text = inEditingState ? "View" : "Edit";
         updateButton.Visible = inEditingState;
 
-        foreach (Label field in mutableAttribValueLabels)
-        {
-            field.Visible = !inEditingState;
-        }
-
-
         foreach (Control field in hideableAttribValueControls)
         {
-            field.Visible = inEditingState;
+            if (field is ControlLabelPair)
+            {
+                (field as ControlLabelPair).setEditMode(inEditingState);
+            }
+            else
+            {
+                field.Visible = inEditingState;
+            }
         }
     }
 
     public void updateUserInputDefaultText()
     {
-        foreach (Control field in hideableAttribValueControls)
+        foreach (Control field in mutableAttribValueControls)
         {
-            if (field is TextBox)
+            if (field is TextBoxLabelPair)
             {
-                field.Text = labelTextboxPairs[field as TextBox].Text;
+                (field as TextBoxLabelPair).updateControlValWithLabelText();
             }
             if (field is DateTimePicker)
             {
@@ -271,13 +239,13 @@ public abstract class Tab
                 {
                     Date date = new Date(labelTextboxPairs[field].Text);
                     d.Value = date.toDateTime();
-                } else
+                }
+                else
                 {
                     d.Value = System.DateTime.Now;
                 }
-
-                }
             }
+        }
     }
 
 
@@ -306,15 +274,15 @@ public abstract class Tab
     // Check if a user-inputted control attribute corresponds to data
     // for which there is an entry in the database
     // Don't want to be updating data that doesn't exist
-    protected bool databaseEntryExists(Control c)
+    protected bool databaseEntryExists(ControlLabelPair c)
     {
-        if (!controlAttrib.ContainsKey(c))
+        if (!allClearableControl.Contains(c))
         {
             return false;
         }
 
         // Check if the attribute associated with the textbox is a default value in the curr item
-        string ret = tabController.getCurrItem().getAttribAsStr(controlAttrib[c]);
+        string ret = tabController.getCurrItem().getAttribAsStr(c.attrib);
         if (ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
             ret.CompareTo(Util.DEFAULT_DATE.ToString()) == 0 ||
             ret.CompareTo(Util.DEFAULT_INT.ToString()) == 0 ||

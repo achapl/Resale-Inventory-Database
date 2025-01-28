@@ -17,7 +17,7 @@ public class PurchasedLotTab : Tab
         this.tabController = tabController;
         isNewPurchase = false;
         generateTBoxGroups();
-        Util.clearLabelText(attributeValueLabels);
+        Util.clearLabelText(allAttributeValueLabels);
         showControlVisibility();
     }
 
@@ -32,31 +32,24 @@ public class PurchasedLotTab : Tab
 
     protected override void generateTBoxGroups()
     {
-        mutableAttribValueControls = new List<Control>()
+        mutableAttribValueControls = new List<ControlLabelPair>()
         {
-            Form1.PurcPurcPriceTextbox,
-            Form1.PurcPurcNotesTextbox,
+            Form1.PurcPurcPriceTLP,
+            Form1.PurcPurcNotesTLP,
             Form1.PurcDatePicker
         };
 
         hideableAttribValueControls = new List<Control>()
         {
-            Form1.PurcPurcPriceTextbox,
-            Form1.PurcPurcNotesTextbox,
+            Form1.PurcPurcPriceTLP,
+            Form1.PurcPurcNotesTLP,
             Form1.PurcDatePicker
         };
 
-        mutableAttribValueLabels = new List<Label>()
+        allAttributeValueLabels = new List<Control>()
         {
-            Form1.PurcPurcPriceLbl,
-            Form1.PurcPurcNotesLbl,
-            Form1.PurcPurcDateLbl
-        };
-
-        attributeValueLabels = new List<Label>()
-        {
-            Form1.PurcPurcPriceLbl,
-            Form1.PurcPurcNotesLbl,
+            Form1.PurcPurcPriceTLP,
+            Form1.PurcPurcNotesTLP,
             Form1.PurcPurcDateLbl
         };
 
@@ -68,7 +61,7 @@ public class PurchasedLotTab : Tab
 
         };
 
-        shippingTBoxes = new List<TextBox>()
+        purcNewItemShippingTBoxes = new List<TextBox>()
         {
             Form1.PurcLengthTextbox,
             Form1.PurcWidthTextbox,
@@ -80,7 +73,7 @@ public class PurchasedLotTab : Tab
 
         newPurchaseGroupControls = new List<Control>()
         {
-            Form1.PurcPurcPriceTextbox,
+            Form1.PurcPurcPriceTLP,
             Form1.PurcDatePicker
         };
 
@@ -89,20 +82,9 @@ public class PurchasedLotTab : Tab
             newPurchaseGroupControls.Add(c);
         }
 
-        labelTextboxPairs = new Dictionary<Control, Label>();
-
-        int i = 0;
-        foreach (Control c in mutableAttribValueControls)
-        {
-            if (c is not Button)
-            {
-                labelTextboxPairs[c] = mutableAttribValueLabels[i++];
-            }
-        }
-
-            Form1.PurcDatePicker,  "purchase.Date_Purchased";
-            Form1.PurcPurcPriceTLP.attrib = "purchase.Amount_purchase";
-            Form1.PurcPurcNotesTLP.attrib = "purchase.Notes_purchase";
+        Form1.PurcPurcPriceTLP.attrib = "purchase.Amount_purchase";
+        Form1.PurcPurcNotesTLP.attrib = "purchase.Notes_purchase";
+        Form1.PurcDatePicker  "purchase.Date_Purchased";
     }
 
 
@@ -172,12 +154,12 @@ public class PurchasedLotTab : Tab
 
     public void showPurchaseAttributes(Purchase purchase)
     {
-        Util.clearLabelText(attributeValueLabels);
+        Util.clearLabelText(allAttributeValueLabels);
         Purchase currPurc = tabController.getCurrPurc();
         Date datePurc = currPurc.Date_Purchased;
         Form1.PurcDatePicker.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
-        Form1.PurcPurcPriceLbl.Text = checkDefault(currPurc.Amount_purchase);
-        Form1.PurcPurcNotesLbl.Text = checkDefault(currPurc.Notes_purchase);
+        Form1.PurcPurcPriceTLP.setLabelText(checkDefault(currPurc.Amount_purchase));
+        Form1.PurcPurcNotesTLP.setLabelText(checkDefault(currPurc.Notes_purchase));
         Form1.PurcPurcDateLbl.Text = checkDefault(currPurc.Date_Purchased.toDateString());
         updateUserInputDefaultText();
         
@@ -210,27 +192,27 @@ public class PurchasedLotTab : Tab
             return false;
         }
 
-        List<Control> changedFields = getChangedFields();
+        List<ControlLabelPair> changedFields = getChangedFields();
         if (!typeCheckUserInput(changedFields)) { return false; }
 
-        foreach (Control c in changedFields)
+        foreach (ControlLabelPair CLP in changedFields)
         {
-            if (c is null) { throw new Exception("ERROR: Control Object c is null, ItemViewTab.cs"); }
+            if (CLP is null) { throw new Exception("ERROR: Control Object CLP is null, ItemViewTab.cs"); }
 
             string query = "";
             
-            if (databaseEntryExists(c))
+            if (databaseEntryExists(CLP))
             {
-                if (c is TextBoxLabelPair)
+                if (CLP is TextBoxLabelPair)
                 {
-                    Database.updateRow(tabController.getCurrItem(), (c as TextBoxLabelPair).attrib, (c as TextBoxLabelPair).getTextBoxText());
+                    Database.updateRow(tabController.getCurrItem(), (CLP as TextBoxLabelPair).attrib, (CLP as TextBoxLabelPair).getControlValueAsStr());
                 }
-                else if (c is /*MyDateTimepicker*/)
+                else if (CLP is /*MyDateTimepicker*/)
                 {
-                    Database.updateRow(tabController.getCurrItem(), (c as /*MyDateTimepicker*/).attrib, new Date(c));
+                    Database.updateRow(tabController.getCurrItem(), (CLP as /*MyDateTimepicker*/).attrib, new Date(CLP));
                 }
             }
-            else if (!databaseEntryExists(c))
+            else if (!databaseEntryExists(CLP))
             {
                 throw new Exception("ERROR: no purchase entry for CurrItem, This should not be possible");
             }
@@ -260,8 +242,8 @@ public class PurchasedLotTab : Tab
            // addCurrPurcItem(Database.getItem(i.get_ITEM_ID()));
         }
 
-        Form1.PurcPurcPriceLbl.Text = currPurc.Amount_purchase.ToString();
-        Form1.PurcPurcNotesLbl.Text = currPurc.Notes_purchase;
+        Form1.PurcPurcPriceTLP.setLabelText(currPurc.Amount_purchase.ToString());
+        Form1.PurcPurcNotesTLP.setLabelText(currPurc.Notes_purchase);
     }
 
 
@@ -314,7 +296,7 @@ public class PurchasedLotTab : Tab
         {
             DateTime dt = Form1.PurcDatePicker.Value;
             purcDate = new(dt.Year, dt.Month, dt.Day);
-            purcID = Database.insertPurchase(Int32.Parse(Form1.PurcPurcPriceTextbox.Text), Form1.PurcPurcNotesTextbox.Text, purcDate);
+            purcID = Database.insertPurchase(Int32.Parse(Form1.PurcPurcPriceTLP.getLabelText()), Form1.PurcPurcNotesTLP.getLabelText(), purcDate);
             setCurrPurc(Database.getPurchase(purcID));
 
         }

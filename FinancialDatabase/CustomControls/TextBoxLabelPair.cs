@@ -7,116 +7,55 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using System.Windows.Forms;
 
 namespace FinancialDatabase
 {
-    public partial class TextBoxLabelPair : TextBox
-    { 
-        Label label;
-        public bool inEditMode { get; private set; }
-
-        private string _attrib;
-        public string attrib { get { return _attrib; }
-            set
-            {
-                // Only set attrib once for any object, should never need to change it
-                if (_attrib != null) { throw new Exception("Error TextBoxLabelPair: Trying to set attrib when attrib is already set"); }
-
-                _attrib = value;
-            } }
-
-
-        public TextBoxLabelPair()
+    public partial class TextBoxLabelPair : ControlLabelPair
+    {
+        TextBox textBox;
+        public TextBoxLabelPair() : base()
         {
-            this.Visible = false;
-            inEditMode = false;
             InitializeComponent();
-            label = new Label();
-
-            ParentChanged += ParentChangedMethod;
-            this.LocationChanged += UpdatedAttributes;
-            this.VisibleChanged += VisibilityChangedMethod;
         }
 
-
-        protected override void OnPaint(PaintEventArgs pe)
+        protected override void UpdatedAttributes(Object e, EventArgs ea)
         {
-            base.OnPaint(pe);
+            textBox.Location = new Point(this.Location.X, this.Location.Y);
+            textBox.Size = new Size(100, 30);
+            textBox.Name = "TextBox-" + this.Name;
+            textBox.Visible = false;
         }
 
-
-        internal void ParentChangedMethod(Object e, EventArgs ea)
+        public override string getControlValue()
         {
-            if (Parent != null)
-            {
-                Parent.Controls.Add(label);
-            }
+            return getControlValueAsStr();
+        }
+        public override string getControlValueAsStr()
+        {
+            if (textBox is null) throw new Exception("Error TextBoxLabelPair: Trying to access TextBox value when control does not exist yet, meaning this object was not added to its parent's controls");
+            return textBox.Text;
         }
 
-
-        internal void UpdatedAttributes(Object e, EventArgs ea)
+        public void setBackgroundColor(Color color)
         {
-            label.Location = new Point(this.Location.X, this.Location.Y);
-            label.Size = new Size(100, 30);
-            label.BackColor = Color.Transparent;
-            label.Name = "Label-" + this.Name;
-            label.Visible = true;
+            textBox.BackColor = color;
         }
 
-
-        internal void VisibilityChangedMethod(Object e, EventArgs ea)
+        public override void setControlVal(string newText)
         {
-            if (label is null) throw new Exception("Error TextBoxLabelPair: Trying to change label visibility when label does not exist yet, meaning this object was not added to its parent's control");
-            label.Visible = !this.Visible;
+            textBox.Text = newText;
         }
 
-
-        public string getLabelText()
+        public override void updateControlValWithLabelText()
         {
-            if (label is null) throw new Exception("Error TextBoxLabelPair: Trying to access label text when label does not exist yet, meaning this object was not added to its parent's control");
-            return label.Text;
+            setControlVal(getLabelText());
         }
 
-
-        public string getTextBoxText()
+        public override bool userChangedValue()
         {
-            return this.Text;
-        }
-
-
-        public void flipEditMode()
-        {
-            if (inEditMode)
-            {
-                viewMode();
-            } else
-            {
-                editMode();
-            }
-        }
-
-
-        public void editMode()
-        {
-            if (label is null) throw new Exception("Error TextBoxLabelPair: Trying to switch into edit mode when label does not exist yet, meaning this object was not added to its parent's control");
-
-            label.Visible = false;
-            this.Visible = true;
-            inEditMode = true;
-
-            this.Text = label.Text;
-        }
-
-
-        public void viewMode()
-        {
-            if (label is null) throw new Exception("Error TextBoxLabelPair: Trying to switch into view mode when label does not exist yet, meaning this object was not added to its parent's control");
-            label.Visible = true;
-            this.Visible = false;
-            inEditMode = false;
-
-            label.Text = this.Text;
+            return this.Text.CompareTo(textBox.Text) != 0;
         }
     }
 }

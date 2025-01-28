@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinancialDatabase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -153,11 +154,19 @@ public class Util
     /// Clears all the text of a given list of labels
     /// </summary>
     /// <param name="l"> List of labels</param>
-    public static void clearLabelText(List<Label> l)
+    // TODO: RENAME TEST
+    public static void clearLabelText(List<Control> l)
     {
-        foreach (Label label in l)
+        foreach (Control c in l)
         {
-            label.Text = "";
+            if (c is Label)
+            {
+                (c as Label).Text = "";
+            }
+            if (c is ControlLabelPair)
+            {
+                (c as ControlLabelPair).setLabelText("");
+            }
         }
     }
 
@@ -166,13 +175,22 @@ public class Util
     /// Clears all the text of a given list of text boxes
     /// And resets their background color to white
     /// </summary>
-    /// <param name="t">List of textboxes</param>
-    public static void clearTBox(List<TextBox> t)
+    /// <param name="textBoxes">List of textboxes</param>
+    public static void clearTBox(List<TextBox> textBoxes)
     {
-        foreach (TextBox tb in t)
+        foreach (TextBox c in textBoxes)
         {
-            tb.Text = "";
-            tb.BackColor = Color.White;
+            (c as TextBox).Text = "";
+            (c as TextBox).BackColor = Color.White;
+        }
+    }
+
+    public static void clearTBox(List<TextBoxLabelPair> TLPs)
+    {
+        foreach (TextBoxLabelPair c in TLPs)
+        {
+            (c as TextBoxLabelPair).setControlVal("");
+            (c as TextBoxLabelPair).setBackgroundColor(Color.White);
         }
     }
 
@@ -184,11 +202,20 @@ public class Util
     /// <param name="c">TextBox given as a control</param>
     public static void clearTBox(Control c)
     {
-        if (c is not TextBox) { return; }
+        if (c is not TextBox && c is not TextBoxLabelPair) { return; }
 
-        TextBox tb = c as TextBox;
-        tb.Text = "";
-        tb.BackColor = Color.White;
+        if (c is TextBox)
+        {
+            TextBox tb = c as TextBox;
+            tb.Text = "";
+            tb.BackColor = Color.White;
+        }
+        else if (c is TextBoxLabelPair)
+        {
+            TextBoxLabelPair TLP = c as TextBoxLabelPair;
+            TLP.setControlVal("");
+            TLP.setBackgroundColor(Color.White);
+        }
     }
 
 
