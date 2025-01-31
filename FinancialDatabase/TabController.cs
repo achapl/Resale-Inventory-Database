@@ -41,9 +41,9 @@ namespace FinancialDatabase
             searchTab = new SearchTab(this, Form1);
             saleTab = new SaleTab(this, Form1);
 
-            allControlAttribs = Util.combineDictionaries(purchasedLotTab.controlAttrib,
-                                                            itemViewTab.controlAttrib,
-                                                            saleTab.controlAttrib);
+            //allControlAttribs = Util.combineDictionaries(purchasedLotTab.controlAttrib,
+                                                            //itemViewTab.controlAttrib,
+                                                            //saleTab.controlAttrib);
 
         }
 

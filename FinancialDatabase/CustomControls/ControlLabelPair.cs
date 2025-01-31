@@ -57,7 +57,7 @@ namespace FinancialDatabase
         {
             if (Parent != null)
             {
-                Parent.Controls.Add(control);
+                //Parent.Controls.Add(control);
             }
         }
 
@@ -74,16 +74,13 @@ namespace FinancialDatabase
 
         internal void VisibilityChangedMethod(Object e, EventArgs ea)
         {
-            if (control is null) throw new Exception("Error ControlLabelPair: Trying to change control visibility when label does not exist yet, meaning this object was not added to its parent's control");
+            if (control is null) { return; } //throw new Exception("Error ControlLabelPair: Trying to change control visibility when label does not exist yet, meaning this object was not added to its parent's control");
             control.Visible = !this.Visible;
         }
 
 
         public abstract object getControlValue();
-        /*{
-            if (control is null) throw new Exception("Error ControlLabelPair: Trying to access control value when control does not exist yet, meaning this object was not added to its parent's controls");
-            return label.Text;
-        }*/
+
         public abstract string getControlValueAsStr();
 
         public string getLabelText()
@@ -98,11 +95,14 @@ namespace FinancialDatabase
 
         public abstract bool userChangedValue();
 
-        public abstract void setControlVal(object val);
         public abstract void setControlVal(string val);
 
         public void flipEditMode()
         {
+            if (this.Name == "itemNameTLP")
+            {
+                int a = 0;
+            }
             if (inEditMode)
             {
                 viewMode();

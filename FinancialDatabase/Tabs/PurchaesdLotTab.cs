@@ -36,14 +36,14 @@ public class PurchasedLotTab : Tab
         {
             Form1.PurcPurcPriceTLP,
             Form1.PurcPurcNotesTLP,
-            Form1.PurcDatePicker
+            Form1.PurcDatePickerDLP
         };
 
         hideableAttribValueControls = new List<Control>()
         {
             Form1.PurcPurcPriceTLP,
             Form1.PurcPurcNotesTLP,
-            Form1.PurcDatePicker
+            Form1.PurcDatePickerDLP
         };
 
         allAttributeValueLabels = new List<Control>()
@@ -82,9 +82,9 @@ public class PurchasedLotTab : Tab
             newPurchaseGroupControls.Add(c);
         }
 
+        Form1.PurcDatePickerDLP.attrib =  "purchase.Date_Purchased";
         Form1.PurcPurcPriceTLP.attrib = "purchase.Amount_purchase";
         Form1.PurcPurcNotesTLP.attrib = "purchase.Notes_purchase";
-        Form1.PurcDatePicker  "purchase.Date_Purchased";
     }
 
 
@@ -157,10 +157,9 @@ public class PurchasedLotTab : Tab
         Util.clearLabelText(allAttributeValueLabels);
         Purchase currPurc = tabController.getCurrPurc();
         Date datePurc = currPurc.Date_Purchased;
-        Form1.PurcDatePicker.Value = new DateTime(datePurc.year, datePurc.month, datePurc.day);
+        Form1.PurcDatePickerDLP.setLabelText(checkDefault(currPurc.Date_Purchased.toDateString()));
         Form1.PurcPurcPriceTLP.setLabelText(checkDefault(currPurc.Amount_purchase));
         Form1.PurcPurcNotesTLP.setLabelText(checkDefault(currPurc.Notes_purchase));
-        Form1.PurcPurcDateLbl.Text = checkDefault(currPurc.Date_Purchased.toDateString());
         updateUserInputDefaultText();
         
     }
@@ -207,9 +206,10 @@ public class PurchasedLotTab : Tab
                 {
                     Database.updateRow(tabController.getCurrItem(), (CLP as TextBoxLabelPair).attrib, (CLP as TextBoxLabelPair).getControlValueAsStr());
                 }
-                else if (CLP is /*MyDateTimepicker*/)
+                // TODO:
+                else if ( CLP is DateTimePickerLabelPair)
                 {
-                    Database.updateRow(tabController.getCurrItem(), (CLP as /*MyDateTimepicker*/).attrib, new Date(CLP));
+                    Database.updateRow(tabController.getCurrItem(), (CLP as DateTimePickerLabelPair).attrib, new Date(CLP));
                 }
             }
             else if (!databaseEntryExists(CLP))
@@ -251,6 +251,7 @@ public class PurchasedLotTab : Tab
     {
         foreach (Control c in newPurchaseGroupControls)
         {
+            // This is fine being a textbox, it's not a TLP
             if (c is TextBox)
             {
                 TextBox t = c as TextBox;

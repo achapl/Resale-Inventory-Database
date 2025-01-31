@@ -27,13 +27,13 @@ public class SaleTab : Tab
         mutableAttribValueControls = new List<ControlLabelPair>()
         {
             Form1.SaleAmountTLP,
-            Form1.SaleDatePicker
+            Form1.SaleDatePickerDLP
         };
 
         hideableAttribValueControls = new List<Control>()
         {
             Form1.SaleAmountTLP,
-            Form1.SaleDatePicker,
+            Form1.SaleDatePickerDLP,
             Form1.SaleUpdateButton,
             Form1.SaleDeleteSaleButton
         };
@@ -42,7 +42,7 @@ public class SaleTab : Tab
         {
             Form1.SaleNameLbl,
             Form1.SaleAmountTLP,
-            Form1.SaleDateLbl
+            Form1.SaleDatePickerDLP
         };
 
         newItemTBoxes = new List<TextBox>()
@@ -52,7 +52,7 @@ public class SaleTab : Tab
 
 
         Form1.SaleAmountTLP.attrib = "sale.Amount_sale";
-        Form1.SaleDatePicker, "sale.Date_Sold";
+        Form1.SaleDatePickerDLP.attrib = "sale.Date_Sold";
     }
 
     public void updateFromUserInput()

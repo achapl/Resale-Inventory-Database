@@ -208,6 +208,10 @@ public class ItemViewTab : Tab
                 return (c as TextBox).Text;
             case DateTimePicker:
                 return new Date(c).toDateString();
+            case TextBoxLabelPair:
+                return (c as TextBoxLabelPair).getControlValueAsStr();
+            case DateTimePickerLabelPair:
+                return new Util.Date(c as DateTimePickerLabelPair).toDateString();
             default:
                 throw new Exception("Error: Unaccounted for Control Type");
         }

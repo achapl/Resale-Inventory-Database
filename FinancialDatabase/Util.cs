@@ -714,16 +714,22 @@ public class Util
         public Date(Control d)
         {
             // If not the a DateTimePicker, set to error values and output error
-            try { DateTimePicker _ = (DateTimePicker) d; }
-            catch 
+            // TODO: Test DLP part of switch
+            switch(d)
             {
-                throw new ArgumentException("ERROR: Trying to make Util.Date from object of type control, but control object is not a DateTimePicker");
+                case DateTimePicker:
+                    DateTimePicker dtp = (DateTimePicker)d;
+                    this.year = dtp.Value.Year;
+                    this.month = dtp.Value.Month;
+                    this.day = dtp.Value.Day;
+                    break;
+                case DateTimePickerLabelPair:
+                    this = new Date((d as DateTimePickerLabelPair).getControlValueAsStr());
+                    break;
+                default:
+                    throw new ArgumentException("ERROR: Trying to make Util.Date from object of type control, but control object is not a DateTimePicker or DateTimePickerLabelPair");
             }
-            DateTimePicker dtp = (DateTimePicker) d;
-
-                this.year = dtp.Value.Year;
-                this.month = dtp.Value.Month;
-                this.day = dtp.Value.Day;
+ 
         }
 
         public Date(DateTimePicker d)

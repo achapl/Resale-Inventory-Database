@@ -66,8 +66,8 @@ public abstract class Tab
             Form1.SaleAmountTLP,
             Form1.SaleNewSaleAmountTextbox,
             Form1.SaleNewSaleDatePicker,
-            Form1.PurcDatePicker,
-            Form1.SaleDatePicker,
+            Form1.PurcDatePickerDLP,
+            Form1.SaleDatePickerDLP,
             Form1.PurchaseListBox,
             Form1.saleListBox
         };
@@ -232,17 +232,17 @@ public abstract class Tab
             {
                 (field as TextBoxLabelPair).updateControlValWithLabelText();
             }
-            if (field is DateTimePicker)
+            if (field is DateTimePickerLabelPair)
             {
-                DateTimePicker d = field as DateTimePicker;
-                if (labelTextboxPairs[field].Text != "")
+                DateTimePickerLabelPair d = field as DateTimePickerLabelPair;
+                if (d.getLabelText() != "")
                 {
-                    Date date = new Date(labelTextboxPairs[field].Text);
-                    d.Value = date.toDateTime();
+                    (d as DateTimePickerLabelPair).updateControlValWithLabelText();
                 }
                 else
                 {
-                    d.Value = System.DateTime.Now;
+                    // TODO:
+                    //d.Value = System.DateTime.Now;
                 }
             }
         }

@@ -45,6 +45,7 @@
             comboBox1 = new ComboBox();
             comboBoxMenuStrip = new MenuStrip();
             ItemTab = new TabPage();
+            itemNameTLP = new TextBoxLabelPair();
             itemHeightTLP = new TextBoxLabelPair();
             itemWidthTLP = new TextBoxLabelPair();
             itemLengthTLP = new TextBoxLabelPair();
@@ -78,6 +79,7 @@
             itemTagDatePurcLbl = new Label();
             itemTagNameLbl = new Label();
             PurchaseTab = new TabPage();
+            PurcDatePickerDLP = new DateTimePickerLabelPair();
             PurcPurcNotesTLP = new TextBoxLabelPair();
             PurcPurcPriceTLP = new TextBoxLabelPair();
             PurcPurcDateLbl = new Label();
@@ -109,14 +111,13 @@
             PurcTagPurcPriceLbl = new Label();
             PurchaseListBox = new ListBox();
             Sale = new TabPage();
+            SaleDatePickerDLP = new DateTimePickerLabelPair();
             SaleAmountTLP = new TextBoxLabelPair();
             SaleDeleteSaleButton = new Button();
             SaleUpdateButton = new Button();
-            SaleDateLbl = new Label();
             SaleEditSaleButton = new Button();
             SaleTagNameLbl = new Label();
             SaleTagSaleDateLbl = new Label();
-            SaleDatePicker = new DateTimePicker();
             SaleNameLbl = new Label();
             SaleTagNewSaleDateLbl = new Label();
             SaleNewSaleDatePicker = new DateTimePicker();
@@ -127,7 +128,6 @@
             saleListBox = new ListBox();
             resultItemBindingSource = new BindingSource(components);
             openFileDialog1 = new OpenFileDialog();
-            itemNameTLP = new TextBoxLabelPair();
             tabCollection.SuspendLayout();
             SearchTab.SuspendLayout();
             ItemTab.SuspendLayout();
@@ -353,6 +353,14 @@
             ItemTab.TabIndex = 1;
             ItemTab.Text = "Item";
             ItemTab.UseVisualStyleBackColor = true;
+            // 
+            // itemNameTLP
+            // 
+            itemNameTLP.attrib = null;
+            itemNameTLP.Location = new Point(120, 49);
+            itemNameTLP.Name = "itemNameTLP";
+            itemNameTLP.Size = new Size(100, 23);
+            itemNameTLP.TabIndex = 86;
             // 
             // itemHeightTLP
             // 
@@ -665,6 +673,7 @@
             // 
             // PurchaseTab
             // 
+            PurchaseTab.Controls.Add(PurcDatePickerDLP);
             PurchaseTab.Controls.Add(PurcPurcNotesTLP);
             PurchaseTab.Controls.Add(PurcPurcPriceTLP);
             PurchaseTab.Controls.Add(PurcPurcDateLbl);
@@ -703,6 +712,16 @@
             PurchaseTab.TabIndex = 2;
             PurchaseTab.Text = "Purchase Group";
             PurchaseTab.UseVisualStyleBackColor = true;
+            // 
+            // PurcDatePickerDLP
+            // 
+            PurcDatePickerDLP.attrib = null;
+            PurcDatePickerDLP.AutoSize = true;
+            PurcDatePickerDLP.Location = new Point(795, 240);
+            PurcDatePickerDLP.Name = "PurcDatePickerDLP";
+            PurcDatePickerDLP.Size = new Size(142, 15);
+            PurcDatePickerDLP.TabIndex = 68;
+            PurcDatePickerDLP.Text = "dateTimePickerLabelPair1";
             // 
             // PurcPurcNotesTLP
             // 
@@ -987,14 +1006,13 @@
             // 
             // Sale
             // 
+            Sale.Controls.Add(SaleDatePickerDLP);
             Sale.Controls.Add(SaleAmountTLP);
             Sale.Controls.Add(SaleDeleteSaleButton);
             Sale.Controls.Add(SaleUpdateButton);
-            Sale.Controls.Add(SaleDateLbl);
             Sale.Controls.Add(SaleEditSaleButton);
             Sale.Controls.Add(SaleTagNameLbl);
             Sale.Controls.Add(SaleTagSaleDateLbl);
-            Sale.Controls.Add(SaleDatePicker);
             Sale.Controls.Add(SaleNameLbl);
             Sale.Controls.Add(SaleTagNewSaleDateLbl);
             Sale.Controls.Add(SaleNewSaleDatePicker);
@@ -1011,10 +1029,20 @@
             Sale.Text = "Sale";
             Sale.UseVisualStyleBackColor = true;
             // 
+            // SaleDatePickerDLP
+            // 
+            SaleDatePickerDLP.attrib = null;
+            SaleDatePickerDLP.AutoSize = true;
+            SaleDatePickerDLP.Location = new Point(625, 112);
+            SaleDatePickerDLP.Name = "SaleDatePickerDLP";
+            SaleDatePickerDLP.Size = new Size(142, 15);
+            SaleDatePickerDLP.TabIndex = 66;
+            SaleDatePickerDLP.Text = "dateTimePickerLabelPair1";
+            // 
             // SaleAmountTLP
             // 
             SaleAmountTLP.attrib = null;
-            SaleAmountTLP.Location = new Point(625, 76);
+            SaleAmountTLP.Location = new Point(625, 74);
             SaleAmountTLP.Name = "SaleAmountTLP";
             SaleAmountTLP.Size = new Size(100, 23);
             SaleAmountTLP.TabIndex = 65;
@@ -1040,15 +1068,6 @@
             SaleUpdateButton.UseVisualStyleBackColor = true;
             SaleUpdateButton.Click += saleUpdateButton_Click;
             // 
-            // SaleDateLbl
-            // 
-            SaleDateLbl.AutoSize = true;
-            SaleDateLbl.Location = new Point(625, 113);
-            SaleDateLbl.Name = "SaleDateLbl";
-            SaleDateLbl.Size = new Size(44, 15);
-            SaleDateLbl.TabIndex = 29;
-            SaleDateLbl.Text = "label54";
-            // 
             // SaleEditSaleButton
             // 
             SaleEditSaleButton.Location = new Point(625, 3);
@@ -1071,18 +1090,11 @@
             // SaleTagSaleDateLbl
             // 
             SaleTagSaleDateLbl.AutoSize = true;
-            SaleTagSaleDateLbl.Location = new Point(558, 113);
+            SaleTagSaleDateLbl.Location = new Point(558, 112);
             SaleTagSaleDateLbl.Name = "SaleTagSaleDateLbl";
             SaleTagSaleDateLbl.Size = new Size(55, 15);
             SaleTagSaleDateLbl.TabIndex = 26;
             SaleTagSaleDateLbl.Text = "Sale Date";
-            // 
-            // SaleDatePicker
-            // 
-            SaleDatePicker.Location = new Point(625, 107);
-            SaleDatePicker.Name = "SaleDatePicker";
-            SaleDatePicker.Size = new Size(200, 23);
-            SaleDatePicker.TabIndex = 25;
             // 
             // SaleNameLbl
             // 
@@ -1120,12 +1132,12 @@
             // SaleTagNewSaleAmountLbl
             // 
             SaleTagNewSaleAmountLbl.AutoSize = true;
-            SaleTagNewSaleAmountLbl.Location = new Point(104, 356);
+            SaleTagNewSaleAmountLbl.Location = new Point(108, 356);
             SaleTagNewSaleAmountLbl.Margin = new Padding(4, 0, 4, 0);
             SaleTagNewSaleAmountLbl.Name = "SaleTagNewSaleAmountLbl";
-            SaleTagNewSaleAmountLbl.Size = new Size(128, 15);
+            SaleTagNewSaleAmountLbl.Size = new Size(75, 15);
             SaleTagNewSaleAmountLbl.TabIndex = 16;
-            SaleTagNewSaleAmountLbl.Text = "Sale Amount_purchase";
+            SaleTagNewSaleAmountLbl.Text = "Sale Amount";
             // 
             // AddSaleButton
             // 
@@ -1141,12 +1153,12 @@
             // SaleTagSaleAmountLbl
             // 
             SaleTagSaleAmountLbl.AutoSize = true;
-            SaleTagSaleAmountLbl.Location = new Point(538, 79);
+            SaleTagSaleAmountLbl.Location = new Point(538, 78);
             SaleTagSaleAmountLbl.Margin = new Padding(4, 0, 4, 0);
             SaleTagSaleAmountLbl.Name = "SaleTagSaleAmountLbl";
-            SaleTagSaleAmountLbl.Size = new Size(128, 15);
+            SaleTagSaleAmountLbl.Size = new Size(75, 15);
             SaleTagSaleAmountLbl.TabIndex = 1;
-            SaleTagSaleAmountLbl.Text = "Sale Amount_purchase";
+            SaleTagSaleAmountLbl.Text = "Sale Amount";
             // 
             // saleListBox
             // 
@@ -1167,15 +1179,6 @@
             // 
             openFileDialog1.FileName = "openFileDialog1";
             openFileDialog1.Multiselect = true;
-            // 
-            // itemNameTLP
-            // 
-            itemNameTLP.attrib = null;
-            itemNameTLP.Location = new Point(120, 49);
-            itemNameTLP.Name = "itemNameTLP";
-            itemNameTLP.Size = new Size(100, 23);
-            itemNameTLP.TabIndex = 86;
-            itemNameTLP.Visible = false;
             // 
             // Form1
             // 
@@ -1281,11 +1284,9 @@
         public Label SaleTagNewSaleAmountLbl;
         public Label label47;
         public Button AddSaleButton;
-        public DateTimePicker SaleDatePicker;
         public Label SaleTagNameLbl;
         public Label SaleTagSaleDateLbl;
         public Button SaleEditSaleButton;
-        public Label SaleDateLbl;
         public Label label49;
         public Button SaleUpdateButton;
         public Button SaleDeleteSaleButton;
@@ -1308,6 +1309,8 @@
         public TextBoxLabelPair PurcPurcPriceTLP;
         public TextBoxLabelPair SaleAmountTLP;
         public TextBoxLabelPair itemNameTLP;
+        public DateTimePickerLabelPair PurcDatePickerDLP;
+        public DateTimePickerLabelPair SaleDatePickerDLP;
     }
 }
 
