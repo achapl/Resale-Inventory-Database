@@ -17,11 +17,11 @@ namespace FinancialDatabase
         public DateTimePickerLabelPair() : base()
         {
             InitializeComponent();
+            control = new DateTimePicker();
         }
 
         protected override void UpdatedAttributes(Object e, EventArgs ea)
         {
-            if (control is null) { control = new DateTimePicker(); }
             control.Parent = this.Parent;
             Parent.Controls.Add(control);
             control.Location = new Point(this.Location.X, this.Location.Y);
@@ -44,6 +44,7 @@ namespace FinancialDatabase
         {
             (control as DateTimePicker).Value = new Util.Date(dateStr).toDateTime();
         }
+
 
         public void setControlVal(DateTime dateTime)
         {

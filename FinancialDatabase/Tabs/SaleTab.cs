@@ -96,7 +96,7 @@ public class SaleTab : Tab
         {
             if (c is null) { Console.WriteLine("ERROR: ControlLabelpair Object c is null, ItemViewTab.cs"); continue; }
 
-            TextBoxLabelPair t = c as TextBoxLabelPair ?? new TextBoxLabelPair();
+            TextBoxLabelPair t = (c as TextBoxLabelPair);
 
             if (databaseEntryExists(c))
             {
@@ -213,13 +213,13 @@ public class SaleTab : Tab
     {
         Util.clearLabelText(allAttributeValueLabels);
         Util.clearTBox(newItemTBoxes);
-        Form1.PurcDatePicker.Value = DateTime.Now;
+        Form1.PurcDatePickerDLP.setControlVal(DateTime.Now);
     }
 
     public void showSale(Sale sale)
     {
+        Form1.SaleDatePickerDLP.setLabelText(sale.get_Date_Sold().toDateString());
         Form1.SaleAmountTLP.setLabelText(sale.get_Amount_sale().ToString());
-        Form1.SaleDateLbl.Text = sale.get_Date_Sold().toDateString();
 
     }
 

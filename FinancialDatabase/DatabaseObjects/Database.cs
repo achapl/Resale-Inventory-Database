@@ -720,8 +720,8 @@ public static class Database
 
 
         }
-        PythonEngine.Shutdown();
-        pythonInitialized = false;
+        //PythonEngine.Shutdown();
+        //pythonInitialized = false;
         return result2;
     }
 

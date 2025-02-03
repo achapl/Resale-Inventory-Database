@@ -75,24 +75,6 @@ namespace FinancialDatabase
         }
 
 
-        // Change TextBox color if changed
-        private void TextBoxAttribute_Leave(object sender, EventArgs e)
-        {
-            TextBox textBox = sender as TextBox;
-
-            // User entered wrong information type
-            if (!tabControl.checkTypeOkay(textBox))
-            {
-                textBox.Text = "";
-            }
-
-            if (tabControl.didTextboxChange(textBox))
-            {
-                textBox.BackColor = Color.LightGray;
-            }
-        }
-
-
         // ItemView View/Edit Button
         private void itemEditButton_Click(object sender, EventArgs e)
         {

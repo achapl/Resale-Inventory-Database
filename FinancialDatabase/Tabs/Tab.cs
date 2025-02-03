@@ -12,7 +12,7 @@ public abstract class Tab
     protected List<Control> hideableAttribValueControls;
 
     protected List<TextBoxLabelPair> shippingTBoxes;
-    protected List<TextBox> purcNewItemShippingTBoxes;
+    protected List<TextBox> purcNewItemShippingTBoxes; // NOTE: Keep as TextBox, these are for new items and don't need TLP's
     protected List<TextBoxLabelPair> itemTBoxes;
     protected List<TextBox> newItemTBoxes; // NOTE: Keep as TextBox, these are for new items and don't need TLP's
     protected List<Control> allAttributeValueLabels;
@@ -42,9 +42,8 @@ public abstract class Tab
             Form1.itemSoldPriceLbl,
             Form1.itemItemNoLbl,
             Form1.itemDatePurcLbl,
-            Form1.PurcPurcDateLbl,
             Form1.SaleNameLbl,
-            Form1.SaleDateLbl,
+            Form1.SaleDatePickerDLP,
             Form1.itemNameTLP,
             Form1.itemInitQtyTLP,
             Form1.itemCurrQtyTLP,
@@ -256,16 +255,35 @@ public abstract class Tab
     {
         foreach (Control c in allClearableControl)
         {
-            if (c is Label || c is TextBox) { c.Text = ""; }
-            if (c is DateTimePicker)
+            switch (c)
             {
-                DateTimePicker d = c as DateTimePicker;
-                d.Value = new DateTime(2000, 1, 1);
-            }
-            if (c is ListBox)
-            {
-                ListBox b = c as ListBox;
-                b.Items.Clear();
+                case DateTimePickerLabelPair:
+                    (c as DateTimePickerLabelPair).setControlVal(DateTime.Now);
+                    (c as DateTimePickerLabelPair).setLabelText(new Util.Date(DateTime.Now).toDateString());
+                    break;
+
+                case TextBoxLabelPair:
+                    (c as TextBoxLabelPair).setControlVal("");
+                    (c as TextBoxLabelPair).setLabelText("");
+                    break;
+
+                case TextBox:
+                    c.Text = "";
+                    break;
+
+                case Label:
+                    c.Text = "";
+                    break;
+
+                case DateTimePicker:
+                    DateTimePicker d = c as DateTimePicker;
+                    d.Value = DateTime.Now;
+                    break;
+
+                case ListBox:
+                    ListBox b = c as ListBox;
+                    b.Items.Clear();
+                    break;
             }
         }
         viewMode();

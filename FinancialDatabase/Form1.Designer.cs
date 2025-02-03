@@ -82,7 +82,6 @@
             PurcDatePickerDLP = new DateTimePickerLabelPair();
             PurcPurcNotesTLP = new TextBoxLabelPair();
             PurcPurcPriceTLP = new TextBoxLabelPair();
-            PurcPurcDateLbl = new Label();
             PurcCurrQtyTextbox = new TextBox();
             PurcTagCurrQtyLbl = new Label();
             UpdatePurcButton = new Button();
@@ -90,7 +89,6 @@
             NewPurcButton = new Button();
             PurcTagPurcNotesLbl = new Label();
             PurcTagPurcDateLbl = new Label();
-            PurcDatePicker = new DateTimePicker();
             PurcWeightOzTextbox = new TextBox();
             PurcWeightLbsTextbox = new TextBox();
             PurcHeightTextbox = new TextBox();
@@ -676,7 +674,6 @@
             PurchaseTab.Controls.Add(PurcDatePickerDLP);
             PurchaseTab.Controls.Add(PurcPurcNotesTLP);
             PurchaseTab.Controls.Add(PurcPurcPriceTLP);
-            PurchaseTab.Controls.Add(PurcPurcDateLbl);
             PurchaseTab.Controls.Add(PurcCurrQtyTextbox);
             PurchaseTab.Controls.Add(PurcTagCurrQtyLbl);
             PurchaseTab.Controls.Add(UpdatePurcButton);
@@ -684,7 +681,6 @@
             PurchaseTab.Controls.Add(NewPurcButton);
             PurchaseTab.Controls.Add(PurcTagPurcNotesLbl);
             PurchaseTab.Controls.Add(PurcTagPurcDateLbl);
-            PurchaseTab.Controls.Add(PurcDatePicker);
             PurchaseTab.Controls.Add(PurcWeightOzTextbox);
             PurchaseTab.Controls.Add(PurcWeightLbsTextbox);
             PurchaseTab.Controls.Add(PurcHeightTextbox);
@@ -717,7 +713,7 @@
             // 
             PurcDatePickerDLP.attrib = null;
             PurcDatePickerDLP.AutoSize = true;
-            PurcDatePickerDLP.Location = new Point(795, 240);
+            PurcDatePickerDLP.Location = new Point(610, 114);
             PurcDatePickerDLP.Name = "PurcDatePickerDLP";
             PurcDatePickerDLP.Size = new Size(142, 15);
             PurcDatePickerDLP.TabIndex = 68;
@@ -740,15 +736,6 @@
             PurcPurcPriceTLP.Size = new Size(100, 23);
             PurcPurcPriceTLP.TabIndex = 65;
             PurcPurcPriceTLP.Visible = false;
-            // 
-            // PurcPurcDateLbl
-            // 
-            PurcPurcDateLbl.AutoSize = true;
-            PurcPurcDateLbl.Location = new Point(603, 105);
-            PurcPurcDateLbl.Name = "PurcPurcDateLbl";
-            PurcPurcDateLbl.Size = new Size(44, 15);
-            PurcPurcDateLbl.TabIndex = 31;
-            PurcPurcDateLbl.Text = "label44";
             // 
             // PurcCurrQtyTextbox
             // 
@@ -817,14 +804,6 @@
             PurcTagPurcDateLbl.Size = new Size(82, 15);
             PurcTagPurcDateLbl.TabIndex = 21;
             PurcTagPurcDateLbl.Text = "Purchase Date";
-            // 
-            // PurcDatePicker
-            // 
-            PurcDatePicker.Location = new Point(603, 99);
-            PurcDatePicker.Margin = new Padding(4, 3, 4, 3);
-            PurcDatePicker.Name = "PurcDatePicker";
-            PurcDatePicker.Size = new Size(233, 23);
-            PurcDatePicker.TabIndex = 20;
             // 
             // PurcWeightOzTextbox
             // 
@@ -1263,7 +1242,6 @@
         public System.Windows.Forms.Label PurcTagWeightOzLbl;
         public System.Windows.Forms.Label PurcTagPurcNotesLbl;
         public System.Windows.Forms.Label PurcTagPurcDateLbl;
-        public System.Windows.Forms.DateTimePicker PurcDatePicker;
         public System.Windows.Forms.TabPage Sale;
         public System.Windows.Forms.Button NewPurcButton;
         public System.Windows.Forms.ListBox saleListBox;
@@ -1276,7 +1254,6 @@
         public TextBox PurcCurrQtyTextbox;
         public Label PurcTagCurrQtyLbl;
         public Label itemDatePurcLbl;
-        public Label PurcPurcDateLbl;
         public Label SaleNameLbl;
         public Label SaleTagNewSaleDateLbl;
         public DateTimePicker SaleNewSaleDatePicker;

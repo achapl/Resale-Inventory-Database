@@ -17,11 +17,12 @@ namespace FinancialDatabase
         public TextBoxLabelPair() : base()
         {
             InitializeComponent();
+            control = new TextBox();
         }
 
         protected override void UpdatedAttributes(Object e, EventArgs ea)
         {
-            if (control is null) { control = new TextBox(); }
+            //if (control is null) { control = new TextBox(); }
             control.Parent = this.Parent;
             Parent.Controls.Add(control);
             control.Location = new Point(this.Location.X, this.Location.Y);

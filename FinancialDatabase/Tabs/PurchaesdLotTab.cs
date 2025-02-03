@@ -50,7 +50,7 @@ public class PurchasedLotTab : Tab
         {
             Form1.PurcPurcPriceTLP,
             Form1.PurcPurcNotesTLP,
-            Form1.PurcPurcDateLbl
+            Form1.PurcDatePickerDLP
         };
 
         newItemTBoxes = new List<TextBox>()
@@ -74,7 +74,7 @@ public class PurchasedLotTab : Tab
         newPurchaseGroupControls = new List<Control>()
         {
             Form1.PurcPurcPriceTLP,
-            Form1.PurcDatePicker
+            Form1.PurcDatePickerDLP
         };
 
         foreach (Control c in newItemTBoxes)
@@ -164,7 +164,7 @@ public class PurchasedLotTab : Tab
         
     }
 
-    public void updateFromUserInput()
+    public bool updateFromUserInput()
     {
         bool success = getUserInputUpdate();
 
@@ -172,6 +172,7 @@ public class PurchasedLotTab : Tab
         {
             viewMode();
         }
+        return success;
     }
 
     // Update purchase button is clicked
@@ -229,6 +230,10 @@ public class PurchasedLotTab : Tab
     {
         if (purchaseID == null || purchaseID <= 0) { throw new Exception("Error: trying to set curr purchase and show its items from a bad purchaseID!"); }
 
+        this.isNewPurchase = false;
+
+        viewMode();
+
         // Update purchase from database
         currPurc = Database.getPurchase(purchaseID);
 
@@ -274,9 +279,9 @@ public class PurchasedLotTab : Tab
 
     public bool allNewShippingBoxesFilled()
     {
-        foreach (Control c in shippingTBoxes)
+        foreach (TextBox t in purcNewItemShippingTBoxes)
         {
-            if (c.Text.CompareTo("") == 0)
+            if (t.Text.CompareTo("") == 0)
             {
                 return false;
             }
@@ -295,9 +300,10 @@ public class PurchasedLotTab : Tab
         if ((currPurc is null || isNewPurchase)
              && allNewPurchaseBoxesFilled())
         {
-            DateTime dt = Form1.PurcDatePicker.Value;
-            purcDate = new(dt.Year, dt.Month, dt.Day);
-            purcID = Database.insertPurchase(Int32.Parse(Form1.PurcPurcPriceTLP.getLabelText()), Form1.PurcPurcNotesTLP.getLabelText(), purcDate);
+            double amount = Double.Parse(Form1.PurcPurcPriceTLP.getControlValueAsStr());
+            purcDate = new(Form1.PurcDatePickerDLP.getControlValueAsStr());
+            string notes = Form1.PurcPurcNotesTLP.getControlValueAsStr();
+            purcID = Database.insertPurchase(amount, notes, purcDate);
             setCurrPurc(Database.getPurchase(purcID));
 
         }
@@ -327,7 +333,7 @@ public class PurchasedLotTab : Tab
 
         // Cleanup
         Util.clearTBox(newItemTBoxes);
-        Util.clearTBox(shippingTBoxes);
+        Util.clearTBox(purcNewItemShippingTBoxes);
         // Currently, this method gets the current item and uses it to update the curr purchase so that the idsplay can be updated with the new purchase associated with it
         // Should instead update the curr purchase and use that to update the purchase tab with the new item.
         setCurrPurcAndShowItems(tabController.getCurrPurc().PURCHASE_ID);
@@ -374,10 +380,10 @@ public class PurchasedLotTab : Tab
     public void newPurchase()
     {
         Form1.PurchaseListBox.Items.Clear();
+        Util.clearLabelText(allClearableControl);
+        clearCurrPurcItems();
         isNewPurchase = true;
         editMode();
-        //addSearchResultItem();
-
     }
 
     public Item getCurrPurcItemsAt(int index)

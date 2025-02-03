@@ -159,14 +159,25 @@ public class Util
     {
         foreach (Control c in l)
         {
-            if (c is Label)
+            if (c is TextBoxLabelPair)
             {
-                (c as Label).Text = "";
-            }
-            if (c is ControlLabelPair)
-            {
+                (c as ControlLabelPair).setControlVal("");
                 (c as ControlLabelPair).setLabelText("");
             }
+            if (c is DateTimePickerLabelPair)
+            {
+                string newText = (c as DateTimePickerLabelPair).getControlValueAsStr();
+                (c as DateTimePickerLabelPair).setControlVal(DateTime.Now);
+                (c as DateTimePickerLabelPair).setLabelText(newText);
+            }
+        }
+    }
+
+    public static void clearLabelText(List<Label> labels)
+    {
+        foreach (Label l in labels)
+        {
+            (l as Label).Text = "";
         }
     }
 
@@ -737,6 +748,14 @@ public class Util
             this.year = d.Value.Year;
             this.month = d.Value.Month;
             this.day = d.Value.Day;
+        }
+
+
+        public Date(DateTime d)
+        {
+            this.year = d.Year;
+            this.month = d.Month;
+            this.day = d.Day;
         }
 
 

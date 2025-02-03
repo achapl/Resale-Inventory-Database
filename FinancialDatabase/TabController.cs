@@ -200,7 +200,12 @@ namespace FinancialDatabase
 
         public void purchasedLotUpdate()
         {
-            purchasedLotTab.updateFromUserInput();
+            if (purchasedLotTab.updateFromUserInput())
+            {
+                itemViewTab.showItemAttributesAndPics(getCurrItemWithImages());
+                saleTab.showItemSales(getCurrItem());
+            }
+
         }
 
 
@@ -276,9 +281,9 @@ namespace FinancialDatabase
             return purchasedLotTab.isNewPurchase;
         }
 
-        public bool didTextboxChange(TextBox textBox)
+        public bool didTextboxChange(TextBoxLabelPair TLP)
         {
-            string attrib = allControlAttribs[textBox];
+            string attrib = TLP.attrib;
 
             string attribVal = getCurrItem().getAttribAsStr(attrib);
 
@@ -290,8 +295,9 @@ namespace FinancialDatabase
                 return attribVal.CompareTo("") == 0;
             }
 
-            return attribVal.CompareTo(textBox.Text) != 0;
+            return attribVal.CompareTo(TLP.getControlValueAsStr()) != 0;
         }
+
 
         public bool checkTypeOkay(TextBox textBox)
         {
@@ -306,12 +312,28 @@ namespace FinancialDatabase
             return false;
         }
 
+        public bool checkTypeOkay(TextBoxLabelPair textBox)
+        {
+            string attrib = textBox.attrib;
+            // If not right type, return
+            string type = colDataTypes[attrib];
+
+            if (Util.checkTypeOkay(textBox.getControlValueAsStr(), type))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public bool getPLInEditingState() => purchasedLotTab.inEditingState;
 
         public Item getCurrItemWithImages()
         {
             Item item = getCurrItem();
-            item.set_images();
+            if (item != null)
+            {
+                item.set_images();
+            }
             return item;
         }
     }

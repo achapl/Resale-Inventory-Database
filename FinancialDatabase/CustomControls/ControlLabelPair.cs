@@ -57,19 +57,12 @@ namespace FinancialDatabase
         {
             if (Parent != null)
             {
-                //Parent.Controls.Add(control);
+                Parent.Controls.Add(control);
             }
         }
 
 
         protected abstract void UpdatedAttributes(Object e, EventArgs ea);
-        /*{
-            label.Location = new Point(this.Location.X, this.Location.Y);
-            label.Size = new Size(100, 30);
-            label.BackColor = Color.Transparent;
-            label.Name = "Label-" + this.Name;
-            label.Visible = true;
-        }*/
 
 
         internal void VisibilityChangedMethod(Object e, EventArgs ea)
@@ -121,8 +114,6 @@ namespace FinancialDatabase
             control.Visible = true;
             this.Visible = false;
             inEditMode = true;
-
-            setControlVal(getLabelText());
         }
 
 
@@ -132,8 +123,6 @@ namespace FinancialDatabase
             control.Visible = false;
             this.Visible = true;
             inEditMode = false;
-
-            this.Text = getControlValueAsStr();
         }
     }
 }
