@@ -506,7 +506,15 @@ public class Item : IEquatable<Item>
     }
 
     // Extra
-    public double getTotalSales() => totalSales;
+    public double getTotalSales()
+    {
+        double totalSales = 0;
+        foreach (Sale s in sales)
+        {
+            totalSales += s.get_Amount_sale();
+        }
+        return totalSales;
+    }
     
 
     // From item table

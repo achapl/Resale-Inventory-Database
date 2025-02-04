@@ -1,6 +1,7 @@
 ﻿using FinancialDatabase.DatabaseObjects;
 using System;
-namespace FinancialDatabase
+using System.Security.Cryptography;
+namespace FinancialDatabase.Tabs
 {
     public class TabController
     {
@@ -41,9 +42,6 @@ namespace FinancialDatabase
             searchTab = new SearchTab(this, Form1);
             saleTab = new SaleTab(this, Form1);
 
-            //allControlAttribs = Util.combineDictionaries(purchasedLotTab.controlAttrib,
-                                                            //itemViewTab.controlAttrib,
-                                                            //saleTab.controlAttrib);
 
         }
 
@@ -88,7 +86,11 @@ namespace FinancialDatabase
 
         public void saleTabUpdate()
         {
-            saleTab.updateFromUserInput();
+            bool success = saleTab.updateFromUserInput();
+            if (success)
+            {
+                itemViewTab.showItemAttributesAndPics(getCurrItemWithImages());
+            }
         }
 
 
@@ -171,6 +173,11 @@ namespace FinancialDatabase
             itemViewTab.clearCurrItemControls();
         }
 
+        public void clearSaleControls()
+        {
+            saleTab.clearAttribs();
+        }
+
         public void saleTflipEditMode()
         {
             saleTab.flipEditMode();
@@ -195,12 +202,13 @@ namespace FinancialDatabase
         public void saleTaddSale()
         {
             saleTab.addSale();
-            itemViewTab.setCurrItem(itemViewTab.getCurrItem());
+            itemViewTab.showItemAttributesAndPics(getCurrItemWithImages());
         }
 
         public void purchasedLotUpdate()
         {
-            if (purchasedLotTab.updateFromUserInput())
+            bool success = purchasedLotTab.updateFromUserInput();
+            if (success)
             {
                 itemViewTab.showItemAttributesAndPics(getCurrItemWithImages());
                 saleTab.showItemSales(getCurrItem());
@@ -231,7 +239,7 @@ namespace FinancialDatabase
             purchasedLotTab.clearCurrItemControls();
             itemViewTab.clearCurrItemControls();
             saleTab.clearCurrItemControls();
-        
+
         }
 
 

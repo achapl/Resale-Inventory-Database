@@ -6,10 +6,10 @@ using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using Date = Util.Date;
 
-namespace FinancialDatabase
+namespace FinancialDatabase.DatabaseObjects
 {
-	public static class QueryBuilder
-	{
+    public static class QueryBuilder
+    {
         public const string DEFAULTQUERY = "SELECT item.ITEM_ID, item.Name, thumbnail.thumbnail FROM item LEFT JOIN thumbnail ON thumbnail.ThumbnailID = item.ThumbnailID;";
 
         static Dictionary<string, string> colDataTypesLocal = null;
@@ -66,7 +66,7 @@ namespace FinancialDatabase
 
             if (Q.getDateCol()) { columns.Add("purchase.Date_Purchased"); }
             if (Q.getPriceCol()) { columns.Add("purchase.Amount_purchase"); }
-            cols = String.Join(", ", columns);
+            cols = string.Join(", ", columns);
 
             string dateRange = "AND purchase.Date_Purchased > '" + Q.getStartDate() + "' AND purchase.Date_Purchased < '" + Q.getEndDate() + "'";
 
@@ -78,7 +78,8 @@ namespace FinancialDatabase
             if (Q.getInStock() && !Q.getSoldOut())
             {
                 stock = " AND item.CurrentQuantity > 0 ";
-            } else if (!Q.getInStock() && Q.getSoldOut())
+            }
+            else if (!Q.getInStock() && Q.getSoldOut())
             {
                 stock = " AND item.CurrentQuantity = 0 ";
             }
@@ -96,7 +97,7 @@ namespace FinancialDatabase
             // NOTE: '^' is a special defined escape character removed in the python script so CMD doesn't assume '>' means pipe command
             if (Q.getSingleTerm().CompareTo("") == 0)
             {
-                query = defaultQuery(); 
+                query = defaultQuery();
             }
             else
             {
@@ -126,8 +127,8 @@ namespace FinancialDatabase
         {
             return "INSERT INTO purchase (Amount_purchase, Notes_purchase, Date_Purchased) Values (" + purcPrice.ToString() + ", \"" + purcNotes + "\", " + formatAttribute(d.toDateString(), "date") + ");";
         }
-        
-        
+
+
         // Correct the formatting for sending different datatypes in a string query 
         private static string formatAttribute(string attrib, string type)
         {
@@ -150,14 +151,15 @@ namespace FinancialDatabase
             }
         }
 
-        public static string shipInfoInsertQuery(Item item) {
+        public static string shipInfoInsertQuery(Item item)
+        {
             List<int> weight = Util.ozToOzLbs(item.get_Weight());
             return shipInfoInsertQuery(item, weight[0], weight[1], item.get_Length(), item.get_Width(), item.get_Height());
         }
 
         public static string shipInfoInsertQuery(Item currItem, int weightLbs, int weightOz, int l, int w, int h)
         {
-            if (l <= 0 ||  w <= 0 || h <= 0 || weightOz < 0 || weightLbs < 0 || (weightOz == 0 && weightLbs == 0))
+            if (l <= 0 || w <= 0 || h <= 0 || weightOz < 0 || weightLbs < 0 || weightOz == 0 && weightLbs == 0)
             {
                 throw new Exception("ERROR: Incorrect Shipping Info Given. Possible value <=0");
             }
@@ -227,10 +229,10 @@ namespace FinancialDatabase
             string query;
             string itemID = "";
 
-            
+
             string updatedText = formatAttribute(updateText, type);
 
-            switch(table)
+            switch (table)
             {
                 case "item":
                     itemID = table + ".ITEM_ID = " + currItem.get_ITEM_ID();
@@ -248,7 +250,7 @@ namespace FinancialDatabase
             query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE " + itemID + ";";
             return query;
         }
-    
+
         public static string updateQuery(Sale sale, string controlAttribute, string updateText)
         {
             string type = colDataTypesLocal[controlAttribute];
@@ -271,10 +273,11 @@ namespace FinancialDatabase
 
             string updatedText = formatAttribute(updateText, type);
 
-            if (table.CompareTo("sale") != 0) {
+            if (table.CompareTo("sale") != 0)
+            {
                 throw new Exception("Trying to update SALE item, but not updating Sale table");
             }
-                    
+
             // Note: Since, for example, item : purchase is a many to 1 relationship (buying a lot),
             // one must update the purchase price with the purchaseID, not itemID of the current item
             query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE sale.SALE_ID = " + itemID + ";";
@@ -298,10 +301,11 @@ namespace FinancialDatabase
 
             string updatedText = formatAttribute(updateDate.toDateString(), type);
 
-            if (table.CompareTo("sale") != 0) {
+            if (table.CompareTo("sale") != 0)
+            {
                 throw new Exception("Trying to update SALE item, but not updating Sale table");
             }
-                    
+
             // Note: Since, for example, item : purchase is a many to 1 relationship (buying a lot),
             // one must update the purchase price with the purchaseID, not itemID of the current item
             query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE sale.SALE_ID = " + itemID + ";";

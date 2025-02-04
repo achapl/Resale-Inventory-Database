@@ -713,7 +713,7 @@
             // 
             PurcDatePickerDLP.attrib = null;
             PurcDatePickerDLP.AutoSize = true;
-            PurcDatePickerDLP.Location = new Point(610, 114);
+            PurcDatePickerDLP.Location = new Point(603, 105);
             PurcDatePickerDLP.Name = "PurcDatePickerDLP";
             PurcDatePickerDLP.Size = new Size(142, 15);
             PurcDatePickerDLP.TabIndex = 68;
@@ -1021,7 +1021,7 @@
             // SaleAmountTLP
             // 
             SaleAmountTLP.attrib = null;
-            SaleAmountTLP.Location = new Point(625, 74);
+            SaleAmountTLP.Location = new Point(625, 75);
             SaleAmountTLP.Name = "SaleAmountTLP";
             SaleAmountTLP.Size = new Size(100, 23);
             SaleAmountTLP.TabIndex = 65;
@@ -1029,7 +1029,7 @@
             // 
             // SaleDeleteSaleButton
             // 
-            SaleDeleteSaleButton.Location = new Point(706, 136);
+            SaleDeleteSaleButton.Location = new Point(706, 148);
             SaleDeleteSaleButton.Name = "SaleDeleteSaleButton";
             SaleDeleteSaleButton.Size = new Size(75, 23);
             SaleDeleteSaleButton.TabIndex = 31;
@@ -1039,7 +1039,7 @@
             // 
             // SaleUpdateButton
             // 
-            SaleUpdateButton.Location = new Point(625, 136);
+            SaleUpdateButton.Location = new Point(625, 148);
             SaleUpdateButton.Name = "SaleUpdateButton";
             SaleUpdateButton.Size = new Size(75, 23);
             SaleUpdateButton.TabIndex = 30;
@@ -1170,6 +1170,7 @@
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+            FormClosed += Form1_FormClosed;
             tabCollection.ResumeLayout(false);
             SearchTab.ResumeLayout(false);
             SearchTab.PerformLayout();
@@ -1183,10 +1184,7 @@
             ResumeLayout(false);
         }
 
-        private void textBoxlabelPair1_ControlAdded(object sender, ControlEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         #endregion
         public System.Windows.Forms.TabControl tabCollection;

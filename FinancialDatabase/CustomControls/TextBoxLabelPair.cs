@@ -22,10 +22,9 @@ namespace FinancialDatabase
 
         protected override void UpdatedAttributes(Object e, EventArgs ea)
         {
-            //if (control is null) { control = new TextBox(); }
             control.Parent = this.Parent;
             Parent.Controls.Add(control);
-            control.Location = new Point(this.Location.X, this.Location.Y);
+            control.Location = new Point(this.Location.X, this.Location.Y - 3);
             control.Size = new Size(100, 30);
             control.Name = "TextBox-" + this.Name;
             control.Visible = false;
@@ -59,6 +58,16 @@ namespace FinancialDatabase
         public override bool userChangedValue()
         {
             return this.Text.CompareTo((control as TextBox).Text) != 0;
+        }
+
+        public bool hasDoubleText()
+        {
+            return Double.TryParse(control.Text, out double _);
+        }
+
+        public bool hasIntText()
+        {
+            return Int32.TryParse(control.Text, out int _);
         }
     }
 }

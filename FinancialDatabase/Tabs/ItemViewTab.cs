@@ -12,6 +12,7 @@ using System.Transactions;
 using System.ComponentModel;
 using Button = System.Windows.Forms.Button;
 using Microsoft.VisualBasic;
+using FinancialDatabase.Tabs;
 
 public class ItemViewTab : Tab
 {
@@ -313,6 +314,10 @@ public class ItemViewTab : Tab
             Form1.itemCurrQtyTLP.setLabelText(checkDefault(item.get_CurrentQuantity()));
             Form1.itemItemNoLbl.Text = checkDefault(item.get_ITEM_ID());
             Form1.SaleNameLbl.Text = checkDefault(item.get_Name());
+
+
+
+            Form1.itemSoldPriceLbl.Text = checkDefault(item.getTotalSales());
         }
 
         if (item.hasPurchaseEntry())

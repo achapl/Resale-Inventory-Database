@@ -1,5 +1,4 @@
-﻿using FinancialDatabase;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -720,8 +719,6 @@ public static class Database
 
 
         }
-        //PythonEngine.Shutdown();
-        //pythonInitialized = false;
         return result2;
     }
 
@@ -957,5 +954,11 @@ public static class Database
             runStatement("DELETE FROM fee;");
             runStatement("DELETE FROM item;");
         }
+    }
+
+    internal static void closeConnection()
+    {
+        PythonEngine.Shutdown();
+        pythonInitialized = false;
     }
 }

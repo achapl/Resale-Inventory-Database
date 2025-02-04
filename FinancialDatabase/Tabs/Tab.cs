@@ -1,4 +1,5 @@
 ﻿using FinancialDatabase;
+using FinancialDatabase.Tabs;
 using System;
 using System.Windows.Forms;
 using Date = Util.Date;
@@ -100,19 +101,23 @@ public abstract class Tab
         return typeCheckUserInput(userInputControls);
     }
 
+
     internal bool typeCheckUserInput(List<ControlLabelPair> userInputFields)
     {
+
+        // Special case, weight textboxes
+        if (!Form1.itemWeightLbsTLP.hasIntText() &&
+            Form1.itemWeightLbsTLP.Text != ""
+            ||
+            !Form1.itemWeightOzTLP.hasIntText() &&
+            Form1.itemWeightOzTLP.Text != "")
+        {
+            showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
+            return false;
+        }
+
         foreach (ControlLabelPair c in userInputFields)
         {
-
-            // Special case, weight textboxes
-            if (!Int32.TryParse(Form1.itemWeightLbsTLP.getControlValue(), out _)
-                || !Int32.TryParse(Form1.itemWeightOzTLP.getControlValue(), out _))
-            {
-                showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
-                return false;
-            }
-
             string attrib = c.attrib;
             string type = tabController.colDataTypes[attrib];
 
@@ -240,8 +245,7 @@ public abstract class Tab
                 }
                 else
                 {
-                    // TODO:
-                    //d.Value = System.DateTime.Now;
+                    d.setControlVal(System.DateTime.Now);
                 }
             }
         }
@@ -259,7 +263,7 @@ public abstract class Tab
             {
                 case DateTimePickerLabelPair:
                     (c as DateTimePickerLabelPair).setControlVal(DateTime.Now);
-                    (c as DateTimePickerLabelPair).setLabelText(new Util.Date(DateTime.Now).toDateString());
+                    (c as DateTimePickerLabelPair).setLabelText("");
                     break;
 
                 case TextBoxLabelPair:

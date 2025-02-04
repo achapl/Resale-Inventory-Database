@@ -1,5 +1,6 @@
 ﻿using FinancialDatabase;
 using FinancialDatabase.DatabaseObjects;
+using FinancialDatabase.Tabs;
 using Date = Util.Date;
 
 public class PurchasedLotTab : Tab
@@ -254,24 +255,48 @@ public class PurchasedLotTab : Tab
 
     public bool allNewPurchaseBoxesFilled()
     {
-        foreach (Control c in newPurchaseGroupControls)
+        // Necessary user input
+        if (Form1.PurcNameTextbox.Text == "" ||
+            !Double.TryParse(Form1.PurcPurcPriceTLP.getControlValueAsStr(), out double _))
         {
-            // This is fine being a textbox, it's not a TLP
-            if (c is TextBox)
+            showWarning("Error: Must have correct formatting for Purchase Date and Purchase Price");
+            return false;
+        }
+
+        bool hasShippingInfo = false;
+        bool hasBlankTextbox = false;
+        foreach (TextBox t in purcNewItemShippingTBoxes)
+        {
+            if (t.Text != "")
             {
-                TextBox t = c as TextBox;
-                // Set defaults
-                if (t.Name.CompareTo("PurcInitQtyTextbox") == 0 ||
-                    t.Name.CompareTo("PurcCurrQtyTextbox") == 0)
+                hasShippingInfo = true;
+                if (!Int32.TryParse(t.Text, out int _))
                 {
-                    t.Text = "1";
-                }
-                if (t.Text.CompareTo("") == 0)
-                {
+                    showWarning("Error: Must have all shipping boxes filled out with correct integers, either none filled out at all");
                     return false;
                 }
             }
-            
+            if (t.Text == "")
+            {
+                hasBlankTextbox = true;
+            }            
+        }
+
+        if (hasShippingInfo &&
+            hasBlankTextbox)
+        {
+            showWarning("Error: Must have all shipping boxes filled out with correct integers, either none filled out at all");
+            return false;
+        }
+
+        // Set defaults
+        if (Form1.PurcInitQtyTextbox.Text == "")
+        {
+            Form1.PurcInitQtyTextbox.Text = "1";
+        }
+        if (Form1.PurcCurrQtyTextbox.Text == "")
+        {
+            Form1.PurcCurrQtyTextbox.Text = "1";
         }
         return true;
     }
@@ -296,9 +321,10 @@ public class PurchasedLotTab : Tab
     {
         int purcID;
         Date purcDate;
-
+        bool userInputGood = allNewPurchaseBoxesFilled();
+        if (!userInputGood) { return; }
         if ((currPurc is null || isNewPurchase)
-             && allNewPurchaseBoxesFilled())
+             && userInputGood)
         {
             double amount = Double.Parse(Form1.PurcPurcPriceTLP.getControlValueAsStr());
             purcDate = new(Form1.PurcDatePickerDLP.getControlValueAsStr());
@@ -306,13 +332,6 @@ public class PurchasedLotTab : Tab
             purcID = Database.insertPurchase(amount, notes, purcDate);
             setCurrPurc(Database.getPurchase(purcID));
 
-        }
-        // Incorrectly formed new purchase from user input, don't continue on
-        else if ((currPurc is null || isNewPurchase)
-             && !allNewPurchaseBoxesFilled())
-        {
-            showWarning("To Add New Purchase, a Purchase Price, Purchase Date, and NEW ITEM Name, Initial Quantity, and Current Quantity must each be filled out");
-            return;
         }
         purcID = currPurc.PURCHASE_ID;
         purcDate = tabController.getCurrPurc().Date_Purchased;

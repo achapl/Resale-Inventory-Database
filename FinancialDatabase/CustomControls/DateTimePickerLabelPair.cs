@@ -24,7 +24,7 @@ namespace FinancialDatabase
         {
             control.Parent = this.Parent;
             Parent.Controls.Add(control);
-            control.Location = new Point(this.Location.X, this.Location.Y);
+            control.Location = new Point(this.Location.X, this.Location.Y - 5);
             control.Name = "DateTimePicker-" + this.Name;
             control.Visible = false;
         }

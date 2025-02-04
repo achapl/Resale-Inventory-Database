@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Reflection;
 using FinancialDatabase;
+using FinancialDatabase.Tabs;
 using Date = Util.Date;
 
 public class SaleTab : Tab
@@ -16,7 +17,7 @@ public class SaleTab : Tab
         editButton = Form1.SaleEditSaleButton;
         updateButton = Form1.SaleUpdateButton;
         generateTBoxGroups();
-        Util.clearLabelText(allAttributeValueLabels);
+        clearAttribs();
         showControlVisibility();
     }
 
@@ -55,7 +56,7 @@ public class SaleTab : Tab
         Form1.SaleDatePickerDLP.attrib = "sale.Date_Sold";
     }
 
-    public void updateFromUserInput()
+    public bool updateFromUserInput()
     {
         bool success = getUserInputUpdate();
         if (success)
@@ -67,6 +68,7 @@ public class SaleTab : Tab
             showSale(getCurrSale());
             viewMode();
         }
+        return success;
         
     }
 
@@ -213,7 +215,7 @@ public class SaleTab : Tab
     {
         Util.clearLabelText(allAttributeValueLabels);
         Util.clearTBox(newItemTBoxes);
-        Form1.PurcDatePickerDLP.setControlVal(DateTime.Now);
+
     }
 
     public void showSale(Sale sale)

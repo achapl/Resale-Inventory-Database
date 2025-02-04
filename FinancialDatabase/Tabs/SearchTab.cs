@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using ItemHitPair = System.Tuple<Item, int>;
 using Date = Util.Date;
+using FinancialDatabase.Tabs;
 
 public class SearchTab
 {

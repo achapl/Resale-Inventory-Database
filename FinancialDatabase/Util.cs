@@ -166,9 +166,12 @@ public class Util
             }
             if (c is DateTimePickerLabelPair)
             {
-                string newText = (c as DateTimePickerLabelPair).getControlValueAsStr();
                 (c as DateTimePickerLabelPair).setControlVal(DateTime.Now);
-                (c as DateTimePickerLabelPair).setLabelText(newText);
+                (c as DateTimePickerLabelPair).setLabelText("");
+            }
+            if (c is Label)
+            {
+                (c as Label).Text = "";
             }
         }
     }
