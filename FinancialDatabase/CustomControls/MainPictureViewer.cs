@@ -11,6 +11,10 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace FinancialDatabase
 {
+    /// <summary>
+    /// When viewing an image with multiple auxiliary images in the ItemViewTab
+    /// This is the large main image
+    /// </summary>
     public partial class MainPictureViewer : Control
     {
 
@@ -45,6 +49,7 @@ namespace FinancialDatabase
 
         }
 
+
         private void drawMainImage(PaintEventArgs pe)
         {
             if (mainImage == null)
@@ -55,26 +60,15 @@ namespace FinancialDatabase
             drawImage(pe, mainImage.image, getMainImageSize(mainImage), 0, 0);
         }
 
+
         public Size getMainImageSize(MyImage image)
         {
             int w = image.image.Size.Width;
             int h = image.image.Size.Height;
             double aspectRatio = (double)w / (double)h;
 
-            Size newSize;
+            Size newSize = Util.getImageSizeFittedIntoMaxDims(image, new Size(mainImageWidth, mainImageHeight));
 
-            // image W > H relative to aspect ratio
-            // Set W to mainImageWidth, and use aspect ratio to det. height
-            if (aspectRatio > mainImageAspectRatio)
-            {
-                newSize = new Size(mainImageWidth, (int)Math.Round((double)mainImageWidth / aspectRatio, 0));
-            }
-            // image W <= H relative to aspect ratio
-            // Set H to mainImageWidth, and use aspect ratio to det. with
-            else
-            {
-                newSize = new Size((int)Math.Round((double)mainImageHeight * aspectRatio, 0), mainImageHeight);
-            }
             return newSize;
         }
 

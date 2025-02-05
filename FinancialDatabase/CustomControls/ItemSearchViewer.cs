@@ -16,6 +16,7 @@ namespace FinancialDatabase
 
         int rowHeight = 50;
         int rowPadding = 3;
+        int totalRowHeight;
         int maxImgWidth = 50;
         double textSizeToRowHeightRatio = 0.3;
         int imageTextPadding = 10;
@@ -37,6 +38,7 @@ namespace FinancialDatabase
 
         public ItemSearchViewer()
         {
+            totalRowHeight = rowHeight + rowPadding;
             this.AutoScrollMinSize = this.Size;
             InitializeComponent();
         }
@@ -44,7 +46,8 @@ namespace FinancialDatabase
 
         public void addRow(Image i, string text)
         {
-            Image resizedImage = Util.resizeImageToMaxDims(i, new Size(maxImgWidth, rowHeight));
+            Size newSize = Util.getImageSizeFittedIntoMaxDims(i, new Size(maxImgWidth, rowHeight));
+            Image resizedImage = (System.Drawing.Image)new Bitmap(i, newSize);
 
             rowList.Add(new row(resizedImage, text));
         }
@@ -74,13 +77,24 @@ namespace FinancialDatabase
 
         protected void drawRow(PaintEventArgs pe, row r, int rowNum)
         {
-            int maxRows = this.rowList.Count();
-            if (maxRows * (rowHeight + rowPadding) > this.AutoScrollMinSize.Height) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, maxRows * (rowHeight + rowPadding)); }
-            if (maxRows * (rowHeight + rowPadding) < this.AutoScrollMinSize.Height + (rowHeight + rowPadding)) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, (maxRows+1) * (rowHeight + rowPadding)); }
-            pe.Graphics.DrawImage(r.i, new Point(0,rowNum*(rowHeight + rowPadding)));
+            updateAutoScrollMinSize();
+
+            pe.Graphics.DrawImage(r.i, new Point(0,rowNum*(totalRowHeight)));
             pe.Graphics.DrawString(r.name, this.Font, new SolidBrush(Color.Black), new PointF(maxImgWidth + imageTextPadding, rowNum * (rowHeight + rowPadding) + rowHeight / 2 - this.FontHeight));
         }
 
+        private void updateAutoScrollMinSize() {
+
+            int numRows = this.rowList.Count();
+            if (numRows * (totalRowHeight) > this.AutoScrollMinSize.Height)
+            {
+                this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, numRows * (totalRowHeight));
+            }
+            if (numRows * (totalRowHeight) < this.AutoScrollMinSize.Height + (totalRowHeight))
+            {
+                this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, (numRows + 1) * (totalRowHeight));
+            }
+        }
 
         public int getRowNum(int y)
         {

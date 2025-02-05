@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using static FinancialDatabase.ItemSearchViewer;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using Image = System.Drawing.Image;
 
 public class Util
 {
@@ -692,24 +693,33 @@ public class Util
 
 
     /// <summary>
-    /// Resize image to fit inside of maxSize
+    /// Resize image to largest possible image to fit inside of maxSize
     /// Preserves aspect ratio of the image
     /// </summary>
     /// <param name="i">Image to resize</param>
     /// <param name="maxSize">Maximum size the image can take be</param>
     /// <returns></returns>
-    internal static System.Drawing.Image resizeImageToMaxDims(System.Drawing.Image i, Size maxSize)
+    internal static Size getImageSizeFittedIntoMaxDims(System.Drawing.Image i, Size maxSize)
     {
+        double iAspectRatio = (double) i.Height / i.Width;
+        double maxAspectRatio = (double) maxSize.Height / maxSize.Width;
         Size newSize;
-        if (i.Height > i.Width)
+        // Image H > W relative to maxAspectRatio
+        if (iAspectRatio > maxAspectRatio)
         {
             newSize = new Size((int)(maxSize.Height * ((double)i.Width / (double)i.Height)), maxSize.Height);
         }
+        // Image H <= W relative to maxAspectRatio
         else
         {
             newSize = new Size(maxSize.Width, (int)(maxSize.Width * ((double)i.Height / (double)i.Width)));
         }
-        return (System.Drawing.Image)new Bitmap(i, newSize);
+        return newSize;
+    }
+
+    internal static Size getImageSizeFittedIntoMaxDims(MyImage i, Size maxSize)
+    {
+        return getImageSizeFittedIntoMaxDims(i.image, maxSize);
     }
 
     public struct Date
