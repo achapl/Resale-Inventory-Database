@@ -1,24 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Printing;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Windows.Forms.VisualStyles;
-using Python.Runtime;
-using System.Xml.Linq;
-using System.IO;
-using System.Windows.Forms;
-using System.Reflection.Metadata.Ecma335;
+﻿using Python.Runtime;
 using Date = Util.Date;
-using System.Runtime.CompilerServices;
-using System.Drawing.Configuration;
 using System.Security.Principal;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-using System.Drawing.Imaging;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static FinancialDatabase.Form1;
 using FinancialDatabase.DatabaseObjects;
 
 public static class Database

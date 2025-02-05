@@ -1,6 +1,4 @@
-﻿using System;
-
-public class MyImage
+﻿public class MyImage
 {
 	public Image image { get; set; }
 	public int imageID { get; set; }
