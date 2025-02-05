@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using static FinancialDatabase.ItemSearchViewer;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 public class Util
 {
@@ -678,13 +681,35 @@ public class Util
         {
             if (controlAttrib1.ContainsKey(kvp.Key))
             {
-                throw new Exception("Error: Combining dictionaries with multiple equivalant keys");
+                throw new Exception("Error: Combining dictionaries with multiple equivalent keys");
             }
 
             controlAttrib1.Add(kvp.Key, kvp.Value);
         }
         return controlAttrib1;
 
+    }
+
+
+    /// <summary>
+    /// Resize image to fit inside of maxSize
+    /// Preserves aspect ratio of the image
+    /// </summary>
+    /// <param name="i">Image to resize</param>
+    /// <param name="maxSize">Maximum size the image can take be</param>
+    /// <returns></returns>
+    internal static System.Drawing.Image resizeImageToMaxDims(System.Drawing.Image i, Size maxSize)
+    {
+        Size newSize;
+        if (i.Height > i.Width)
+        {
+            newSize = new Size((int)(maxSize.Height * ((double)i.Width / (double)i.Height)), maxSize.Height);
+        }
+        else
+        {
+            newSize = new Size(maxSize.Width, (int)(maxSize.Width * ((double)i.Height / (double)i.Width)));
+        }
+        return (System.Drawing.Image)new Bitmap(i, newSize);
     }
 
     public struct Date

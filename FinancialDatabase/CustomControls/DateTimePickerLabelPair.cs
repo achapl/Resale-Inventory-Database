@@ -20,7 +20,7 @@ namespace FinancialDatabase
             control = new DateTimePicker();
         }
 
-        protected override void initializeControl(Object e, EventArgs ea)
+        protected override void initializeControl(Object _, EventArgs __)
         {
             control.Parent = this.Parent;
             Parent.Controls.Add(control);

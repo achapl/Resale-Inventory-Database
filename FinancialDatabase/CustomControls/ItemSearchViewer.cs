@@ -22,6 +22,7 @@ namespace FinancialDatabase
         
         private List<row> rowList = new List<row>();
 
+
         public struct row
         {
             public Image i;
@@ -40,19 +41,14 @@ namespace FinancialDatabase
             InitializeComponent();
         }
 
+
         public void addRow(Image i, string text)
         {
-            Size newSize;
-            if (i.Height > i.Width)
-            {
-                newSize = new Size((int)(rowHeight * ((double)i.Width / (double)i.Height)), rowHeight);
-            }
-            else
-            {
-                newSize = new Size(maxImgWidth,(int)(maxImgWidth * ((double)i.Height / (double)i.Width)));
-            }
-            rowList.Add(new row((Image)new Bitmap(i, newSize), text));
+            Image resizedImage = Util.resizeImageToMaxDims(i, new Size(maxImgWidth, rowHeight));
+
+            rowList.Add(new row(resizedImage, text));
         }
+
 
         protected override void OnPaint(PaintEventArgs pe)
         {
@@ -65,6 +61,7 @@ namespace FinancialDatabase
             
         }
 
+
         protected void drawRows(PaintEventArgs pe)
         { 
             int rowCount = 0;
@@ -74,6 +71,7 @@ namespace FinancialDatabase
             }
         }
 
+
         protected void drawRow(PaintEventArgs pe, row r, int rowNum)
         {
             int maxRows = this.rowList.Count();
@@ -82,6 +80,7 @@ namespace FinancialDatabase
             pe.Graphics.DrawImage(r.i, new Point(0,rowNum*(rowHeight + rowPadding)));
             pe.Graphics.DrawString(r.name, this.Font, new SolidBrush(Color.Black), new PointF(maxImgWidth + imageTextPadding, rowNum * (rowHeight + rowPadding) + rowHeight / 2 - this.FontHeight));
         }
+
 
         public int getRowNum(int y)
         {
@@ -95,16 +94,19 @@ namespace FinancialDatabase
             return rowNum;
         }
 
+
         public int countItems()
         {
             return this.rowList.Count();
         }
+
 
         public void clearItems()
         {
             this.rowList.Clear();
 
         }
+
 
         public void updatePaint()
         {
