@@ -103,7 +103,6 @@ public static class DtbParser
         return results;
     }
 
-
     private static bool hasAttrib(int attribIndex)
     {
         return attribIndex != -1;
@@ -223,5 +222,45 @@ public static class DtbParser
         }
 
         return results;
+    }
+
+    public static Dictionary<int, MyImage> parseThumbnails(List<string> rawThumbnails)
+    {
+        Dictionary<int, MyImage> results = new Dictionary<int, MyImage>();
+        foreach (string rawThumbnail in rawThumbnails)
+        {
+            // Seperate each image item into individual image attributes
+            List<string> thumbnailAttribs = new List<string>(Util.splitOnTopLevelCommas(rawThumbnail));
+
+            int itemID = Int32.Parse(thumbnailAttribs[0]);
+            int imageID = Int32.Parse(thumbnailAttribs[1]);
+            byte[] imageBytes = new byte[thumbnailAttribs[2].Length];
+
+            // Get list of the individual bytes, each as a string
+            List<string> imageStrBytes = new List<string>(thumbnailAttribs[2].Trim(new char[] { '[', ']' }).Split(", "));
+
+            // Convert strings to bytes
+            for (int j = 0; j < imageStrBytes.Count; j++)
+            {
+                imageBytes[j] = (byte)Int32.Parse(imageStrBytes[j]);
+            }
+            // Make an image from the list of bytes
+            MyImage thumbnail = new MyImage(Image.FromStream(new MemoryStream(imageBytes)), -1);
+
+            if (!results.ContainsKey(itemID))
+            {
+                results.Add(itemID, thumbnail);
+            }
+        }
+        return results;
+    }
+
+    internal static int getThumbnailID(string rawResult)
+    {
+        // Trim '[]' that surrounds the whole string
+        rawResult = rawResult.Substring(1, rawResult.Length - 2);
+        List<string> rawImageInfos = Util.pairedCharTopLevelSplit(rawResult, '[');
+
+        return Int32.Parse(rawImageInfos[0]);
     }
 }

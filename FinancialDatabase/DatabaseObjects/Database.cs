@@ -161,6 +161,7 @@ public static class Database
             throw new Exception("Error: Sale Not Found for saleID: " + saleID);
         }
 
+
         // Only option left, a single sale was found (Count will not be negative)
         Sale sale = result[0];
         return sale;
@@ -177,13 +178,8 @@ public static class Database
     /// ex:  colDataTypes[ITEM_ID] = 'item.int unsigned' </returns>
     public static Dictionary<string, string> getColDataTypes()
     {
-        // Init vals
         Dictionary<string, string> colDataTypes = new Dictionary<string, string>();
         List<List<List<string>>> colsInfoALlTables = getColsInfoAllTables();
-        string tableName;
-        string colName;
-        string type;
-
 
         // Aggregate each entry in colInfo into colDataTypes like:
         // colDataTypes[ITEM_ID] = 'item.int unsigned'
@@ -191,13 +187,12 @@ public static class Database
         {
             foreach (List<string> colInfo in tableCols)
             {
-                tableName = colInfo[0];
-                colName = tableName + "." + colInfo[1];
-                type = colInfo[2];
+                string tableName = colInfo[0];
+                string colName = tableName + "." + colInfo[1];
+                string type = colInfo[2];
 
                 // Test if column name already entered
-                string throwaway;
-                if (colDataTypes.TryGetValue(colName, out throwaway))
+                if (colDataTypes.TryGetValue(colName, out _))
                 {
                     throw new Exception("Error: Duplicate column name: " + colName);
                 }
@@ -210,7 +205,6 @@ public static class Database
         //Hardcoded types for special cases that can't be found in database
         colDataTypes["shipping.WeightLbs"] = "int unsigned";
         colDataTypes["shipping.WeightOz"] = "int unsigned";
-        colDataTypes["item.ShippingID"] = "int unsigned";
         QueryBuilder.setColDataTypesLocal(colDataTypes);
         return colDataTypes;
     }
@@ -286,45 +280,15 @@ public static class Database
         rawResult = rawResult.Substring(1, rawResult.Length - 2);
         List<string> rawThumbnails = Util.pairedCharTopLevelSplit(rawResult, '[');
 
-        Dictionary<int, MyImage> results = new Dictionary<int, MyImage>();
-        List<string> thumbnailAttribs;
-        List<string> imageStrBytes;
-        MyImage thumbnail;
-        byte[] imageBytes;
-        int imageID;
-        int itemID;
-        // 
-        foreach (string rawThumbnail in rawThumbnails)
-        {
-            // Seperate each image item into individual image attributes
-            thumbnailAttribs = new List<string>(Util.splitOnTopLevelCommas(rawThumbnail));
-
-            itemID  = Int32.Parse(thumbnailAttribs[0]);
-            imageID = Int32.Parse(thumbnailAttribs[1]);
-            imageBytes = new byte[thumbnailAttribs[2].Length];
-
-            // Get list of the individual bytes, each as a string
-            imageStrBytes = new List<string>(thumbnailAttribs[2].Trim(new char[] { '[', ']' }).Split(", "));
-
-            // Convert strings to bytes
-            for (int j = 0; j < imageStrBytes.Count; j++)
-            {
-                imageBytes[j] = (byte)Int32.Parse(imageStrBytes[j]);
-            }
-            // Make an image from the list of bytes
-            thumbnail = new MyImage(Image.FromStream(new MemoryStream(imageBytes)), -1);
-
-            if (!results.ContainsKey(itemID))
-            {
-                results.Add(itemID, thumbnail);
-            }
-        }
-        return results;
+        return DtbParser.parseThumbnails(rawThumbnails);
     }
 
-    // Given a list of ResultItems without a thumbnail,
-    // it will return the list with all items having a thumbnail
-    // Default thumbnail is provided for those without one
+    /// <summary>
+    /// Attaches thumbnails to a list of items
+    /// Default thumbnail is provided for those without one
+    /// </summary>
+    /// <param name="items">list of ResultItems without a thumbnail</param>
+    /// <returns>List of thumbnails attached to original items</returns>
     private static List<Item> attachThumbnails(List<Item> items)
     {
         // Empty case
@@ -333,14 +297,12 @@ public static class Database
             return new List<Item>();
         }
 
-        // Init vals
-        MyImage thumbnail;
-
         Dictionary<int, MyImage> thumbnails = getThumbnails(items);
         
         // Attach each thumbnail to the respective Item
         foreach (Item item in items)
         {
+            MyImage thumbnail;
             if (thumbnails.TryGetValue(item.get_ITEM_ID(), out thumbnail))
             {
                 item.set_Thumbnail(thumbnail);
@@ -357,7 +319,6 @@ public static class Database
 
     private static List<Sale> runSaleSearchQuery(string query)
     {
-        int lastrowid;
         List<string> colNames;
         string queryOutput = runStatement(query, out colNames);
 
@@ -511,23 +472,14 @@ public static class Database
         // insert that into the database too
         if (item.get_Weight() != Util.DEFAULT_INT)
         {
-            // Insert shipping info
             item.set_ITEM_ID(lastrowid);
-            query = QueryBuilder.shipInfoInsertQuery(item);
-            output = runStatement(query, out shippingID);
-
-            // Update item entry to link to shipping info
-            string attrib = "item.ShippingID";
-            query = QueryBuilder.updateQuery(item, attrib, shippingID.ToString());
-
-            // Update the item table with the new shipping info
-            output = runStatement(query);
+            insertShipInfo(item);
         }
         
         return output;
-
     }
 
+    
 
     public static string insertSale(Sale sale)
     {
@@ -555,30 +507,14 @@ public static class Database
     }
 
 
-    // Return the size of a given Image when sized down to fit into
-    // thumbnail dimensions without changing the image's aspect ratio
+    /// <summary>
+    /// Return the size of a given Image when sized down to fit into
+    /// thumbnail dimensions without changing the image's aspect ratio
+    /// </summary>
+    /// <param name="image">Image to resize</param>
     private static Size getThumbnailSize(Image image)
     {
-        int w = image.Size.Width;
-        int h = image.Size.Height;
-        double aspectRatio = (double)w / (double)h;
-        double maxDimsAspectRatio = (double)maxDims.Height / (double)maxDims.Width;
-
-        Size newSize;
-
-        // image W > H relative to aspect ratio
-        // Set W to maxDims.Width, and use aspect ratio to det. height
-        if (aspectRatio > maxDimsAspectRatio)
-        {
-            newSize = new Size(maxDims.Width, (int)Math.Round((double)maxDims.Width / aspectRatio, 0));
-        }
-        // image W <= H relative to aspect ratio
-        // Set H to maxDims.Height, and use aspect ratio to det. width
-        else
-        {
-            newSize = new Size((int)Math.Round((double)maxDims.Height * aspectRatio, 0), maxDims.Height);
-        }
-        return newSize;
+        return Util.getImageSizeFittedIntoMaxDims(image, maxDims);
     }
 
 
@@ -778,36 +714,20 @@ public static class Database
     // Will get all the full images, not the thumbnails
     public static List<MyImage> getAllImages(Item newItem)
     {
-
         int lastrowid;
         List<string> colNames;
 
-
-
-        string rawResult = runStatement("SELECT * FROM image WHERE ItemID = " + newItem.get_ITEM_ID(), out colNames, out lastrowid);
+        string query = QueryBuilder.getImages(newItem);
+        string rawResult = runStatement(query, out colNames, out lastrowid);
 
 
         // No images returned from query
-        if (rawResult.CompareTo("[]") == 0) { return Util.DEFAULT_IMAGES; }
-        
-        // Trim '[]' that surrounds the whole string
-        rawResult = rawResult.Substring(1, rawResult.Length - 2);
-        List<string> rawImageInfos = Util.pairedCharTopLevelSplit(rawResult, '[');
-
-        List<MyImage> results = [];
-        foreach (string rawImageInfo in rawImageInfos)
+        if (rawResult.CompareTo("[]") == 0)
         {
-            // Seperate each item into individual item attributes to make a Item with it
-            List<string> imageAttributes = new(Util.splitOnTopLevelCommas(rawImageInfo));
-            string rawImage = imageAttributes[1];
-            int imageID = Int32.Parse(imageAttributes[0]);
-            MyImage i = new(Util.rawImageStrToImage(rawImage), imageID);
-
-            results.Add(i);
+            return Util.DEFAULT_IMAGES;
         }
-
         
-        return results;
+        return DtbParser.parseImages(rawResult, colNames);
     }
 
     
@@ -816,11 +736,7 @@ public static class Database
     {
         string rawResult = runStatement("SELECT thumbnailID FROM image WHERE IMAGE_ID = " + currImageID + ";");
 
-        // Trim '[]' that surrounds the whole string
-        rawResult = rawResult.Substring(1, rawResult.Length - 2);
-        List<string> rawImageInfos = Util.pairedCharTopLevelSplit(rawResult, '[');
-
-        int thumbnailID = Int32.Parse(rawImageInfos[0]);
+        int thumbnailID = DtbParser.getThumbnailID(rawResult);
 
         return thumbnailID;
     }
@@ -873,6 +789,13 @@ public static class Database
         output = Database.runStatement(query);
 
         return shippingID;
+
+    }
+
+
+    public static int insertShipInfo(Item item)
+    {
+        return insertShipInfo(item, item.get_WeightLbs(), item.get_WeightOz(), item.get_Length(), item.get_Width(), item.get_Height());
     }
 
 

@@ -400,7 +400,7 @@ namespace FinancialDatabase.DatabaseObjects
 
         internal static string getImages(Item item)
         {
-            return "SELECT * FROM image WHERE Item_ID = " + item.get_ITEM_ID() + ";";
+            return "SELECT * FROM image WHERE ItemID = " + item.get_ITEM_ID() + ";";
         }
     }
 }
