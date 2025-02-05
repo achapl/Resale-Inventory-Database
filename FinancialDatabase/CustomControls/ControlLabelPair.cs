@@ -82,6 +82,8 @@ namespace FinancialDatabase
         /// <summary>
         /// Information for the control object can only be set once the label is set up
         /// Once Label is set up (attribute is updated), the control object can be initialized
+        /// 
+        /// This is because the control's location is set relative to the label's location
         /// </summary>
         protected abstract void initializeControl(Object _, EventArgs __);
 
