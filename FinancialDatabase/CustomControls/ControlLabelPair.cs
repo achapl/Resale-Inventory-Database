@@ -50,7 +50,7 @@ namespace FinancialDatabase
             inEditMode = false;
 
             ParentChanged += ParentChangedMethod;
-            this.LocationChanged += UpdatedAttributes;
+            this.LocationChanged += initializeControl;
             this.VisibleChanged += VisibilityChangedMethod;
         }
 
@@ -79,12 +79,16 @@ namespace FinancialDatabase
         }
 
 
-        protected abstract void UpdatedAttributes(Object e, EventArgs ea);
+        /// <summary>
+        /// Information for the control object can only be set once the label is set up
+        /// Once Label is set up (attribute is updated), the control object can be initialized
+        /// </summary>
+        protected abstract void initializeControl(Object _, EventArgs __);
 
 
         internal void VisibilityChangedMethod(Object e, EventArgs ea)
         {
-            if (control is null) { return; } //throw new Exception("Error ControlLabelPair: Trying to change control visibility when label does not exist yet, meaning this object was not added to its parent's control");
+            if (control is null) { return; }
             control.Visible = !this.Visible;
         }
 
