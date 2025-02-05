@@ -12,25 +12,36 @@ public class MyImage
 
     public MyImage(List<string> imageAttribs, List<string> colNames)
     {
+        if (imageAttribs.Count() != colNames.Count())  throw new Exception("Error: Creating MyImage with different # attributes and colNames");
+
 
         for (int i = 0; i < colNames.Count; i++)
         {
             string imageAttrib = imageAttribs[i];
+            string colName = colNames[i];
+
             // Missing info, skip
             if (imageAttrib.CompareTo("None") == 0)
             {
                 imageAttrib = null!;
             }
-            switch (colNames[i])
-            {
-                // From item table
-                case "IMAGE_ID":
-                    this.imageID = Int32.Parse(imageAttrib);
-                    break;
-                case "image":
-                    this.image = Util.rawImageStrToImage(imageAttrib);
-                    break;
-            }
+
+            setAttribute(imageAttrib, colName);
+        }
+    }
+
+
+    private void setAttribute(string imageAttrib, string colName)
+    {
+        switch (colName)
+        {
+            // From item table
+            case "IMAGE_ID":
+                this.imageID = Int32.Parse(imageAttrib);
+                break;
+            case "image":
+                this.image = Util.rawImageStrToImage(imageAttrib);
+                break;
         }
     }
 }
