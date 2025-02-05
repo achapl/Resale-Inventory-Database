@@ -11,11 +11,26 @@ using System.Windows.Forms;
 
 namespace FinancialDatabase
 {
+    /// <summary>
+    /// A ControlLabelPair (CLP) is a Label that has its own control
+    /// The control is there to store a user-inputted value when in "edit" mode
+    /// 
+    /// The control value will not automatically update the Label value when switched back into "view" mode
+    /// since the user may not have inputted a valid value into the control
+    /// 
+    /// Implementation of changing a user-value into what the label displays is left to the inherited class
+    /// </summary>
     public abstract class ControlLabelPair : Label
     {
         protected Control control;
+
         public bool inEditMode { get; private set; }
 
+        
+        /// <summary>
+        /// attrib is a value the bound to the CLP so CLP's
+        /// can each be associated with a specific database column
+        /// </summary>
         protected string _attrib;
         public string attrib
         {
@@ -39,7 +54,9 @@ namespace FinancialDatabase
             this.VisibleChanged += VisibilityChangedMethod;
         }
 
+
         public abstract void updateControlValWithLabelText();
+
 
         public void setEditMode(bool newInEditMode)
         {
@@ -74,12 +91,15 @@ namespace FinancialDatabase
 
         public abstract object getControlValue();
 
+
         public abstract string getControlValueAsStr();
+
 
         public string getLabelText()
         {
             return this.Text;
         }
+
 
         public void setLabelText(string newText)
         {
@@ -88,14 +108,12 @@ namespace FinancialDatabase
 
         public abstract bool userChangedValue();
 
+
         public abstract void setControlVal(string val);
+
 
         public void flipEditMode()
         {
-            if (this.Name == "itemNameTLP")
-            {
-                int a = 0;
-            }
             if (inEditMode)
             {
                 viewMode();
