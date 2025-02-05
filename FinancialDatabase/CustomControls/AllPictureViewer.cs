@@ -30,17 +30,15 @@ namespace FinancialDatabase
             this.AutoScrollMinSize = this.Size;
 
             auxImagePadding = 5;
-            
-
-            
-
         }
+
 
         protected override void OnPaint(PaintEventArgs pe)
         {
-            auxImageHeight = this.Size.Width; // Not a typo. auxImage max dimensions should be a square that fits in the width of the component
-            auxImageWidth = this.Size.Width;
-            auxImageAspectRatio = (double)auxImageHeight / (double)auxImageWidth;
+            int imageSquareSize = this.Size.Width;
+            auxImageHeight = imageSquareSize;
+            auxImageWidth = imageSquareSize;
+            auxImageAspectRatio = (double)auxImageHeight / auxImageWidth;
 
             pe.Graphics.Clear(this.BackColor);
             pe.Graphics.TranslateTransform(this.AutoScrollPosition.X, this.AutoScrollPosition.Y);
@@ -48,9 +46,8 @@ namespace FinancialDatabase
             base.OnPaint(pe);
 
             drawAuxImages(pe);
-            
-
         }
+
 
         private void drawAuxImages(PaintEventArgs pe)
         {
@@ -63,11 +60,30 @@ namespace FinancialDatabase
                 vertOffset = i++ * (auxImageHeight + auxImagePadding);
                 drawImage(pe, image, getAuxImageSize(image), vertOffset, 0);
             }
-            if (vertOffset + auxImageHeight > this.AutoScrollMinSize.Height) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, vertOffset + auxImageHeight); }
-            if (vertOffset + auxImageHeight < this.AutoScrollMinSize.Height + auxImageHeight) { this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, vertOffset + auxImageHeight + auxImageHeight); }
+
+            reAdjustAutoScrollMinSize();
         }
 
-        
+
+        /// <summary>
+        /// Readjust AutoScrollMinSize to encompass the height of all current pictures (totalImagesHeight)
+        /// and "round" the AutoScrollMinSize to the nearest image cell size
+        /// AutoScrollMinSize is the area when objects are drawn outside of it, it will be scroll-able to get to it
+        /// </summary>
+        private void reAdjustAutoScrollMinSize()
+        {
+            int imageCellHeight = auxImageHeight + auxImagePadding;
+            int totalImagesHeight = imageList.Count() * (imageCellHeight);
+
+            // Account for taking off padding below the last image
+            if (imageList.Count() > 0)
+            {
+                totalImagesHeight -= auxImagePadding;
+            }
+            
+            this.AutoScrollMinSize = new Size(this.AutoScrollMinSize.Width, totalImagesHeight);
+        }
+
 
         private Size getNewSize(Image image, Size maxSize)
         {
@@ -75,9 +91,7 @@ namespace FinancialDatabase
             int h = image.Size.Height;
             double aspectRatio = (double)w / (double)h;
 
-            int maxW = maxSize.Width;
-            int maxH = maxSize.Height;
-            double maxSizeAspectRatio = (double) maxW / (double) maxH;
+            double maxSizeAspectRatio = (double)maxSize.Width / maxSize.Height;
 
             Size newSize;
 
@@ -96,11 +110,10 @@ namespace FinancialDatabase
             return newSize;
         }
 
+
         public Size getAuxImageSize(Image image)
         {
-            int w = image.Size.Width;
-            int h = image.Size.Height;
-            double aspectRatio = (double) w / (double) h;
+            double aspectRatio = (double)image.Size.Width / image.Size.Height;
 
             Size newSize;
 
@@ -120,13 +133,13 @@ namespace FinancialDatabase
         }
 
         
-
         private void drawImage(PaintEventArgs pe, Image image, Size imageSize, int vertOffset, int horizOffset)
         {
             Image resizedImage = new Bitmap(image, imageSize);
 
             pe.Graphics.DrawImage(resizedImage, new Point(horizOffset, vertOffset));
         }
+
 
         public void addImage(MyImage image)
         {
@@ -138,35 +151,44 @@ namespace FinancialDatabase
             updatePaint();
         }
 
+
         public void clearImages()
         {
             if (imageList != null)
+            {
                 imageList.Clear();
+            }
+
             updatePaint();
         }
 
-        
 
         public void setImages(List<MyImage> images)
         {
-            if (images == null || images.Count == 0) { return; }
+            if (images == null || images.Count == 0)
+            {
+                return;
+            }
+
             clearImages();
             this.imageList = images;
             updatePaint();
         }
+
 
         public void updatePaint()
         {
             InvokePaint(this, new PaintEventArgs(this.CreateGraphics(), this.ClientRectangle));
         }
 
+
         public int getRowNum(int y)
         {
-            double height = this.auxImageHeight + this.auxImagePadding;
-            int scrollAmount = this.VerticalScroll.Value;
-            y += scrollAmount;
+            double cellHeight = this.auxImageHeight + this.auxImagePadding;
+            int amountScrolled = this.VerticalScroll.Value;
+            y += amountScrolled;
 
-            int rowNumClicked = (int)Math.Ceiling((double)y / height) - 1;
+            int rowNumClicked = (int)Math.Ceiling((double)y / cellHeight) - 1;
             int rowNum = Math.Min(rowNumClicked, imageList.Count - 1);
 
             return rowNum;
