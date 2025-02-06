@@ -31,6 +31,7 @@ namespace FinancialDatabase.Tabs
         public int purcLotTabNum = 2;
         public int saleTabNum = 3;
 
+
         public TabController(Form1 Form1)
         {
             this.Form1 = Form1;
@@ -45,89 +46,35 @@ namespace FinancialDatabase.Tabs
 
         }
 
-        // currItem
-        private void setCurrItemVar(Item newItem) => itemViewTab.setCurrItem(newItem);
-        public Item getCurrItem() => itemViewTab.getCurrItem();
+
+        private void clearAllNonSearchTabsAndVars()
+        {
+            saleTab.setCurrSale(null);
+            clearCurrSaleItems();
+            clearCurrPurcItems();
+            clearCurrItem();
+        }
+
+        private void clearCurrItem()
+        {
+            itemViewTab.setCurrItemAndShowView(null);
+            itemViewTab.clearCurrItemControls();
+        }
 
 
-        // searchItems
+
+        // Search Tab
         public void setSearchItems(List<Item> items) => searchTab.setSearchItems(items);
+        
         public Item getSearchItemsAt(int index) => getSearchItems()[index];
+        
         public List<Item> getSearchItems() => searchTab.getSearchItems();
+       
         public void clearSearchItems()
         {
             Form1.itemSearchView.clearItems();
             searchTab.clearCurrItemsVar();
         }
-
-
-        // currPurc
-        public Purchase getCurrPurc() => purchasedLotTab.getCurrPurc();
-
-        // currPurcItems
-        public Item getCurrPurcItemsAt(int index) => purchasedLotTab.getCurrPurcItemsAt(index);
-        public List<Item> getCurrPurcItems() => purchasedLotTab.getCurrPurcItems();
-        public void clearCurrPurcItems() => purchasedLotTab.clearCurrPurcItems();
-
-
-        // currSale
-        public Sale getCurrSale() => saleTab.getCurrSale();
-
-
-        // currSales
-        internal void addCurrentItemSales(Sale newSales) => saleTab.addSale(newSales);
-        public Sale getCurrSaleAt(int index) => saleTab.getCurrItemSales(index);
-        public List<Sale> getCurrentItemSales() => saleTab.getCurrItemSales();
-        public void setCurrSale(int index) => saleTab.setCurrSale(index);
-
-        public bool getSaleInEditingState() => saleTab.inEditingState;
-        public bool getItemInEditingState() => itemViewTab.inEditingState;
-
-
-        public void saleTabUpdate()
-        {
-            bool success = saleTab.updateFromUserInput();
-            if (success)
-            {
-                itemViewTab.showItemAttributesAndPics(getCurrItemWithImages());
-            }
-        }
-
-
-        // Update the program (the model of the database) with a new resultItem, not just the backend variable currItem
-        // Will work with null val for newItem
-        public void setCurrItem(Item newItem)
-        {
-            setCurrItemVar(newItem);
-            newItem = getCurrItem(); // Updated
-            if (newItem == null) { return; }
-            purchasedLotTab.setCurrPurcAndShowItems(newItem.get_PurchaseID());
-            itemViewTab.showItemAttributesAndPics(newItem);
-            saleTab.showItemSales(newItem);
-
-            Form1.tabCollection.SelectTab(itemViewTabNum);
-        }
-
-
-        // Update the curr item given its position in the search results
-        public void setCurrItem(int index)
-        {
-            if (index > Form1.itemSearchView.countItems())
-            {
-                throw new Exception("Index of the search results to set the new currItem to in Form1.TabController setCurrItem() is greater than the number of items in the search result");
-            }
-            Item shellItem = getSearchItemsAt(index);
-
-            Item newItem = Database.getItem(shellItem.get_ITEM_ID());
-            setCurrItem(newItem);
-
-        }
-
-        private void clearCurrSaleItems()
-        {
-            saleTab.clearCurrItemSales();
-        }
-
 
         public void search()
         {
@@ -135,129 +82,19 @@ namespace FinancialDatabase.Tabs
             Form1.itemSearchView.updatePaint();
         }
 
-
-        public void itemViewUpdate()
-        {
-            itemViewTab.updateFromUserInput();
-        }
-
-        public void flipIVEditMode()
-        {
-            itemViewTab.flipEditMode();
-        }
-
-        public void IVdeleteShippingInfo()
-        {
-            itemViewTab.deleteShippingInfo();
-        }
-
-        public void PLflipEditMode()
-        {
-            purchasedLotTab.flipEditMode();
-        }
-
-        public void PLaddItem()
-        {
-            purchasedLotTab.addItemToPurc();
-        }
-
-        public void PLnewPurchase()
-        {
-            itemViewTab.clearCurrItem();
-            purchasedLotTab.newPurchase();
-            itemViewTab.clearCurrItemControls();
-        }
-
-        public void clearCurrItemControls()
-        {
-            itemViewTab.clearCurrItemControls();
-        }
-
-        public void clearSaleControls()
-        {
-            saleTab.clearAttribs();
-        }
-
-        public void saleTflipEditMode()
-        {
-            saleTab.flipEditMode();
-        }
-
-        public void saleTEditMode()
-        {
-            if (!saleTab.inEditingState)
-            {
-                saleTab.flipEditMode();
-            }
-        }
-
-        public void saleTViewMode()
-        {
-            if (saleTab.inEditingState)
-            {
-                saleTab.flipEditMode();
-            }
-        }
-
-        public void saleTaddSale()
-        {
-            saleTab.addSale();
-            itemViewTab.showItemAttributesAndPics(getCurrItemWithImages());
-        }
-
-        public void purchasedLotUpdate()
-        {
-            bool success = purchasedLotTab.updateFromUserInput();
-            if (success)
-            {
-                itemViewTab.showItemAttributesAndPics(getCurrItemWithImages());
-                saleTab.showItemSales(getCurrItem());
-            }
-
-        }
-
-
-
-        public void deleteCurrSale()
-        {
-            bool success = saleTab.deleteCurrSale();
-            if (success)
-            {
-                saleTab.showItemSales(itemViewTab.getCurrItem());
-                itemViewTab.updateCurrItemUsingDtb();
-                Form1.tabCollection.SelectTab(saleTabNum);
-            }
-        }
-
-
-        private void clearAllNonSearchTabs()
-        {
-            itemViewTab.setCurrItem(null);
-            clearCurrSaleItems();
-            clearCurrPurcItems();
-
-            purchasedLotTab.clearCurrItemControls();
-            itemViewTab.clearCurrItemControls();
-            saleTab.clearCurrItemControls();
-
-        }
-
-
         public void deleteCurrItem()
         {
             bool deletedItem = itemViewTab.deleteItem();
             if (!deletedItem) { return; }
 
-            clearAllNonSearchTabs();
+            clearAllNonSearchTabsAndVars();
             Form1.tabCollection.SelectTab(searchTabNum);
         }
-
 
         public void setMainImage(int currIndex)
         {
             itemViewTab.setMainImage(currIndex);
         }
-
 
         public void insertImage()
         {
@@ -278,17 +115,220 @@ namespace FinancialDatabase.Tabs
             itemViewTab.showItemPictures(getCurrItem());
         }
 
-
         public void setThumbnail()
         {
             itemViewTab.setThumbnail();
         }
 
+
+
+
+
+
+        // ItemViewTab
+        public Item getCurrItem() => itemViewTab.getCurrItem();
+
+        public bool getItemInEditingState() => itemViewTab.inEditingState;
+
+        // Update the program (the model of the database) with a new resultItem, not just the backend variable currItem
+        // Will work with null val for newItem
+        public void setCurrItem(Item newItem)
+        {
+            if (newItem == null)
+            {
+                clearAllNonSearchTabsAndVars();
+                itemViewTab.setCurrItemAndShowView(newItem);
+                return;
+            }
+
+            // New item may be coming from search result as a shell item. Need to update it into a full item
+            newItem = Database.getItem(newItem.get_ITEM_ID());
+
+
+            // Note: Order matters: Must set currPurc before item. Must also set sale after item.
+            purchasedLotTab.setCurrPurcAndShowView(newItem.get_PurchaseID());    
+            itemViewTab.setCurrItemAndShowView(newItem);
+            saleTab.showItemAttributes(newItem);
+
+            Form1.tabCollection.SelectTab(itemViewTabNum);
+        }
+
+        // Update the curr item given its position in the search results
+        public void setCurrItem(int index)
+        {
+            if (index > Form1.itemSearchView.countItems())
+            {
+                throw new Exception("Index of the search results to set the new currItem to in Form1.TabController setCurrItem() is greater than the number of items in the search result");
+            }
+            Item shellItem = getSearchItemsAt(index);
+
+            Item newItem = Database.getItem(shellItem.get_ITEM_ID());
+            setCurrItem(newItem);
+
+        }
+
+        public void itemViewUpdateFromUserInput()
+        {
+            itemViewTab.updateFromUserInput();
+        }
+
+        public void itemViewFlipEditMode()
+        {
+            itemViewTab.flipEditMode();
+        }
+
+        public void itemViewDeleteShipInfo()
+        {
+            itemViewTab.deleteShippingInfo();
+        }
+        
+        public void clearCurrItemControls()
+        {
+            itemViewTab.clearCurrItemControls();
+        }
+
+        public Item getCurrItemWithImages()
+        {
+            Item item = getCurrItem();
+            if (item != null)
+            {
+                item.set_images();
+            }
+            return item;
+        }
+
+        public void itemViewShowUpdate()
+        {
+            itemViewTab.showItemAttributes(getCurrItemWithImages());
+        }
+
+
+
+
+
+        // Purchase Tab
+        public Purchase getCurrPurc() => purchasedLotTab.getCurrPurc();
+
+        public Item getCurrPurcItemsAt(int index) => purchasedLotTab.getCurrPurcItemsAt(index);
+        
+        public List<Item> getCurrPurcItems() => purchasedLotTab.getCurrPurcItems();
+        
+        public void clearCurrPurcItems() => purchasedLotTab.clearCurrPurcItems();
+
+        public void purcItemsflipEditMode()
+        {
+            purchasedLotTab.flipEditMode();
+        }
+
+        public void purcItemsAddItem()
+        {
+            purchasedLotTab.addItemToPurc();
+        }
+
+        public void purcItemsNewPurchase()
+        {
+            itemViewTab.clearCurrItem();
+            purchasedLotTab.newPurchase();
+            itemViewTab.clearCurrItemControls();
+        }
+
+        public void purcItemsUpdateFromUserInput()
+        {
+            purchasedLotTab.updateFromUserInput();
+        }
+        
         public bool isNewPurchase()
         {
             return purchasedLotTab.isNewPurchase;
         }
+        
+        public bool getPLInEditingState() => purchasedLotTab.inEditingState;
 
+
+
+
+
+        // Sale Tab
+        public Sale getCurrSale() => saleTab.getCurrSale();
+
+        internal void addCurrentItemSales(Sale newSales) => saleTab.addSale(newSales);
+        
+        public Sale getCurrSaleAt(int index) => saleTab.getCurrItemSales(index);
+       
+        public List<Sale> getCurrentItemSales() => saleTab.getCurrItemSales();
+        
+        public void setCurrSale(int index) => saleTab.setCurrSale(index);
+
+        public bool saleTabGetInEditingState() => saleTab.inEditingState;
+
+        public void saleTabUpdate()
+        {
+            bool success = saleTab.updateFromUserInput();
+            if (success)
+            {
+                itemViewTab.showItemAttributes(getCurrItemWithImages());
+            }
+        }
+
+        private void clearCurrSaleItems()
+        {
+            saleTab.clearCurrItemSales();
+        }
+        
+        public void saleTabClearControls()
+        {
+            saleTab.clearAttribs();
+        }
+
+        public void saleTabflipEditMode()
+        {
+            saleTab.flipEditMode();
+        }
+
+        public void saleTabEditMode()
+        {
+            if (!saleTab.inEditingState)
+            {
+                saleTab.flipEditMode();
+            }
+        }
+
+        public void saleTabViewMode()
+        {
+            if (saleTab.inEditingState)
+            {
+                saleTab.flipEditMode();
+            }
+        }
+
+        public void saleTabAddSale()
+        {
+            saleTab.addSale();
+            itemViewTab.showItemAttributes(getCurrItemWithImages());
+        }
+        
+        public void deleteCurrSale()
+        {
+            bool success = saleTab.deleteCurrSale();
+            if (success)
+            {
+                saleTab.showItemAttributes(itemViewTab.getCurrItem());
+                itemViewTab.updateCurrItemUsingDtb();
+                Form1.tabCollection.SelectTab(saleTabNum);
+            }
+        }
+
+        public void saleTabShowUpdate()
+        {
+            saleTab.showItemAttributes(getCurrItem());
+        }
+
+
+
+
+        
+
+        // FOR TESTING
         public bool didTextboxChange(TextBoxLabelPair TLP)
         {
             string attrib = TLP.attrib;
@@ -300,25 +340,12 @@ namespace FinancialDatabase.Tabs
                 attribVal.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
                 attribVal.CompareTo(Util.DEFAULT_INT.ToString()) == 0)
             {
-                return attribVal.CompareTo("") == 0;
+                return TLP.getControlValueAsStr().CompareTo("") != 0;
             }
 
             return attribVal.CompareTo(TLP.getControlValueAsStr()) != 0;
         }
 
-
-        public bool checkTypeOkay(TextBox textBox)
-        {
-            string attrib = allControlAttribs[textBox];
-            // If not right type, return
-            string type = colDataTypes[attrib];
-
-            if (Util.checkTypeOkay(textBox.Text, type))
-            {
-                return true;
-            }
-            return false;
-        }
 
         public bool checkTypeOkay(TextBoxLabelPair textBox)
         {
@@ -332,17 +359,6 @@ namespace FinancialDatabase.Tabs
             }
             return false;
         }
-
-        public bool getPLInEditingState() => purchasedLotTab.inEditingState;
-
-        public Item getCurrItemWithImages()
-        {
-            Item item = getCurrItem();
-            if (item != null)
-            {
-                item.set_images();
-            }
-            return item;
-        }
+        
     }
 }

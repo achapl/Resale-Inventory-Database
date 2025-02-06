@@ -781,11 +781,10 @@ public static class Database
         int lastrowid;
         string output = Database.runStatement(query, out lastrowid);
 
-        string attrib = "item.ShippingID";
         int shippingID = lastrowid;
-        query = QueryBuilder.updateQuery(resultItem, attrib, shippingID.ToString());
+        query = QueryBuilder.updateQuery(resultItem, "item.ShippingID", shippingID.ToString());
 
-        // Update the item table with the new shipping info
+        // Update the item table with the new shipping info ID
         output = Database.runStatement(query);
 
         return shippingID;

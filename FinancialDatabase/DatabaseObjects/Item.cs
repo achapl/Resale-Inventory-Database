@@ -51,7 +51,6 @@ public class Item : IEquatable<Item>
     List<MyImage> images;
 
     // Extra
-    double totalSales;
     private MyImage thumbnail;
 
     // For Testing
@@ -100,9 +99,6 @@ public class Item : IEquatable<Item>
         //From image table
         set_images(Util.DEFAULT_IMAGES);
         
-        
-        // Extra
-        totalSales      = SaleTab.getTotalSales(this);
 
         sales = new List<Sale>();
     }
@@ -451,8 +447,6 @@ public class Item : IEquatable<Item>
 
     public bool hasPurchaseEntry() => PurchaseID != Util.DEFAULT_INT;
 
-    public bool hasSaleEntry() => totalSales != Util.DEFAULT_INT;
-
 
     public bool hasShippingEntry() => ShippingID != Util.DEFAULT_INT;
 
@@ -745,7 +739,6 @@ public class Item : IEquatable<Item>
     }
 
     // Extra
-    public void set_totalSales(double totalSales) => this.totalSales = totalSales;
 
     public bool Equals(Item? other)
     {

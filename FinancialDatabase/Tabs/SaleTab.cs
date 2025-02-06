@@ -58,15 +58,15 @@ public class SaleTab : Tab
 
     public bool updateFromUserInput()
     {
-        bool success = getUserInputUpdate();
+        bool success = updateDtbFromUserInput();
         if (success)
         {
-            showItemSales(tabController.getCurrItem());
-            updateSale(getCurrSale());
+            updateSaleFromCurrSalesUsingDtb(currSale);
             currSale = currItemSales[currItemSales.IndexOf(currSale)];
 
-            showSale(getCurrSale());
+            showSale(currSale);
             viewMode();
+            Form1.itemSoldPriceLbl.Text = getTotalSales(tabController.getCurrItem()).ToString();
         }
         return success;
         
@@ -77,7 +77,7 @@ public class SaleTab : Tab
         return this.currSale;
     }
 
-    public void updateSale(Sale s)
+    public void updateSaleFromCurrSalesUsingDtb(Sale s)
     {
         int index = currItemSales.IndexOf(s);
         if (index == -1)
@@ -88,7 +88,7 @@ public class SaleTab : Tab
         currItemSales[index] = Database.getSale(s.get_SALE_ID());
     }
 
-    public bool getUserInputUpdate() {
+    public bool updateDtbFromUserInput() {
 
         if (tabController.getCurrItem() == null) { return false; }
         List<ControlLabelPair> changedFields = getChangedFields();
@@ -96,7 +96,7 @@ public class SaleTab : Tab
 
         foreach (ControlLabelPair c in changedFields)
         {
-            if (c is null) { Console.WriteLine("ERROR: ControlLabelpair Object c is null, ItemViewTab.cs"); continue; }
+            if (c is null) { Console.WriteLine("ERROR: ControlLabelPair Object c is null, ItemViewTab.cs"); continue; }
 
             TextBoxLabelPair t = (c as TextBoxLabelPair);
 
@@ -138,7 +138,7 @@ public class SaleTab : Tab
 
     }
 
-    public void showItemSales(Item item)
+    private void showItemSales(Item item)
     {
         Form1.saleListBox.Items.Clear();
         clearCurrItemSales();
@@ -152,6 +152,8 @@ public class SaleTab : Tab
             Form1.saleListBox.Items.Add(s.get_Date_Sold().toDateString() + ", " + s.get_Amount_sale());
             tabController.addCurrentItemSales(s);
         }
+
+        Form1.itemSoldPriceLbl.Text = getTotalSales(item).ToString();
     }
 
 
@@ -160,7 +162,8 @@ public class SaleTab : Tab
         return Database.runSaleSearchQuery(item);
     }
 
-    public static double getTotalSales(Item item)
+
+    public double getTotalSales(Item item)
     {
         double totalSales = 0;
         List<Sale> sales = getSales(item);
@@ -221,17 +224,22 @@ public class SaleTab : Tab
     public void showSale(Sale sale)
     {
         Form1.SaleDatePickerDLP.setLabelText(sale.get_Date_Sold().toDateString());
+        Form1.SaleDatePickerDLP.setControlVal(sale.get_Date_Sold().toDateString());
         Form1.SaleAmountTLP.setLabelText(sale.get_Amount_sale().ToString());
+        Form1.SaleAmountTLP.setControlVal(sale.get_Amount_sale().ToString());
 
     }
 
-    public override void showItemAttributesAndPics(Item item)
+    public override void showItemAttributes(Item item)
     {
         Form1.SaleNameLbl.Text = ""; // Must be cleared manually as to not clear sale fields after showSale has been called (or visa versa from showSale's perspective)
         
-        if (item.hasItemEntry()){
+        if (item != null &&
+            item.hasItemEntry()){
             Form1.SaleNameLbl.Text = item.get_Name();
         }
+
+        showItemSales(tabController.getCurrItem());
     }
 
 
@@ -255,8 +263,19 @@ public class SaleTab : Tab
     }
 
 
+    public void setCurrSale(object? o)
+    {
+        if (o is null)
+        {
+            currSale = null;
+            return;
+        }
+    }
+
+
     public void setCurrSale(int index)
     {
+        
         // Check bad mouse click
         if (index == -1) { return; }
         int sale_id = currItemSales[index].get_SALE_ID();
@@ -268,6 +287,11 @@ public class SaleTab : Tab
 
     private void setCurrSale(Sale s)
     {
+        if (s == null)
+        {
+            currSale = null;
+            return;
+        }
         if (!currItemSales.Contains(s))
         {
             throw new Exception("Form1.TabController.setCurrSale,"
@@ -275,7 +299,7 @@ public class SaleTab : Tab
                               + "Sale sale ID: " + s.get_SALE_ID().ToString() + ", "
                               + "Not found!");
         }
-
+        // TODO: Decide which s==null route to take. Does return w/o error seems to pass all tests so far?
         if (s == null)
         {
             throw new Exception("Sale Not Found: Form1.TabControl.setCurrSale()");
@@ -303,6 +327,8 @@ public class SaleTab : Tab
     
     public void clearCurrItemSales()
     {
+        setCurrSale((Sale) null);
         currItemSales.Clear();
+        Util.clearControls(allAttributeValueLabels);
     }
 }

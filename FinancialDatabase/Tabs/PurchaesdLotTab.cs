@@ -22,7 +22,7 @@ public class PurchasedLotTab : Tab
         showControlVisibility();
     }
 
-    public override void showItemAttributesAndPics(Item item)
+    public override void showItemAttributes(Item item)
     {
         // TODO: DELETE THIS and change it so that this method is not an inherited method. Not all tabs show item attributes.
 
@@ -131,7 +131,10 @@ public class PurchasedLotTab : Tab
 
     public void clearCurrPurcItems()
     {
-        if (currPurc is null)
+        setCurrPurc(null);
+        Util.clearControls(allAttributeValueLabels);
+
+        /*if (currPurc is null)
         {
             currPurc = new Purchase();
         }
@@ -139,7 +142,7 @@ public class PurchasedLotTab : Tab
         {
             currPurc.items = new List<Item>();
         }
-        currPurc.items.Clear();
+        currPurc.items.Clear();*/
     }
 
     override public void flipEditMode()
@@ -158,11 +161,13 @@ public class PurchasedLotTab : Tab
         Util.clearLabelText(allAttributeValueLabels);
         Purchase currPurc = tabController.getCurrPurc();
         Date datePurc = currPurc.Date_Purchased;
-        Form1.PurcDatePickerDLP.setLabelText(checkDefault(currPurc.Date_Purchased.toDateString()));
-        Form1.PurcPurcPriceTLP.setLabelText(checkDefault(currPurc.Amount_purchase));
-        Form1.PurcPurcNotesTLP.setLabelText(checkDefault(currPurc.Notes_purchase));
+        Form1.PurcDatePickerDLP.setLabelText(Util.checkDefault(currPurc.Date_Purchased.toDateString()));
+        Form1.PurcDatePickerDLP.setControlVal(Util.checkDefault(currPurc.Date_Purchased.toDateString()));
+        Form1.PurcPurcPriceTLP.setLabelText(Util.checkDefault(currPurc.Amount_purchase));
+        Form1.PurcPurcPriceTLP.setControlVal(Util.checkDefault(currPurc.Amount_purchase));
+        Form1.PurcPurcNotesTLP.setLabelText(Util.checkDefault(currPurc.Notes_purchase));
+        Form1.PurcPurcNotesTLP.setControlVal(Util.checkDefault(currPurc.Notes_purchase));
         updateUserInputDefaultText();
-        
     }
 
     public bool updateFromUserInput()
@@ -171,6 +176,10 @@ public class PurchasedLotTab : Tab
 
         if (success)
         {
+            setCurrPurcAndShowView(currPurc.PURCHASE_ID);
+            showPurchaseAttributes(tabController.getCurrPurc());
+            tabController.itemViewShowUpdate();
+            tabController.saleTabShowUpdate();
             viewMode();
         }
         return success;
@@ -221,13 +230,12 @@ public class PurchasedLotTab : Tab
 
         }
 
-        setCurrPurcAndShowItems(currPurc.PURCHASE_ID);
-        showPurchaseAttributes(tabController.getCurrPurc());
+        
         return true;
     }
 
 
-    public void setCurrPurcAndShowItems(int purchaseID)
+    public void setCurrPurcAndShowView(int purchaseID)
     {
         if (purchaseID == null || purchaseID <= 0) { throw new Exception("Error: trying to set curr purchase and show its items from a bad purchaseID!"); }
 
@@ -245,11 +253,7 @@ public class PurchasedLotTab : Tab
         foreach (Item i in currPurc.items)
         {
             Form1.PurchaseListBox.Items.Add(i.get_Name());
-           // addCurrPurcItem(Database.getItem(i.get_ITEM_ID()));
         }
-
-        Form1.PurcPurcPriceTLP.setLabelText(currPurc.Amount_purchase.ToString());
-        Form1.PurcPurcNotesTLP.setLabelText(currPurc.Notes_purchase);
     }
 
 
@@ -355,7 +359,7 @@ public class PurchasedLotTab : Tab
         Util.clearTBox(purcNewItemShippingTBoxes);
         // Currently, this method gets the current item and uses it to update the curr purchase so that the idsplay can be updated with the new purchase associated with it
         // Should instead update the curr purchase and use that to update the purchase tab with the new item.
-        setCurrPurcAndShowItems(tabController.getCurrPurc().PURCHASE_ID);
+        setCurrPurcAndShowView(tabController.getCurrPurc().PURCHASE_ID);
         isNewPurchase = false;
     }
 

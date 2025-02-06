@@ -77,56 +77,56 @@ namespace FinancialDatabase
         // Item Tab Update Item
         private void itemUpdateButton_Click(object sender, EventArgs e)
         {
-            tabControl.itemViewUpdate();
+            tabControl.itemViewUpdateFromUserInput();
         }
 
 
         // ItemView View/Edit Button
         private void itemEditButton_Click(object sender, EventArgs e)
         {
-            tabControl.flipIVEditMode();
+            tabControl.itemViewFlipEditMode();
         }
 
 
         // ItemView Delete Shipping Info
         private void deleteShipInfoButton_Click(object sender, EventArgs e)
         {
-            tabControl.IVdeleteShippingInfo();
+            tabControl.itemViewDeleteShipInfo();
         }
 
 
         // PurchasedLot View/Edit Button
         private void editPurcButton_Click(object sender, EventArgs e)
         {
-            tabControl.PLflipEditMode();
+            tabControl.purcItemsflipEditMode();
         }
 
 
         // PurchasedLot update item
         private void updatePurcButton_Click(object sender, EventArgs e)
         {
-            tabControl.purchasedLotUpdate();
+            tabControl.purcItemsUpdateFromUserInput();
         }
 
 
         // Add sale to purchase
         private void addItemButton_Click(object sender, EventArgs e)
         {
-            tabControl.PLaddItem();
+            tabControl.purcItemsAddItem();
         }
 
 
         // New Purchase
         private void newPurcButton_Click(object sender, EventArgs e)
         {
-            tabControl.PLnewPurchase();
+            tabControl.purcItemsNewPurchase();
         }
 
 
         // SaleTab View/Edit button
         private void saleEditSaleButton_Click(object sender, EventArgs e)
         {
-            tabControl.saleTflipEditMode();
+            tabControl.saleTabflipEditMode();
         }
 
 
@@ -149,7 +149,7 @@ namespace FinancialDatabase
         // SaleTab Add Sale
         private void addSaleButton_Click(object sender, EventArgs e)
         {
-            tabControl.saleTaddSale();
+            tabControl.saleTabAddSale();
         }
 
 

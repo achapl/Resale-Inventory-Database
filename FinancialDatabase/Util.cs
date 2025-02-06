@@ -41,6 +41,31 @@ public class Util
     public static List<MyImage> DEFAULT_IMAGES = new List<MyImage>() {DEFAULT_IMAGE};
 
 
+    // Check if a value is a defualt value
+    internal static string checkDefault(int val)
+    {
+        if (val == Util.DEFAULT_INT) { return ""; }
+        else { return val.ToString(); }
+    }
+
+
+    // Check if a value is a defualt value
+    internal static string checkDefault(double val)
+    {
+        if (val == -1) { return ""; }
+        else { return val.ToString(); }
+    }
+
+
+    // Redundant, but exists for sake of extensibility
+    internal static string checkDefault(string val)
+    {
+        if (val is null) return "";
+        if (val.CompareTo("") == 0) return "";
+        else { return val.ToString(); }
+    }
+
+
     /// <summary>
     /// Token used for finding definitively the start of a raw image returned from python
     /// </summary>
@@ -201,6 +226,15 @@ public class Util
             (c as TextBox).Text = "";
             (c as TextBox).BackColor = Color.White;
         }
+    }
+
+    public static void clearControls(List<Control> controls)
+    {
+        foreach (Control c in controls)
+        {
+            clearTBox(c);
+        }
+
     }
 
     public static void clearTBox(List<TextBoxLabelPair> TLPs)

@@ -130,29 +130,7 @@ public abstract class Tab
     }
 
 
-    // Check if a value is a defualt value
-    protected string checkDefault(int val)
-    {
-        if (val == Util.DEFAULT_INT) { return ""; }
-        else { return val.ToString(); }
-    }
-    
-    
-    // Check if a value is a defualt value
-    protected string checkDefault(double val)
-    {
-        if (val == -1) { return ""; }
-        else { return val.ToString(); }
-    }
-    
-    
-    // Redundant, but exists for sake of extensibility
-    protected string checkDefault(string val)
-    {
-        if (val is null) return "";
-        if (val.CompareTo("") == 0) return "";
-        else { return val.ToString(); }
-    }
+
 
 
     // Opertaions are done to groups of control objects.
@@ -252,7 +230,7 @@ public abstract class Tab
     }
 
 
-    abstract public void showItemAttributesAndPics(Item item);
+    abstract public void showItemAttributes(Item item);
 
     // Clear all shown info about currItem
     public void clearCurrItemControls()
