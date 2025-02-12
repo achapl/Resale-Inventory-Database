@@ -231,7 +231,7 @@ public class TestUtil
         tBox.Text = generatedText;
         tBox.BackColor = Color.Gray;
 
-        Util.clearTBox(tBox);
+        Util.clearControl(tBox);
 
         Assert.AreEqual(0, tBox.Text.CompareTo(""));
         Assert.IsTrue(tBox.BackColor.Equals(Color.White));

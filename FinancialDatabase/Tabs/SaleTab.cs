@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Reflection;
+using System.Security.Permissions;
 using FinancialDatabase;
 using FinancialDatabase.Tabs;
 using Date = Util.Date;
@@ -97,18 +98,9 @@ public class SaleTab : Tab
         foreach (ControlLabelPair c in changedFields)
         {
             if (c is null) { Console.WriteLine("ERROR: ControlLabelPair Object c is null, ItemViewTab.cs"); continue; }
-
-            TextBoxLabelPair t = (c as TextBoxLabelPair);
-
-            if (databaseEntryExists(c))
-            {
-                Database.updateRow(currSale, c.attrib, c.getControlValueAsStr());
-                Util.clearTBox(t);
-            }
-            else if (!databaseEntryExists(t))
-            {
-                throw new Exception("ERROR: no purchase entry for CurrItem, This should not be possible");
-            }
+            
+            Database.updateRow(currSale, c.attrib, c.getControlValueAsStr());
+            Util.clearControl(c);
         }
         return true;
     }
@@ -237,6 +229,9 @@ public class SaleTab : Tab
         if (item != null &&
             item.hasItemEntry()){
             Form1.SaleNameLbl.Text = item.get_Name();
+        } else
+        {
+            Form1.SaleNameLbl.Text = "";
         }
 
         showItemSales(tabController.getCurrItem());
@@ -278,6 +273,14 @@ public class SaleTab : Tab
         
         // Check bad mouse click
         if (index == -1) { return; }
+        if (currItemSales is null || currItemSales.Count() == 0)
+        {
+            throw new Exception("Error: Trying to set sales when item sales don't exist");
+        }
+        if (index > currItemSales.Count())
+        {
+            throw new Exception("Error: Trying to set sales for index '" + index + "' when only total of '" + currItemSales.Count() + "' sales");
+        }
         int sale_id = currItemSales[index].get_SALE_ID();
 
         Sale sale = Database.getSale(sale_id);

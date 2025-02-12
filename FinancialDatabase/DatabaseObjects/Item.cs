@@ -65,40 +65,40 @@ public class Item : IEquatable<Item>
     {
         setDefaults();
     }
-    
+
     private void setDefaults()
     {
         //string rawResult;
         //List<string> rawList;
 
         // From item table
-        ITEM_ID         = Util.DEFAULT_INT;
-        Name            = Util.DEFAULT_STRING;
-        PurchaseID      = Util.DEFAULT_INT;
-        SaleID          = Util.DEFAULT_INT;
-        ShippingID      = Util.DEFAULT_INT;
+        ITEM_ID = Util.DEFAULT_INT;
+        Name = Util.DEFAULT_STRING;
+        PurchaseID = Util.DEFAULT_INT;
+        SaleID = Util.DEFAULT_INT;
+        ShippingID = Util.DEFAULT_INT;
         InitialQuantity = Util.DEFAULT_INT;
         CurrentQuantity = Util.DEFAULT_INT;
-        Notes_item      = Util.DEFAULT_STRING;
+        Notes_item = Util.DEFAULT_STRING;
 
         // From purchase table
-        Date_Purchased  = Util.DEFAULT_DATE;
+        Date_Purchased = Util.DEFAULT_DATE;
         Amount_purchase = Util.DEFAULT_DOUBLE;
-        Tax             = Util.DEFAULT_DOUBLE;
-        Fees_purchase   = Util.DEFAULT_DOUBLE;
-        Seller          = Util.DEFAULT_STRING;
-        Notes_purchase  = Util.DEFAULT_STRING;
+        Tax = Util.DEFAULT_DOUBLE;
+        Fees_purchase = Util.DEFAULT_DOUBLE;
+        Seller = Util.DEFAULT_STRING;
+        Notes_purchase = Util.DEFAULT_STRING;
 
         // From shipping table
-        Length          = Util.DEFAULT_INT;
-        Width           = Util.DEFAULT_INT;
-        Height          = Util.DEFAULT_INT;
-        Weight          = Util.DEFAULT_INT;
-        Notes_shipping  = Util.DEFAULT_STRING;
+        Length = Util.DEFAULT_INT;
+        Width = Util.DEFAULT_INT;
+        Height = Util.DEFAULT_INT;
+        Weight = Util.DEFAULT_INT;
+        Notes_shipping = Util.DEFAULT_STRING;
 
         //From image table
         set_images(Util.DEFAULT_IMAGES);
-        
+
 
         sales = new List<Sale>();
     }
@@ -108,7 +108,7 @@ public class Item : IEquatable<Item>
         setDefaults();
         this.rawList = item;
 
-        for(int i = 0; i < colNames.Count; i++) 
+        for (int i = 0; i < colNames.Count; i++)
         {
             string itemAttribute = item[i];
             // Missing info, skip
@@ -116,7 +116,7 @@ public class Item : IEquatable<Item>
             {
                 itemAttribute = null!;
             }
-            switch(colNames[i])
+            switch (colNames[i])
             {
                 // From item table
                 case "ITEM_ID":
@@ -211,7 +211,7 @@ public class Item : IEquatable<Item>
         {
             this.thumbnail = Util.DEFAULT_IMAGE;
             return;
-        } 
+        }
         this.thumbnail = image;
     }
     public void set_Thumbnail(string itemAttribute)
@@ -223,7 +223,7 @@ public class Item : IEquatable<Item>
         }
 
         Image i = Util.rawImageStrToImage(itemAttribute);
-        this.thumbnail = new MyImage(i,-1);
+        this.thumbnail = new MyImage(i, -1);
     }
 
     public void getAttrib(string attrib, out string ret)
@@ -254,7 +254,7 @@ public class Item : IEquatable<Item>
                 throw new Exception("ERROR: Unknown string Attrib: " + attrib);
         }
     }
-    
+
     public void getAttrib(string attrib, out int ret)
     {
         switch (attrib)
@@ -303,7 +303,7 @@ public class Item : IEquatable<Item>
                 throw new Exception("ERROR: Unknown int Attrib: " + attrib);
         }
     }
-    
+
     public void getAttrib(string attrib, out double ret)
     {
         switch (attrib)
@@ -337,7 +337,7 @@ public class Item : IEquatable<Item>
                 throw new Exception("ERROR: Unknown double Attrib: " + attrib);
         }
     }
-    
+
     public void getAttrib(string attrib, out Date ret)
     {
         switch (attrib)
@@ -433,13 +433,15 @@ public class Item : IEquatable<Item>
                 break;
         }
 
-        if (retVal.CompareTo(Util.DEFAULT_DATE.toDateString()) == 0 || 
+        // TODO: Delete if all tests pass. Don't know hy throwing error for accessing attrib that is simply a default val
+        // Some methods like databaseEntryExists do check for default values to determine if a dtb entry exists for the given attribute
+        /*if (retVal.CompareTo(Util.DEFAULT_DATE.toDateString()) == 0 || 
             retVal.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
             retVal.CompareTo(Util.DEFAULT_INT.ToString())  == 0 ||
             retVal.CompareTo(Util.DEFAULT_STRING) == 0)
         {
             throw new Exception("ERROR: Unknown attribute: " + attrib);
-        }
+        }*/
         return retVal;
     }
 
@@ -465,7 +467,7 @@ public class Item : IEquatable<Item>
     public string get_Notes_item() => Notes_item;
     public MyImage get_Thumbnail()
     {
-        if (this.thumbnail == null) { set_Thumbnail(Util.DEFAULT_IMAGE); } 
+        if (this.thumbnail == null) { set_Thumbnail(Util.DEFAULT_IMAGE); }
         return this.thumbnail;
     }
 
@@ -484,7 +486,17 @@ public class Item : IEquatable<Item>
     public int get_Height() => Height;
     public int get_Weight() => Weight;
     public int get_WeightOz() => Weight % 16;
-    public int get_WeightLbs() => Weight / 16;
+    public int get_WeightLbs()
+    {
+        if (Weight == Util.DEFAULT_INT)
+        {
+            return Weight;
+        }
+        else
+        {
+            return Weight / 16;
+        }
+    }
     public string get_Notes_shipping() => Notes_shipping;
 
     // From image table
@@ -502,7 +514,13 @@ public class Item : IEquatable<Item>
     // Extra
     public double getTotalSales()
     {
+        if (sales is null)
+        {
+            throw new Exception("Error: '" + Name + "' item.sales is null");
+        }
+
         double totalSales = 0;
+
         foreach (Sale s in sales)
         {
             totalSales += s.get_Amount_sale();
@@ -789,5 +807,21 @@ public class Item : IEquatable<Item>
     {
         if (name.Length == 0) return false;
         return Util.containsAnAlphaNumeric(name);
+    }
+
+    public bool isDefaultValue(string attrib)
+    {
+        string val = getAttribAsStr(attrib);
+        if (val == Util.DEFAULT_DOUBLE.ToString() ||
+            val == Util.DEFAULT_DATE.ToString() ||
+            val == Util.DEFAULT_INT.ToString() ||
+            val == Util.DEFAULT_STRING)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

@@ -232,12 +232,12 @@ public class Util
     {
         foreach (Control c in controls)
         {
-            clearTBox(c);
+            clearControl(c);
         }
 
     }
 
-    public static void clearTBox(List<TextBoxLabelPair> TLPs)
+    public static void clearTLPs(List<TextBoxLabelPair> TLPs)
     {
         foreach (TextBoxLabelPair c in TLPs)
         {
@@ -252,7 +252,7 @@ public class Util
     /// And resets their background color to white
     /// </summary>
     /// <param name="c">TextBox given as a control</param>
-    public static void clearTBox(Control c)
+    public static void clearControl(Control c)
     {
         if (c is not TextBox && c is not TextBoxLabelPair) { return; }
 

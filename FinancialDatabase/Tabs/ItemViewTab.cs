@@ -122,10 +122,10 @@ public class ItemViewTab : Tab
     // Checks that all shipping boxes are filled, and are integers
     public bool allShippingBoxesFilled()
     {
-        foreach (Control c in shippingTBoxes)
+        foreach (TextBoxLabelPair c in shippingTBoxes)
         {
-            if (c.Text.CompareTo("") == 0 ||
-                !Int32.TryParse(c.Text, out int _))
+            if (c.getControlValueAsStr().CompareTo("") == 0 ||
+                !Int32.TryParse(c.getControlValueAsStr(), out int _))
             {
                 return false;
             }
@@ -160,8 +160,16 @@ public class ItemViewTab : Tab
         foreach (ControlLabelPair userInputContainer in changedFields)
         {
             TextBoxLabelPair userInputTLP = userInputContainer as TextBoxLabelPair;
+
+            if (userInputContainer == Form1.itemWeightOzTLP &&
+                weightIsUpdated)
+            {
+                continue;
+            }
             if (databaseEntryExists(userInputTLP))
             {
+
+                // Special case, weight TLP's
                 if (userInputTLP == Form1.itemWeightLbsTLP ||
                      userInputTLP == Form1.itemWeightOzTLP)
                 {
@@ -180,12 +188,13 @@ public class ItemViewTab : Tab
 
                     Database.updateRow(getCurrItem(), attrib, newVal);
                 }
-                Util.clearTBox(userInputTLP);
+                Util.clearControl(userInputTLP);
             }
             else
             {
                 if (shippingTBoxes.Contains(userInputTLP))
                 {
+                    // NOTE: Why is weight textbox blank at THIS point?
                     makeShippingEntry();
                 }
                 else if (itemTBoxes.Contains(userInputTLP))
@@ -232,8 +241,8 @@ public class ItemViewTab : Tab
             showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
             return -1;
         }
-        Util.clearTBox(Form1.itemWeightLbsTLP);
-        Util.clearTBox(Form1.itemWeightOzTLP);
+        Util.clearControl(Form1.itemWeightLbsTLP);
+        Util.clearControl(Form1.itemWeightOzTLP);
 
         ttlWeight = lbs * 16 + oz;
 
@@ -257,7 +266,7 @@ public class ItemViewTab : Tab
             int w = Int32.Parse(Form1.itemWidthTLP.getControlValueAsStr());
 
             Database.insertShipInfo(getCurrItem(), weightLbs, weightOz, l, w, h);
-            Util.clearTBox(weightTBoxes);
+            Util.clearTLPs(weightTBoxes);
             showItemAttributes(Database.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
         }
         else
@@ -319,6 +328,9 @@ public class ItemViewTab : Tab
             Form1.itemItemNoLbl.Text = Util.checkDefault(item.get_ITEM_ID());
             Form1.SaleNameLbl.Text = Util.checkDefault(item.get_Name());
 
+        }
+        if (item.sales != null && item.sales.Count() > 0)
+        {
             Form1.itemSoldPriceLbl.Text = Util.checkDefault(item.getTotalSales());
         }
 

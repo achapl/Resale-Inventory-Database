@@ -56,5 +56,176 @@
 				]
 			}
 		]
+	},
+
+
+
+	{
+		"Date_Purchased_str": "1978-12-16",
+		"Amount_purchase": 200.0,
+		"Notes_purchase": null,
+		"Seller": null,
+		"items": [
+			{
+				"Name": "Item3",
+				"InitialQuantity": 2,
+				"CurrentQuantity": 1,
+				"Length": 1,
+				"Width": 1,
+				"Height": 1,
+				"Weight": 1,
+				"Notes Shipping": null,
+				"Notes_item": null,
+				"imagePaths": [
+					"C:\\Users\\Owner\\source\\repos\\FinancialDatabaseSolution\\FinancialDatabase\\Resources\\s-l1600.png"
+				],
+				"sales": [
+					{
+						"Amount_sale": 110.0,
+						"Date_Sold_str": "1979-12-16"
+					},
+					{
+						"Amount_sale": 100.0,
+						"Date_Sold_str": "1979-12-17"
+					}
+				]
+			}
+		]
+	},
+
+	{
+		"Date_Purchased_str": "1978-12-17",
+		"Amount_purchase": 200.0,
+		"Notes_purchase": null,
+		"Seller": null,
+		"items": [
+			{
+				"Name": "Item4",
+				"InitialQuantity": 2,
+				"CurrentQuantity": 1,
+				"Length": 1,
+				"Width": 1,
+				"Height": 1,
+				"Weight": 1,
+				"Notes Shipping": null,
+				"Notes_item": null,
+				"imagePaths": [
+					"C:\\Users\\Owner\\source\\repos\\FinancialDatabaseSolution\\FinancialDatabase\\Resources\\s-l1600.png"
+				],
+				"sales": [
+					{
+						"Amount_sale": 220.0,
+						"Date_Sold_str": "1979-12-16"
+					}
+				]
+			}
+		]
+	},
+
+
+	{
+		"Date_Purchased_str": "1978-12-18",
+		"Amount_purchase": 300.0,
+		"Notes_purchase": null,
+		"Seller": null,
+		"items": [
+			{
+				"Name": "Item5",
+				"InitialQuantity": 2,
+				"CurrentQuantity": 1,
+				"Length": 1,
+				"Width": 1,
+				"Height": 1,
+				"Weight": 1,
+				"Notes Shipping": null,
+				"Notes_item": null,
+				"imagePaths": null,
+				"sales": [
+					{
+						"Amount_sale": 330.0,
+						"Date_Sold_str": "1979-12-16"
+					}
+				]
+			}
+		]
+	},
+
+	{
+		"Date_Purchased_str": "1978-12-18",
+		"Amount_purchase": 400.0,
+		"Notes_purchase": null,
+		"Seller": null,
+		"items": [
+			{
+				"Name": "Item3",
+				"InitialQuantity": 2,
+				"CurrentQuantity": 1,
+				"Length": 1,
+				"Width": 1,
+				"Height": 1,
+				"Weight": 1,
+				"Notes Shipping": null,
+				"Notes_item": null,
+				"imagePaths": null,
+				"sales": [
+					{
+						"Amount_sale": 440.0,
+						"Date_Sold_str": "1979-12-16"
+					}
+				]
+			}
+		]
+	},
+
+	{
+		"Date_Purchased_str": "1978-12-16",
+		"Amount_purchase": 100.0,
+		"Notes_purchase": null,
+		"Seller": null,
+		"items": [
+			{
+				"Name": "ItemA",
+				"InitialQuantity": 1,
+				"CurrentQuantity": 1,
+				"Length": -1,
+				"Width": -1,
+				"Height": -1,
+				"Weight": -1,
+				"Notes Shipping": null,
+				"Notes_item": null,
+				"imagePaths": null,
+				"sales": null
+			},
+			{
+				"Name": "ItemB",
+				"InitialQuantity": 1,
+				"CurrentQuantity": 1,
+				"Length": -1,
+				"Width": -1,
+				"Height": -1,
+				"Weight": -1,
+				"Notes Shipping": null,
+				"Notes_item": null,
+				"imagePaths": null,
+				"sales": null
+			},
+			{
+				"Name": "ItemC",
+				"InitialQuantity": 1,
+				"CurrentQuantity": 1,
+				"Length": -1,
+				"Width": -1,
+				"Height": -1,
+				"Weight": -1,
+				"Notes Shipping": null,
+				"Notes_item": null,
+				"imagePaths": null,
+				"sales": null
+			}
+		]
 	}
 ]
+
+
+
+		

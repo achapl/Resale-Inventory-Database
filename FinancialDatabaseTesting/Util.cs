@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -84,17 +85,26 @@ namespace FinancialDatabaseTesting
             foreach (Purchase purchase in purchases)
             {
                 purchase.Date_Purchased = new Util.Date(purchase.Date_Purchased_str);
-                foreach (Item item in purchase.items)
+                if (purchase.items != null)
                 {
-                    item.set_Date_Purchased(purchase.Date_Purchased);
-                    item.set_Amount_purchase(purchase.Amount_purchase);
-                    item.set_Seller(purchase.Seller);
-                    item.set_Fees_purchase(purchase.Fees_purchase);
-                    item.set_Tax(purchase.Tax);
-                    item.set_Notes_purchase(purchase.Notes_purchase);
-                    foreach (Sale sale in item.sales)
+                    foreach (Item item in purchase.items)
                     {
-                        sale.set_Date_Sold(new Util.Date(sale.Date_Sold_str));
+                        item.set_Date_Purchased(purchase.Date_Purchased);
+                        item.set_Amount_purchase(purchase.Amount_purchase);
+                        item.set_Seller(purchase.Seller);
+                        item.set_Fees_purchase(purchase.Fees_purchase);
+                        item.set_Tax(purchase.Tax);
+                        item.set_Notes_purchase(purchase.Notes_purchase);
+                        if (item.sales != null)
+                        {
+                            foreach (Sale sale in item.sales)
+                            {
+                                sale.set_Date_Sold(new Util.Date(sale.Date_Sold_str));
+                            }
+                        } else
+                        {
+                            item.sales = new List<Sale>();
+                        }
                     }
                 }
             }
