@@ -42,7 +42,6 @@
             boughtAfterDatePicker = new DateTimePicker();
             searchButton = new Button();
             searchBox = new TextBox();
-            comboBox1 = new ComboBox();
             comboBoxMenuStrip = new MenuStrip();
             ItemTab = new TabPage();
             itemNameTLP = new TextBoxLabelPair();
@@ -161,7 +160,6 @@
             SearchTab.Controls.Add(boughtAfterDatePicker);
             SearchTab.Controls.Add(searchButton);
             SearchTab.Controls.Add(searchBox);
-            SearchTab.Controls.Add(comboBox1);
             SearchTab.Controls.Add(comboBoxMenuStrip);
             SearchTab.Location = new Point(4, 24);
             SearchTab.Margin = new Padding(4, 3, 4, 3);
@@ -176,7 +174,7 @@
             // 
             itemSearchView.AutoScroll = true;
             itemSearchView.AutoScrollMinSize = new Size(191, 180);
-            itemSearchView.Location = new Point(538, 49);
+            itemSearchView.Location = new Point(374, 49);
             itemSearchView.Name = "itemSearchView";
             itemSearchView.Size = new Size(566, 406);
             itemSearchView.TabIndex = 18;
@@ -186,7 +184,7 @@
             // showPurcPriceCheckBox
             // 
             showPurcPriceCheckBox.AutoSize = true;
-            showPurcPriceCheckBox.Location = new Point(602, 13);
+            showPurcPriceCheckBox.Location = new Point(438, 13);
             showPurcPriceCheckBox.Margin = new Padding(4, 3, 4, 3);
             showPurcPriceCheckBox.Name = "showPurcPriceCheckBox";
             showPurcPriceCheckBox.Size = new Size(103, 19);
@@ -197,7 +195,7 @@
             // showDateCheckBox
             // 
             showDateCheckBox.AutoSize = true;
-            showDateCheckBox.Location = new Point(538, 13);
+            showDateCheckBox.Location = new Point(374, 13);
             showDateCheckBox.Margin = new Padding(4, 3, 4, 3);
             showDateCheckBox.Name = "showDateCheckBox";
             showDateCheckBox.Size = new Size(50, 19);
@@ -210,7 +208,7 @@
             soldOutCheckBox.AutoSize = true;
             soldOutCheckBox.Checked = true;
             soldOutCheckBox.CheckState = CheckState.Checked;
-            soldOutCheckBox.Location = new Point(257, 145);
+            soldOutCheckBox.Location = new Point(131, 137);
             soldOutCheckBox.Margin = new Padding(4, 3, 4, 3);
             soldOutCheckBox.Name = "soldOutCheckBox";
             soldOutCheckBox.Size = new Size(72, 19);
@@ -223,7 +221,7 @@
             inStockCheckBox.AutoSize = true;
             inStockCheckBox.Checked = true;
             inStockCheckBox.CheckState = CheckState.Checked;
-            inStockCheckBox.Location = new Point(257, 118);
+            inStockCheckBox.Location = new Point(131, 110);
             inStockCheckBox.Margin = new Padding(4, 3, 4, 3);
             inStockCheckBox.Name = "inStockCheckBox";
             inStockCheckBox.Size = new Size(68, 19);
@@ -234,7 +232,7 @@
             // boughtBeforeLbl
             // 
             boughtBeforeLbl.AutoSize = true;
-            boughtBeforeLbl.Location = new Point(155, 87);
+            boughtBeforeLbl.Location = new Point(29, 79);
             boughtBeforeLbl.Margin = new Padding(4, 0, 4, 0);
             boughtBeforeLbl.Name = "boughtBeforeLbl";
             boughtBeforeLbl.Size = new Size(83, 15);
@@ -244,7 +242,7 @@
             // boughtAfterLbl
             // 
             boughtAfterLbl.AutoSize = true;
-            boughtAfterLbl.Location = new Point(166, 57);
+            boughtAfterLbl.Location = new Point(40, 49);
             boughtAfterLbl.Margin = new Padding(4, 0, 4, 0);
             boughtAfterLbl.Name = "boughtAfterLbl";
             boughtAfterLbl.Size = new Size(75, 15);
@@ -253,7 +251,7 @@
             // 
             // boughtBeforeDatePicker
             // 
-            boughtBeforeDatePicker.Location = new Point(257, 87);
+            boughtBeforeDatePicker.Location = new Point(131, 79);
             boughtBeforeDatePicker.Margin = new Padding(4, 3, 4, 3);
             boughtBeforeDatePicker.Name = "boughtBeforeDatePicker";
             boughtBeforeDatePicker.Size = new Size(236, 23);
@@ -261,7 +259,7 @@
             // 
             // boughtAfterDatePicker
             // 
-            boughtAfterDatePicker.Location = new Point(257, 57);
+            boughtAfterDatePicker.Location = new Point(131, 49);
             boughtAfterDatePicker.Margin = new Padding(4, 3, 4, 3);
             boughtAfterDatePicker.Name = "boughtAfterDatePicker";
             boughtAfterDatePicker.Size = new Size(236, 23);
@@ -270,7 +268,7 @@
             // 
             // searchButton
             // 
-            searchButton.Location = new Point(405, 8);
+            searchButton.Location = new Point(257, 8);
             searchButton.Margin = new Padding(4, 3, 4, 3);
             searchButton.Name = "searchButton";
             searchButton.Size = new Size(110, 27);
@@ -288,16 +286,6 @@
             searchBox.Size = new Size(242, 23);
             searchBox.TabIndex = 7;
             searchBox.KeyDown += searchBox_KeyDown;
-            // 
-            // comboBox1
-            // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "Item", "Fee" });
-            comboBox1.Location = new Point(257, 8);
-            comboBox1.Margin = new Padding(4, 3, 4, 3);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(140, 23);
-            comboBox1.TabIndex = 6;
             // 
             // comboBoxMenuStrip
             // 
@@ -363,7 +351,7 @@
             // itemHeightTLP
             // 
             itemHeightTLP.attrib = null;
-            itemHeightTLP.Location = new Point(399, 278);
+            itemHeightTLP.Location = new Point(309, 278);
             itemHeightTLP.Name = "itemHeightTLP";
             itemHeightTLP.Size = new Size(100, 23);
             itemHeightTLP.TabIndex = 77;
@@ -372,7 +360,7 @@
             // itemWidthTLP
             // 
             itemWidthTLP.attrib = null;
-            itemWidthTLP.Location = new Point(399, 247);
+            itemWidthTLP.Location = new Point(309, 247);
             itemWidthTLP.Name = "itemWidthTLP";
             itemWidthTLP.Size = new Size(100, 23);
             itemWidthTLP.TabIndex = 75;
@@ -381,7 +369,7 @@
             // itemLengthTLP
             // 
             itemLengthTLP.attrib = null;
-            itemLengthTLP.Location = new Point(399, 216);
+            itemLengthTLP.Location = new Point(309, 216);
             itemLengthTLP.Name = "itemLengthTLP";
             itemLengthTLP.Size = new Size(100, 23);
             itemLengthTLP.TabIndex = 73;
@@ -390,7 +378,7 @@
             // itemWeightOzTLP
             // 
             itemWeightOzTLP.attrib = null;
-            itemWeightOzTLP.Location = new Point(399, 185);
+            itemWeightOzTLP.Location = new Point(309, 185);
             itemWeightOzTLP.Name = "itemWeightOzTLP";
             itemWeightOzTLP.Size = new Size(100, 23);
             itemWeightOzTLP.TabIndex = 71;
@@ -399,7 +387,7 @@
             // itemWeightLbsTLP
             // 
             itemWeightLbsTLP.attrib = null;
-            itemWeightLbsTLP.Location = new Point(399, 154);
+            itemWeightLbsTLP.Location = new Point(309, 154);
             itemWeightLbsTLP.Name = "itemWeightLbsTLP";
             itemWeightLbsTLP.Size = new Size(100, 23);
             itemWeightLbsTLP.TabIndex = 69;
@@ -425,7 +413,7 @@
             // 
             // setThumbnailButton
             // 
-            setThumbnailButton.Location = new Point(350, 405);
+            setThumbnailButton.Location = new Point(616, 421);
             setThumbnailButton.Name = "setThumbnailButton";
             setThumbnailButton.Size = new Size(96, 23);
             setThumbnailButton.TabIndex = 62;
@@ -435,7 +423,7 @@
             // 
             // deleteImageButton
             // 
-            deleteImageButton.Location = new Point(156, 405);
+            deleteImageButton.Location = new Point(521, 421);
             deleteImageButton.Name = "deleteImageButton";
             deleteImageButton.Size = new Size(89, 23);
             deleteImageButton.TabIndex = 61;
@@ -444,7 +432,7 @@
             // 
             // AddImageButton
             // 
-            AddImageButton.Location = new Point(251, 405);
+            AddImageButton.Location = new Point(422, 421);
             AddImageButton.Name = "AddImageButton";
             AddImageButton.Size = new Size(93, 23);
             AddImageButton.TabIndex = 60;
@@ -454,26 +442,26 @@
             // 
             // mainPictureViewer
             // 
-            mainPictureViewer.Location = new Point(505, 44);
+            mainPictureViewer.Location = new Point(415, 49);
             mainPictureViewer.Name = "mainPictureViewer";
-            mainPictureViewer.Size = new Size(451, 393);
+            mainPictureViewer.Size = new Size(451, 366);
             mainPictureViewer.TabIndex = 59;
             mainPictureViewer.Text = "customControl31";
             // 
             // allPictureViewer
             // 
-            allPictureViewer.Location = new Point(962, 44);
+            allPictureViewer.Location = new Point(872, 49);
             allPictureViewer.Name = "allPictureViewer";
-            allPictureViewer.Size = new Size(126, 393);
+            allPictureViewer.Size = new Size(126, 366);
             allPictureViewer.TabIndex = 58;
             allPictureViewer.Text = "customControl21";
             allPictureViewer.Click += allPictureViewer_Click;
             // 
             // deleteItemButton
             // 
-            deleteItemButton.Location = new Point(382, 18);
+            deleteItemButton.Location = new Point(415, 20);
             deleteItemButton.Name = "deleteItemButton";
-            deleteItemButton.Size = new Size(117, 27);
+            deleteItemButton.Size = new Size(100, 23);
             deleteItemButton.TabIndex = 57;
             deleteItemButton.Text = "Delete Item";
             deleteItemButton.UseVisualStyleBackColor = true;
@@ -490,7 +478,7 @@
             // 
             // deleteShipInfoButton
             // 
-            deleteShipInfoButton.Location = new Point(373, 317);
+            deleteShipInfoButton.Location = new Point(253, 315);
             deleteShipInfoButton.Name = "deleteShipInfoButton";
             deleteShipInfoButton.Size = new Size(126, 23);
             deleteShipInfoButton.TabIndex = 55;
@@ -510,10 +498,10 @@
             // 
             // itemUpdateButton
             // 
-            itemUpdateButton.Location = new Point(120, 315);
+            itemUpdateButton.Location = new Point(202, 20);
             itemUpdateButton.Margin = new Padding(4, 3, 4, 3);
             itemUpdateButton.Name = "itemUpdateButton";
-            itemUpdateButton.Size = new Size(117, 27);
+            itemUpdateButton.Size = new Size(78, 23);
             itemUpdateButton.TabIndex = 37;
             itemUpdateButton.Text = "Update";
             itemUpdateButton.UseVisualStyleBackColor = true;
@@ -552,7 +540,7 @@
             // itemTagHeightLbl
             // 
             itemTagHeightLbl.AutoSize = true;
-            itemTagHeightLbl.Location = new Point(343, 282);
+            itemTagHeightLbl.Location = new Point(253, 282);
             itemTagHeightLbl.Margin = new Padding(4, 0, 4, 0);
             itemTagHeightLbl.Name = "itemTagHeightLbl";
             itemTagHeightLbl.Size = new Size(43, 15);
@@ -562,7 +550,7 @@
             // itemTagWidthLbl
             // 
             itemTagWidthLbl.AutoSize = true;
-            itemTagWidthLbl.Location = new Point(347, 251);
+            itemTagWidthLbl.Location = new Point(257, 251);
             itemTagWidthLbl.Margin = new Padding(4, 0, 4, 0);
             itemTagWidthLbl.Name = "itemTagWidthLbl";
             itemTagWidthLbl.Size = new Size(39, 15);
@@ -572,7 +560,7 @@
             // itemTagLengthLbl
             // 
             itemTagLengthLbl.AutoSize = true;
-            itemTagLengthLbl.Location = new Point(321, 220);
+            itemTagLengthLbl.Location = new Point(231, 220);
             itemTagLengthLbl.Margin = new Padding(4, 0, 4, 0);
             itemTagLengthLbl.Name = "itemTagLengthLbl";
             itemTagLengthLbl.Size = new Size(65, 15);
@@ -582,7 +570,7 @@
             // itemTagWeightOzLbl
             // 
             itemTagWeightOzLbl.AutoSize = true;
-            itemTagWeightOzLbl.Location = new Point(318, 188);
+            itemTagWeightOzLbl.Location = new Point(228, 188);
             itemTagWeightOzLbl.Margin = new Padding(4, 0, 4, 0);
             itemTagWeightOzLbl.Name = "itemTagWeightOzLbl";
             itemTagWeightOzLbl.Size = new Size(68, 15);
@@ -592,7 +580,7 @@
             // itemTagWeightLbsLbl
             // 
             itemTagWeightLbsLbl.AutoSize = true;
-            itemTagWeightLbsLbl.Location = new Point(315, 157);
+            itemTagWeightLbsLbl.Location = new Point(225, 157);
             itemTagWeightLbsLbl.Margin = new Padding(4, 0, 4, 0);
             itemTagWeightLbsLbl.Name = "itemTagWeightLbsLbl";
             itemTagWeightLbsLbl.Size = new Size(71, 15);
@@ -756,9 +744,9 @@
             // 
             // UpdatePurcButton
             // 
-            UpdatePurcButton.Location = new Point(603, 198);
+            UpdatePurcButton.Location = new Point(714, 6);
             UpdatePurcButton.Name = "UpdatePurcButton";
-            UpdatePurcButton.Size = new Size(75, 23);
+            UpdatePurcButton.Size = new Size(75, 28);
             UpdatePurcButton.TabIndex = 28;
             UpdatePurcButton.Text = "Update";
             UpdatePurcButton.UseVisualStyleBackColor = true;
@@ -1039,7 +1027,7 @@
             // 
             // SaleUpdateButton
             // 
-            SaleUpdateButton.Location = new Point(625, 148);
+            SaleUpdateButton.Location = new Point(706, 3);
             SaleUpdateButton.Name = "SaleUpdateButton";
             SaleUpdateButton.Size = new Size(75, 23);
             SaleUpdateButton.TabIndex = 30;
@@ -1169,7 +1157,6 @@
             Margin = new Padding(4, 3, 4, 3);
             Name = "Form1";
             Text = "Form1";
-            Load += Form1_Load;
             FormClosed += Form1_FormClosed;
             tabCollection.ResumeLayout(false);
             SearchTab.ResumeLayout(false);
@@ -1184,14 +1171,13 @@
             ResumeLayout(false);
         }
 
-        
+
 
         #endregion
         public System.Windows.Forms.TabControl tabCollection;
         public System.Windows.Forms.TabPage SearchTab;
         public System.Windows.Forms.TabPage ItemTab;
         public System.Windows.Forms.MenuStrip comboBoxMenuStrip;
-        public System.Windows.Forms.ComboBox comboBox1;
         public System.Windows.Forms.TextBox searchBox;
         public System.Windows.Forms.Button searchButton;
         public System.Windows.Forms.DateTimePicker boughtBeforeDatePicker;

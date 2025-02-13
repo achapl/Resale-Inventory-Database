@@ -35,13 +35,6 @@ namespace FinancialDatabase
             tabControl = new TabController(this);
         }
 
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            // Make default selection "Item"
-            comboBox1.SelectedIndex = 0;
-        }
-
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             Database.closeConnection();
