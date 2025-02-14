@@ -78,6 +78,12 @@
             itemTagDatePurcLbl = new Label();
             itemTagNameLbl = new Label();
             PurchaseTab = new TabPage();
+            PurcNewPurcTagPurcNotesLbl = new Label();
+            PurcNewPurcPurcNotesTextbox = new TextBox();
+            PurcNewPurcTagPurcDateLbl = new Label();
+            PurcNewPurcPurcDate = new DateTimePicker();
+            PurcNewPurcPurcPriceTextbox = new TextBox();
+            PurcNewPurcTagPurcPriceLbl = new Label();
             PurcDatePickerDLP = new DateTimePickerLabelPair();
             PurcPurcNotesTLP = new TextBoxLabelPair();
             PurcPurcPriceTLP = new TextBoxLabelPair();
@@ -659,6 +665,12 @@
             // 
             // PurchaseTab
             // 
+            PurchaseTab.Controls.Add(PurcNewPurcTagPurcNotesLbl);
+            PurchaseTab.Controls.Add(PurcNewPurcPurcNotesTextbox);
+            PurchaseTab.Controls.Add(PurcNewPurcTagPurcDateLbl);
+            PurchaseTab.Controls.Add(PurcNewPurcPurcDate);
+            PurchaseTab.Controls.Add(PurcNewPurcPurcPriceTextbox);
+            PurchaseTab.Controls.Add(PurcNewPurcTagPurcPriceLbl);
             PurchaseTab.Controls.Add(PurcDatePickerDLP);
             PurchaseTab.Controls.Add(PurcPurcNotesTLP);
             PurchaseTab.Controls.Add(PurcPurcPriceTLP);
@@ -697,6 +709,56 @@
             PurchaseTab.Text = "Purchase Group";
             PurchaseTab.UseVisualStyleBackColor = true;
             // 
+            // PurcNewPurcTagPurcNotesLbl
+            // 
+            PurcNewPurcTagPurcNotesLbl.AutoSize = true;
+            PurcNewPurcTagPurcNotesLbl.Location = new Point(432, 402);
+            PurcNewPurcTagPurcNotesLbl.Name = "PurcNewPurcTagPurcNotesLbl";
+            PurcNewPurcTagPurcNotesLbl.Size = new Size(38, 15);
+            PurcNewPurcTagPurcNotesLbl.TabIndex = 82;
+            PurcNewPurcTagPurcNotesLbl.Text = "Notes";
+            // 
+            // PurcNewPurcPurcNotesTextbox
+            // 
+            PurcNewPurcPurcNotesTextbox.Location = new Point(432, 422);
+            PurcNewPurcPurcNotesTextbox.Margin = new Padding(4, 3, 4, 3);
+            PurcNewPurcPurcNotesTextbox.Name = "PurcNewPurcPurcNotesTextbox";
+            PurcNewPurcPurcNotesTextbox.Size = new Size(86, 23);
+            PurcNewPurcPurcNotesTextbox.TabIndex = 81;
+            // 
+            // PurcNewPurcTagPurcDateLbl
+            // 
+            PurcNewPurcTagPurcDateLbl.AutoSize = true;
+            PurcNewPurcTagPurcDateLbl.Location = new Point(225, 402);
+            PurcNewPurcTagPurcDateLbl.Name = "PurcNewPurcTagPurcDateLbl";
+            PurcNewPurcTagPurcDateLbl.Size = new Size(31, 15);
+            PurcNewPurcTagPurcDateLbl.TabIndex = 80;
+            PurcNewPurcTagPurcDateLbl.Text = "Date";
+            // 
+            // PurcNewPurcPurcDate
+            // 
+            PurcNewPurcPurcDate.Location = new Point(225, 422);
+            PurcNewPurcPurcDate.Name = "PurcNewPurcPurcDate";
+            PurcNewPurcPurcDate.Size = new Size(200, 23);
+            PurcNewPurcPurcDate.TabIndex = 79;
+            // 
+            // PurcNewPurcPurcPriceTextbox
+            // 
+            PurcNewPurcPurcPriceTextbox.Location = new Point(132, 422);
+            PurcNewPurcPurcPriceTextbox.Margin = new Padding(4, 3, 4, 3);
+            PurcNewPurcPurcPriceTextbox.Name = "PurcNewPurcPurcPriceTextbox";
+            PurcNewPurcPurcPriceTextbox.Size = new Size(86, 23);
+            PurcNewPurcPurcPriceTextbox.TabIndex = 75;
+            // 
+            // PurcNewPurcTagPurcPriceLbl
+            // 
+            PurcNewPurcTagPurcPriceLbl.AutoSize = true;
+            PurcNewPurcTagPurcPriceLbl.Location = new Point(134, 402);
+            PurcNewPurcTagPurcPriceLbl.Name = "PurcNewPurcTagPurcPriceLbl";
+            PurcNewPurcTagPurcPriceLbl.Size = new Size(84, 15);
+            PurcNewPurcTagPurcPriceLbl.TabIndex = 74;
+            PurcNewPurcTagPurcPriceLbl.Text = "Purchase Price";
+            // 
             // PurcDatePickerDLP
             // 
             PurcDatePickerDLP.attrib = null;
@@ -727,7 +789,7 @@
             // 
             // PurcCurrQtyTextbox
             // 
-            PurcCurrQtyTextbox.Location = new Point(349, 412);
+            PurcCurrQtyTextbox.Location = new Point(370, 346);
             PurcCurrQtyTextbox.Margin = new Padding(4, 3, 4, 3);
             PurcCurrQtyTextbox.Name = "PurcCurrQtyTextbox";
             PurcCurrQtyTextbox.Size = new Size(96, 23);
@@ -736,7 +798,7 @@
             // PurcTagCurrQtyLbl
             // 
             PurcTagCurrQtyLbl.AutoSize = true;
-            PurcTagCurrQtyLbl.Location = new Point(349, 394);
+            PurcTagCurrQtyLbl.Location = new Point(370, 325);
             PurcTagCurrQtyLbl.Name = "PurcTagCurrQtyLbl";
             PurcTagCurrQtyLbl.Size = new Size(96, 15);
             PurcTagCurrQtyLbl.TabIndex = 29;
@@ -744,7 +806,7 @@
             // 
             // UpdatePurcButton
             // 
-            UpdatePurcButton.Location = new Point(714, 6);
+            UpdatePurcButton.Location = new Point(684, 7);
             UpdatePurcButton.Name = "UpdatePurcButton";
             UpdatePurcButton.Size = new Size(75, 28);
             UpdatePurcButton.TabIndex = 28;
@@ -754,7 +816,7 @@
             // 
             // EditPurcButton
             // 
-            EditPurcButton.Location = new Point(633, 7);
+            EditPurcButton.Location = new Point(603, 7);
             EditPurcButton.Name = "EditPurcButton";
             EditPurcButton.Size = new Size(75, 27);
             EditPurcButton.TabIndex = 25;
@@ -764,10 +826,10 @@
             // 
             // NewPurcButton
             // 
-            NewPurcButton.Location = new Point(501, 7);
+            NewPurcButton.Location = new Point(9, 422);
             NewPurcButton.Margin = new Padding(4, 3, 4, 3);
             NewPurcButton.Name = "NewPurcButton";
-            NewPurcButton.Size = new Size(122, 27);
+            NewPurcButton.Size = new Size(100, 27);
             NewPurcButton.TabIndex = 24;
             NewPurcButton.Text = "New Purchase";
             NewPurcButton.UseVisualStyleBackColor = true;
@@ -776,26 +838,26 @@
             // PurcTagPurcNotesLbl
             // 
             PurcTagPurcNotesLbl.AutoSize = true;
-            PurcTagPurcNotesLbl.Location = new Point(501, 158);
+            PurcTagPurcNotesLbl.Location = new Point(547, 155);
             PurcTagPurcNotesLbl.Margin = new Padding(4, 0, 4, 0);
             PurcTagPurcNotesLbl.Name = "PurcTagPurcNotesLbl";
-            PurcTagPurcNotesLbl.Size = new Size(89, 15);
+            PurcTagPurcNotesLbl.Size = new Size(38, 15);
             PurcTagPurcNotesLbl.TabIndex = 22;
-            PurcTagPurcNotesLbl.Text = "Purchase Notes";
+            PurcTagPurcNotesLbl.Text = "Notes";
             // 
             // PurcTagPurcDateLbl
             // 
             PurcTagPurcDateLbl.AutoSize = true;
-            PurcTagPurcDateLbl.Location = new Point(501, 105);
+            PurcTagPurcDateLbl.Location = new Point(554, 105);
             PurcTagPurcDateLbl.Margin = new Padding(4, 0, 4, 0);
             PurcTagPurcDateLbl.Name = "PurcTagPurcDateLbl";
-            PurcTagPurcDateLbl.Size = new Size(82, 15);
+            PurcTagPurcDateLbl.Size = new Size(31, 15);
             PurcTagPurcDateLbl.TabIndex = 21;
-            PurcTagPurcDateLbl.Text = "Purchase Date";
+            PurcTagPurcDateLbl.Text = "Date";
             // 
             // PurcWeightOzTextbox
             // 
-            PurcWeightOzTextbox.Location = new Point(801, 413);
+            PurcWeightOzTextbox.Location = new Point(819, 346);
             PurcWeightOzTextbox.Margin = new Padding(4, 3, 4, 3);
             PurcWeightOzTextbox.Name = "PurcWeightOzTextbox";
             PurcWeightOzTextbox.Size = new Size(40, 23);
@@ -803,7 +865,7 @@
             // 
             // PurcWeightLbsTextbox
             // 
-            PurcWeightLbsTextbox.Location = new Point(712, 413);
+            PurcWeightLbsTextbox.Location = new Point(730, 346);
             PurcWeightLbsTextbox.Margin = new Padding(4, 3, 4, 3);
             PurcWeightLbsTextbox.Name = "PurcWeightLbsTextbox";
             PurcWeightLbsTextbox.Size = new Size(40, 23);
@@ -811,7 +873,7 @@
             // 
             // PurcHeightTextbox
             // 
-            PurcHeightTextbox.Location = new Point(633, 413);
+            PurcHeightTextbox.Location = new Point(651, 346);
             PurcHeightTextbox.Margin = new Padding(4, 3, 4, 3);
             PurcHeightTextbox.Name = "PurcHeightTextbox";
             PurcHeightTextbox.Size = new Size(40, 23);
@@ -819,7 +881,7 @@
             // 
             // PurcWidthTextbox
             // 
-            PurcWidthTextbox.Location = new Point(557, 413);
+            PurcWidthTextbox.Location = new Point(575, 346);
             PurcWidthTextbox.Margin = new Padding(4, 3, 4, 3);
             PurcWidthTextbox.Name = "PurcWidthTextbox";
             PurcWidthTextbox.Size = new Size(40, 23);
@@ -827,7 +889,7 @@
             // 
             // PurcLengthTextbox
             // 
-            PurcLengthTextbox.Location = new Point(475, 413);
+            PurcLengthTextbox.Location = new Point(493, 346);
             PurcLengthTextbox.Margin = new Padding(4, 3, 4, 3);
             PurcLengthTextbox.Name = "PurcLengthTextbox";
             PurcLengthTextbox.Size = new Size(40, 23);
@@ -835,7 +897,7 @@
             // 
             // PurcInitQtyTextbox
             // 
-            PurcInitQtyTextbox.Location = new Point(260, 413);
+            PurcInitQtyTextbox.Location = new Point(281, 347);
             PurcInitQtyTextbox.Margin = new Padding(4, 3, 4, 3);
             PurcInitQtyTextbox.Name = "PurcInitQtyTextbox";
             PurcInitQtyTextbox.Size = new Size(81, 23);
@@ -843,7 +905,7 @@
             // 
             // PurcNameTextbox
             // 
-            PurcNameTextbox.Location = new Point(111, 413);
+            PurcNameTextbox.Location = new Point(132, 347);
             PurcNameTextbox.Margin = new Padding(4, 3, 4, 3);
             PurcNameTextbox.Name = "PurcNameTextbox";
             PurcNameTextbox.Size = new Size(142, 23);
@@ -852,7 +914,7 @@
             // PurcTagWeightOzLbl
             // 
             PurcTagWeightOzLbl.AutoSize = true;
-            PurcTagWeightOzLbl.Location = new Point(797, 395);
+            PurcTagWeightOzLbl.Location = new Point(818, 325);
             PurcTagWeightOzLbl.Margin = new Padding(4, 0, 4, 0);
             PurcTagWeightOzLbl.Name = "PurcTagWeightOzLbl";
             PurcTagWeightOzLbl.Size = new Size(68, 15);
@@ -862,7 +924,7 @@
             // ShippingInfoLbl
             // 
             ShippingInfoLbl.AutoSize = true;
-            ShippingInfoLbl.Location = new Point(472, 375);
+            ShippingInfoLbl.Location = new Point(493, 301);
             ShippingInfoLbl.Margin = new Padding(4, 0, 4, 0);
             ShippingInfoLbl.Name = "ShippingInfoLbl";
             ShippingInfoLbl.Size = new Size(138, 15);
@@ -872,7 +934,7 @@
             // PurcTagWeightLbs
             // 
             PurcTagWeightLbs.AutoSize = true;
-            PurcTagWeightLbs.Location = new Point(709, 395);
+            PurcTagWeightLbs.Location = new Point(730, 325);
             PurcTagWeightLbs.Margin = new Padding(4, 0, 4, 0);
             PurcTagWeightLbs.Name = "PurcTagWeightLbs";
             PurcTagWeightLbs.Size = new Size(71, 15);
@@ -882,7 +944,7 @@
             // PurcTagHeightLbl
             // 
             PurcTagHeightLbl.AutoSize = true;
-            PurcTagHeightLbl.Location = new Point(629, 395);
+            PurcTagHeightLbl.Location = new Point(650, 325);
             PurcTagHeightLbl.Margin = new Padding(4, 0, 4, 0);
             PurcTagHeightLbl.Name = "PurcTagHeightLbl";
             PurcTagHeightLbl.Size = new Size(64, 15);
@@ -892,7 +954,7 @@
             // PurcTagWidthLbl
             // 
             PurcTagWidthLbl.AutoSize = true;
-            PurcTagWidthLbl.Location = new Point(553, 395);
+            PurcTagWidthLbl.Location = new Point(574, 325);
             PurcTagWidthLbl.Margin = new Padding(4, 0, 4, 0);
             PurcTagWidthLbl.Name = "PurcTagWidthLbl";
             PurcTagWidthLbl.Size = new Size(60, 15);
@@ -902,7 +964,7 @@
             // PurcTagLengthLbl
             // 
             PurcTagLengthLbl.AutoSize = true;
-            PurcTagLengthLbl.Location = new Point(472, 395);
+            PurcTagLengthLbl.Location = new Point(493, 325);
             PurcTagLengthLbl.Margin = new Padding(4, 0, 4, 0);
             PurcTagLengthLbl.Name = "PurcTagLengthLbl";
             PurcTagLengthLbl.Size = new Size(65, 15);
@@ -912,7 +974,7 @@
             // PurcTagInitQtyLbl
             // 
             PurcTagInitQtyLbl.AutoSize = true;
-            PurcTagInitQtyLbl.Location = new Point(257, 395);
+            PurcTagInitQtyLbl.Location = new Point(278, 325);
             PurcTagInitQtyLbl.Margin = new Padding(4, 0, 4, 0);
             PurcTagInitQtyLbl.Name = "PurcTagInitQtyLbl";
             PurcTagInitQtyLbl.Size = new Size(85, 15);
@@ -922,7 +984,7 @@
             // PurcTagNameLbl
             // 
             PurcTagNameLbl.AutoSize = true;
-            PurcTagNameLbl.Location = new Point(107, 395);
+            PurcTagNameLbl.Location = new Point(132, 325);
             PurcTagNameLbl.Margin = new Padding(4, 0, 4, 0);
             PurcTagNameLbl.Name = "PurcTagNameLbl";
             PurcTagNameLbl.Size = new Size(66, 15);
@@ -932,7 +994,7 @@
             // AddNewItemLbl
             // 
             AddNewItemLbl.AutoSize = true;
-            AddNewItemLbl.Location = new Point(7, 375);
+            AddNewItemLbl.Location = new Point(9, 325);
             AddNewItemLbl.Margin = new Padding(4, 0, 4, 0);
             AddNewItemLbl.Name = "AddNewItemLbl";
             AddNewItemLbl.Size = new Size(86, 15);
@@ -941,10 +1003,10 @@
             // 
             // addItemButton
             // 
-            addItemButton.Location = new Point(7, 409);
+            addItemButton.Location = new Point(8, 343);
             addItemButton.Margin = new Padding(4, 3, 4, 3);
             addItemButton.Name = "addItemButton";
-            addItemButton.Size = new Size(88, 27);
+            addItemButton.Size = new Size(101, 27);
             addItemButton.TabIndex = 2;
             addItemButton.Text = "Add Item";
             addItemButton.UseVisualStyleBackColor = true;
@@ -967,7 +1029,7 @@
             PurchaseListBox.Location = new Point(7, 7);
             PurchaseListBox.Margin = new Padding(4, 3, 4, 3);
             PurchaseListBox.Name = "PurchaseListBox";
-            PurchaseListBox.Size = new Size(468, 319);
+            PurchaseListBox.Size = new Size(468, 289);
             PurchaseListBox.TabIndex = 0;
             PurchaseListBox.MouseDoubleClick += purcListBox_DoubleClick;
             // 
@@ -1272,6 +1334,12 @@
         public TextBoxLabelPair itemNameTLP;
         public DateTimePickerLabelPair PurcDatePickerDLP;
         public DateTimePickerLabelPair SaleDatePickerDLP;
+        public TextBox PurcNewPurcPurcPriceTextbox;
+        public Label PurcNewPurcTagPurcPriceLbl;
+        public DateTimePicker PurcNewPurcPurcDate;
+        public Label PurcNewPurcTagPurcDateLbl;
+        public Label PurcNewPurcTagPurcNotesLbl;
+        public TextBox PurcNewPurcPurcNotesTextbox;
     }
 }
 

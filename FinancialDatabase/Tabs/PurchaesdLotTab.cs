@@ -8,7 +8,6 @@ public class PurchasedLotTab : Tab
 
     private List<Control> newPurchaseGroupControls;
     private Purchase currPurc;
-    public bool isNewPurchase;
 
     public PurchasedLotTab(TabController tabController, Form1 Form1) : base(Form1)
 	{
@@ -16,7 +15,6 @@ public class PurchasedLotTab : Tab
         updateButton = Form1.UpdatePurcButton;
         editButton   = Form1.EditPurcButton;
         this.tabController = tabController;
-        isNewPurchase = false;
         generateTBoxGroups();
         Util.clearLabelText(allAttributeValueLabels);
         showControlVisibility();
@@ -74,12 +72,14 @@ public class PurchasedLotTab : Tab
 
         newPurchaseGroupControls = new List<Control>()
         {
-            Form1.PurcPurcPriceTLP,
-            Form1.PurcDatePickerDLP
+            Form1.PurcNewPurcPurcPriceTextbox,
+            Form1.PurcNewPurcPurcNotesTextbox,
+            Form1.PurcNewPurcPurcDate,
         };
 
         foreach (Control c in newItemTBoxes)
         {
+
             newPurchaseGroupControls.Add(c);
         }
 
@@ -133,22 +133,12 @@ public class PurchasedLotTab : Tab
     {
         setCurrPurc(null);
         Util.clearControls(allAttributeValueLabels);
-
-        /*if (currPurc is null)
-        {
-            currPurc = new Purchase();
-        }
-        if (currPurc.items is null)
-        {
-            currPurc.items = new List<Item>();
-        }
-        currPurc.items.Clear();*/
     }
 
     override public void flipEditMode()
     {
         // Don't go into edit mode if there is no item to edit
-        if (!isNewPurchase && !inEditingState && tabController.getCurrItem() == null) { return; }
+        if (!inEditingState && tabController.getCurrItem() == null) { return; }
         inEditingState = !inEditingState;
         recordAttributeStates();
         showControlVisibility();
@@ -188,16 +178,9 @@ public class PurchasedLotTab : Tab
     // Update purchase button is clicked
     public bool getUserInputUpdate()
     {
-        // Check if adding a new purchase
-        // or editing existing one
-        if (isNewPurchase)
-        {
-            addItemToPurc();
-            return true;
-        }
         // Null check: Every currPurc must have at least one item.
         // There if not a new purc, there must therefore be a currItem
-        else if (tabController.getCurrItem() is null)
+        if (tabController.getCurrItem() is null)
         {
             return false;
         }
@@ -239,8 +222,6 @@ public class PurchasedLotTab : Tab
     {
         if (purchaseID == null || purchaseID <= 0) { throw new Exception("Error: trying to set curr purchase and show its items from a bad purchaseID!"); }
 
-        this.isNewPurchase = false;
-
         viewMode();
 
         // Update purchase from database
@@ -256,41 +237,157 @@ public class PurchasedLotTab : Tab
         }
     }
 
-
-    public bool allNewPurchaseBoxesFilled()
+    
+    public bool allNewItemBoxesFilled(out string errorMsg)
     {
-        // Necessary user input
-        if (Form1.PurcNameTextbox.Text == "" ||
-            !Double.TryParse(Form1.PurcPurcPriceTLP.getControlValueAsStr(), out double _))
+        errorMsg = "";
+        if (Form1.PurcNameTextbox.Text == "")
         {
-            showWarning("Error: Must have correct formatting for Purchase Date and Purchase Price");
+            errorMsg = "Error: New Purchase must have at least 1 item with a name!";
             return false;
         }
 
-        bool hasShippingInfo = false;
-        bool hasBlankTextbox = false;
+        // Check individually so blank error message doesn't overwrite real error message
+        Util.NoneSomeAll shipBoxesFilled = newShippingBoxesFilled(out errorMsg);
+        if (shipBoxesFilled == Util.NoneSomeAll.Some)
+        {
+            return false;
+        }
+        else if (shipBoxesFilled == Util.NoneSomeAll.All &&
+                !allNewShippingBoxesHaveNumbers(out errorMsg))
+        {
+            return false;
+        }
+
+
+        return true;
+
+    }
+
+
+    public bool allNewPurchaseBoxesFilled(out string errorMsg)
+    {
+        errorMsg = "";
+        if (!allNewItemBoxesFilled(out errorMsg)) { return false; }
+
+
+        if (Form1.PurcNewPurcPurcPriceTextbox.Text == "" ||
+            !Double.TryParse(Form1.PurcNewPurcPurcPriceTextbox.Text, out double _))
+        {
+            errorMsg = "Error: Must have correct formatting for Purchase Date and Purchase Price";
+            return false;
+        }
+        
+        return true;
+    }
+
+
+    internal Util.NoneSomeAll newShippingBoxesFilled(out string errorMsg)
+    {
+        errorMsg = "";
+        bool allBoxesFilled = true;
+        bool hasAtLeastOneFilledBox = false;
+        bool hasAtLeastOneEmptyBox = false;
+        Util.NoneSomeAll boxesFilled;
         foreach (TextBox t in purcNewItemShippingTBoxes)
         {
-            if (t.Text != "")
+            if (t.Text.CompareTo("") == 0)
             {
-                hasShippingInfo = true;
-                if (!Int32.TryParse(t.Text, out int _))
-                {
-                    showWarning("Error: Must have all shipping boxes filled out with correct integers, either none filled out at all");
-                    return false;
-                }
+                hasAtLeastOneEmptyBox = true;
+                allBoxesFilled = false;
             }
-            if (t.Text == "")
+            else
             {
-                hasBlankTextbox = true;
-            }            
+                hasAtLeastOneFilledBox = true;
+            }
+        }
+        if (allBoxesFilled)
+        {
+            boxesFilled = Util.NoneSomeAll.All;
+        }
+        else if (hasAtLeastOneFilledBox &&
+                 hasAtLeastOneEmptyBox)
+        {
+            boxesFilled = Util.NoneSomeAll.Some;
+            errorMsg = "Error: Shipping Information Incomplete";
+        }
+        else
+        {
+            boxesFilled = Util.NoneSomeAll.None;
         }
 
-        if (hasShippingInfo &&
-            hasBlankTextbox)
+        return boxesFilled;
+    }
+
+
+    public bool allNewShippingBoxesHaveNumbers(out string errorMsg)
+    {
+        errorMsg = "";
+
+        if (newShippingBoxesFilled(out string _) != Util.NoneSomeAll.All)
         {
-            showWarning("Error: Must have all shipping boxes filled out with correct integers, either none filled out at all");
             return false;
+        }
+
+        foreach (TextBox shipTBox in purcNewItemShippingTBoxes)
+        {
+            if (!Int32.TryParse(shipTBox.Text, out int _))
+            {
+                errorMsg = "Error: Must have all shipping boxes filled out with correct integers, either none filled out at all";
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public bool createNewPurchase(out int newItemID)
+    {
+        newItemID = -1;
+        bool userInputGood = allNewPurchaseBoxesFilled(out string errorMsg);
+
+        if (errorMsg != "")
+        {
+            showWarning(errorMsg);
+        }
+
+        if (!userInputGood)
+        {
+            return false;
+        }
+
+        Form1.PurchaseListBox.Items.Clear();
+        clearCurrPurcItems();
+
+        double amount = Double.Parse(Form1.PurcNewPurcPurcPriceTextbox.Text);
+        Date purcDate = new Date(Form1.PurcNewPurcPurcDate.Value);
+        string notes = Form1.PurcNewPurcPurcNotesTextbox.Text;
+        int purcID = Database.insertPurchase(amount, notes, purcDate);
+        this.currPurc = Database.getPurchase(purcID);
+
+        newItemID = addUserInputItemToCurrPurc();
+        Util.clearLabelText(newPurchaseGroupControls);
+        return true;
+    }
+
+
+    // Button was pushed to add an item to the current purchase
+    // If there is no current purchase, create one from given user input
+    // Returns ItemID of new item in the new purchase
+    public int addUserInputItemToCurrPurc()
+    {
+        int purcID;
+        Date purcDate;
+        bool userInputGood = allNewItemBoxesFilled(out string errorMsg);
+        
+        if (errorMsg != "")
+        {
+            showWarning(errorMsg);
+        }
+        
+        if (!userInputGood)
+        {
+            return -1;
         }
 
         // Set defaults
@@ -302,41 +399,10 @@ public class PurchasedLotTab : Tab
         {
             Form1.PurcCurrQtyTextbox.Text = "1";
         }
-        return true;
-    }
+
+            
 
 
-    public bool allNewShippingBoxesFilled()
-    {
-        foreach (TextBox t in purcNewItemShippingTBoxes)
-        {
-            if (t.Text.CompareTo("") == 0)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    // Button was pushed to add an item to the current purchase
-    // If there is no current purchase, create one from given user input
-    public void addItemToPurc()
-    {
-        int purcID;
-        Date purcDate;
-        bool userInputGood = allNewPurchaseBoxesFilled();
-        if (!userInputGood) { return; }
-        if ((currPurc is null || isNewPurchase)
-             && userInputGood)
-        {
-            double amount = Double.Parse(Form1.PurcPurcPriceTLP.getControlValueAsStr());
-            purcDate = new(Form1.PurcDatePickerDLP.getControlValueAsStr());
-            string notes = Form1.PurcPurcNotesTLP.getControlValueAsStr();
-            purcID = Database.insertPurchase(amount, notes, purcDate);
-            setCurrPurc(Database.getPurchase(purcID));
-
-        }
         purcID = currPurc.PURCHASE_ID;
         purcDate = tabController.getCurrPurc().Date_Purchased;
 
@@ -346,7 +412,7 @@ public class PurchasedLotTab : Tab
         if (!Item.isValidName(Form1.PurcNameTextbox.Text))
         {
             showWarning("To Add New Item, a valid name for the item must be filled out");
-            return;
+            return -1;
         }
 
         Item newItem = getNewItemFromUserInput();
@@ -360,7 +426,7 @@ public class PurchasedLotTab : Tab
         // Currently, this method gets the current item and uses it to update the curr purchase so that the idsplay can be updated with the new purchase associated with it
         // Should instead update the curr purchase and use that to update the purchase tab with the new item.
         setCurrPurcAndShowView(tabController.getCurrPurc().PURCHASE_ID);
-        isNewPurchase = false;
+        return itemID;
     }
 
     private Item getNewItemFromUserInput()
@@ -385,7 +451,7 @@ public class PurchasedLotTab : Tab
         newItem.set_CurrentQuantity(currQty);
         
         // Add user-inputted shipping info
-        if (allNewShippingBoxesFilled())
+        if (newShippingBoxesFilled(out string errorMsg) == Util.NoneSomeAll.All)
         {
             int ttlWeight = Int32.Parse(Form1.PurcWeightLbsTextbox.Text) * 16 + Int32.Parse(Form1.PurcWeightOzTextbox.Text);
             newItem.set_Weight(ttlWeight);
@@ -393,20 +459,12 @@ public class PurchasedLotTab : Tab
             newItem.set_Width(Int32.Parse(Form1.PurcWidthTextbox.Text));
             newItem.set_Height(Int32.Parse(Form1.PurcHeightTextbox.Text));
         }
+        else if (errorMsg != "")
+        {
+            showWarning(errorMsg);
+        }
 
         return newItem;
-    }
-
-    // Clear out old information
-    // If there is a purchased item able to be added,
-    // make a new purchase in the database and add it
-    public void newPurchase()
-    {
-        Form1.PurchaseListBox.Items.Clear();
-        Util.clearLabelText(allClearableControl);
-        clearCurrPurcItems();
-        isNewPurchase = true;
-        editMode();
     }
 
     public Item getCurrPurcItemsAt(int index)

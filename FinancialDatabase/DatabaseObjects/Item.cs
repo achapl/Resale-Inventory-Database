@@ -1,5 +1,6 @@
 ﻿using FinancialDatabase;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
@@ -64,6 +65,41 @@ public class Item : IEquatable<Item>
     public Item()
     {
         setDefaults();
+    }
+
+    public Item(int itemID)
+    {
+        if (itemID == Util.DEFAULT_INT)
+        {
+            this.ITEM_ID = -1;
+            return;
+        }
+
+        Item actualItem = Database.getItem(itemID);
+        this.set_ITEM_ID(actualItem.get_ITEM_ID());
+        this.set_Name(actualItem.get_Name());
+        this.set_CurrentQuantity(actualItem.get_CurrentQuantity());
+        this.set_InitialQuantity(actualItem.get_InitialQuantity());
+        this.set_Notes_item(actualItem.get_Notes_item());
+
+        this.set_ShippingID(actualItem.get_ShippingID());
+        this.set_Length(actualItem.get_Length());
+        this.set_Width(actualItem.get_Width());
+        this.set_Height(actualItem.get_Height());
+        this.set_Weight(actualItem.get_Weight());
+        this.set_Notes_shipping(actualItem.get_Notes_shipping());
+
+        this.set_PurchaseID(actualItem.get_PurchaseID());
+        this.set_Amount_purchase(actualItem.get_Amount_purchase());
+        this.set_Date_Purchased(actualItem.get_Date_Purchased());
+        this.set_Fees_purchase(actualItem.get_Fees_purchase());
+        this.set_Notes_purchase(actualItem.get_Notes_purchase());
+        this.set_Seller(actualItem.get_Seller());
+        this.set_Tax(actualItem.get_Tax());
+
+        this.set_SaleID(actualItem.get_SaleID());
+        this.sales = actualItem.sales;
+
     }
 
     private void setDefaults()

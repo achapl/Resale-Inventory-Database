@@ -222,24 +222,22 @@ namespace FinancialDatabase.Tabs
 
         public void purcItemsAddItem()
         {
-            purchasedLotTab.addItemToPurc();
+            purchasedLotTab.addUserInputItemToCurrPurc();
         }
 
         public void purcItemsNewPurchase()
         {
             itemViewTab.clearCurrItem();
-            purchasedLotTab.newPurchase();
-            itemViewTab.clearCurrItemControls();
+            bool success = purchasedLotTab.createNewPurchase(out int newItemID);
+            if (success)
+            {
+                itemViewTab.setCurrItemAndShowView(new Item(newItemID));
+            }
         }
 
         public void purcItemsUpdateFromUserInput()
         {
             purchasedLotTab.updateFromUserInput();
-        }
-        
-        public bool isNewPurchase()
-        {
-            return purchasedLotTab.isNewPurchase;
         }
         
         public bool getPLInEditingState() => purchasedLotTab.inEditingState;

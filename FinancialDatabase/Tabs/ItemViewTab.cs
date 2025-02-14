@@ -404,7 +404,8 @@ public class ItemViewTab : Tab
     public void setCurrItemAndShowView(Item? newItem)
     {
        
-        if (newItem == null) {
+        if (newItem == null ||
+            newItem.get_ITEM_ID() == Util.DEFAULT_INT) {
             currItem = null;
             return;
         }
@@ -412,8 +413,7 @@ public class ItemViewTab : Tab
         // Items must only come from user input or currently indexed items such as from the current purchase or item search list.
         // If one has to bring an item outside of these places, there's something wrong. Possibility of bugs introduced.
         if (!tabController.getSearchItems().Contains(newItem) &&
-            !tabController.getCurrPurcItems().Contains(newItem) &&
-            !tabController.isNewPurchase())
+            !tabController.getCurrPurcItems().Contains(newItem))
         {
             throw new Exception("Error: ItemViewTab.setCurrItem,"
                                 + "Result item ID: " + newItem.get_ITEM_ID().ToString() + ", "

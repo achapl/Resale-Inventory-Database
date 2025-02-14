@@ -38,7 +38,7 @@ public class Util
     /// <summary>
     /// Default list of images used for unassigned init values for a database object
     /// </summary>
-    public static List<MyImage> DEFAULT_IMAGES = new List<MyImage>() {DEFAULT_IMAGE};
+    public static List<MyImage> DEFAULT_IMAGES = new List<MyImage>() { DEFAULT_IMAGE };
 
 
     // Check if a value is a defualt value
@@ -64,6 +64,14 @@ public class Util
         if (val.CompareTo("") == 0) return "";
         else { return val.ToString(); }
     }
+
+
+    internal enum NoneSomeAll {
+        None,
+        Some,
+        All
+    };
+
 
 
     /// <summary>
@@ -201,6 +209,10 @@ public class Util
             if (c is Label)
             {
                 (c as Label).Text = "";
+            }
+            if (c is TextBox)
+            {
+                (c as TextBox).Text = "";
             }
         }
     }
