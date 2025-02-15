@@ -2,11 +2,14 @@ from ..DtbConnAndQuery import runQuery
 
 
 
+thumbTable = "thumbnail"
 purcTable = "purchase"
 shipTable = "shipping"
+imageTable = "image"
 saleTable = "sale"
 itemTable = "item"
 feeTable  = "fee"
+
 
 # Determine if sold by checking if it has a sold date
 # This prevents lot headers (purchase: "Lot" which covers purchase of all items below) which have a net sold price but no date, from being inputted into the sales table
@@ -24,33 +27,35 @@ def isFee(row):
 
 def deleteTable(table):
 	modifiedItemQuery = "DELETE FROM " + table + ";"
-	result = runQuery(modifiedItemQuery)
+	result = runQuery(modifiedItemQuery, False)
 	if result[0] == "!!!ERROR!!!":
 		print("!!!ERROR!!!")
 		print(modifiedItemQuery)
 
 def clearDatabase():
 	deleteTable(purcTable)
-	deleteTable(shipTable)
 	deleteTable(saleTable)
-	deleteTable(itemTable)
+	deleteTable(shipTable)
+	deleteTable(thumbTable)
+	deleteTable(imageTable)
 	deleteTable(feeTable)
+	deleteTable(itemTable)
 
 def updateItemIDs(itemID, purcID, saleID, shipID):
 
 	if purcID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET PurchaseID = " + purcID + " WHERE ITEM_ID = " + itemID + ";"
-		result = runQuery(modifiedItemQuery)
+		result = runQuery(modifiedItemQuery, False)
 	else:
 		print("ERROR, NO PURC_ID for ITEM_ID: " + itemID)
 
 	if saleID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET SaleID = "     + saleID + " WHERE ITEM_ID = " + itemID + ";"
-		result = runQuery(modifiedItemQuery)
+		result = runQuery(modifiedItemQuery, False)
 
 	if shipID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET ShippingID = " + shipID + " WHERE ITEM_ID = " + itemID + ";"
-		result = runQuery(modifiedItemQuery)
+		result = runQuery(modifiedItemQuery, False)
 
 	return
 
@@ -113,27 +118,27 @@ def inputIntoDatabase(data):
 		if isFee(row):
 			# Fee entry
 			feeQuery = "INSERT INTO " + feeTable + " (Date, Amount, Type) VALUES (STR_TO_DATE('" + row[0] + "', '%Y-%m-%d')," + str(row[2]) + ", \"" + row[12] + "\");"
-			feeID = str(runQuery(feeQuery)[2])
+			feeID = str(runQuery(feeQuery, False)[2])
 			continue
 		
 		#Item entry
 		itemQuery = "INSERT INTO " + itemTable + " (Name, InitialQuantity, CurrentQuantity, Notes_item) VALUES (\"" + row[1] + "\"" + ", " + str(initQuantity) + ", " + str(currQuantity) + ", " + "\"" + row[8] + "\"" + ");" # Note: Change current quantity later based on small_sales.
-		itemID = str(runQuery(itemQuery)[2])
+		itemID = str(runQuery(itemQuery, False)[2])
 
 		# If it is the purchase of a new lot or single item lot, insert that purchase into the database, and
 		# update the most recent purchaseID to be used for following items of the same lot if any exist
 		if hasPurchasePrice(row):
-			purchaseQuery = "INSERT INTO " + purcTable + " (Date_Purchased, Amount_purchase, ItemID_purchase) VALUES (STR_TO_DATE('" + row[0] + "', '%Y-%m-%d')," + row[2] + ", " + itemID + ");"
-			purcID = str(runQuery(purchaseQuery)[2])
+			purchaseQuery = "INSERT INTO " + purcTable + " (Date_Purchased, Amount_purchase) VALUES (STR_TO_DATE('" + row[0] + "', '%Y-%m-%d')," + row[2] + ");"
+			purcID = str(runQuery(purchaseQuery, False)[2])
 		
 		if isSold(row):
 			saleQuery = "INSERT INTO " + saleTable + " (Date_Sold, Amount_sale, ItemID_sale) VALUES (STR_TO_DATE('" + row[5] + "', '%Y-%m-%d')" + ", " + row[3] + ", " + itemID + ");"
-			saleID = str(runQuery(saleQuery)[2])
+			saleID = str(runQuery(saleQuery, False)[2])
 
 		if hasPackingDims(row):
 			ttlWeight, l, w, h = getShippingDims(row)
 			shipQuery = "INSERT INTO " + shipTable + " (Length, Width, Height, Weight, ItemID_shipping, Notes_shipping) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + itemID + ", \"" + row[11] + "\");"
-			shipID = str(runQuery(shipQuery)[2])
+			shipID = str(runQuery(shipQuery, False)[2])
 
 		updateItemIDs(itemID, purcID, saleID, shipID)
 		print(row[1] + " PurcID: " + purcID)

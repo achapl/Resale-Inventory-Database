@@ -17,7 +17,7 @@ f = None
 # Get all image and image IDs, where there is no thumbnail ID
 
 def getImagesAndData():
-    imagesAndData, colNames, lastColID = runQuery("SELECT IMAGE_ID, image FROM image WHERE thumbnailID IS NULL OR thumbnailID = 0")
+    imagesAndData, colNames, lastColID = runQuery("SELECT IMAGE_ID, image FROM image WHERE thumbnailID IS NULL OR thumbnailID = 0", False)
     return imagesAndData
 
 # Convert bytearray to image
@@ -46,7 +46,7 @@ def saveImage(image, imagePath):
 
 # Insert new image into database / Get result ID
 def insertImage(imagePath):
-    a, b, lastRowID = runQuery("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + imagePath + "'));")
+    a, b, lastRowID = runQuery("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + imagePath + "'));", False)
     return lastRowID
     
 
@@ -55,7 +55,7 @@ def insertImage(imagePath):
 
 def updateID(imageID, thumbnailID):
     query = "UPDATE image SET thumbnailID = " + str(thumbnailID) + " WHERE IMAGE_ID = " + str(imageID) + ";" 
-    runQuery(query)
+    runQuery(query, False)
 
 
 def imageIDToThumbnail(imageID):
@@ -64,7 +64,7 @@ def imageIDToThumbnail(imageID):
 
 def imageToThumbnail(itemID):
     # Modify next line to get 
-    imagesAndData, colNames, lastColID = runQuery("SELECT IMAGE_ID, image FROM image WHERE ItemID = " + str(itemID) + ";")
+    imagesAndData, colNames, lastColID = runQuery("SELECT IMAGE_ID, image FROM image WHERE ItemID = " + str(itemID) + ";", False)
     hasThumbnail = False
     count = 0
     for [imageID, byteImage] in imagesAndData:
@@ -85,7 +85,7 @@ def imageToThumbnail(itemID):
             continue
         
 
-        result,_,_  = runQuery("SELECT thumbnailID FROM item WHERE ITEM_ID = " + str(itemID) + ";")
+        result,_,_  = runQuery("SELECT thumbnailID FROM item WHERE ITEM_ID = " + str(itemID) + ";", False)
         # Only 1 should be returned since itemID is unique. More than that would be an error
         if len(result) > 1:
             print("ERROR: Multiple Returns for single ITEM_ID: " + str(itemID))
@@ -98,7 +98,7 @@ def imageToThumbnail(itemID):
         oldThumbnailID = result[0][0]
 
         if oldThumbnailID is None:
-            runQuery("UPDATE item SET thumbnailID = " + str(thumbnailID) + " WHERE ITEM_ID = " + str(itemID) + ";")
+            runQuery("UPDATE item SET thumbnailID = " + str(thumbnailID) + " WHERE ITEM_ID = " + str(itemID) + ";", False)
 
         hasThumbnail = True
 

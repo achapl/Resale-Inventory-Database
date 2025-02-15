@@ -7,7 +7,7 @@ import time
 import shutil
 
 #parentDir = "C:\\Users\\Owner\\Desktop\\InsertImagesTest\\"
-parentDir = "C:\\Users\\Owner\\Desktop\\Selling"
+parentDir = "C:\\Users\\Owner\\source\\repos\\FinancialDatabaseSolution\\FinancialDatabase\\Resources\\Selling"
 parentDirSingleSlash = parentDir.replace('\\\\','\\')
 
 imageDir = "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/"
@@ -68,14 +68,14 @@ def copyFolderContents (folder:str):
         shutil.copyfile(filePath, destPath)
 
 def getItemID(shipNum:int):
-    shipNum = runQuery("SELECT ITEM_ID FROM item WHERE (Notes_item LIKE '%Orig Shipping Info Number: " + str(shipNum) + ",%' OR Notes_item LIKE '%Orig Shipping Info Number: " + str(shipNum) + "');")[0]
+    shipNum = runQuery("SELECT ITEM_ID FROM item WHERE (Notes_item LIKE '%Orig Shipping Info Number: " + str(shipNum) + ",%' OR Notes_item LIKE '%Orig Shipping Info Number: " + str(shipNum) + "');", False)[0]
     if len(shipNum) != 1:
         return -1
     return int(shipNum[0][0])
 
-runQuery("UPDATE item SET thumbnailID = NULL;")
-runQuery("DELETE FROM image")
-runQuery("DELETE FROM thumbnail")
+runQuery("UPDATE item SET thumbnailID = NULL;", False)
+runQuery("DELETE FROM image;", False)
+runQuery("DELETE FROM thumbnail;", False)
 
 # Clear the mySQL upload directory
 for root, dirs, files in os.walk(imageDir):
@@ -97,6 +97,6 @@ for [shipNum, folder] in map2:
     print("ShipNum: " + str(shipNum) + "\n")
     if itemID != -1:
         for pic in pics:
-            runQuery("INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + imageDir + pic + "'), " + str(itemID) +");")    
+            runQuery("INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + imageDir + pic + "'), " + str(itemID) +");", False)    
         imageToThumbnail(itemID)
         
