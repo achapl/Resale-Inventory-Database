@@ -197,6 +197,7 @@ namespace FinancialDatabase.Tabs
         public void clearCurrItemControls()
         {
             itemViewTab.clearCurrItemControls();
+            saleTab.clearCurrItemSales();
         }
 
         public Item getCurrItemWithImages()
@@ -239,10 +240,10 @@ namespace FinancialDatabase.Tabs
 
         public void purcItemsNewPurchase()
         {
-            itemViewTab.clearCurrItem();
             bool success = purchasedLotTab.createNewPurchase(out int newItemID);
             if (success)
             {
+                itemViewTab.clearCurrItem();
                 itemViewTab.setCurrItemAndShowView(new Item(newItemID));
             }
         }
