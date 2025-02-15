@@ -789,7 +789,7 @@ public class Util
         {
             if (s.CompareTo("") == 0) { throw new Exception("ERROR: Empty Date Given"); }
 
-            // Assumed to be format "datetime.Date_Purchased(yyyy, (m)m, (d)d)"
+            // Assumed to be format "datetime.date(yyyy, (m)m, (d)d)"
             if (s.Length > 14 && s.Substring(0, 14).CompareTo("datetime.date(") == 0)
             {
                 List<string> components = new List<string>(s.Split(", "));

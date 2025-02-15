@@ -32,15 +32,15 @@ namespace FinancialDatabase.DatabaseObjects
 
         public Purchase()
         {
-
-        }
-
-        public Purchase(int id, Util.Date date, double amount)
-        {
-            this.PURCHASE_ID = id;
-            this.Date_Purchased = date;
-            this.Amount_purchase = amount;
-        }
+            Notes_purchase = Util.DEFAULT_STRING;
+            Amount_purchase = Util.DEFAULT_DOUBLE;
+            Fees_purchase = Util.DEFAULT_DOUBLE;
+            Date_Purchased = Util.DEFAULT_DATE;
+            PURCHASE_ID = Util.DEFAULT_INT;
+            Seller = Util.DEFAULT_STRING;
+            Tax = Util.DEFAULT_DOUBLE;
+            items = null;
+    }
 
         public Purchase(List<string> itemAttributes, List<string> colNames)
         {
