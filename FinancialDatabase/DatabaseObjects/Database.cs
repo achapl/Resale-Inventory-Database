@@ -248,6 +248,26 @@ public static class Database
     }
 
 
+
+    public static void deleteByName(string name)
+    {
+        List<Item> items = getItems(new SearchQuery(new List<string> {  }, name, new Util.Date(1000,1,1), new Util.Date(9999,1,1), true, true, false, false));
+        
+        if (items.Count() > 1)
+        {
+            throw new Exception("Error: Trying to delete by name, but multiple items exist with the same name. This method is only intended to delete a single item and this is a catch in case there are more items with the same name");
+        }
+
+        if (items.Count == 0)
+        {
+            throw new Exception("Error: Item not found to delete by name: " + name);
+        }
+        
+        Database.deleteItem(items[0]);
+    }
+
+
+
     /// <summary>
     /// For the item search tab
     /// Given an itemID, it will search the database for items related to the query
@@ -365,7 +385,7 @@ public static class Database
     /// <param name="lastrowid">If MySQL Statement creates, updates, or deletes row, that rowID number would be returned here</param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static string runStatement(string statement, out List<string> colNames, out int lastrowid)
+    private static string runStatement(string statement, out List<string> colNames, out int lastrowid)
     {
         string retList;
 
@@ -383,7 +403,7 @@ public static class Database
 
 
     // Run a given SQL statement with ability to return col names
-    public static string runStatement(string statement, out List<string> colNames)
+    private static string runStatement(string statement, out List<string> colNames)
     {
         string retList;
 
@@ -400,7 +420,7 @@ public static class Database
 
 
     // Run a given SQL statement with ability to return lastrowid
-    public static string runStatement(string statement, out int lastrowid)
+    private static string runStatement(string statement, out int lastrowid)
     {
         string retList;
 
@@ -417,7 +437,7 @@ public static class Database
 
 
     // Run a given SQL statement
-    public static string runStatement(string statement)
+    private static string runStatement(string statement)
     {
         string retList;
 
@@ -659,7 +679,12 @@ public static class Database
 
         // Delete the item
         string delItemQuery = QueryBuilder.deleteItemQuery(item);
-        runStatement(delItemQuery);
+        string result = runStatement(delItemQuery);
+
+        if (result.CompareTo("['ERROR']") == 0)
+        {
+            throw new Exception("Error: Cannot delete item with id: " + item.get_ITEM_ID());
+        }
 
         // Delete the purchase associated with the item
         // Must do this last because there is a many:1 relationship

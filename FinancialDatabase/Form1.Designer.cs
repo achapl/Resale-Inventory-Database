@@ -270,7 +270,7 @@
             boughtAfterDatePicker.Name = "boughtAfterDatePicker";
             boughtAfterDatePicker.Size = new Size(236, 23);
             boughtAfterDatePicker.TabIndex = 9;
-            boughtAfterDatePicker.Value = new DateTime(2020, 1, 1, 0, 1, 0, 0);
+            boughtAfterDatePicker.Value = new DateTime(1900, 1, 1, 0, 1, 0, 0);
             // 
             // searchButton
             // 

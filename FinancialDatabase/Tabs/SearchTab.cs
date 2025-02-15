@@ -96,15 +96,13 @@ public class SearchTab
         Form1.itemSearchView.clearItems();
         tabController.clearSearchItems();
         List<string> searchTerms = new List<string>(Form1.searchBox.Text.Split(' '));
-        DateTime startDateRaw = Form1.boughtAfterDatePicker.Value;
-        DateTime endDateRaw = Form1.boughtBeforeDatePicker.Value;
         bool inStock = Form1.inStockCheckBox.Checked;
         bool soldOut = Form1.soldOutCheckBox.Checked;
         bool dateCol = Form1.showDateCheckBox.Checked;
         bool priceCol = Form1.showPurcPriceCheckBox.Checked;
 
-        Date startDate = new Date(Form1.boughtAfterDatePicker);
-        Date endDate  = new Date(Form1.boughtBeforeDatePicker);
+        Date startDate = new Date(Form1.boughtAfterDatePicker.Value.AddDays(-1));
+        Date endDate  = new Date(Form1.boughtBeforeDatePicker.Value.AddDays(1));
         //string startDate = startDateRaw.Year.ToString() + "-" + startDateRaw.Month.ToString() + "-" + startDateRaw.Day.ToString();
         //string endDate = endDateRaw.Year.ToString() + "-" + endDateRaw.Month.ToString() + "-" + endDateRaw.Day.ToString();
 
