@@ -95,14 +95,9 @@ namespace FinancialDatabase.DatabaseObjects
             }
 
             // NOTE: '^' is a special defined escape character removed in the python script so CMD doesn't assume '>' means pipe command
-            if (Q.getSingleTerm().CompareTo("") == 0)
-            {
-                query = defaultQuery();
-            }
-            else
-            {
-                query = "SELECT " + cols + " FROM item " + purchaseJoin + thumbnailJoin + "WHERE item.name LIKE '%" + Q.getSingleTerm() + "%'" + stock + " " + dateRange + ";";
-            }
+
+            query = "SELECT " + cols + " FROM item " + purchaseJoin + thumbnailJoin + "WHERE item.name LIKE '%" + Q.getSingleTerm() + "%'" + stock + " " + dateRange + ";";
+
             return query;
         }
 
