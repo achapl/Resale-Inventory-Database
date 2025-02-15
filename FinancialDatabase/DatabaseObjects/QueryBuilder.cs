@@ -312,6 +312,37 @@ namespace FinancialDatabase.DatabaseObjects
             return query;
         }
 
+        public static string updateQuery(MyImage image, string controlAttribute, string updateText)
+        {
+            string type = colDataTypesLocal[controlAttribute];
+
+            if (image is null)
+            {
+                throw new Exception("image was null, QueryBuilder.updateQuery()");
+            }
+
+            if (!Util.checkTypeOkay(updateText, type)) { return "ERROR: BAD USER INPUT"; }
+
+            if (controlAttribute.Split('.').Length != 2)
+            {
+                Console.WriteLine("ERROR: controlAttribute does not have exactly 2 fields when splitting on '.': " + controlAttribute);
+            }
+            string table = controlAttribute.Split('.')[0];
+            string attrib = controlAttribute.Split('.')[1];
+            string query;
+            string imageID = image.imageID.ToString();
+
+            string updatedText = formatAttribute(updateText, type);
+
+            if (table.CompareTo("image") != 0)
+            {
+                throw new Exception("Trying to update image item, but not updating image table");
+            }
+
+            query = "UPDATE " + table + " SET " + controlAttribute + " = " + updatedText + " WHERE image.IMAGE_ID = " + imageID + ";";
+            return query;
+        }
+
         public static string itemInsertQuery(Item item)
         {
             return "INSERT INTO item (Name, InitialQuantity, CurrentQuantity, PurchaseID) VALUES (" + "\"" + item.get_Name() + "\"" + ", " + item.get_InitialQuantity() + ", " + item.get_CurrentQuantity() + ", " + item.get_PurchaseID() + ");";
@@ -401,6 +432,11 @@ namespace FinancialDatabase.DatabaseObjects
         internal static string getImages(Item item)
         {
             return "SELECT * FROM image WHERE ItemID = " + item.get_ITEM_ID() + ";";
+        }
+
+        internal static string deleteThumbnailQuery(int thumbnailID)
+        {
+            return "DELETE FROM thumbnail WHERE ThumbnailID = " + thumbnailID + ";";
         }
     }
 }

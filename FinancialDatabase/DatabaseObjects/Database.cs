@@ -652,7 +652,11 @@ public static class Database
         }
         
         deleteSales(item);
+
+        Database.deleteThumbnails(item);
         
+        Database.deleteImages(item);
+
         // Delete the item
         string delItemQuery = QueryBuilder.deleteItemQuery(item);
         runStatement(delItemQuery);
@@ -666,6 +670,31 @@ public static class Database
             {
                 deletePurchase(item);
             }
+        }
+    }
+
+    private static void deleteThumbnails(Item item)
+    {
+        List<MyImage> images = Database.getImages(item);
+
+        foreach (MyImage image in images)
+        {
+            if (image is null)
+            {
+                throw new Exception("Error: Trying to delete thumbnail where the the MyImage object does not exist");
+            }
+            if (image.thumbnailID == Util.DEFAULT_INT)
+            {
+                continue;
+            }
+
+            string removeForeignKeyQuery = QueryBuilder.updateQuery(image, "image.thumbnailID", "NULL");
+            Database.runStatement(removeForeignKeyQuery);
+
+            Database.updateRow(item, "item.ThumbnailID", "NULL");
+
+            string query = QueryBuilder.deleteThumbnailQuery(image.thumbnailID);
+            Database.runStatement(query);
         }
     }
 

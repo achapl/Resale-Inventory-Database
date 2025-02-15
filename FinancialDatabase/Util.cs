@@ -266,8 +266,6 @@ public class Util
     /// <param name="c">TextBox given as a control</param>
     public static void clearControl(Control c)
     {
-        if (c is not TextBox && c is not TextBoxLabelPair) { return; }
-
         if (c is TextBox)
         {
             TextBox tb = c as TextBox;
@@ -279,6 +277,10 @@ public class Util
             TextBoxLabelPair TLP = c as TextBoxLabelPair;
             TLP.setControlVal("");
             TLP.setBackgroundColor(Color.White);
+        }
+        else if (c is Label)
+        {
+            (c as Label).Text = "";
         }
     }
 
@@ -331,8 +333,9 @@ public class Util
                         doub >= 0);
 
             case "int unsigned":
-                return Int32.TryParse(attrib, out int i) &&
-                       i >= 0;
+                return attrib == "NULL" ||
+                    (Int32.TryParse(attrib, out int i) &&
+                     i >= 0);
 
             case "int":
                 return Int32.TryParse(attrib, out int _);

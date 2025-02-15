@@ -48,15 +48,6 @@ namespace FinancialDatabase
         }
 
 
-        // Purchased Lot listbox double click
-        private void purcListBox_DoubleClick(object sender, MouseEventArgs e)
-        {
-            int index = this.PurchaseListBox.IndexFromPoint(e.Location);
-            Item item = tabControl.getCurrPurcItemsAt(index);
-            tabControl.setCurrItem(item);
-        }
-
-
         // Enter key pressed for search
         private void searchBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -113,6 +104,15 @@ namespace FinancialDatabase
         private void newPurcButton_Click(object sender, EventArgs e)
         {
             tabControl.purcItemsNewPurchase();
+        }
+
+
+        // Purchased Lot listbox double click
+        private void purcListBox_DoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = this.PurchaseListBox.IndexFromPoint(e.Location);
+            Item item = tabControl.getCurrPurcItemsAt(index);
+            tabControl.setCurrItem(item);
         }
 
 

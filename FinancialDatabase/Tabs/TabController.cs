@@ -87,7 +87,18 @@ namespace FinancialDatabase.Tabs
             bool deletedItem = itemViewTab.deleteItem();
             if (!deletedItem) { return; }
 
-            clearAllNonSearchTabsAndVars();
+            saleTab.setCurrSale(null);
+            clearCurrSaleItems();
+
+            if (getCurrPurcItems().Count == 1)
+            {
+                clearCurrPurcItems();
+            } else
+            {
+                purchasedLotTab.setCurrPurcAndShowView(purchasedLotTab.getCurrPurc().PURCHASE_ID);
+
+            }
+            clearCurrItem();
             Form1.tabCollection.SelectTab(searchTabNum);
         }
 
@@ -136,6 +147,7 @@ namespace FinancialDatabase.Tabs
         {
             if (newItem == null)
             {
+                // TODO: Does this clear the curr Purc and not reset the view of it?
                 clearAllNonSearchTabsAndVars();
                 itemViewTab.setCurrItemAndShowView(newItem);
                 return;

@@ -442,4 +442,43 @@ public class ItemViewTab : Tab
         }
         Database.setThumbnail(tabController.getCurrItem().get_ITEM_ID(), currImageID);
     }
+
+    // Clear all shown info about currItem
+    internal void clearCurrItemControls()
+    {
+        foreach (Control c in allAttributeValueLabels)
+        {
+            switch (c)
+            {
+                case DateTimePickerLabelPair:
+                    (c as DateTimePickerLabelPair).setControlVal(DateTime.Now);
+                    (c as DateTimePickerLabelPair).setLabelText("");
+                    break;
+
+                case TextBoxLabelPair:
+                    (c as TextBoxLabelPair).setControlVal("");
+                    (c as TextBoxLabelPair).setLabelText("");
+                    break;
+
+                case TextBox:
+                    c.Text = "";
+                    break;
+
+                case Label:
+                    c.Text = "";
+                    break;
+
+                case DateTimePicker:
+                    DateTimePicker d = c as DateTimePicker;
+                    d.Value = DateTime.Now;
+                    break;
+
+                case ListBox:
+                    ListBox b = c as ListBox;
+                    b.Items.Clear();
+                    break;
+            }
+        }
+        viewMode();
+    }
 }

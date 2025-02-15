@@ -232,44 +232,7 @@ public abstract class Tab
 
     abstract public void showItemAttributes(Item item);
 
-    // Clear all shown info about currItem
-    public void clearCurrItemControls()
-    {
-        foreach (Control c in allClearableControl)
-        {
-            switch (c)
-            {
-                case DateTimePickerLabelPair:
-                    (c as DateTimePickerLabelPair).setControlVal(DateTime.Now);
-                    (c as DateTimePickerLabelPair).setLabelText("");
-                    break;
-
-                case TextBoxLabelPair:
-                    (c as TextBoxLabelPair).setControlVal("");
-                    (c as TextBoxLabelPair).setLabelText("");
-                    break;
-
-                case TextBox:
-                    c.Text = "";
-                    break;
-
-                case Label:
-                    c.Text = "";
-                    break;
-
-                case DateTimePicker:
-                    DateTimePicker d = c as DateTimePicker;
-                    d.Value = DateTime.Now;
-                    break;
-
-                case ListBox:
-                    ListBox b = c as ListBox;
-                    b.Items.Clear();
-                    break;
-            }
-        }
-        viewMode();
-    }
+    
 
     // Check if a user-inputted control attribute corresponds to data
     // for which there is an entry in the database

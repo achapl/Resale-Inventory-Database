@@ -135,6 +135,8 @@ public class SaleTab : Tab
         Form1.saleListBox.Items.Clear();
         clearCurrItemSales();
 
+        Form1.SaleNameLbl.Text = item.get_Name();
+
         if (item is null) { return; }
 
         List<Sale> sales = getSales(item);
@@ -206,6 +208,7 @@ public class SaleTab : Tab
         return true;
     }
     
+    // TODO: Are all the sub functions called instead of this one? Is this func needed?
     public void clearAttribs()
     {
         Util.clearLabelText(allAttributeValueLabels);
@@ -234,6 +237,7 @@ public class SaleTab : Tab
             Form1.SaleNameLbl.Text = "";
         }
 
+        // TODO: Combine above functionality into showItemSales?
         showItemSales(tabController.getCurrItem());
     }
 
@@ -332,6 +336,7 @@ public class SaleTab : Tab
     {
         setCurrSale((Sale) null);
         currItemSales.Clear();
+        Form1.saleListBox.Items.Clear();
         Util.clearControls(allAttributeValueLabels);
     }
 }
