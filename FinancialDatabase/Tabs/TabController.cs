@@ -251,6 +251,7 @@ namespace FinancialDatabase.Tabs
         public void purcItemsUpdateFromUserInput()
         {
             purchasedLotTab.updateFromUserInput();
+            Form1.tabCollection.SelectTab(purcLotTabNum);
         }
         
         public bool getPLInEditingState() => purchasedLotTab.inEditingState;

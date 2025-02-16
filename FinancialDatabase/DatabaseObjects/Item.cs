@@ -401,6 +401,7 @@ public class Item : IEquatable<Item>
                 retVal = get_Notes_item();
                 break;
 
+                // TODO: DELETE all non-item/shipping cases from this? Remove all this info from Item?
             // From purchase table
             case "purchase.Seller":
                 retVal = get_Seller();
@@ -468,16 +469,6 @@ public class Item : IEquatable<Item>
                 retVal = get_Fees_purchase().ToString();
                 break;
         }
-
-        // TODO: Delete if all tests pass. Don't know hy throwing error for accessing attrib that is simply a default val
-        // Some methods like databaseEntryExists do check for default values to determine if a dtb entry exists for the given attribute
-        /*if (retVal.CompareTo(Util.DEFAULT_DATE.toDateString()) == 0 || 
-            retVal.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
-            retVal.CompareTo(Util.DEFAULT_INT.ToString())  == 0 ||
-            retVal.CompareTo(Util.DEFAULT_STRING) == 0)
-        {
-            throw new Exception("ERROR: Unknown attribute: " + attrib);
-        }*/
         return retVal;
     }
 

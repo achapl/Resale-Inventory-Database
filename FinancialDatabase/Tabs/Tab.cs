@@ -243,10 +243,38 @@ public abstract class Tab
         {
             return false;
         }
-        // Note: need to get attribute and 
+        string ret = null;
+        string table = c.getAttribTable();
+        switch (table)
+        {
+            // Shipping is lumped in with item object since they are 1 to 1
+            case "shipping":
+
+            case "item":
+                if (tabController.getCurrItem() == null)
+                {
+                    throw new Exception("Error: Trying to check if database entry exist for purchase table, when no curr purchase exists. This shouldn't happen");
+                }
+                ret = tabController.getCurrItem().getAttribAsStr(c.attrib);
+                break;
+            case "purchase":
+                if (tabController.getCurrPurc() == null)
+                {
+                    throw new Exception("Error: Trying to check if database entry exist for purchase table, when no curr purchase exists. This shouldn't happen");
+                }
+                ret = tabController.getCurrPurc().getAttribAsString(c.attrib);
+                break;
+
+            case "sale":
+                if (tabController.getCurrSale() != null)
+                    {
+                        ret = tabController.getCurrSale().getAttribAsStr(c.attrib);
+                    }
+                break;
+        }
 
         // Check if the attribute associated with the textbox is a default value in the curr item
-        string ret = tabController.getCurrItem().getAttribAsStr(c.attrib);
+        
         if (ret is null ||
             ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
             ret.CompareTo(Util.DEFAULT_DATE.ToString()) == 0 ||

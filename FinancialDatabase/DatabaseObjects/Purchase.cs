@@ -166,5 +166,32 @@ namespace FinancialDatabase.DatabaseObjects
             }
         }
 
+        internal string getAttribAsString(string attrib)
+        {
+            string retVal = "";
+            switch (attrib)
+            {
+                // From purchase table
+                case "purchase.Seller":
+                    retVal = Seller;
+                    break;
+                case "purchase.Notes_purchase":
+                    retVal = Notes_purchase;
+                    break;
+                case "purchase.Date_Purchased":
+                    retVal = Date_Purchased.toDateString();
+                    break;
+                case "purchase.Amount_purchase":
+                    retVal = Amount_purchase.ToString();
+                    break;
+                case "purchase.Tax":
+                    retVal = Tax.ToString();
+                    break;
+                case "purchase.Fees_purchase":
+                    retVal = Fees_purchase.ToString();
+                    break;
+            }
+            return retVal;
+        }
     }
 }

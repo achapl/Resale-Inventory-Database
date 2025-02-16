@@ -137,5 +137,18 @@
             this.Visible = true;
             inEditMode = false;
         }
+
+        internal string getAttribTable()
+        {
+            if (this.attrib == null ||
+                this.attrib == "")
+            {
+                throw new Exception("Error: CLP doesn't have an attrib associated with it!");
+            }
+
+            // Note: Attrib is of the format "table.attributeName"
+            string tableName = this.attrib.Split('.')[0];
+            return tableName;
+        }
     }
 }

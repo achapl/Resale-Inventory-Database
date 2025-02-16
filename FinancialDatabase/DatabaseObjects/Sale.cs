@@ -58,8 +58,9 @@ public class Sale : IEquatable<Sale>
         }
     }
 
-    public bool getAttribAsStr(string attrib, ref string ret)
+    public string getAttribAsStr(string attrib)
     {
+        string ret = "";
         switch (attrib)
         {
             // From sale table
@@ -81,18 +82,8 @@ public class Sale : IEquatable<Sale>
             case "sale.ItemID_sale":
                 ret = get_ItemID_sale().ToString();
                 break;
-            default:
-                return false;
         }
-
-        if (ret.CompareTo(Util.DEFAULT_DATE.toDateString()) == 0 ||
-            ret.CompareTo(Util.DEFAULT_DOUBLE.ToString()) == 0 ||
-            ret.CompareTo(Util.DEFAULT_INT.ToString()) == 0 ||
-            ret.CompareTo(Util.DEFAULT_STRING) == 0)
-        {
-            ret = "";
-        }
-        return true;
+        return ret;
     }
 
 

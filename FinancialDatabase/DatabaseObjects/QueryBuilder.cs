@@ -366,7 +366,7 @@ namespace FinancialDatabase.DatabaseObjects
 
         public static string thumbnailQuery(List<Item> parsedItems)
         {
-            if (parsedItems == null || parsedItems.Count == 0) { throw new Exception("ERROR: QuyeryBuilder.thumbnailQuery(): Null or Empty list passed into it"); }
+            if (parsedItems == null || parsedItems.Count == 0) { throw new Exception("ERROR: QueryBuilder.thumbnailQuery(): Null or Empty list passed into it"); }
 
             string query = "SELECT item.ITEM_ID, thumbnail.ThumbnailID, thumbnail.thumbnail FROM item JOIN thumbnail on item.ThumbnailID = thumbnail.ThumbnailID WHERE item.ITEM_ID IN (";
             query += parsedItems[0].get_ITEM_ID().ToString();
