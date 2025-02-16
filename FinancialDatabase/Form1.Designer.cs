@@ -1072,7 +1072,7 @@
             // SaleAmountTLP
             // 
             SaleAmountTLP.attrib = null;
-            SaleAmountTLP.Location = new Point(625, 75);
+            SaleAmountTLP.Location = new Point(620, 78);
             SaleAmountTLP.Name = "SaleAmountTLP";
             SaleAmountTLP.Size = new Size(100, 23);
             SaleAmountTLP.TabIndex = 65;

@@ -275,8 +275,15 @@ public class Util
         else if (c is TextBoxLabelPair)
         {
             TextBoxLabelPair TLP = c as TextBoxLabelPair;
+            TLP.Text = "";
             TLP.setControlVal("");
             TLP.setBackgroundColor(Color.White);
+        }
+        else if (c is DateTimePickerLabelPair)
+        {
+            DateTimePickerLabelPair DLP = c as DateTimePickerLabelPair;
+            DLP.Text = "";
+            DLP.setControlVal(new Util.Date(DateTime.Now));
         }
         else if (c is Label)
         {

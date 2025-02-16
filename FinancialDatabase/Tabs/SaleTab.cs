@@ -148,6 +148,7 @@ public class SaleTab : Tab
         }
 
         Form1.itemSoldPriceLbl.Text = getTotalSales(item).ToString();
+        Form1.itemCurrQtyTLP.Text = item.get_CurrentQuantity().ToString();
     }
 
 
@@ -177,6 +178,11 @@ public class SaleTab : Tab
 
     public void addSale()
     {
+        if (tabController.getCurrItem().get_CurrentQuantity() == 0)
+        {
+            showWarning("Cannot add sale, current quantity is 0");
+            return;
+        }
         if (tabController.getCurrItem() == null) return;
 
         if (Form1.SaleNewSaleAmountTextbox.Text == "")
@@ -184,14 +190,20 @@ public class SaleTab : Tab
             return;
         }
 
-
+        // Generate sale to insert
         Sale newItem = new Sale();
         newItem.set_Amount_sale(Int32.Parse(Form1.SaleNewSaleAmountTextbox.Text));
         newItem.set_Date_Sold(new Date(Form1.SaleNewSaleDatePicker));
         newItem.set_ItemID_sale(tabController.getCurrItem().get_ITEM_ID());
 
+        // Insert sale
         Util.clearTBox(newItemTBoxes);
         Database.insertSale(newItem);
+
+        Item curritem = tabController.getCurrItem();
+        int newQty = curritem.get_CurrentQuantity() - 1;
+        Database.updateRow(curritem, "item.CurrentQuantity", newQty.ToString());
+        
         showItemSales(tabController.getCurrItem());
     }
 
@@ -337,6 +349,9 @@ public class SaleTab : Tab
         setCurrSale((Sale) null);
         currItemSales.Clear();
         Form1.saleListBox.Items.Clear();
+        // TODO: TLP's labels aren't getting cleared when adding new sale
+        // Also delete is not present unless in edit mode
+        // Delete functionality is wonky
         Util.clearControls(allAttributeValueLabels);
     }
 }

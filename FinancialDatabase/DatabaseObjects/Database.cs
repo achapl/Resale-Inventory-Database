@@ -856,7 +856,7 @@ public static class Database
     {
         string query = QueryBuilder.deleteSaleQuery(currSale);
         string output = runStatement(query);
-        return output.CompareTo("ERROR") == 0;
+        return output.CompareTo("['ERROR']") != 0;
     }
 
 
