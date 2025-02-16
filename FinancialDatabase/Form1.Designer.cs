@@ -1219,7 +1219,7 @@
             MainMenuStrip = comboBoxMenuStrip;
             Margin = new Padding(4, 3, 4, 3);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Resale Database Inventory";
             FormClosed += Form1_FormClosed;
             tabCollection.ResumeLayout(false);
             SearchTab.ResumeLayout(false);
