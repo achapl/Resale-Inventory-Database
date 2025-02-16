@@ -349,15 +349,15 @@
             // itemNameTLP
             // 
             itemNameTLP.attrib = null;
-            itemNameTLP.Location = new Point(120, 49);
+            itemNameTLP.Location = new Point(120, 52);
             itemNameTLP.Name = "itemNameTLP";
-            itemNameTLP.Size = new Size(100, 23);
+            itemNameTLP.Size = new Size(259, 23);
             itemNameTLP.TabIndex = 86;
             // 
             // itemHeightTLP
             // 
             itemHeightTLP.attrib = null;
-            itemHeightTLP.Location = new Point(309, 278);
+            itemHeightTLP.Location = new Point(303, 281);
             itemHeightTLP.Name = "itemHeightTLP";
             itemHeightTLP.Size = new Size(100, 23);
             itemHeightTLP.TabIndex = 77;
@@ -366,7 +366,7 @@
             // itemWidthTLP
             // 
             itemWidthTLP.attrib = null;
-            itemWidthTLP.Location = new Point(309, 247);
+            itemWidthTLP.Location = new Point(303, 250);
             itemWidthTLP.Name = "itemWidthTLP";
             itemWidthTLP.Size = new Size(100, 23);
             itemWidthTLP.TabIndex = 75;
@@ -375,7 +375,7 @@
             // itemLengthTLP
             // 
             itemLengthTLP.attrib = null;
-            itemLengthTLP.Location = new Point(309, 216);
+            itemLengthTLP.Location = new Point(303, 219);
             itemLengthTLP.Name = "itemLengthTLP";
             itemLengthTLP.Size = new Size(100, 23);
             itemLengthTLP.TabIndex = 73;
@@ -384,7 +384,7 @@
             // itemWeightOzTLP
             // 
             itemWeightOzTLP.attrib = null;
-            itemWeightOzTLP.Location = new Point(309, 185);
+            itemWeightOzTLP.Location = new Point(303, 188);
             itemWeightOzTLP.Name = "itemWeightOzTLP";
             itemWeightOzTLP.Size = new Size(100, 23);
             itemWeightOzTLP.TabIndex = 71;
@@ -393,7 +393,7 @@
             // itemWeightLbsTLP
             // 
             itemWeightLbsTLP.attrib = null;
-            itemWeightLbsTLP.Location = new Point(309, 154);
+            itemWeightLbsTLP.Location = new Point(303, 157);
             itemWeightLbsTLP.Name = "itemWeightLbsTLP";
             itemWeightLbsTLP.Size = new Size(100, 23);
             itemWeightLbsTLP.TabIndex = 69;
@@ -402,7 +402,7 @@
             // itemCurrQtyTLP
             // 
             itemCurrQtyTLP.attrib = null;
-            itemCurrQtyTLP.Location = new Point(120, 247);
+            itemCurrQtyTLP.Location = new Point(114, 251);
             itemCurrQtyTLP.Name = "itemCurrQtyTLP";
             itemCurrQtyTLP.Size = new Size(100, 23);
             itemCurrQtyTLP.TabIndex = 65;
@@ -411,7 +411,7 @@
             // itemInitQtyTLP
             // 
             itemInitQtyTLP.attrib = null;
-            itemInitQtyTLP.Location = new Point(120, 216);
+            itemInitQtyTLP.Location = new Point(114, 220);
             itemInitQtyTLP.Name = "itemInitQtyTLP";
             itemInitQtyTLP.Size = new Size(100, 23);
             itemInitQtyTLP.TabIndex = 63;
@@ -527,7 +527,7 @@
             // itemSoldPriceLbl
             // 
             itemSoldPriceLbl.AutoSize = true;
-            itemSoldPriceLbl.Location = new Point(120, 188);
+            itemSoldPriceLbl.Location = new Point(114, 188);
             itemSoldPriceLbl.Margin = new Padding(4, 0, 4, 0);
             itemSoldPriceLbl.Name = "itemSoldPriceLbl";
             itemSoldPriceLbl.Size = new Size(44, 15);
@@ -537,7 +537,7 @@
             // itemPurcPriceLbl
             // 
             itemPurcPriceLbl.AutoSize = true;
-            itemPurcPriceLbl.Location = new Point(120, 157);
+            itemPurcPriceLbl.Location = new Point(114, 157);
             itemPurcPriceLbl.Margin = new Padding(4, 0, 4, 0);
             itemPurcPriceLbl.Name = "itemPurcPriceLbl";
             itemPurcPriceLbl.Size = new Size(44, 15);

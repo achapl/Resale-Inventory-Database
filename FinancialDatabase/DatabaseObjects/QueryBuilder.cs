@@ -368,7 +368,7 @@ namespace FinancialDatabase.DatabaseObjects
         {
             if (parsedItems == null || parsedItems.Count == 0) { throw new Exception("ERROR: QuyeryBuilder.thumbnailQuery(): Null or Empty list passed into it"); }
 
-            string query = "SELECT image.ItemID, image.IMAGE_ID, thumbnail.thumbnail FROM image JOIN thumbnail ON image.thumbnailID = thumbnail.ThumbnailID WHERE image.ItemID IN (";
+            string query = "SELECT item.ITEM_ID, thumbnail.ThumbnailID, thumbnail.thumbnail FROM item JOIN thumbnail on item.ThumbnailID = thumbnail.ThumbnailID WHERE item.ITEM_ID IN (";
             query += parsedItems[0].get_ITEM_ID().ToString();
 
             if (parsedItems.Count > 1)
@@ -379,7 +379,7 @@ namespace FinancialDatabase.DatabaseObjects
                 }
             }
 
-            query += ") ORDER BY image.ItemID;";
+            query += ");";//ORDER BY image.ItemID;";
             return query;
 
         }
