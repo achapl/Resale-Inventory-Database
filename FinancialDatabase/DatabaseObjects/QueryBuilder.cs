@@ -433,5 +433,20 @@ namespace FinancialDatabase.DatabaseObjects
         {
             return "DELETE FROM thumbnail WHERE ThumbnailID = " + thumbnailID + ";";
         }
+
+        internal static string deleteImageQuery(int imageID)
+        {
+            return "DELETE FROM image WHERE IMAGE_ID = " + imageID + ";";
+        }
+
+        internal static string getImage(int imageID)
+        {
+            return "SELECT * FROM image WHERE IMAGE_ID = " + imageID + ";";
+        }
+
+        internal static string getItemByThumbnail(int imageID)
+        {
+            return "SELECT * FROM item WHERE ThumbnailID = " + imageID + ";";
+        }
     }
 }

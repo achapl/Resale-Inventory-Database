@@ -435,6 +435,7 @@
             deleteImageButton.TabIndex = 61;
             deleteImageButton.Text = "Delete Image";
             deleteImageButton.UseVisualStyleBackColor = true;
+            deleteImageButton.Click += deleteImageButton_Click;
             // 
             // AddImageButton
             // 

@@ -481,4 +481,13 @@ public class ItemViewTab : Tab
         }
         viewMode();
     }
+
+    internal void deleteCurrImage()
+    {
+        if (currItem == null) return;
+
+        int currImage = Form1.mainPictureViewer.getCurrImageID();
+
+        Database.deleteImage(currImage);
+    }
 }

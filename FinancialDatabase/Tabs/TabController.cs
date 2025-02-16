@@ -370,6 +370,11 @@ namespace FinancialDatabase.Tabs
             }
             return false;
         }
-        
+
+        internal void deleteCurrImage()
+        {
+            itemViewTab.deleteCurrImage();
+            itemViewTab.showItemPictures(getCurrItem());
+        }
     }
 }

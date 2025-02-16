@@ -202,5 +202,10 @@ namespace FinancialDatabase
         {
             return new List<string>(openFileDialog1.FileNames);
         }
+
+        private void deleteImageButton_Click(object sender, EventArgs e)
+        {
+            tabControl.deleteCurrImage();
+        }
     }
 }

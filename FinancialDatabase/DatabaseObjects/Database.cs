@@ -919,4 +919,83 @@ public static class Database
         PythonEngine.Shutdown();
         pythonInitialized = false;
     }
+
+    internal static void deleteImage(int imageID)
+    {
+        deleteThumbnail(imageID);
+
+        string deleteImageQuery = QueryBuilder.deleteImageQuery(imageID);
+        Database.runStatement(deleteImageQuery);
+    }
+
+    private static void deleteThumbnail(int imageID)
+    {
+        MyImage image = Database.getImage(imageID);
+        
+        if (image is null ||
+        image.imageID == Util.DEFAULT_INT)
+        {
+            throw new Exception("Error: Trying to delete thumbnail where the the imagedoes not exist");
+        }
+
+        if (image.thumbnailID == Util.DEFAULT_INT)
+        {
+            throw new Exception("Error: Thumbnail does not exist for imageID: " + imageID + ";");
+        }
+
+        // Remove foreign key in item table referencing the thumbnail, if such an item table entry exists
+
+        Item thumbnailItem = getItemByThumbnailID(image.thumbnailID);
+
+        if (thumbnailItem != null)
+        {
+            Database.updateRow(thumbnailItem, "item.ThumbnailID", "NULL");
+        }
+
+        string removeForeignKeyQuery = QueryBuilder.updateQuery(image, "image.thumbnailID", "NULL");
+        Database.runStatement(removeForeignKeyQuery);
+
+        string query = QueryBuilder.deleteThumbnailQuery(image.thumbnailID);
+        Database.runStatement(query);
+    }
+
+    private static Item getItemByThumbnailID(int thumbnailID)
+    {
+        string getItemByThumbnailQuery = QueryBuilder.getItemByThumbnail(thumbnailID);
+        string rawItems = runStatement(getItemByThumbnailQuery, out List<string> colNames);
+        List<Item> thumbnailItems = DtbParser.parseItems(rawItems, colNames);
+        if (thumbnailItems.Count > 1)
+        {
+            throw new Exception("Error: Multiple items returned for same thumbnail");
+        }
+        else if (thumbnailItems.Count == 0)
+        {
+            return null;
+        }
+        else if (thumbnailItems.Count == 1)
+        {
+            return thumbnailItems[0];
+        }
+
+        throw new Exception("Error: Unreachable code reached");
+    }
+
+    private static MyImage getImage(int imageID)
+    {
+        string query = QueryBuilder.getImage(imageID);
+        string rawOutput = runStatement(query, out List<string> colNames);
+        List<MyImage> images = DtbParser.parseImages(rawOutput, colNames);
+
+        if (images.Count > 1)
+        {
+            throw new Exception("ERROR: >1 image found for ID: " + imageID + ";");
+        }
+
+        if (images.Count == 0)
+        {
+            throw new Exception("ERROR: No image found for ID: " + imageID + ";");
+        }
+
+        return images[0];
+    }
 }
