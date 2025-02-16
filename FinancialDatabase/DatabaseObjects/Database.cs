@@ -571,28 +571,29 @@ public static class Database
     }
 
 
-    private static void insertThumbnail(string thumbnailPath, int imageID)
+    private static int insertThumbnail(string thumbnailPath, int imageID)
     {
         int thumbnailID;
         runStatement("INSERT INTO thumbnail (thumbnail) VALUES (LOAD_FILE('" + thumbnailPath + "'));", out thumbnailID);
         runStatement("UPDATE image SET thumbnailID = " + thumbnailID + " WHERE IMAGE_ID = " + imageID);
+
+        return thumbnailID;
     }
 
 
-    public static int insertImage(string filePath, int itemID)
+    public static int insertImage(string filePath, Item item)
     {
+        if (item == null) { throw new Exception("ERROR: Inserting image for null item"); }
         if (filePath == null) { throw new Exception("ERROR: No image path to inesrt"); }
-
+        
+        int itemID = item.get_ITEM_ID();
+        
         // Copy file to database folder
         string copiedFile = copyImageToDtbFolder(filePath);
 
         // Insert into database
-        int imageID;
-        string userID = WindowsIdentity.GetCurrent().Name;
-
-        string query = "INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + copiedFile + "'), " + itemID + ");";
-        
-        runStatement(query, out imageID);
+        string inserImageQuery = QueryBuilder.insertImageQuery(copiedFile, itemID); 
+        runStatement(inserImageQuery, out int imageID);
 
         // Resize the image for a thumbnail
         Image origImage = Image.FromFile(filePath);
@@ -611,7 +612,13 @@ public static class Database
         resizedImFileDest = resizedImFileDest.Replace("\\", "\\\\");
 
         // Insert resized image into database
-        insertThumbnail(resizedImFileDest, imageID);
+        int thumbnailID = insertThumbnail(resizedImFileDest, imageID);
+
+        // Check if item doesn't have thumbnail already
+        if (!item.hasThumbnail())
+        {
+            Database.updateRow(item, "item.ThumbnailID", thumbnailID);
+        }
 
         // Clean up copied files after uploading the image
         File.Delete(copiedFile);

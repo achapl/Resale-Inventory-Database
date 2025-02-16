@@ -120,7 +120,7 @@ namespace FinancialDatabase.Tabs
                 List<string> files = Form1.getOpenFileDialogNames();
                 foreach (string file in files)
                 {
-                    Database.insertImage(file, itemViewTab.getCurrItem().get_ITEM_ID());
+                    Database.insertImage(file, itemViewTab.getCurrItem());
                 }
             }
             itemViewTab.showItemPictures(getCurrItem());

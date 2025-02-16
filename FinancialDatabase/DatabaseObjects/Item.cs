@@ -22,6 +22,7 @@ public class Item : IEquatable<Item>
     int PurchaseID;
     int SaleID;
     int ShippingID;
+    int thumbnailID;
     [JsonInclude]
     int InitialQuantity;
     [JsonInclude]
@@ -81,6 +82,7 @@ public class Item : IEquatable<Item>
         this.set_CurrentQuantity(actualItem.get_CurrentQuantity());
         this.set_InitialQuantity(actualItem.get_InitialQuantity());
         this.set_Notes_item(actualItem.get_Notes_item());
+        this.set_thumbnailID(actualItem.get_thumbnailID());
 
         this.set_ShippingID(actualItem.get_ShippingID());
         this.set_Length(actualItem.get_Length());
@@ -116,6 +118,7 @@ public class Item : IEquatable<Item>
         InitialQuantity = Util.DEFAULT_INT;
         CurrentQuantity = Util.DEFAULT_INT;
         Notes_item = Util.DEFAULT_STRING;
+        thumbnailID = Util.DEFAULT_INT;
 
         // From purchase table
         Date_Purchased = Util.DEFAULT_DATE;
@@ -191,6 +194,11 @@ public class Item : IEquatable<Item>
                 case "thumbnail.thumbnail":
                     set_Thumbnail(itemAttribute);
                     break;
+                case "thumbnailID":
+                case "item.thumbnailID":
+                    set_thumbnailID(itemAttribute);
+                    break;
+
                 // From purchase table
                 case "Date_Purchased":
                 case "purchase.Date_Purchased":
@@ -497,6 +505,7 @@ public class Item : IEquatable<Item>
         if (this.thumbnail == null) { set_Thumbnail(Util.DEFAULT_IMAGE); }
         return this.thumbnail;
     }
+    public int get_thumbnailID() => thumbnailID;
 
 
     // From purchase table
@@ -630,6 +639,16 @@ public class Item : IEquatable<Item>
         this.CurrentQuantity = Int32.Parse(CurrentQuantity);
     }
     public void set_Notes_item(string Notes_item) => this.Notes_item = Notes_item;
+    public void set_thumbnailID(int thumbnailID) => this.thumbnailID = thumbnailID;
+    public void set_thumbnailID(string thumbnailID)
+    {
+        if (thumbnailID is null || thumbnailID.CompareTo("") == 0)
+        {
+            this.thumbnailID = Util.DEFAULT_INT;
+            return;
+        }
+        this.thumbnailID = Int32.Parse(thumbnailID);
+    }
 
 
     // From purchase table
@@ -850,5 +869,10 @@ public class Item : IEquatable<Item>
         {
             return false;
         }
+    }
+
+    internal bool hasThumbnail()
+    {
+        return get_thumbnailID() != Util.DEFAULT_INT;
     }
 }

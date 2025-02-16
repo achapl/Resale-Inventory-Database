@@ -448,5 +448,10 @@ namespace FinancialDatabase.DatabaseObjects
         {
             return "SELECT * FROM item WHERE ThumbnailID = " + imageID + ";";
         }
+
+        internal static string insertImageQuery(string filePath, int itemID)
+        {
+            return "INSERT INTO image (image, ItemID) VALUES (LOAD_FILE('" + filePath + "'), " + itemID + ");";
+        }
     }
 }
