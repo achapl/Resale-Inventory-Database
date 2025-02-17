@@ -205,7 +205,6 @@ public static class DtbParser
             items.Add(new Item(itemAttributes, colNames));
         }
         retPurc.items = items;
-        // TODO: Add items to the purchase
         return retPurc;
     }
 

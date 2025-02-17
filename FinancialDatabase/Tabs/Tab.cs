@@ -1,6 +1,7 @@
 ﻿using FinancialDatabase;
 using FinancialDatabase.Tabs;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 using Date = Util.Date;
 
@@ -91,6 +92,7 @@ public abstract class Tab
     }
 
 
+    // Note: 2 versions of func are required since List<TextBoxLabelPair> and List<ControlLabelPair> don't inherit from each other
     internal bool typeCheckUserInput(List<TextBoxLabelPair> userInputFields)
     {
         List<ControlLabelPair> userInputControls = new List<ControlLabelPair>();
@@ -102,18 +104,23 @@ public abstract class Tab
     }
 
 
+    // Note: 2 versions of func are required since List<TextBoxLabelPair> and List<ControlLabelPair> don't inherit from each other
     internal bool typeCheckUserInput(List<ControlLabelPair> userInputFields)
     {
 
         // Special case, weight textboxes
-        if (!Form1.itemWeightLbsTLP.hasIntText() &&
+        if (userInputFields.Contains(Form1.itemWeightLbsTLP) ||
+            userInputFields.Contains(Form1.itemWeightLbsTLP))
+        {
+            if (!Form1.itemWeightLbsTLP.hasIntText() &&
             Form1.itemWeightLbsTLP.Text != ""
             ||
             !Form1.itemWeightOzTLP.hasIntText() &&
             Form1.itemWeightOzTLP.Text != "")
-        {
-            showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
-            return false;
+            {
+                showWarning("Must Input Correct Numerical Format For weight. No decimals/commas allowed!");
+                return false;
+            }
         }
 
         foreach (ControlLabelPair c in userInputFields)

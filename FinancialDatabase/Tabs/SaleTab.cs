@@ -113,7 +113,7 @@ public class SaleTab : Tab
             flipEditMode();
         }
 
-        Util.clearLabelText(allAttributeValueLabels);
+        Util.clearControlText(allAttributeValueLabels);
     }
 
     override public void flipEditMode()
@@ -218,12 +218,12 @@ public class SaleTab : Tab
             }
         }
         return true;
+
     }
-    
-    // TODO: Are all the sub functions called instead of this one? Is this func needed?
+
     public void clearAttribs()
     {
-        Util.clearLabelText(allAttributeValueLabels);
+        Util.clearControlText(allAttributeValueLabels);
         Util.clearTBox(newItemTBoxes);
 
     }
@@ -249,7 +249,7 @@ public class SaleTab : Tab
             Form1.SaleNameLbl.Text = "";
         }
 
-        // TODO: Combine above functionality into showItemSales?
+        // TODO: Combine above functionality into showItemSales or showAttributes?
         showItemSales(tabController.getCurrItem());
     }
 
@@ -318,7 +318,7 @@ public class SaleTab : Tab
                               + "Sale sale ID: " + s.get_SALE_ID().ToString() + ", "
                               + "Not found!");
         }
-        // TODO: Decide which s==null route to take. Does return w/o error seems to pass all tests so far?
+
         if (s == null)
         {
             throw new Exception("Sale Not Found: Form1.TabControl.setCurrSale()");
@@ -349,9 +349,6 @@ public class SaleTab : Tab
         setCurrSale((Sale) null);
         currItemSales.Clear();
         Form1.saleListBox.Items.Clear();
-        // TODO: TLP's labels aren't getting cleared when adding new sale
-        // Also delete is not present unless in edit mode
-        // Delete functionality is wonky
         Util.clearControls(allAttributeValueLabels);
     }
 }

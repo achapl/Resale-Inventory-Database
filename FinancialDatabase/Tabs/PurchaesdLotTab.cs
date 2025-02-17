@@ -16,17 +16,14 @@ public class PurchasedLotTab : Tab
         editButton   = Form1.EditPurcButton;
         this.tabController = tabController;
         generateTBoxGroups();
-        Util.clearLabelText(allAttributeValueLabels);
+        Util.clearControlText(allAttributeValueLabels);
         showControlVisibility();
     }
 
     public override void showItemAttributes(Item item)
     {
-        // TODO: DELETE THIS and change it so that this method is not an inherited method. Not all tabs show item attributes.
-
-        // Or account for the equivilant with ShowAttributes(). IE: sale tab shows sale attributes, item tab shows item attributes, purc tab shows purc attributes
-        // Note this method is currently listed as showPurchaseAttributes()
-        throw new NotImplementedException();
+        // No attributes to show from a given item
+        return;
     }
 
     protected override void generateTBoxGroups()
@@ -148,7 +145,7 @@ public class PurchasedLotTab : Tab
 
     public void showPurchaseAttributes(Purchase purchase)
     {
-        Util.clearLabelText(allAttributeValueLabels);
+        Util.clearControlText(allAttributeValueLabels);
         Purchase currPurc = tabController.getCurrPurc();
         Date datePurc = currPurc.Date_Purchased;
         Form1.PurcDatePickerDLP.setLabelText(Util.checkDefault(currPurc.Date_Purchased.toDateString()));
@@ -200,7 +197,6 @@ public class PurchasedLotTab : Tab
                 {
                     Database.updateRow(tabController.getCurrItem(), (CLP as TextBoxLabelPair).attrib, (CLP as TextBoxLabelPair).getControlValueAsStr());
                 }
-                // TODO:
                 else if ( CLP is DateTimePickerLabelPair)
                 {
                     Database.updateRow(tabController.getCurrItem(), (CLP as DateTimePickerLabelPair).attrib, new Date(CLP));
@@ -366,7 +362,7 @@ public class PurchasedLotTab : Tab
         this.currPurc = Database.getPurchase(purcID);
 
         newItemID = addUserInputItemToCurrPurc();
-        Util.clearLabelText(newPurchaseGroupControls);
+        Util.clearControlText(newPurchaseGroupControls);
         return true;
     }
 

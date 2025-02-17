@@ -148,7 +148,6 @@ namespace FinancialDatabase.Tabs
         {
             if (newItem == null)
             {
-                // TODO: Does this clear the curr Purc and not reset the view of it?
                 clearAllNonSearchTabsAndVars();
                 itemViewTab.setCurrItemAndShowView(newItem);
                 return;

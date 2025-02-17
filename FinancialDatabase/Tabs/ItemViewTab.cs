@@ -27,7 +27,7 @@ public class ItemViewTab : Tab
         updateButton = Form1.itemUpdateButton;
         editButton = Form1.itemEditButton;
         generateTBoxGroups();
-        Util.clearLabelText(allAttributeValueLabels);
+        Util.clearControlText(allAttributeValueLabels);
         showControlVisibility();
     }
 
@@ -313,7 +313,7 @@ public class ItemViewTab : Tab
     public override void showItemAttributes(Item item)
     { 
 
-        Util.clearLabelText(allAttributeValueLabels);
+        Util.clearControlText(allAttributeValueLabels);
 
         if (item is null) { return; }
 

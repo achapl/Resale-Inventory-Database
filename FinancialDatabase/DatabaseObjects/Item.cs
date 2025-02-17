@@ -169,9 +169,6 @@ public class Item : IEquatable<Item>
 
     private void setDefaults()
     {
-        //string rawResult;
-        //List<string> rawList;
-
         // From item table
         ITEM_ID = Util.DEFAULT_INT;
         Name = Util.DEFAULT_STRING;
@@ -200,7 +197,7 @@ public class Item : IEquatable<Item>
         //From image table
         images = Util.DEFAULT_IMAGES;
 
-
+        // From sales table
         sales = new List<Sale>();
     }
 
@@ -454,8 +451,6 @@ public class Item : IEquatable<Item>
             case "item.Notes_item":
                 retVal = Notes_item;
                 break;
-
-                // TODO: DELETE all non-item/shipping cases from this? Remove all this info from Item?
             // From purchase table
             case "purchase.Seller":
                 retVal = Seller;

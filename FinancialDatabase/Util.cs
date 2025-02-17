@@ -190,11 +190,10 @@ public class Util
     /// <summary>
     /// Clears all the text of a given list of labels
     /// </summary>
-    /// <param name="l"> List of labels</param>
-    // TODO: RENAME TEST
-    public static void clearLabelText(List<Control> l)
+    /// <param name="controls"> List of labels</param>
+    public static void clearControlText(List<Control> controls)
     {
-        foreach (Control c in l)
+        foreach (Control c in controls)
         {
             if (c is TextBoxLabelPair)
             {
@@ -819,7 +818,6 @@ public class Util
         public Date(Control d)
         {
             // If not the a DateTimePicker, set to error values and output error
-            // TODO: Test DLP part of switch
             switch(d)
             {
                 case DateTimePicker:
