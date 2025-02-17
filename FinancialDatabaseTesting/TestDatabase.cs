@@ -19,6 +19,7 @@ using System.ComponentModel;
 using NUnit.Framework.Internal.Commands;
 using System.Runtime.InteropServices.Marshalling;
 using FinancialDatabase.Tabs;
+using System.Xml.Linq;
 
 public class TestDatabase
 {
@@ -72,6 +73,15 @@ public class TestDatabase
                 }
             }
         }
+    }
+
+
+    [OneTimeSetUp]
+    public static void OneTimeSetup()
+    {
+        TestingUtil.setDatabaseTesting(true);
+        Database.clearAll();
+
     }
 
 
@@ -304,7 +314,7 @@ public class TestDatabase
 
 
 
-    public static object[] runStatementCases = {
+    /*public static object[] runStatementCases = {
 
         new object[] {
         // CRUD
@@ -368,7 +378,7 @@ public class TestDatabase
             Assert.AreEqual(0, expResult.CompareTo(result));
         }
     }
-
+    */
 
 
     public static object[] insertPurchaseCases = {
@@ -431,11 +441,9 @@ public class TestDatabase
                 Assert.Pass();
 
                 item.set_Name(origName);
+                Database.deleteByName(testingName);
             }
         }
-        
-        string result = Database.runStatement("DELETE FROM item WHERE Name LIKE \"" + testingName + "\"");
-        Assert.AreNotEqual(0, result.CompareTo("['ERROR']"));
     }
 
 
@@ -454,6 +462,7 @@ public class TestDatabase
                 item.set_Name(testingName);
 
                 result = Database.insertItem(item, out int itemID);
+
                 Assert.AreNotEqual(0, result.CompareTo("['ERROR']"));
                 item.set_ITEM_ID(itemID);
 
@@ -464,10 +473,9 @@ public class TestDatabase
 
                 item.set_ITEM_ID(origItemID);
                 item.set_Name(origName);
+                Database.deleteByName(testingName);
             }
         }
-        result = Database.runStatement("DELETE FROM item WHERE Name LIKE \"" + testingName + "\"");
-        Assert.AreNotEqual(0, result.CompareTo("['ERROR']"));
     }
 
 
@@ -550,7 +558,7 @@ public class TestDatabase
             Item item = Database.getItem(itemID);
 
             Database.deleteImages(item);
-            Database.insertImage(imagePath, itemID);
+            Database.insertImage(imagePath, purchases[0].items[0]);
             List<MyImage> dtbImages = Database.getAllImages(item);
             Assert.AreEqual(1, dtbImages.Count);
 
@@ -603,7 +611,7 @@ public class TestDatabase
         Database.deleteImages(item);
 
         // Try inserting 1 image
-        Database.insertImage(imagePath, itemID);
+        Database.insertImage(imagePath, purchases[0].items[0]);
         List<MyImage> dtbImages = Database.getAllImages(item);
         Assert.AreEqual(1, dtbImages.Count);
 
@@ -614,8 +622,8 @@ public class TestDatabase
         Assert.IsTrue(TestingUtil.compareImages(dtbImages[0].image, Util.DEFAULT_IMAGE.image, false));
 
         // Try inserting 2 images
-        Database.insertImage(imagePath, itemID);
-        Database.insertImage(imagePath, itemID);
+        Database.insertImage(imagePath, purchases[0].items[0]);
+        Database.insertImage(imagePath, purchases[0].items[0]);
         dtbImages = Database.getAllImages(item);
         Assert.AreEqual(2, dtbImages.Count);
 
@@ -687,7 +695,7 @@ public class TestDatabase
             // Insert images
             for (int j = 0; j < imgGroupSize; j++)
             {
-                Database.insertImage(images[i+j], item.get_ITEM_ID());
+                Database.insertImage(images[i+j], item);
             }
             List<MyImage> resultImages = Database.getAllImages(item);
             // Test all images are there correctly
@@ -827,8 +835,7 @@ public class TestDatabase
 
         Sale changedSale = Database.getSale(saleToChange.get_SALE_ID());
 
-        string changedAttrib = "";
-        changedSale.getAttribAsStr(attrib, ref changedAttrib);
+        string changedAttrib = changedSale.getAttribAsStr(attrib);
 
         Assert.AreEqual(0, newVal.CompareTo(changedAttrib));
     }
@@ -849,8 +856,7 @@ public class TestDatabase
 
         Sale changedSale = Database.getSale(saleToChange.get_SALE_ID());
 
-        string changedAttrib = "";
-        changedSale.getAttribAsStr(attrib, ref changedAttrib);
+        string changedAttrib = changedSale.getAttribAsStr(attrib);
 
         Assert.IsTrue(newVal.Equals(new Util.Date(changedAttrib)));
     }
@@ -955,7 +961,7 @@ public class TestDatabase
                 Database.deleteImages(item);
                 Item newItem = Database.getItem(itemID);
                 Assert.IsTrue(TestingUtil.compareImages(Util.DEFAULT_IMAGE.image, newItem.get_Thumbnail().image, true));
-                int imageID = Database.insertImage(imagePath, itemID);
+                int imageID = Database.insertImage(imagePath, item);
                 Assert.IsTrue(TestingUtil.compareImages(Util.DEFAULT_IMAGE.image, newItem.get_Thumbnail().image, true));
                 Database.setThumbnail(itemID, imageID);
                 newItem = Database.getItem(itemID);

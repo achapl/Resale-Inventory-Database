@@ -16,14 +16,38 @@
 				"Notes Shipping": null,
 				"Notes_item": null,
 				"imagePaths": [
-					"C:\\Users\\Owner\\source\\repos\\FinancialDatabaseSolution\\FinancialDatabaseTesting\\TestingItems\\Images\\20210118_133444.jpg"
+					"C:\\Users\\Owner\\source\\repos\\FinancialDatabaseSolution\\FinancialDatabaseTesting\\TestingItems\\Images\\20210118_133444.jpg",
+					"C:\\Users\\Owner\\source\\repos\\FinancialDatabaseSolution\\FinancialDatabaseTesting\\TestingItems\\Images\\20210118_133514.jpg"
 				],
+
 				"sales": [
 					{
 						"Amount_sale": 100.0,
 						"Date_Sold_str": "2020-1-1"
 					}
 				]
+			}
+		]
+	},
+
+	{
+		"Date_Purchased_str": "1900-1-1",
+		"Amount_purchase": 0.0,
+		"Notes_purchase": null,
+		"Seller": null,
+		"items": [
+			{
+				"Name": "Item1",
+				"InitialQuantity": 0,
+				"CurrentQuantity": 0,
+				"Length": -1,
+				"Width": -1,
+				"Height": -1,
+				"Weight": -1,
+				"Notes Shipping": null,
+				"Notes_item": null,
+				"imagePaths": null,
+				"sales": null
 			}
 		]
 	},
