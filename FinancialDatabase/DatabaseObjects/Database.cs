@@ -661,8 +661,6 @@ public static class Database
             result2[0] = rawResult[0].ToString() ?? ErrMsg;
             result2[1] = rawResult[1].ToString() ?? ErrMsg;
             result2[2] = rawResult[2].ToString() ?? ErrMsg;
-
-
         }
         return result2;
     }
