@@ -861,6 +861,14 @@ public static class Database
     {
         string query = QueryBuilder.deleteSaleQuery(currSale);
         string output = runStatement(query);
+
+        // Increase curr qty by 1
+        Item ItemFromSale = Database.getItem(currSale.get_ItemID_sale());
+        int oldCurrQty = ItemFromSale.get_CurrentQuantity();
+
+        string updateCurrQty = QueryBuilder.updateQuery(ItemFromSale, "item.CurrentQuantity", (oldCurrQty + 1).ToString());
+        Database.runStatement(updateCurrQty);
+
         return output.CompareTo("['ERROR']") != 0;
     }
 
