@@ -103,8 +103,7 @@ namespace FinancialDatabase.DatabaseObjects
 
         public static string purchaseQuery(int purcID)
         {
-            string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM purchase WHERE PURCHASE_ID = " + purcID + ") subPurchase LEFT JOIN item ON item.PurchaseID = subPurchase.PURCHASE_ID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
-            // string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM item WHERE item.PurchaseID = " + purcID + ") subItem LEFT JOIN purchase ON purchase.PURCHASE_ID = subItem.PurchaseID) subPurchase) subSale LEFT JOIN sale ON sale.SALE_ID = subSale.SaleID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
+            string query = "SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM purchase WHERE PURCHASE_ID = " + purcID + ") subPurchase LEFT JOIN item ON item.PurchaseID = subPurchase.PURCHASE_ID) subPurchase) subSale LEFT JOIN sale ON sale.ItemID_Sale = subSale.ITEM_ID) subShipping LEFT JOIN shipping on shipping.SHIPPING_ID = subShipping.shippingID;";
             return query;
         }
 

@@ -20,7 +20,6 @@ public class Item : IEquatable<Item>
     [JsonInclude]
     string Name;
     int PurchaseID;
-    int SaleID;
     int ShippingID;
     int thumbnailID;
     [JsonInclude]
@@ -99,7 +98,6 @@ public class Item : IEquatable<Item>
         this.set_Seller(actualItem.get_Seller());
         this.set_Tax(actualItem.get_Tax());
 
-        this.set_SaleID(actualItem.get_SaleID());
         this.sales = actualItem.sales;
 
     }
@@ -113,7 +111,6 @@ public class Item : IEquatable<Item>
         ITEM_ID = Util.DEFAULT_INT;
         Name = Util.DEFAULT_STRING;
         PurchaseID = Util.DEFAULT_INT;
-        SaleID = Util.DEFAULT_INT;
         ShippingID = Util.DEFAULT_INT;
         InitialQuantity = Util.DEFAULT_INT;
         CurrentQuantity = Util.DEFAULT_INT;
@@ -169,10 +166,6 @@ public class Item : IEquatable<Item>
                 case "PurchaseID":
                 case "item.PurchaseID":
                     set_PurchaseID(itemAttribute);
-                    break;
-                case "SaleID":
-                case "item.SaleID":
-                    set_SaleID(itemAttribute);
                     break;
                 case "ShippingID":
                 case "item.ShippingID":
@@ -310,9 +303,6 @@ public class Item : IEquatable<Item>
             case "item.PurchaseID":
                 ret = get_PurchaseID();
                 break;
-            case "item.SaleID":
-                ret = get_SaleID();
-                break;
             case "item.ShippingID":
                 ret = get_ShippingID();
                 break;
@@ -433,9 +423,6 @@ public class Item : IEquatable<Item>
             case "item.PurchaseID":
                 retVal = get_PurchaseID().ToString();
                 break;
-            case "item.SaleID":
-                retVal = get_SaleID().ToString();
-                break;
             case "item.ShippingID":
                 retVal = get_ShippingID().ToString();
                 break;
@@ -495,7 +482,6 @@ public class Item : IEquatable<Item>
     public int get_ITEM_ID() => ITEM_ID;
     public string get_Name() => Name;
     public int get_PurchaseID() => PurchaseID;
-    public int get_SaleID() => SaleID;
     public int get_ShippingID() => ShippingID;
     public int get_InitialQuantity() => InitialQuantity;
     public int get_CurrentQuantity() => CurrentQuantity;
@@ -597,16 +583,6 @@ public class Item : IEquatable<Item>
             return;
         }
         this.PurchaseID = Int32.Parse(PurchaseID);
-    }
-    public void set_SaleID(int SaleID) => this.SaleID = SaleID;
-    public void set_SaleID(string SaleID)
-    {
-        if (SaleID is null || SaleID.CompareTo("") == 0)
-        {
-            this.SaleID = Util.DEFAULT_INT;
-            return;
-        }
-        this.SaleID = Int32.Parse(SaleID);
     }
     public void set_ShippingID(int ShippingID) => this.ShippingID = ShippingID;
     public void set_ShippingID(string ShippingID)

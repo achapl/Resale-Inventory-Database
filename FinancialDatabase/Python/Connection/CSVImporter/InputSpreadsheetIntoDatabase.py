@@ -41,17 +41,13 @@ def clearDatabase():
 	deleteTable(feeTable)
 	deleteTable(itemTable)
 
-def updateItemIDs(itemID, purcID, saleID, shipID):
+def updateItemIDs(itemID, purcID, shipID):
 
 	if purcID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET PurchaseID = " + purcID + " WHERE ITEM_ID = " + itemID + ";"
 		result = runQuery(modifiedItemQuery, False)
 	else:
 		print("ERROR, NO PURC_ID for ITEM_ID: " + itemID)
-
-	if saleID != "":
-		modifiedItemQuery = "UPDATE " + itemTable + " SET SaleID = "     + saleID + " WHERE ITEM_ID = " + itemID + ";"
-		result = runQuery(modifiedItemQuery, False)
 
 	if shipID != "":
 		modifiedItemQuery = "UPDATE " + itemTable + " SET ShippingID = " + shipID + " WHERE ITEM_ID = " + itemID + ";"
@@ -111,7 +107,7 @@ def inputIntoDatabase(data):
 	purcID = "" # This needs to be outside the for loop so the last purchaceID can carry over into next item 
 	for index, row in enumerate(data):
 
-		itemID, saleID, shipID = "", "", ""
+		itemID, shipID = "", "", ""
 
 		currQuantity, initQuantity = extractQuantity(row)
 
@@ -133,13 +129,13 @@ def inputIntoDatabase(data):
 		
 		if isSold(row):
 			saleQuery = "INSERT INTO " + saleTable + " (Date_Sold, Amount_sale, ItemID_sale) VALUES (STR_TO_DATE('" + row[5] + "', '%Y-%m-%d')" + ", " + row[3] + ", " + itemID + ");"
-			saleID = str(runQuery(saleQuery, False)[2])
+			runQuery(saleQuery, False)[2]
 
 		if hasPackingDims(row):
 			ttlWeight, l, w, h = getShippingDims(row)
 			shipQuery = "INSERT INTO " + shipTable + " (Length, Width, Height, Weight, ItemID_shipping, Notes_shipping) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + itemID + ", \"" + row[11] + "\");"
 			shipID = str(runQuery(shipQuery, False)[2])
 
-		updateItemIDs(itemID, purcID, saleID, shipID)
+		updateItemIDs(itemID, purcID, shipID)
 		print(row[1] + " PurcID: " + purcID)
 	
