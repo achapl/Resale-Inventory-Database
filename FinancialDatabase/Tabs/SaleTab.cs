@@ -135,7 +135,7 @@ public class SaleTab : Tab
         Form1.saleListBox.Items.Clear();
         clearCurrItemSales();
 
-        Form1.SaleNameLbl.Text = item.get_Name();
+        Form1.SaleNameLbl.Text = item.Name;
 
         if (item is null) { return; }
 
@@ -148,7 +148,7 @@ public class SaleTab : Tab
         }
 
         Form1.itemSoldPriceLbl.Text = getTotalSales(item).ToString();
-        Form1.itemCurrQtyTLP.Text = item.get_CurrentQuantity().ToString();
+        Form1.itemCurrQtyTLP.Text = item.CurrentQuantity.ToString();
     }
 
 
@@ -178,7 +178,7 @@ public class SaleTab : Tab
 
     public void addSale()
     {
-        if (tabController.getCurrItem().get_CurrentQuantity() == 0)
+        if (tabController.getCurrItem().CurrentQuantity == 0)
         {
             showWarning("Cannot add sale, current quantity is 0");
             return;
@@ -194,14 +194,14 @@ public class SaleTab : Tab
         Sale newItem = new Sale();
         newItem.set_Amount_sale(Int32.Parse(Form1.SaleNewSaleAmountTextbox.Text));
         newItem.set_Date_Sold(new Date(Form1.SaleNewSaleDatePicker));
-        newItem.set_ItemID_sale(tabController.getCurrItem().get_ITEM_ID());
+        newItem.set_ItemID_sale(tabController.getCurrItem().ITEM_ID);
 
         // Insert sale
         Util.clearTBox(newItemTBoxes);
         Database.insertSale(newItem);
 
         Item curritem = tabController.getCurrItem();
-        int newQty = curritem.get_CurrentQuantity() - 1;
+        int newQty = curritem.CurrentQuantity - 1;
         Database.updateRow(curritem, "item.CurrentQuantity", newQty.ToString());
         
         showItemSales(tabController.getCurrItem());
@@ -243,7 +243,7 @@ public class SaleTab : Tab
         
         if (item != null &&
             item.hasItemEntry()){
-            Form1.SaleNameLbl.Text = item.get_Name();
+            Form1.SaleNameLbl.Text = item.Name;
         } else
         {
             Form1.SaleNameLbl.Text = "";

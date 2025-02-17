@@ -78,7 +78,7 @@ public static class DtbParser
     {
         for (int i = 0; i < items.Count(); i++)
         {
-            if (items[i].get_ITEM_ID().Equals(itemID))
+            if (items[i].ITEM_ID.Equals(itemID))
             {
                 return i;
             }

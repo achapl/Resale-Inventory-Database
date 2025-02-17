@@ -155,11 +155,11 @@ namespace FinancialDatabase.Tabs
             }
 
             // New item may be coming from search result as a shell item. Need to update it into a full item
-            newItem = Database.getItem(newItem.get_ITEM_ID());
+            newItem = Database.getItem(newItem.ITEM_ID);
 
 
             // Note: Order matters: Must set currPurc before item. Must also set sale after item.
-            purchasedLotTab.setCurrPurcAndShowView(newItem.get_PurchaseID());    
+            purchasedLotTab.setCurrPurcAndShowView(newItem.PurchaseID);    
             itemViewTab.setCurrItemAndShowView(newItem);
             saleTab.showItemAttributes(newItem);
 
@@ -175,7 +175,7 @@ namespace FinancialDatabase.Tabs
             }
             Item shellItem = getSearchItemsAt(index);
 
-            Item newItem = Database.getItem(shellItem.get_ITEM_ID());
+            Item newItem = Database.getItem(shellItem.ITEM_ID);
             setCurrItem(newItem);
 
         }
@@ -206,7 +206,7 @@ namespace FinancialDatabase.Tabs
             Item item = getCurrItem();
             if (item != null)
             {
-                item.set_images();
+                item.set_imagesFromDatabase();
             }
             return item;
         }

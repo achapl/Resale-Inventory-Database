@@ -120,10 +120,10 @@ public class SearchTab
         Form1.itemSearchView.clearItems();
         for (int i = 0; i < result.Count; i++)
         {
-            itemStr = result[i].get_Name();
-            if (priceCol) { itemStr = result[i].get_Amount_purchase() + ", " + itemStr; }
-            if (dateCol)  { itemStr += ", " + result[i].get_Date_Purchased().toDateString(); }
-            Form1.itemSearchView.addRow(result[i].get_Thumbnail().image, itemStr);
+            itemStr = result[i].Name;
+            if (priceCol) { itemStr = result[i].Amount_purchase + ", " + itemStr; }
+            if (dateCol)  { itemStr += ", " + result[i].Date_Purchased.toDateString(); }
+            Form1.itemSearchView.addRow(result[i].thumbnail.image, itemStr);
             searchItems.Add(result[i]);
             
         }

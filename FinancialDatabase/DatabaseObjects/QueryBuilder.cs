@@ -109,12 +109,12 @@ namespace FinancialDatabase.DatabaseObjects
 
         public static string purchaseQuery(Item item)
         {
-            return purchaseQuery(item.get_PurchaseID());
+            return purchaseQuery(item.PurchaseID);
         }
 
         public static string saleQuery(Item item)
         {
-            return "SELECT * FROM sale WHERE ItemID_sale = " + item.get_ITEM_ID().ToString() + ";";
+            return "SELECT * FROM sale WHERE ItemID_sale = " + item.ITEM_ID.ToString() + ";";
         }
 
         public static string insertPurchaseQuery(double purcPrice, string purcNotes, Date d)
@@ -147,8 +147,8 @@ namespace FinancialDatabase.DatabaseObjects
 
         public static string shipInfoInsertQuery(Item item)
         {
-            List<int> weight = Util.ozToOzLbs(item.get_Weight());
-            return shipInfoInsertQuery(item, weight[0], weight[1], item.get_Length(), item.get_Width(), item.get_Height());
+            List<int> weight = Util.ozToOzLbs(item.Weight);
+            return shipInfoInsertQuery(item, weight[0], weight[1], item.Length, item.Width, item.Height);
         }
 
         public static string shipInfoInsertQuery(Item currItem, int weightLbs, int weightOz, int l, int w, int h)
@@ -159,13 +159,13 @@ namespace FinancialDatabase.DatabaseObjects
             }
 
             int ttlWeight = weightLbs * 16 + weightOz;
-            return "INSERT INTO shipping (Length, Width, Height, Weight, ItemID_shipping) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + currItem.get_ITEM_ID() + ")";
+            return "INSERT INTO shipping (Length, Width, Height, Weight, ItemID_shipping) VALUES (" + l + ", " + w + ", " + h + ", " + ttlWeight + ", " + currItem.ITEM_ID + ")";
         }
 
         public static string deleteShipInfoQuery(Item item)
         {
 
-            int shipID = item.get_ShippingID();
+            int shipID = item.ShippingID;
 
             return "DELETE FROM shipping WHERE SHIPPING_ID = " + shipID + ";";
         }
@@ -192,13 +192,13 @@ namespace FinancialDatabase.DatabaseObjects
             switch (table)
             {
                 case "item":
-                    itemID = table + ".ITEM_ID = " + currItem.get_ITEM_ID();
+                    itemID = table + ".ITEM_ID = " + currItem.ITEM_ID;
                     break;
                 case "shipping":
-                    itemID = table + ".SHIPPING_ID = " + currItem.get_ShippingID();
+                    itemID = table + ".SHIPPING_ID = " + currItem.ShippingID;
                     break;
                 case "purchase":
-                    itemID = table + ".PURCHASE_ID = " + currItem.get_PurchaseID();
+                    itemID = table + ".PURCHASE_ID = " + currItem.PurchaseID;
                     break;
 
 
@@ -229,13 +229,13 @@ namespace FinancialDatabase.DatabaseObjects
             switch (table)
             {
                 case "item":
-                    itemID = table + ".ITEM_ID = " + currItem.get_ITEM_ID();
+                    itemID = table + ".ITEM_ID = " + currItem.ITEM_ID;
                     break;
                 case "shipping":
-                    itemID = table + ".SHIPPING_ID = " + currItem.get_ShippingID();
+                    itemID = table + ".SHIPPING_ID = " + currItem.ShippingID;
                     break;
                 case "purchase":
-                    itemID = table + ".PURCHASE_ID = " + currItem.get_PurchaseID();
+                    itemID = table + ".PURCHASE_ID = " + currItem.PurchaseID;
                     break;
 
             }
@@ -339,7 +339,7 @@ namespace FinancialDatabase.DatabaseObjects
 
         public static string itemInsertQuery(Item item)
         {
-            return "INSERT INTO item (Name, InitialQuantity, CurrentQuantity, PurchaseID) VALUES (" + "\"" + item.get_Name() + "\"" + ", " + item.get_InitialQuantity() + ", " + item.get_CurrentQuantity() + ", " + item.get_PurchaseID() + ");";
+            return "INSERT INTO item (Name, InitialQuantity, CurrentQuantity, PurchaseID) VALUES (" + "\"" + item.Name + "\"" + ", " + item.InitialQuantity + ", " + item.CurrentQuantity + ", " + item.PurchaseID + ");";
         }
 
         public static string saleInsertQuery(Sale sale)
@@ -349,18 +349,18 @@ namespace FinancialDatabase.DatabaseObjects
 
         public static string deletePurchaseQuery(Item item)
         {
-            int purcID = item.get_PurchaseID();
+            int purcID = item.PurchaseID;
             return "DELETE FROM purchase WHERE purchase.PURCHASE_ID = " + purcID + ";";
         }
 
         public static string deleteAllSalesQuery(Item item)
         {
-            return "DELETE FROM sale WHERE sale.ItemID_sale = " + item.get_ITEM_ID() + ";";
+            return "DELETE FROM sale WHERE sale.ItemID_sale = " + item.ITEM_ID + ";";
         }
 
         public static string deleteItemQuery(Item item)
         {
-            return "DELETE FROM item WHERE ITEM_ID = " + item.get_ITEM_ID() + ";";
+            return "DELETE FROM item WHERE ITEM_ID = " + item.ITEM_ID + ";";
         }
 
         public static string thumbnailQuery(List<Item> parsedItems)
@@ -368,13 +368,13 @@ namespace FinancialDatabase.DatabaseObjects
             if (parsedItems == null || parsedItems.Count == 0) { throw new Exception("ERROR: QueryBuilder.thumbnailQuery(): Null or Empty list passed into it"); }
 
             string query = "SELECT item.ITEM_ID, thumbnail.ThumbnailID, thumbnail.thumbnail FROM item JOIN thumbnail on item.ThumbnailID = thumbnail.ThumbnailID WHERE item.ITEM_ID IN (";
-            query += parsedItems[0].get_ITEM_ID().ToString();
+            query += parsedItems[0].ITEM_ID.ToString();
 
             if (parsedItems.Count > 1)
             {
                 foreach (Item item in parsedItems[1..])
                 {
-                    query += ", " + item.get_ITEM_ID().ToString();
+                    query += ", " + item.ITEM_ID.ToString();
                 }
             }
 
@@ -412,7 +412,7 @@ namespace FinancialDatabase.DatabaseObjects
 
         internal static string deleteImagesQuery(Item item)
         {
-            return "DELETE FROM image WHERE ItemID =" + item.get_ITEM_ID() + ";";
+            return "DELETE FROM image WHERE ItemID =" + item.ITEM_ID + ";";
         }
 
         internal static string setThumbnail(int itemID, int? newThumbnailID)
@@ -425,7 +425,7 @@ namespace FinancialDatabase.DatabaseObjects
 
         internal static string getImages(Item item)
         {
-            return "SELECT * FROM image WHERE ItemID = " + item.get_ITEM_ID() + ";";
+            return "SELECT * FROM image WHERE ItemID = " + item.ITEM_ID + ";";
         }
 
         internal static string deleteThumbnailQuery(int thumbnailID)

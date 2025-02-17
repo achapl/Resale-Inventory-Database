@@ -115,7 +115,7 @@ public class ItemViewTab : Tab
     // Update the under-hood reference to the object in the database
     public void updateCurrItemUsingDtb()
     {
-        currItem = Database.getItem(currItem.get_ITEM_ID());
+        currItem = Database.getItem(currItem.ITEM_ID);
     }
 
 
@@ -267,7 +267,7 @@ public class ItemViewTab : Tab
 
             Database.insertShipInfo(getCurrItem(), weightLbs, weightOz, l, w, h);
             Util.clearTLPs(weightTBoxes);
-            showItemAttributes(Database.getItem(tabController.getCurrItem().get_ITEM_ID())); // Will also reset currItem with new search for it
+            showItemAttributes(Database.getItem(tabController.getCurrItem().ITEM_ID)); // Will also reset currItem with new search for it
         }
         else
         {
@@ -287,7 +287,7 @@ public class ItemViewTab : Tab
 
         if (success)
         {
-            showItemAttributes(Database.getItem(tabController.getCurrItem().get_ITEM_ID()));
+            showItemAttributes(Database.getItem(tabController.getCurrItem().ITEM_ID));
         }
         flipEditMode();
     }
@@ -319,14 +319,14 @@ public class ItemViewTab : Tab
 
         if (item.hasItemEntry())
         {
-            Form1.itemNameTLP.setLabelText(Util.checkDefault(item.get_Name()));
-            Form1.itemNameTLP.setControlVal(Util.checkDefault(item.get_Name()));
-            Form1.itemInitQtyTLP.setLabelText(Util.checkDefault(item.get_InitialQuantity()));
-            Form1.itemInitQtyTLP.setControlVal(Util.checkDefault(item.get_InitialQuantity()));
-            Form1.itemCurrQtyTLP.setLabelText(Util.checkDefault(item.get_CurrentQuantity()));
-            Form1.itemCurrQtyTLP.setControlVal(Util.checkDefault(item.get_CurrentQuantity()));
-            Form1.itemItemNoLbl.Text = Util.checkDefault(item.get_ITEM_ID());
-            Form1.SaleNameLbl.Text = Util.checkDefault(item.get_Name());
+            Form1.itemNameTLP.setLabelText(Util.checkDefault(item.Name));
+            Form1.itemNameTLP.setControlVal(Util.checkDefault(item.Name));
+            Form1.itemInitQtyTLP.setLabelText(Util.checkDefault(item.InitialQuantity));
+            Form1.itemInitQtyTLP.setControlVal(Util.checkDefault(item.InitialQuantity));
+            Form1.itemCurrQtyTLP.setLabelText(Util.checkDefault(item.CurrentQuantity));
+            Form1.itemCurrQtyTLP.setControlVal(Util.checkDefault(item.CurrentQuantity));
+            Form1.itemItemNoLbl.Text = Util.checkDefault(item.ITEM_ID);
+            Form1.SaleNameLbl.Text = Util.checkDefault(item.Name);
 
         }
         if (item.sales != null && item.sales.Count() > 0)
@@ -343,17 +343,17 @@ public class ItemViewTab : Tab
 
         if (item.hasShippingEntry())
         {
-            List<int> WeightLbsOz = Util.ozToOzLbs(item.get_Weight());
+            List<int> WeightLbsOz = Util.ozToOzLbs(item.Weight);
             Form1.itemWeightLbsTLP.setLabelText(Util.checkDefault(WeightLbsOz[0]));
             Form1.itemWeightLbsTLP.setControlVal(Util.checkDefault(WeightLbsOz[0]));
             Form1.itemWeightOzTLP.setLabelText(Util.checkDefault(WeightLbsOz[1]));
             Form1.itemWeightOzTLP.setControlVal(Util.checkDefault(WeightLbsOz[1]));
-            Form1.itemLengthTLP.setLabelText(Util.checkDefault(item.get_Length()));
-            Form1.itemLengthTLP.setControlVal(Util.checkDefault(item.get_Length()));
-            Form1.itemWidthTLP.setLabelText(Util.checkDefault(item.get_Width()));
-            Form1.itemWidthTLP.setControlVal(Util.checkDefault(item.get_Width()));
-            Form1.itemHeightTLP.setLabelText(Util.checkDefault(item.get_Height()));
-            Form1.itemHeightTLP.setControlVal(Util.checkDefault(item.get_Height()));
+            Form1.itemLengthTLP.setLabelText(Util.checkDefault(item.Length));
+            Form1.itemLengthTLP.setControlVal(Util.checkDefault(item.Length));
+            Form1.itemWidthTLP.setLabelText(Util.checkDefault(item.Width));
+            Form1.itemWidthTLP.setControlVal(Util.checkDefault(item.Width));
+            Form1.itemHeightTLP.setLabelText(Util.checkDefault(item.Height));
+            Form1.itemHeightTLP.setControlVal(Util.checkDefault(item.Height));
         }
 
         showItemPictures(item);
@@ -383,11 +383,11 @@ public class ItemViewTab : Tab
 
     public void showItemPictures(Item newItem)
     {
-        newItem.set_images();
-        Form1.allPictureViewer.setImages(newItem.get_Images());
-        if (newItem.get_Images().Count > 0)
+        newItem.set_imagesFromDatabase();
+        Form1.allPictureViewer.setImages(newItem.images);
+        if (newItem.images.Count > 0)
         {
-            Form1.mainPictureViewer.setImage(newItem.get_Images()[0]);
+            Form1.mainPictureViewer.setImage(newItem.images[0]);
         }
     }
 
@@ -405,7 +405,7 @@ public class ItemViewTab : Tab
     {
        
         if (newItem == null ||
-            newItem.get_ITEM_ID() == Util.DEFAULT_INT) {
+            newItem.ITEM_ID == Util.DEFAULT_INT) {
             currItem = null;
             return;
         }
@@ -416,8 +416,8 @@ public class ItemViewTab : Tab
             !tabController.getCurrPurcItems().Contains(newItem))
         {
             throw new Exception("Error: ItemViewTab.setCurrItem,"
-                                + "Result item ID: " + newItem.get_ITEM_ID().ToString() + ", "
-                                + "Name: " + newItem.get_Name() + ", "
+                                + "Result item ID: " + newItem.ITEM_ID.ToString() + ", "
+                                + "Name: " + newItem.Name + ", "
                                 + "Not found!");
         }
 
@@ -440,7 +440,7 @@ public class ItemViewTab : Tab
         {
             return;
         }
-        Database.setThumbnail(tabController.getCurrItem().get_ITEM_ID(), currImageID);
+        Database.setThumbnail(tabController.getCurrItem().ITEM_ID, currImageID);
     }
 
     // Clear all shown info about currItem

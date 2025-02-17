@@ -233,7 +233,7 @@ public class PurchasedLotTab : Tab
 
         foreach (Item i in currPurc.items)
         {
-            Form1.PurchaseListBox.Items.Add(i.get_Name());
+            Form1.PurchaseListBox.Items.Add(i.Name);
         }
     }
 
@@ -416,9 +416,9 @@ public class PurchasedLotTab : Tab
         }
 
         Item newItem = getNewItemFromUserInput();
-        newItem.set_PurchaseID(purcID);
+        newItem.PurchaseID = purcID;
         Database.insertItem(newItem, out itemID);
-        newItem.set_ITEM_ID(itemID);
+        newItem.ITEM_ID = itemID;
 
         // Cleanup
         Util.clearTBox(newItemTBoxes);
@@ -433,7 +433,7 @@ public class PurchasedLotTab : Tab
     {
         Item newItem = new Item();
 
-        newItem.set_Name(Form1.PurcNameTextbox.Text);
+        newItem.Name = Form1.PurcNameTextbox.Text;
 
         // Make to default 1
         string initQty = "1";
@@ -441,23 +441,23 @@ public class PurchasedLotTab : Tab
         {
             initQty = Form1.PurcInitQtyTextbox.Text;
         }
-        newItem.set_InitialQuantity(initQty);
+        newItem.set_InitialQuantity_str(initQty);
 
         string currQty = "1";
         if (Form1.PurcCurrQtyTextbox.Text.CompareTo("") != 0)
         {
             currQty = Form1.PurcCurrQtyTextbox.Text;
         }
-        newItem.set_CurrentQuantity(currQty);
+        newItem.set_CurrentQuantity_str(currQty);
         
         // Add user-inputted shipping info
         if (newShippingBoxesFilled(out string errorMsg) == Util.NoneSomeAll.All)
         {
             int ttlWeight = Int32.Parse(Form1.PurcWeightLbsTextbox.Text) * 16 + Int32.Parse(Form1.PurcWeightOzTextbox.Text);
-            newItem.set_Weight(ttlWeight);
-            newItem.set_Length(Int32.Parse(Form1.PurcLengthTextbox.Text));
-            newItem.set_Width(Int32.Parse(Form1.PurcWidthTextbox.Text));
-            newItem.set_Height(Int32.Parse(Form1.PurcHeightTextbox.Text));
+            newItem.Weight = ttlWeight;
+            newItem.Length = Int32.Parse(Form1.PurcLengthTextbox.Text);
+            newItem.Width = Int32.Parse(Form1.PurcWidthTextbox.Text);
+            newItem.Height = Int32.Parse(Form1.PurcHeightTextbox.Text);
         }
         else if (errorMsg != "")
         {

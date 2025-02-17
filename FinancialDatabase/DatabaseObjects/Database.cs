@@ -99,7 +99,8 @@ public static class Database
     {
         string query = QueryBuilder.completeItemIDSearchQuery(itemID);
 
-        List<Item> result = getItems(itemID, true);
+        string item = QueryBuilder.completeItemIDSearchQuery(itemID);
+        List<Item> result =  getItems(query, true);
 
         // Error Checking
         if (result.Count > 1)
@@ -117,8 +118,8 @@ public static class Database
         }
 
         // Only option left, a single item was found (Count will not be negative)
-        Item item = result[0];
-        return item;
+        Item retItem = result[0];
+        return retItem;
     }
 
 
@@ -279,7 +280,8 @@ public static class Database
     public static List<Item> getItems(int itemID, bool includeThumbnails)
     {
         string query = QueryBuilder.completeItemIDSearchQuery(itemID);
-        return getItems(query, includeThumbnails);
+
+        return getItems(query, true);
     }
 
 
@@ -323,13 +325,13 @@ public static class Database
         foreach (Item item in items)
         {
             MyImage thumbnail;
-            if (thumbnails.TryGetValue(item.get_ITEM_ID(), out thumbnail))
+            if (thumbnails.TryGetValue(item.ITEM_ID, out thumbnail))
             {
-                item.set_Thumbnail(thumbnail);
+                item.thumbnail = thumbnail;
             }
             else
             {
-                item.set_Thumbnail(Util.DEFAULT_IMAGE);
+                item.thumbnail = Util.DEFAULT_IMAGE;
             }
         }
 
@@ -490,9 +492,9 @@ public static class Database
         int shippingID = -1;
         // If given item also has shipping info,
         // insert that into the database too
-        if (item.get_Weight() != Util.DEFAULT_INT)
+        if (item.Weight != Util.DEFAULT_INT)
         {
-            item.set_ITEM_ID(lastrowid);
+            item.ITEM_ID = lastrowid;
             insertShipInfo(item);
         }
         
@@ -586,7 +588,7 @@ public static class Database
         if (item == null) { throw new Exception("ERROR: Inserting image for null item"); }
         if (filePath == null) { throw new Exception("ERROR: No image path to inesrt"); }
         
-        int itemID = item.get_ITEM_ID();
+        int itemID = item.ITEM_ID;
         
         // Copy file to database folder
         string copiedFile = copyImageToDtbFolder(filePath);
@@ -688,7 +690,7 @@ public static class Database
 
         if (result.CompareTo("['ERROR']") == 0)
         {
-            throw new Exception("Error: Cannot delete item with id: " + item.get_ITEM_ID());
+            throw new Exception("Error: Cannot delete item with id: " + item.ITEM_ID);
         }
 
         // Delete the purchase associated with the item
@@ -696,7 +698,7 @@ public static class Database
         // between items:purchase
         if (item.hasPurchaseEntry())
         {
-            if (isEmptyPurchase(item.get_PurchaseID()))
+            if (isEmptyPurchase(item.PurchaseID))
             {
                 deletePurchase(item);
             }
@@ -751,7 +753,7 @@ public static class Database
         string query = QueryBuilder.deleteImagesQuery(item);
         runStatement(query);
 
-        query = QueryBuilder.setThumbnail(item.get_ITEM_ID(), null);
+        query = QueryBuilder.setThumbnail(item.ITEM_ID, null);
         runStatement(query);
     }
 
@@ -853,7 +855,7 @@ public static class Database
 
     public static int insertShipInfo(Item item)
     {
-        return insertShipInfo(item, item.get_WeightLbs(), item.get_WeightOz(), item.get_Length(), item.get_Width(), item.get_Height());
+        return insertShipInfo(item, item.get_WeightLbs(), item.get_WeightOz(), item.Length, item.Width, item.Height);
     }
 
 
@@ -864,7 +866,7 @@ public static class Database
 
         // Increase curr qty by 1
         Item ItemFromSale = Database.getItem(currSale.get_ItemID_sale());
-        int oldCurrQty = ItemFromSale.get_CurrentQuantity();
+        int oldCurrQty = ItemFromSale.CurrentQuantity;
 
         string updateCurrQty = QueryBuilder.updateQuery(ItemFromSale, "item.CurrentQuantity", (oldCurrQty + 1).ToString());
         Database.runStatement(updateCurrQty);
@@ -876,7 +878,7 @@ public static class Database
     public static Purchase getPurchase(Item item)
     {
         List<string> colNames;
-        string query = QueryBuilder.purchaseQueryByItemID(item.get_ITEM_ID());
+        string query = QueryBuilder.purchaseQueryByItemID(item.ITEM_ID);
         string output = runStatement(query, out colNames);
         return  DtbParser.parsePurchase(output, colNames);
     }
