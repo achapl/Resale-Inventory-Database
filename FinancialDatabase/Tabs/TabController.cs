@@ -99,6 +99,7 @@ namespace FinancialDatabase.Tabs
 
             }
             clearCurrItem();
+            search();
             Form1.tabCollection.SelectTab(searchTabNum);
         }
 
