@@ -64,38 +64,36 @@ public class TestItem
     public static MyImage image2 = new MyImage(System.Drawing.Image.FromFile("C:\\Users\\Owner\\source\\repos\\FinancialDatabaseSolution\\FinancialDatabase\\Resources\\s-l1600.png"), -2);
 
 
-
     [Test]
     public static void Test_ConstructorDefault()
     {
         Item i = new Item();
         // From item table
-        Assert.AreEqual(i.get_ITEM_ID(), Util.DEFAULT_INT);
-        Assert.AreEqual(i.get_Name(), Util.DEFAULT_STRING);
-        Assert.AreEqual(i.get_PurchaseID(), Util.DEFAULT_INT);
-        Assert.AreEqual(i.get_SaleID(), Util.DEFAULT_INT);
-        Assert.AreEqual(i.get_ShippingID(), Util.DEFAULT_INT);
-        Assert.AreEqual(i.get_InitialQuantity(), Util.DEFAULT_INT);
-        Assert.AreEqual(i.get_CurrentQuantity(), Util.DEFAULT_INT);
-        Assert.AreEqual(i.get_Notes_item(), Util.DEFAULT_STRING);
+        Assert.AreEqual(i.ITEM_ID, Util.DEFAULT_INT);
+        Assert.AreEqual(i.Name, Util.DEFAULT_STRING);
+        Assert.AreEqual(i.PurchaseID, Util.DEFAULT_INT);
+        Assert.AreEqual(i.ShippingID, Util.DEFAULT_INT);
+        Assert.AreEqual(i.InitialQuantity, Util.DEFAULT_INT);
+        Assert.AreEqual(i.CurrentQuantity, Util.DEFAULT_INT);
+        Assert.AreEqual(i.Notes_item, Util.DEFAULT_STRING);
 
         // From purchase table
-        Assert.AreEqual(i.get_Date_Purchased(), Util.DEFAULT_DATE);
-        Assert.AreEqual(i.get_Amount_purchase(), Util.DEFAULT_DOUBLE);
-        Assert.AreEqual(i.get_Tax(), Util.DEFAULT_DOUBLE);
-        Assert.AreEqual(i.get_Fees_purchase(), Util.DEFAULT_DOUBLE);
-        Assert.AreEqual(i.get_Seller(), Util.DEFAULT_STRING);
-        Assert.AreEqual(i.get_Notes_purchase(), Util.DEFAULT_STRING);
+        Assert.AreEqual(i.Date_Purchased, Util.DEFAULT_DATE);
+        Assert.AreEqual(i.Amount_purchase, Util.DEFAULT_DOUBLE);
+        Assert.AreEqual(i.Tax, Util.DEFAULT_DOUBLE);
+        Assert.AreEqual(i.Fees_purchase, Util.DEFAULT_DOUBLE);
+        Assert.AreEqual(i.Seller, Util.DEFAULT_STRING);
+        Assert.AreEqual(i.Notes_purchase, Util.DEFAULT_STRING);
 
         // From shipping table
-        Assert.AreEqual(i.get_Length(), Util.DEFAULT_INT);
-        Assert.AreEqual(i.get_Width(), Util.DEFAULT_INT);
-        Assert.AreEqual(i.get_Height(), Util.DEFAULT_INT);
-        Assert.AreEqual(i.get_Weight(), Util.DEFAULT_INT);
-        Assert.AreEqual(i.get_Notes_shipping(), Util.DEFAULT_STRING);
+        Assert.AreEqual(i.Length, Util.DEFAULT_INT);
+        Assert.AreEqual(i.Width, Util.DEFAULT_INT);
+        Assert.AreEqual(i.Height, Util.DEFAULT_INT);
+        Assert.AreEqual(i.Weight, Util.DEFAULT_INT);
+        Assert.AreEqual(i.Notes_shipping, Util.DEFAULT_STRING);
 
         //From image table
-        Assert.AreEqual(i.get_Images(), Util.DEFAULT_IMAGES);
+        Assert.AreEqual(i.images, Util.DEFAULT_IMAGES);
     }
 
 
@@ -134,27 +132,26 @@ public class TestItem
 
 
         Item item = new Item(itemAttribs, colNames);
-        Assert.AreEqual(ITEM_ID, item.get_ITEM_ID());
-        Assert.AreEqual(Name, item.get_Name());
-        Assert.AreEqual(PurchaseID, item.get_PurchaseID());
-        Assert.AreEqual(SaleID, item.get_SaleID());
-        Assert.AreEqual(ShippingID, item.get_ShippingID());
-        Assert.AreEqual(InitialQuantity, item.get_InitialQuantity());
-        Assert.AreEqual(CurrentQuantity, item.get_CurrentQuantity());
-        Assert.AreEqual(Notes_item, item.get_Notes_item());
-        Assert.AreEqual(Date_Purchased, item.get_Date_Purchased());
-        Assert.AreEqual(Amount_purchase, item.get_Amount_purchase());
-        Assert.AreEqual(Tax, item.get_Tax());
-        Assert.AreEqual(Fees_purchase, item.get_Fees_purchase());
-        Assert.AreEqual(Seller, item.get_Seller());
-        Assert.AreEqual(Notes_purchase, item.get_Notes_purchase());
-        Assert.AreEqual(Length, item.get_Length());
-        Assert.AreEqual(Width, item.get_Width());
-        Assert.AreEqual(Height, item.get_Height());
-        Assert.AreEqual(Weight, item.get_Weight());
-        Assert.AreEqual(Notes_shipping, item.get_Notes_shipping());
+        Assert.AreEqual(ITEM_ID, item.ITEM_ID);
+        Assert.AreEqual(Name, item.Name);
+        Assert.AreEqual(PurchaseID, item.PurchaseID);
+        Assert.AreEqual(ShippingID, item.ShippingID);
+        Assert.AreEqual(InitialQuantity, item.InitialQuantity);
+        Assert.AreEqual(CurrentQuantity, item.CurrentQuantity);
+        Assert.AreEqual(Notes_item, item.Notes_item);
+        Assert.AreEqual(Date_Purchased, item.Date_Purchased);
+        Assert.AreEqual(Amount_purchase, item.Amount_purchase);
+        Assert.AreEqual(Tax, item.Tax);
+        Assert.AreEqual(Fees_purchase, item.Fees_purchase);
+        Assert.AreEqual(Seller, item.Seller);
+        Assert.AreEqual(Notes_purchase, item.Notes_purchase);
+        Assert.AreEqual(Length, item.Length);
+        Assert.AreEqual(Width, item.Width);
+        Assert.AreEqual(Height, item.Height);
+        Assert.AreEqual(Weight, item.Weight);
+        Assert.AreEqual(Notes_shipping, item.Notes_shipping);
 
-        Assert.IsTrue(TestingUtil.compareImages(thumbnail, item.get_Thumbnail()));
+        Assert.IsTrue(TestingUtil.compareImages(thumbnail, item.thumbnail));
     }
 
 
@@ -176,48 +173,46 @@ public class TestItem
 
         Item item = new Item();
 
-        item.set_ITEM_ID(ITEM_ID);
-        item.set_Name(Name);
-        item.set_PurchaseID(PurchaseID);
-        item.set_SaleID(SaleID);
-        item.set_ShippingID(ShippingID);
-        item.set_InitialQuantity(InitialQuantity);
-        item.set_CurrentQuantity(CurrentQuantity);
-        item.set_Notes_item(Notes_item);
-        item.set_Date_Purchased(Date_Purchased);
-        item.set_Amount_purchase(Amount_purchase);
-        item.set_Tax(Tax);
-        item.set_Fees_purchase(Fees_purchase);
-        item.set_Seller(Seller);
-        item.set_Notes_purchase(Notes_purchase);
-        item.set_Length(Length);
-        item.set_Width(Width);
-        item.set_Height(Height);
-        item.set_Weight(Weight);
-        item.set_Notes_shipping(Notes_shipping);
-        item.set_Thumbnail(thumbnail);
+        item.ITEM_ID = ITEM_ID;
+        item.Name = Name;
+        item.PurchaseID = PurchaseID;
+        item.ShippingID = ShippingID;
+        item.InitialQuantity = InitialQuantity;
+        item.CurrentQuantity = CurrentQuantity;
+        item.Notes_item = Notes_item;
+        item.Date_Purchased = Date_Purchased;
+        item.Amount_purchase = Amount_purchase;
+        item.Tax = Tax;
+        item.Fees_purchase = Fees_purchase;
+        item.Seller = Seller;
+        item.Notes_purchase = Notes_purchase;
+        item.Length = Length;
+        item.Width = Width;
+        item.Height = Height;
+        item.Weight = Weight;
+        item.Notes_shipping = Notes_shipping;
+        item.thumbnail = thumbnail;
 
 
-        Assert.AreEqual(ITEM_ID, item.get_ITEM_ID());
-        Assert.AreEqual(Name, item.get_Name());
-        Assert.AreEqual(PurchaseID, item.get_PurchaseID());
-        Assert.AreEqual(SaleID, item.get_SaleID());
-        Assert.AreEqual(ShippingID, item.get_ShippingID());
-        Assert.AreEqual(InitialQuantity, item.get_InitialQuantity());
-        Assert.AreEqual(CurrentQuantity, item.get_CurrentQuantity());
-        Assert.AreEqual(Notes_item, item.get_Notes_item());
-        Assert.AreEqual(Date_Purchased, item.get_Date_Purchased());
-        Assert.AreEqual(Amount_purchase, item.get_Amount_purchase());
-        Assert.AreEqual(Tax, item.get_Tax());
-        Assert.AreEqual(Fees_purchase, item.get_Fees_purchase());
-        Assert.AreEqual(Seller, item.get_Seller());
-        Assert.AreEqual(Notes_purchase, item.get_Notes_purchase());
-        Assert.AreEqual(Length, item.get_Length());
-        Assert.AreEqual(Width, item.get_Width());
-        Assert.AreEqual(Height, item.get_Height());
-        Assert.AreEqual(Weight, item.get_Weight());
-        Assert.AreEqual(Notes_shipping, item.get_Notes_shipping());
-        Assert.IsTrue(TestingUtil.compareImages(thumbnail, item.get_Thumbnail()));
+        Assert.AreEqual(ITEM_ID, item.ITEM_ID);
+        Assert.AreEqual(Name, item.Name);
+        Assert.AreEqual(PurchaseID, item.PurchaseID);
+        Assert.AreEqual(ShippingID, item.ShippingID);
+        Assert.AreEqual(InitialQuantity, item.InitialQuantity);
+        Assert.AreEqual(CurrentQuantity, item.CurrentQuantity);
+        Assert.AreEqual(Notes_item, item.Notes_item);
+        Assert.AreEqual(Date_Purchased, item.Date_Purchased);
+        Assert.AreEqual(Amount_purchase, item.Amount_purchase);
+        Assert.AreEqual(Tax, item.Tax);
+        Assert.AreEqual(Fees_purchase, item.Fees_purchase);
+        Assert.AreEqual(Seller, item.Seller);
+        Assert.AreEqual(Notes_purchase, item.Notes_purchase);
+        Assert.AreEqual(Length, item.Length);
+        Assert.AreEqual(Width, item.Width);
+        Assert.AreEqual(Height, item.Height);
+        Assert.AreEqual(Weight, item.Weight);
+        Assert.AreEqual(Notes_shipping, item.Notes_shipping);
+        Assert.IsTrue(TestingUtil.compareImages(thumbnail, item.thumbnail));
     }
 
 
@@ -239,48 +234,46 @@ public class TestItem
 
         Item item = new Item();
 
-        item.set_ITEM_ID(ITEM_ID);
-        item.set_Name(Name);
-        item.set_PurchaseID(PurchaseID);
-        item.set_SaleID(SaleID);
-        item.set_ShippingID(ShippingID);
-        item.set_InitialQuantity(InitialQuantity);
-        item.set_CurrentQuantity(CurrentQuantity);
-        item.set_Notes_item(Notes_item);
-        item.set_Date_Purchased(Date_Purchased);
-        item.set_Amount_purchase(Amount_purchase);
-        item.set_Tax(Tax);
-        item.set_Fees_purchase(Fees_purchase);
-        item.set_Seller(Seller);
-        item.set_Notes_purchase(Notes_purchase);
-        item.set_Length(Length);
-        item.set_Width(Width);
-        item.set_Height(Height);
-        item.set_Weight(Weight);
-        item.set_Notes_shipping(Notes_shipping);
-        item.set_Thumbnail(thumbnail);
+        item.set_ITEM_ID_str(ITEM_ID);
+        item.Name = Name;
+        item.set_PurchaseID_str(PurchaseID);
+        item.set_ShippingID_str(ShippingID);
+        item.set_InitialQuantity_str(InitialQuantity);
+        item.set_CurrentQuantity_str(CurrentQuantity);
+        item.Notes_item = (Notes_item);
+        item.Date_Purchased = Date_Purchased;
+        item.set_Amount_purchase_str(Amount_purchase);
+        item.set_Tax_str(Tax);
+        item.set_Fees_purchase_str(Fees_purchase);
+        item.Seller = Seller;
+        item.Notes_purchase = Notes_purchase;
+        item.set_Length_str(Length);
+        item.set_Width_str(Width);
+        item.set_Height_str(Height);
+        item.set_Weight_str(Weight);
+        item.Notes_shipping = Notes_shipping;
+        item.thumbnail = thumbnail;
 
 
-        Assert.AreEqual(Int32.Parse(ITEM_ID), item.get_ITEM_ID());
-        Assert.AreEqual(Name, item.get_Name());
-        Assert.AreEqual(Int32.Parse(PurchaseID), item.get_PurchaseID());
-        Assert.AreEqual(Int32.Parse(SaleID), item.get_SaleID());
-        Assert.AreEqual(Int32.Parse(ShippingID), item.get_ShippingID());
-        Assert.AreEqual(Int32.Parse(InitialQuantity), item.get_InitialQuantity());
-        Assert.AreEqual(Int32.Parse(CurrentQuantity), item.get_CurrentQuantity());
-        Assert.AreEqual(Notes_item, item.get_Notes_item());
-        Assert.AreEqual(Date_Purchased, item.get_Date_Purchased());
-        Assert.AreEqual(Double.Parse(Amount_purchase), item.get_Amount_purchase());
-        Assert.AreEqual(Double.Parse(Tax), item.get_Tax());
-        Assert.AreEqual(Double.Parse(Fees_purchase), item.get_Fees_purchase());
-        Assert.AreEqual(Seller, item.get_Seller());
-        Assert.AreEqual(Notes_purchase, item.get_Notes_purchase());
-        Assert.AreEqual(Int32.Parse(Length), item.get_Length());
-        Assert.AreEqual(Int32.Parse(Width), item.get_Width());
-        Assert.AreEqual(Int32.Parse(Height), item.get_Height());
-        Assert.AreEqual(Int32.Parse(Weight), item.get_Weight());
-        Assert.AreEqual(Notes_shipping, item.get_Notes_shipping());
-        Assert.IsTrue(TestingUtil.compareImages(thumbnail, item.get_Thumbnail()));
+        Assert.AreEqual(Int32.Parse(ITEM_ID), item.ITEM_ID);
+        Assert.AreEqual(Name, item.Name);
+        Assert.AreEqual(Int32.Parse(PurchaseID), item.PurchaseID);
+        Assert.AreEqual(Int32.Parse(ShippingID), item.ShippingID);
+        Assert.AreEqual(Int32.Parse(InitialQuantity), item.InitialQuantity);
+        Assert.AreEqual(Int32.Parse(CurrentQuantity), item.CurrentQuantity);
+        Assert.AreEqual(Notes_item, item.Notes_item);
+        Assert.AreEqual(Date_Purchased, item.Date_Purchased);
+        Assert.AreEqual(Double.Parse(Amount_purchase), item.Amount_purchase);
+        Assert.AreEqual(Double.Parse(Tax), item.Tax);
+        Assert.AreEqual(Double.Parse(Fees_purchase), item.Fees_purchase);
+        Assert.AreEqual(Seller, item.Seller);
+        Assert.AreEqual(Notes_purchase, item.Notes_purchase);
+        Assert.AreEqual(Int32.Parse(Length), item.Length);
+        Assert.AreEqual(Int32.Parse(Width), item.Width);
+        Assert.AreEqual(Int32.Parse(Height), item.Height);
+        Assert.AreEqual(Int32.Parse(Weight), item.Weight);
+        Assert.AreEqual(Notes_shipping, item.Notes_shipping);
+        Assert.IsTrue(TestingUtil.compareImages(thumbnail, item.thumbnail));
     }
 
 
@@ -290,26 +283,25 @@ public class TestItem
     {
         Item item = new Item();
 
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_ITEM_ID());
-        Assert.AreEqual(Util.DEFAULT_STRING, item.get_Name());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_PurchaseID());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_SaleID());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_ShippingID());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_InitialQuantity());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_CurrentQuantity());
-        Assert.AreEqual(Util.DEFAULT_STRING, item.get_Notes_item());
-        Assert.AreEqual(Util.DEFAULT_DATE, item.get_Date_Purchased());
-        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.get_Amount_purchase());
-        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.get_Tax());
-        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.get_Fees_purchase());
-        Assert.AreEqual(Util.DEFAULT_STRING, item.get_Seller());
-        Assert.AreEqual(Util.DEFAULT_STRING, item.get_Notes_purchase());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_Length());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_Width());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_Height());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_Weight());
-        Assert.AreEqual(Util.DEFAULT_STRING, item.get_Notes_shipping());
-        Assert.IsTrue(TestingUtil.compareImages(Util.DEFAULT_IMAGE, item.get_Thumbnail()));
+        Assert.AreEqual(Util.DEFAULT_INT, item.ITEM_ID);
+        Assert.AreEqual(Util.DEFAULT_STRING, item.Name);
+        Assert.AreEqual(Util.DEFAULT_INT, item.PurchaseID);
+        Assert.AreEqual(Util.DEFAULT_INT, item.ShippingID);
+        Assert.AreEqual(Util.DEFAULT_INT, item.InitialQuantity);
+        Assert.AreEqual(Util.DEFAULT_INT, item.CurrentQuantity);
+        Assert.AreEqual(Util.DEFAULT_STRING, item.Notes_item);
+        Assert.AreEqual(Util.DEFAULT_DATE, item.Date_Purchased);
+        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.Amount_purchase);
+        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.Tax);
+        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.Fees_purchase);
+        Assert.AreEqual(Util.DEFAULT_STRING, item.Seller);
+        Assert.AreEqual(Util.DEFAULT_STRING, item.Notes_purchase);
+        Assert.AreEqual(Util.DEFAULT_INT, item.Length);
+        Assert.AreEqual(Util.DEFAULT_INT, item.Width);
+        Assert.AreEqual(Util.DEFAULT_INT, item.Height);
+        Assert.AreEqual(Util.DEFAULT_INT, item.Weight);
+        Assert.AreEqual(Util.DEFAULT_STRING, item.Notes_shipping);
+        Assert.IsTrue(TestingUtil.compareImages(Util.DEFAULT_IMAGE, item.thumbnail));
     }
 
 
@@ -330,46 +322,45 @@ public class TestItem
 
         Item item = new Item();
 
-        Assert.Catch<Exception>(() => item.set_ITEM_ID(ITEM_ID));
-        Assert.Catch<Exception>(() => item.set_Name(Name));
-        item.set_PurchaseID(PurchaseID);
-        item.set_SaleID(SaleID);
-        item.set_ShippingID(ShippingID);
-        item.set_InitialQuantity(InitialQuantity);
-        item.set_CurrentQuantity(CurrentQuantity);
-        item.set_Notes_item(Notes_item); // Valid to have miscellaneous notes just be empty
-        item.set_Date_Purchased(Date_Purchased);
-        item.set_Amount_purchase(Amount_purchase);
-        item.set_Tax(Tax);
-        item.set_Fees_purchase(Fees_purchase);
-        item.set_Seller(Seller); // Valid to have Seller just be empty, it is not necessary information
-        item.set_Notes_purchase(Notes_purchase);  // Valid to have miscellaneous notes just be empty
-        item.set_Length(Length);
-        item.set_Width(Width);
-        item.set_Height(Height);
-        item.set_Weight(Weight);
-        item.set_Notes_shipping(Notes_shipping); // Valid to have miscellaneous notes just be empty
+        Assert.Catch<Exception>(() => item.set_ITEM_ID_str(ITEM_ID));
+        item.Name = Name;
+        item.set_PurchaseID_str(PurchaseID);
+        item.set_ShippingID_str(ShippingID);
+        item.set_InitialQuantity_str(InitialQuantity);
+        item.set_CurrentQuantity_str(CurrentQuantity);
+        item.Notes_item = Notes_item; // Valid to have miscellaneous notes just be empty
+        item.set_Date_Purchased_str(Date_Purchased);
+        item.set_Amount_purchase_str(Amount_purchase);
+        item.set_Tax_str(Tax);
+        item.set_Fees_purchase_str(Fees_purchase);
+        item.Seller = Seller; // Valid to have Seller just be empty, it is not necessary information
+        item.Notes_purchase = Notes_purchase;  // Valid to have miscellaneous notes just be empty
+        item.set_Length_str(Length);
+        item.set_Width_str(Width);
+        item.set_Height_str(Height);
+        item.set_Weight_str(Weight);
+        item.Notes_shipping = Notes_shipping; // Valid to have miscellaneous notes just be empty
         item.set_Thumbnail(thumbnail);
 
 
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_PurchaseID());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_SaleID());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_ShippingID());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_InitialQuantity());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_CurrentQuantity());
-        Assert.AreEqual("", item.get_Notes_item());
-        Assert.AreEqual(Util.DEFAULT_DATE, item.get_Date_Purchased());
-        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.get_Amount_purchase());
-        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.get_Tax());
-        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.get_Fees_purchase());
-        Assert.AreEqual("", item.get_Seller());
-        Assert.AreEqual("", item.get_Notes_purchase());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_Length());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_Width());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_Height());
-        Assert.AreEqual(Util.DEFAULT_INT, item.get_Weight());
-        Assert.AreEqual("", item.get_Notes_shipping());
-        Assert.IsTrue(TestingUtil.compareImages(Util.DEFAULT_IMAGE, item.get_Thumbnail()));
+        Assert.AreEqual("", item.Name);
+        Assert.AreEqual(Util.DEFAULT_INT, item.PurchaseID);
+        Assert.AreEqual(Util.DEFAULT_INT, item.ShippingID);
+        Assert.AreEqual(Util.DEFAULT_INT, item.InitialQuantity);
+        Assert.AreEqual(Util.DEFAULT_INT, item.CurrentQuantity);
+        Assert.AreEqual("", item.Notes_item);
+        Assert.AreEqual(Util.DEFAULT_DATE, item.Date_Purchased);
+        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.Amount_purchase);
+        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.Tax);
+        Assert.AreEqual(Util.DEFAULT_DOUBLE, item.Fees_purchase);
+        Assert.AreEqual("", item.Seller);
+        Assert.AreEqual("", item.Notes_purchase);
+        Assert.AreEqual(Util.DEFAULT_INT, item.Length);
+        Assert.AreEqual(Util.DEFAULT_INT, item.Width);
+        Assert.AreEqual(Util.DEFAULT_INT, item.Height);
+        Assert.AreEqual(Util.DEFAULT_INT, item.Weight);
+        Assert.AreEqual("", item.Notes_shipping);
+        Assert.IsTrue(TestingUtil.compareImages(Util.DEFAULT_IMAGE, item.thumbnail));
     }
 
 
@@ -381,18 +372,18 @@ public class TestItem
     public static void Test_set_NameQuotes(string Name)
     {
         Item item = new Item();
-        item.set_Name("\"" + Name + "\"");
-        Assert.AreEqual(0, Name.CompareTo(item.get_Name()));
+        item.Name = "\"" + Name + "\"";
+        Assert.AreEqual(0, Name.CompareTo(item.Name));
     }
 
 
 
 
-    [TestCase("5", "Name", "5", "6", "7", "8", "9", "Item Notes",
+    [TestCase("5", "Name", "5", "7", "8", "9", "Item Notes",
         "1978-12-16", "10", "10", "12", "Seller", "Purchase Notes",
         "13", "14", "15", "16", "Shipping Notes")]
     public static void Test_getAttribAsStr( // Item
-                                            string ITEM_ID, string Name, string PurchaseID, string SaleID, string ShippingID, string InitialQuantity, string CurrentQuantity, string Notes_item,
+                                            string ITEM_ID, string Name, string PurchaseID, string ShippingID, string InitialQuantity, string CurrentQuantity, string Notes_item,
                                             // Purchase
                                             string Date_Purchased, string Amount_purchase, string Tax, string Fees_purchase, string Seller, string Notes_purchase,
                                             // Shipping
@@ -400,31 +391,29 @@ public class TestItem
     {
         Item item = new Item();
 
-        item.set_ITEM_ID(ITEM_ID);
-        item.set_Name(Name);
-        item.set_PurchaseID(PurchaseID);
-        item.set_SaleID(SaleID);
-        item.set_ShippingID(ShippingID);
-        item.set_InitialQuantity(InitialQuantity);
-        item.set_CurrentQuantity(CurrentQuantity);
-        item.set_Notes_item(Notes_item);
-        item.set_Date_Purchased(Date_Purchased);
-        item.set_Amount_purchase(Amount_purchase);
-        item.set_Tax(Tax);
-        item.set_Fees_purchase(Fees_purchase);
-        item.set_Seller(Seller);
-        item.set_Notes_purchase(Notes_purchase);
-        item.set_Length(Length);
-        item.set_Width(Width);
-        item.set_Height(Height);
-        item.set_Weight(Weight);
-        item.set_Notes_shipping(Notes_shipping);
+        item.set_ITEM_ID_str(ITEM_ID);
+        item.Name = Name;
+        item.set_PurchaseID_str(PurchaseID);
+        item.set_ShippingID_str(ShippingID);
+        item.set_InitialQuantity_str(InitialQuantity);
+        item.set_CurrentQuantity_str(CurrentQuantity);
+        item.Notes_item = Notes_item;
+        item.set_Date_Purchased_str(Date_Purchased);
+        item.set_Amount_purchase_str(Amount_purchase);
+        item.set_Tax_str(Tax);
+        item.set_Fees_purchase_str(Fees_purchase);
+        item.Seller = Seller;
+        item.Notes_purchase = Notes_purchase;
+        item.set_Length_str(Length);
+        item.set_Width_str(Width);
+        item.set_Height_str(Height);
+        item.set_Weight_str(Weight);
+        item.Notes_shipping = Notes_shipping;
 
 
         Assert.AreEqual(0, ITEM_ID.CompareTo(item.getAttribAsStr("item.ITEM_ID")));
         Assert.AreEqual(0, Name.CompareTo(item.getAttribAsStr("item.Name")));
         Assert.AreEqual(0, PurchaseID.CompareTo(item.getAttribAsStr("item.PurchaseID")));
-        Assert.AreEqual(0, SaleID.CompareTo(item.getAttribAsStr("item.SaleID")));
         Assert.AreEqual(0, ShippingID.CompareTo(item.getAttribAsStr("item.ShippingID")));
         Assert.AreEqual(0, InitialQuantity.CompareTo(item.getAttribAsStr("item.InitialQuantity")));
         Assert.AreEqual(0, CurrentQuantity.CompareTo(item.getAttribAsStr("item.CurrentQuantity")));
@@ -516,13 +505,13 @@ public class TestItem
     public static void Test_Equals()
     {
         Item itemA = new Item();
-        itemA.set_ITEM_ID(1234);
+        itemA.ITEM_ID = 1234;
 
         Item itemB = new Item();
-        itemB.set_ITEM_ID(itemA.get_ITEM_ID());
+        itemB.ITEM_ID = itemA.ITEM_ID;
 
         Item itemC = new Item();
-        itemC.set_ITEM_ID(itemA.get_ITEM_ID() + 1);
+        itemC.ITEM_ID = itemA.ITEM_ID + 1;
 
         Assert.IsFalse(itemA.Equals(itemC));
     }
@@ -534,12 +523,12 @@ public class TestItem
         Item i = new Item();
         i.add_image(image1);
         i.add_image(image1);
-        List<MyImage> imagesBefore = i.get_Images();
+        List<MyImage> imagesBefore = i.images;
         Assert.AreEqual(2, imagesBefore.Count());
 
         i.clear_images();
 
-        List<MyImage> imagesAfter = i.get_Images();
+        List<MyImage> imagesAfter = i.images;
         Assert.AreEqual(1, imagesAfter.Count());
     }
 
@@ -550,12 +539,12 @@ public class TestItem
     {
         Item i = new Item();
         
-        List<MyImage> imagesBefore = i.get_Images();
+        List<MyImage> imagesBefore = i.images;
         Assert.IsTrue(imagesBefore.Count() > 0);
 
         i.add_image(image1);
 
-        List<MyImage> imagesAfter = i.get_Images();
+        List<MyImage> imagesAfter = i.images;
         Assert.AreEqual(1, imagesAfter.Count());
         Assert.IsTrue(TestingUtil.compareImages(image1, imagesAfter[0]));
 
@@ -568,19 +557,19 @@ public class TestItem
     {
         Item i = new Item();
 
-        List<MyImage> imagesBefore = i.get_Images();
+        List<MyImage> imagesBefore = i.images;
         Assert.IsTrue(imagesBefore.Count() > 0);
 
         i.add_image(image1);
 
-        List<MyImage> imagesAfter = i.get_Images();
+        List<MyImage> imagesAfter = i.images;
         Assert.AreEqual(1, imagesAfter.Count());
         Assert.IsTrue(TestingUtil.compareImages(image1, imagesAfter[0]));
 
         i.add_image(image1);
         i.add_image(image2);
 
-        imagesAfter = i.get_Images();
+        imagesAfter = i.images;
         Assert.AreEqual(3, imagesAfter.Count());
         Assert.IsTrue(TestingUtil.compareImages(image1, imagesAfter[0]));
         Assert.IsTrue(TestingUtil.compareImages(image1, imagesAfter[1]));
@@ -594,12 +583,12 @@ public class TestItem
     {
         Item i = new Item();
 
-        List<MyImage> imagesBefore = i.get_Images();
+        List<MyImage> imagesBefore = i.images;
         Assert.IsTrue(imagesBefore.Count() > 0);
 
         i.add_images(new List<MyImage> { image1, image2 });
 
-        List<MyImage> imagesAfter = i.get_Images();
+        List<MyImage> imagesAfter = i.images;
         Assert.AreEqual(2, imagesAfter.Count());
         Assert.IsTrue(TestingUtil.compareImages(image1, imagesAfter[0]));
         Assert.IsTrue(TestingUtil.compareImages(image2, imagesAfter[1]));

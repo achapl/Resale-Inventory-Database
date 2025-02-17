@@ -609,6 +609,24 @@ public class TestUtil
     }
 
 
+    [TestCase(1899, 1, 2)]
+    // Constructor that takes a control that is a DateTimePicker
+    // Here the control is a DateTimePicker
+    public static void Test_DateConstructorCONTROL_DATETIMEPICKERLABELPAIR(int y, int m, int d)
+    {
+        DateTimePickerLabelPair DLP = new DateTimePickerLabelPair();
+        Form1 form1 = new Form1();
+        form1.Controls.Add(DLP);
+        DLP.setControlVal(new DateTime(y, m, d));
+
+        Util.Date result = new Util.Date(DLP);
+        
+        Assert.AreEqual(m, result.month);
+        Assert.AreEqual(y, result.year);
+        Assert.AreEqual(d, result.day);
+    }
+
+
 
     [Test]
     // Constructor that takes a control that is a DateTimePicker

@@ -54,19 +54,19 @@ public class TestDatabase
 
             foreach (Item item in purchase.items)
             {
-                item.set_PurchaseID(purchase.PURCHASE_ID);
+                item.PurchaseID = purchase.PURCHASE_ID;
                 Database.insertItem(item, out int itemID);
-                item.set_ITEM_ID(itemID);
-                if (item.get_Length() != Util.DEFAULT_INT)
+                item.ITEM_ID = itemID;
+                if (item.Length != Util.DEFAULT_INT)
                 {
                     int shipID = Database.insertShipInfo(item);
-                    item.set_ShippingID(shipID);
+                    item.ShippingID = shipID;
                 }
                 if (item.sales != null)
                 {
                     foreach (Sale sale in item.sales)
                     {
-                        sale.set_ItemID_sale(item.get_ITEM_ID());
+                        sale.set_ItemID_sale(item.ITEM_ID);
                         Database.insertSale(sale, out int saleID);
                         sale.set_SALE_ID(saleID);
                     }
@@ -113,11 +113,11 @@ public class TestDatabase
         List<int> itemIDs = new List<int>();
         foreach (Item item in searchItems)
         {
-            if (itemIDs.Contains(item.get_ITEM_ID()))
+            if (itemIDs.Contains(item.ITEM_ID))
             {
                 return false;
             }
-            itemIDs.Add(item.get_ITEM_ID());
+            itemIDs.Add(item.ITEM_ID);
         }
         return true;
     }
@@ -131,7 +131,7 @@ public class TestDatabase
         {
             foreach (Item item in purchase.items)
             {
-                int itemID = item.get_ITEM_ID();
+                int itemID = item.ITEM_ID;
                 Item actualItem = Database.getItem(itemID);
                 MyAssert.ItemsEqual(item, actualItem);
             }
@@ -156,9 +156,9 @@ public class TestDatabase
                 // Check all items are from the same purchase
                 for (int j = 0; j < purcItems.Count(); j++)
                 {
-                    Assert.AreEqual(purcItems[0].get_PurchaseID(), purcItems[j].get_PurchaseID());
+                    Assert.AreEqual(purcItems[0].PurchaseID, purcItems[j].PurchaseID);
                 }
-                Assert.AreEqual(purcItems[0].get_PurchaseID(), item.get_PurchaseID());
+                Assert.AreEqual(purcItems[0].PurchaseID, item.PurchaseID);
             }
         }
     }
@@ -203,7 +203,6 @@ public class TestDatabase
             {"item.ITEM_ID", "int unsigned"},
             {"item.Name", "varchar(255)"},
             {"item.PurchaseID", "int unsigned"},
-            {"item.SaleID", "int unsigned"},
             {"item.ShippingID", "int unsigned"},
             {"item.InitialQuantity", "int unsigned"},
             {"item.CurrentQuantity", "int unsigned"},
@@ -261,24 +260,24 @@ public class TestDatabase
         {
             foreach (Item item in purchase.items)
             {
-                List<Item> items = Database.getItems(item.get_ITEM_ID(), true);
+                List<Item> items = Database.getItems(item.ITEM_ID, true);
 
                 Assert.IsTrue(items.Count == 1);
                 Item actualItem = items[0];
 
-                Assert.AreEqual(item.get_ITEM_ID(), actualItem.get_ITEM_ID());
-                Assert.AreEqual(item.get_Name(), actualItem.get_Name());
-                Assert.AreEqual(item.get_Amount_purchase(), actualItem.get_Amount_purchase());
-                Assert.AreEqual(item.get_Date_Purchased(), actualItem.get_Date_Purchased());
-                Assert.AreEqual(item.get_InitialQuantity(), actualItem.get_InitialQuantity());
-                Assert.AreEqual(item.get_CurrentQuantity(), actualItem.get_CurrentQuantity());
+                Assert.AreEqual(item.ITEM_ID, actualItem.ITEM_ID);
+                Assert.AreEqual(item.Name, actualItem.Name);
+                Assert.AreEqual(item.Amount_purchase, actualItem.Amount_purchase);
+                Assert.AreEqual(item.Date_Purchased, actualItem.Date_Purchased);
+                Assert.AreEqual(item.InitialQuantity, actualItem.InitialQuantity);
+                Assert.AreEqual(item.CurrentQuantity, actualItem.CurrentQuantity);
 
                 if (item.hasShippingEntry())
                 {
-                    Assert.AreEqual(item.get_Weight(), actualItem.get_Weight());
-                    Assert.AreEqual(item.get_Length(), actualItem.get_Length());
-                    Assert.AreEqual(item.get_Height(), actualItem.get_Height());
-                    Assert.AreEqual(item.get_Width(), actualItem.get_Width());
+                    Assert.AreEqual(item.Weight, actualItem.Weight);
+                    Assert.AreEqual(item.Length, actualItem.Length);
+                    Assert.AreEqual(item.Height, actualItem.Height);
+                    Assert.AreEqual(item.Width, actualItem.Width);
                 }
                 for (int i = 0; i < item.sales.Count(); i++)
                 {
@@ -429,8 +428,8 @@ public class TestDatabase
         {
             foreach (Item item in purchase.items)
             {
-                string origName = item.get_Name();
-                item.set_Name(testingName);
+                string origName = item.Name;
+                item.Name = testingName;
 
                 string insertResult = Database.insertItem(item);
 
@@ -440,7 +439,7 @@ public class TestDatabase
                 // No other way to test without getting purcID returned which is tested elsewhere
                 Assert.Pass();
 
-                item.set_Name(origName);
+                item.Name = origName;
                 Database.deleteByName(testingName);
             }
         }
@@ -457,22 +456,22 @@ public class TestDatabase
         {
             foreach (Item item in purchase.items)
             {
-                int origItemID = item.get_ITEM_ID();
-                string origName = item.get_Name();
-                item.set_Name(testingName);
+                int origItemID = item.ITEM_ID;
+                string origName = item.Name;
+                item.Name = testingName;
 
                 result = Database.insertItem(item, out int itemID);
 
                 Assert.AreNotEqual(0, result.CompareTo("['ERROR']"));
-                item.set_ITEM_ID(itemID);
+                item.ITEM_ID = itemID;
 
 
                 Item actualItem = Database.getItem(itemID);
 
                 MyAssert.ItemsEqualWithoutSales(item, actualItem);
 
-                item.set_ITEM_ID(origItemID);
-                item.set_Name(origName);
+                item.ITEM_ID = origItemID;
+                item.Name = origName;
                 Database.deleteByName(testingName);
             }
         }
@@ -484,10 +483,10 @@ public class TestDatabase
     public static void Test_insertSale()
     {
         Item testingItem = new Item();
-        testingItem.set_Name("TestingItem");
-        testingItem.set_InitialQuantity(1);
-        testingItem.set_CurrentQuantity(1);
-        testingItem.set_PurchaseID(purchases[0].PURCHASE_ID);
+        testingItem.Name = "TestingItem";
+        testingItem.InitialQuantity = 1;
+        testingItem.CurrentQuantity = 1;
+        testingItem.PurchaseID = purchases[0].PURCHASE_ID;
 
         Database.insertItem(testingItem, out int tempItemID);
         Item tempItem = Database.getItem(tempItemID);
@@ -508,7 +507,7 @@ public class TestDatabase
             }
         }
         Database.deleteItem(tempItem);
-        Assert.Catch<Exception>(() => Database.getItem(tempItem.get_ITEM_ID()));
+        Assert.Catch<Exception>(() => Database.getItem(tempItem.ITEM_ID));
     }
 
 
@@ -517,10 +516,10 @@ public class TestDatabase
     public static void Test_insertSaleLastrowid()
     {
         Item testingItem = new Item();
-        testingItem.set_Name("TestingItem");
-        testingItem.set_InitialQuantity(1);
-        testingItem.set_CurrentQuantity(1);
-        testingItem.set_PurchaseID(purchases[0].PURCHASE_ID);
+        testingItem.Name = "TestingItem";
+        testingItem.InitialQuantity = 1;
+        testingItem.CurrentQuantity = 1;
+        testingItem.PurchaseID = purchases[0].PURCHASE_ID;
 
         Database.insertItem(testingItem, out int tempItemID);
         Item tempItem = Database.getItem(tempItemID);
@@ -543,7 +542,7 @@ public class TestDatabase
             }
         }
         Database.deleteItem(tempItem);
-        Assert.Catch<Exception>(() => Database.getItem(tempItem.get_ITEM_ID()));
+        Assert.Catch<Exception>(() => Database.getItem(tempItem.ITEM_ID));
     }
 
 
@@ -554,7 +553,7 @@ public class TestDatabase
         string[] images = Directory.GetFiles(imagesDir);
         foreach (string imagePath in images)
         {
-            int itemID = purchases[0].items[0].get_ITEM_ID();
+            int itemID = purchases[0].items[0].ITEM_ID;
             Item item = Database.getItem(itemID);
 
             Database.deleteImages(item);
@@ -584,15 +583,15 @@ public class TestDatabase
 
             foreach (Item item in purchase.items)
             {
-                string oldName = item.get_Name();
-                item.set_Name(name);
+                string oldName = item.Name;
+                item.Name = name;
                 Assert.AreNotEqual(0, Database.insertItem(item, out int itemID).CompareTo("['ERROR']"));
-                item.set_Name(oldName);
+                item.Name = oldName;
 
                 Item itemToDelete = Database.getItem(itemID);
                 Database.deleteItem(itemToDelete);
 
-                Assert.Catch<Exception>(() => Database.getItem(itemToDelete.get_ITEM_ID()));
+                Assert.Catch<Exception>(() => Database.getItem(itemToDelete.ITEM_ID));
             }
         }
 
@@ -607,7 +606,7 @@ public class TestDatabase
 
         Item item = purchases[0].items[0];
 
-        int itemID = item.get_ITEM_ID();
+        int itemID = item.ITEM_ID;
         Database.deleteImages(item);
 
         // Try inserting 1 image
@@ -645,7 +644,7 @@ public class TestDatabase
 
             foreach (Item item in purchase.items)
             {
-                int itemID = item.get_ITEM_ID();
+                int itemID = item.ITEM_ID;
                 int l = Math.Abs(rand.Next(2000000000));
                 int w = Math.Abs(rand.Next(2000000000));
                 int h = Math.Abs(rand.Next(2000000000));
@@ -654,22 +653,22 @@ public class TestDatabase
 
                 Database.deleteShipInfo(item);
                 // Confirm no prev shipping info exists for the item
-                Assert.AreEqual(Util.DEFAULT_INT, Database.getItem(itemID).get_Weight());
+                Assert.AreEqual(Util.DEFAULT_INT, Database.getItem(itemID).Weight);
                 Database.insertShipInfo(item, lbs, oz, l, w, h);
 
-                Item itemWithShipInfo = Database.getItem(item.get_ITEM_ID());
+                Item itemWithShipInfo = Database.getItem(item.ITEM_ID);
 
                 // check that it has shipping info
-                Assert.AreEqual(oz + 16 * lbs, itemWithShipInfo.get_Weight());
+                Assert.AreEqual(oz + 16 * lbs, itemWithShipInfo.Weight);
 
                 Database.deleteShipInfo(itemWithShipInfo);
 
-                Item itemWithoutShipInfo = Database.getItem(item.get_ITEM_ID());
+                Item itemWithoutShipInfo = Database.getItem(item.ITEM_ID);
 
-                Assert.AreEqual(Util.DEFAULT_INT, itemWithoutShipInfo.get_Weight());
-                Assert.AreEqual(Util.DEFAULT_INT, itemWithoutShipInfo.get_Length());
-                Assert.AreEqual(Util.DEFAULT_INT, itemWithoutShipInfo.get_Width());
-                Assert.AreEqual(Util.DEFAULT_INT, itemWithoutShipInfo.get_Height());
+                Assert.AreEqual(Util.DEFAULT_INT, itemWithoutShipInfo.Weight);
+                Assert.AreEqual(Util.DEFAULT_INT, itemWithoutShipInfo.Length);
+                Assert.AreEqual(Util.DEFAULT_INT, itemWithoutShipInfo.Width);
+                Assert.AreEqual(Util.DEFAULT_INT, itemWithoutShipInfo.Height);
 
             }
         }
@@ -683,8 +682,8 @@ public class TestDatabase
         int maxImages = 10;
         int imgGroupSize = 4;
         Item item = new Item();
-        int itemID = purchases[0].items[0].get_ITEM_ID();
-        item.set_ITEM_ID(itemID);
+        int itemID = purchases[0].items[0].ITEM_ID;
+        item.ITEM_ID = itemID;
         string[] images = Directory.GetFiles(imagesDir);
         for (int i = 0; i < Math.Min(images.Length, maxImages) - imgGroupSize; i += imgGroupSize)
         {
@@ -724,7 +723,7 @@ public class TestDatabase
 
         Database.updateRow(item, attrib, newVal);
 
-        Item changedItem = Database.getItem(item.get_ITEM_ID());
+        Item changedItem = Database.getItem(item.ITEM_ID);
         string changedAttrib = changedItem.getAttribAsStr(attrib);
 
         Assert.AreEqual(0, newVal.CompareTo(changedAttrib));
@@ -743,7 +742,7 @@ public class TestDatabase
             {
                 Database.updateRow(item, attrib, newVal);
 
-                Item changedItem = Database.getItem(item.get_ITEM_ID());
+                Item changedItem = Database.getItem(item.ITEM_ID);
 
                 string changedAttrib = changedItem.getAttribAsStr(attrib);
 
@@ -776,7 +775,7 @@ public class TestDatabase
                     continue;
                 }
                 Database.updateRow(item, attrib, newVal);
-                Item changedItem = Database.getItem(item.get_ITEM_ID());
+                Item changedItem = Database.getItem(item.ITEM_ID);
                 string changedAttrib = "-999";
                 try
                 {
@@ -810,13 +809,13 @@ public class TestDatabase
     public static void Test_updateRowDate(string attrib, Util.Date newVal)
     {
         Item itemToChange = purchases[0].items[0];
-        int itemID = itemToChange.get_ITEM_ID();
-        int purcID = itemToChange.get_PurchaseID();
-        itemToChange.set_ITEM_ID(itemID);
-        itemToChange.set_PurchaseID(purcID);
+        int itemID = itemToChange.ITEM_ID;
+        int purcID = itemToChange.PurchaseID;
+        itemToChange.ITEM_ID = itemID;
+        itemToChange.PurchaseID = purcID;
         Database.updateRow(itemToChange, attrib, newVal);
 
-        Item changedItem = Database.getItem(itemToChange.get_ITEM_ID());
+        Item changedItem = Database.getItem(itemToChange.ITEM_ID);
 
         string changedAttrib = changedItem.getAttribAsStr(attrib);
 
@@ -870,11 +869,11 @@ public class TestDatabase
         {
             foreach (Item item in purchase.items)
             {
-                int itemID = item.get_ITEM_ID();
-                int purcID = item.get_PurchaseID();
-                item.set_ITEM_ID(itemID);
-                item.set_PurchaseID(purcID);
-                item.set_ITEM_ID(itemID);
+                int itemID = item.ITEM_ID;
+                int purcID = item.PurchaseID;
+                item.ITEM_ID = itemID;
+                item.PurchaseID = purcID;
+                item.ITEM_ID = itemID;
 
 
                 int l = Math.Abs(rand.Next(2000000000));
@@ -885,14 +884,14 @@ public class TestDatabase
 
                 Database.deleteShipInfo(item);
                 // Confirm no prev shipping info exists for the item
-                Assert.AreEqual(Util.DEFAULT_INT, Database.getItem(itemID).get_Weight());
+                Assert.AreEqual(Util.DEFAULT_INT, Database.getItem(itemID).Weight);
                 Database.insertShipInfo(item, lbs, oz, l, w, h);
 
-                Item itemWithShipInfo = Database.getItem(item.get_ITEM_ID());
-                Assert.AreEqual(l, itemWithShipInfo.get_Length());
-                Assert.AreEqual(w, itemWithShipInfo.get_Width());
-                Assert.AreEqual(h, itemWithShipInfo.get_Height());
-                Assert.AreEqual(oz + 16 * lbs, itemWithShipInfo.get_Weight());
+                Item itemWithShipInfo = Database.getItem(item.ITEM_ID);
+                Assert.AreEqual(l, itemWithShipInfo.Length);
+                Assert.AreEqual(w, itemWithShipInfo.Width);
+                Assert.AreEqual(h, itemWithShipInfo.Height);
+                Assert.AreEqual(oz + 16 * lbs, itemWithShipInfo.Weight);
             }
         }
     }
@@ -902,7 +901,7 @@ public class TestDatabase
     [Test]
     public static void Test_deleteSale()
     {
-        int itemID = purchases[0].items[0].get_ITEM_ID();
+        int itemID = purchases[0].items[0].ITEM_ID;
         Sale sale = new Sale();
         sale.set_Date_Sold(new Util.Date(1978,12,16));
         sale.set_Amount_sale(100.0);
@@ -928,7 +927,7 @@ public class TestDatabase
         {
             foreach (Item item in purchase.items)
             {
-                Assert.AreEqual(item.get_Amount_purchase(), Database.getPurchase(item).Amount_purchase);
+                Assert.AreEqual(item.Amount_purchase, Database.getPurchase(item).Amount_purchase);
             }
         }
     }
@@ -942,8 +941,8 @@ public class TestDatabase
         {
             foreach (Item item in purchase.items)
             {
-                int purcID = item.get_PurchaseID();
-                Assert.AreEqual(item.get_Amount_purchase(), Database.getPurchase(purcID).Amount_purchase);
+                int purcID = item.PurchaseID;
+                Assert.AreEqual(item.Amount_purchase, Database.getPurchase(purcID).Amount_purchase);
             }
         }
     }
@@ -957,15 +956,15 @@ public class TestDatabase
         {
             foreach (Item item in purchase.items)
             {
-                int itemID = item.get_ITEM_ID();
+                int itemID = item.ITEM_ID;
                 Database.deleteImages(item);
                 Item newItem = Database.getItem(itemID);
-                Assert.IsTrue(TestingUtil.compareImages(Util.DEFAULT_IMAGE.image, newItem.get_Thumbnail().image, true));
+                Assert.IsTrue(TestingUtil.compareImages(Util.DEFAULT_IMAGE.image, newItem.thumbnail.image, true));
                 int imageID = Database.insertImage(imagePath, item);
-                Assert.IsTrue(TestingUtil.compareImages(Util.DEFAULT_IMAGE.image, newItem.get_Thumbnail().image, true));
+                Assert.IsTrue(TestingUtil.compareImages(Util.DEFAULT_IMAGE.image, newItem.thumbnail.image, true));
                 Database.setThumbnail(itemID, imageID);
                 newItem = Database.getItem(itemID);
-                Assert.IsTrue(TestingUtil.compareImages(Image.FromFile(imagePath), newItem.get_Thumbnail().image, true));
+                Assert.IsTrue(TestingUtil.compareImages(Image.FromFile(imagePath), newItem.thumbnail.image, true));
             }
         }
     }

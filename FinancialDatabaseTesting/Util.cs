@@ -89,12 +89,12 @@ namespace FinancialDatabaseTesting
                 {
                     foreach (Item item in purchase.items)
                     {
-                        item.set_Date_Purchased(purchase.Date_Purchased);
-                        item.set_Amount_purchase(purchase.Amount_purchase);
-                        item.set_Seller(purchase.Seller);
-                        item.set_Fees_purchase(purchase.Fees_purchase);
-                        item.set_Tax(purchase.Tax);
-                        item.set_Notes_purchase(purchase.Notes_purchase);
+                        item.Date_Purchased = purchase.Date_Purchased;
+                        item.Amount_purchase = purchase.Amount_purchase;
+                        item.Seller = purchase.Seller;
+                        item.Fees_purchase = purchase.Fees_purchase;
+                        item.Tax = purchase.Tax;
+                        item.Notes_purchase = purchase.Notes_purchase;
                         if (item.sales != null)
                         {
                             foreach (Sale sale in item.sales)
