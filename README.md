@@ -14,7 +14,7 @@ This program solves the problem resellers face in recording a complex inventory
 
 # The Solution
 Suppose you buy a tool and resell it for a profit
-[Picture of Milwaukee hammer drill] -> Arrow -> [Dollar sign picture]
+![Picture of Milwaukee hammer drill -> Arrow -> Dollar sign picture](READMEResources/Drill.png)
 Recording this in a spreadsheet is easy!
 | Date | Name | Cost | Sold Date | Sold Val.| Profit |
 |--|--|--|--|--|--|
