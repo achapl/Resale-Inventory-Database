@@ -45,7 +45,7 @@ Now you can
 ### Basic Understanding
 For every purchase there may be multiple items (or just  1)
 For every item there may be multiple sales (or just 1)
-[Picture showing a single purchase, with arrows to multiple items, with arrows to multiple sales]
+![Picture showing a single purchase, with arrows to multiple items, with arrows to multiple sales](READMEResources/UnderlyingIdea.png)
 
 ### Recording your first purchase
 1. Click on the purchase tab
